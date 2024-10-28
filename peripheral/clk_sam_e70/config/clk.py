@@ -330,14 +330,14 @@ def __slow_clock_menu(clk_comp, clk_menu, supc_reg_module, update_slow_xtal_freq
 
     # set slow clock input frequency
     sym_slow_xtal_freq = clk_comp.createIntegerSymbol("CLK_SLOW_XTAL", sym_supc_cr_xtalsel)
-    sym_slow_xtal_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_slow_xtal_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:SUPC_MR")
     sym_slow_xtal_freq.setLabel("External Slow Clock Input Frequency (Hz)")
     sym_slow_xtal_freq.setDefaultValue(32768)
     sym_slow_xtal_freq.setReadOnly(True)
     sym_slow_xtal_freq.setDependencies(update_slow_xtal_freq_ro_prop, ["SUPC_MR_OSCBYPASS"])
 
     sym_slow_clock_freq = clk_comp.createIntegerSymbol("SLOW_CLK_FREQ", sym_supc_cr_xtalsel)
-    sym_slow_clock_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_slow_clock_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:SUPC_MR")
     sym_slow_clock_freq.setLabel("Slow Clock Frequency")
     sym_slow_clock_freq.setDefaultValue(32000)
     sym_slow_clock_freq.setDependencies(calc_slow_clk_freq, ["SUPC_CR_XTALSEL"])
@@ -367,7 +367,7 @@ def __main_clock_menu(clk_comp, clk_menu, pmc_reg_module, disable_main_xtal):
 
     # create symbol for MOSCRCEN Bitfield of CKGR_MOR Register
     sym_rc_enable = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCRCEN", clk_menu)
-    sym_rc_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_rc_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_MOR")
     sym_rc_enable.setLabel(bitfield_ckgr_mor_moscrcen.getDescription())
     sym_rc_enable.setDefaultValue(True)
 
@@ -388,7 +388,7 @@ def __main_clock_menu(clk_comp, clk_menu, pmc_reg_module, disable_main_xtal):
 
     # create symbol for MOSCXTBY Bitfield of CKGR_MOR Register
     sym_osc_bypass = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCXTBY", clk_menu)
-    sym_osc_bypass.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_osc_bypass.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_MOR")
     sym_osc_bypass.setLabel(bitfield_ckgr_mor_moscxtby.getDescription())
 
     # get MOSCXTEN Bitfield of CKGR_MOR Register
@@ -396,14 +396,14 @@ def __main_clock_menu(clk_comp, clk_menu, pmc_reg_module, disable_main_xtal):
 
     # create Boolean Symbol for MOSCXTEN Bitfield of CKGR_MOR Register
     sym_crystal_osc_enable = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCXTEN", clk_menu)
-    sym_crystal_osc_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_crystal_osc_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_MOR")
     sym_crystal_osc_enable.setLabel(bitfield_ckgr_mor_moscxten.getDescription())
     sym_crystal_osc_enable.setDefaultValue(False)
     sym_crystal_osc_enable.setDependencies(disable_main_xtal, ["PMC_CKGR_MOR_MOSCXTBY"])
 
     # create integer symbol for external main clock frequency
     sym_main_xtal_freq = clk_comp.createIntegerSymbol("CLK_MAIN_XTAL", sym_crystal_osc_enable)
-    sym_main_xtal_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_main_xtal_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_MOR")
     sym_main_xtal_freq.setLabel("External Main Clock Input Frequency (Hz)")
     sym_main_xtal_freq.setDefaultValue(12000000)
     sym_main_xtal_freq.setMin(3000000)
@@ -425,7 +425,7 @@ def __main_clock_menu(clk_comp, clk_menu, pmc_reg_module, disable_main_xtal):
 
     # create symbol for main clock source
     sym_main_clk_src = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCSEL", clk_menu)
-    sym_main_clk_src.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_main_clk_src.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_MOR")
     sym_main_clk_src.setLabel(bitfield_ckgr_mor_moscsel.getDescription())
     sym_main_clk_src.setDefaultValue(False)
 
@@ -452,7 +452,7 @@ def __plla_menu(clk_comp, clk_menu, pmc_reg_module, plla_div_visibility, plla_mu
 
     # create symbol to enable/disable PLLA
     sym_plla_enable = clk_comp.createBooleanSymbol("CLK_PLLA_ENABLE", clk_menu)
-    sym_plla_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_plla_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_PLLAR")
     sym_plla_enable.setLabel("Enable PLLA Clock")
     sym_plla_enable.setDefaultValue(True)
 
@@ -559,7 +559,7 @@ def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, utmi_reg_module, update
 
     # create symbol for UPLLEN Bitfield of CKGR_UCKR register
     sym_ckgr_uckr_upllen = clk_comp.createBooleanSymbol("PMC_CKGR_UCKR_UPLLEN", clk_menu)
-    sym_ckgr_uckr_upllen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_ckgr_uckr_upllen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_UCKR")
     sym_ckgr_uckr_upllen.setLabel(bitfield_ckgr_uckr_upllen.getDescription())
 
     # get UTMI register group
@@ -663,7 +663,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module, gclk_div_visibility
 
         # create symbol for EN bitfield of PMC_PCR Register
         sym_pmc_pcr_en = clk_comp.createBooleanSymbol("PMC_PCR_EN" + str(i), sym_i2s_pclk_menu)
-        sym_pmc_pcr_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+        sym_pmc_pcr_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCR")
         sym_pmc_pcr_en.setLabel(bitfield_pmc_pcr.getDescription())
         sym_pmc_pcr_en.setDefaultValue(False)
 
@@ -676,7 +676,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module, gclk_div_visibility
 
         # create symbol for GCLKEN bitfield of PMC_PCR register
         sym_pmc_pcr_gclken = clk_comp.createBooleanSymbol("PMC_PCR_GCLK" + str(i) + "EN", sym_gen_clk_menu)
-        sym_pmc_pcr_gclken.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+        sym_pmc_pcr_gclken.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCR")
         sym_pmc_pcr_gclken.setLabel(bitfield_pmc_pcr_gclken.getDescription())
 
         # get GCLKDIV bitfield of PMC_PCR register
@@ -684,7 +684,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module, gclk_div_visibility
 
         # create symbol for GCLKDIV bitfield of PMC_PCR register
         sym_pmc_pcr_gclkdiv = clk_comp.createIntegerSymbol("PMC_PCR_GCLK" + str(i) + "DIV", sym_gen_clk_menu)
-        sym_pmc_pcr_gclkdiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+        sym_pmc_pcr_gclkdiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCR")
         sym_pmc_pcr_gclkdiv.setLabel(bitfield_pmc_pcr_gclkdiv.getDescription())
         sym_pmc_pcr_gclkdiv.setMin(1)
         sym_pmc_pcr_gclkdiv.setMax(256)
@@ -697,7 +697,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module, gclk_div_visibility
 
         # create symbol for GCLKCSS bitfield of PMC_PCR register
         sym_pmc_pcr_gclkcss = clk_comp.createKeyValueSetSymbol("PMC_PCR_GCLK" + str(i) + "CSS", sym_gen_clk_menu)
-        sym_pmc_pcr_gclkcss.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+        sym_pmc_pcr_gclkcss.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCR")
         sym_pmc_pcr_gclkcss.setLabel(bitfield_pmc_pcr_gclkcss.getDescription())
         sym_pmc_pcr_gclkcss.setVisible(False)
         sym_pmc_pcr_gclkcss.addKey("SLOW_CLK", "SLOW_CLK", "Slow Clock")
@@ -819,7 +819,7 @@ def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
 
         # create symbol for CSS bitfield of PMC_PCK# register
         sym_pmc_pck_css = clk_comp.createComboSymbol("PMC_PCK" + str(i) + "_CSS", sym_pmc_scer_pck, valgrp_pmc_pck_css.getValueNames())
-        sym_pmc_pck_css.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+        sym_pmc_pck_css.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCK")
         sym_pmc_pck_css.setLabel(bitfield_pmc_pck_css.getDescription())
         sym_pmc_pck_css.setDefaultValue("SLOW_CLK")
 
@@ -828,7 +828,7 @@ def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
 
         # create symbol for PRES bitfield of PMC_PCK# register
         sym_pmc_pck_pres = clk_comp.createIntegerSymbol("PMC_PCK" + str(i) +"_PRES", sym_pmc_scer_pck)
-        sym_pmc_pck_pres.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+        sym_pmc_pck_pres.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCK")
         sym_pmc_pck_pres.setLabel(bitfield_pmc_pck_pres.getDescription())
         sym_pmc_pck_pres.setMin(1)
         sym_pmc_pck_pres.setMax(256)
@@ -850,91 +850,91 @@ def __calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree):
     sym_calc_freq_menu.setLabel("Calculated Clock Frequencies")
 
     sym_sys_tick_freq = clk_comp.createStringSymbol("SYSTICK_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_sys_tick_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_sys_tick_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_SCER")
     sym_sys_tick_freq.setLabel("System Tick Frequency (HZ)")
     sym_sys_tick_freq.setDefaultValue("150000000")
     sym_sys_tick_freq.setReadOnly(True)
 
     sym_proc_clk_freq = clk_comp.createStringSymbol("CPU_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_proc_clk_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_proc_clk_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_SCER")
     sym_proc_clk_freq.setLabel("Processor Clock Frequency (HZ)")
     sym_proc_clk_freq.setDefaultValue("300000000")
     sym_proc_clk_freq.setReadOnly(True)
 
     sym_master_clk_freq = clk_comp.createStringSymbol("MASTER_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_master_clk_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_master_clk_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:CKGR_MCFR")
     sym_master_clk_freq.setLabel("Master Clock Frequency (HZ)")
     sym_master_clk_freq.setDefaultValue("150000000")
     sym_master_clk_freq.setReadOnly(True)
 
     sym_i2s0_freq = clk_comp.createStringSymbol("I2S0_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_i2s0_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_i2s0_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCER0")
     sym_i2s0_freq.setLabel("I2S0 Frequency (HZ)")
     sym_i2s0_freq.setDefaultValue("75000000")
     sym_i2s0_freq.setReadOnly(True)
 
     sym_i2s1_freq = clk_comp.createStringSymbol("I2S1_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_i2s1_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_i2s1_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCER0")
     sym_i2s1_freq.setLabel("I2S1 Frequency (HZ)")
     sym_i2s1_freq.setDefaultValue("100000000")
     sym_i2s1_freq.setReadOnly(True)
 
     sym_pck0_freq = clk_comp.createStringSymbol("PCK0_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck0_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck0_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck0_freq.setLabel("Programmable clock #0 Frequency (HZ)")
     sym_pck0_freq.setDefaultValue("32000")
     sym_pck0_freq.setReadOnly(True)
 
     sym_pck1_freq = clk_comp.createStringSymbol("PCK1_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck1_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck1_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck1_freq.setLabel("Programmable clock #1 Frequency (HZ)")
     sym_pck1_freq.setDefaultValue("32000")
     sym_pck1_freq.setReadOnly(True)
 
     sym_pck2_freq = clk_comp.createStringSymbol("PCK2_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck2_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck2_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck2_freq.setLabel("Programmable clock #2 Frequency (HZ)")
     sym_pck2_freq.setDefaultValue("32000")
     sym_pck2_freq.setReadOnly(True)
 
     sym_pck3_freq = clk_comp.createStringSymbol("PCK3_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck3_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck3_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck3_freq.setLabel("Programmable clock #3 Frequency (HZ)")
     sym_pck3_freq.setDefaultValue("32000")
     sym_pck3_freq.setReadOnly(True)
 
     sym_pck4_freq = clk_comp.createStringSymbol("PCK4_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck4_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck4_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck4_freq.setLabel("Programmable clock #4 Frequency (HZ)")
     sym_pck4_freq.setDefaultValue("32000")
     sym_pck4_freq.setReadOnly(True)
 
     sym_pck5_freq = clk_comp.createStringSymbol("PCK5_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck5_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck5_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck5_freq.setLabel("Programmable clock #5 Frequency (HZ)")
     sym_pck5_freq.setDefaultValue("32000")
     sym_pck5_freq.setReadOnly(True)
 
     sym_pck6_freq = clk_comp.createStringSymbol("PCK6_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck6_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck6_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck6_freq.setLabel("Programmable clock #6 Frequency (HZ)")
     sym_pck6_freq.setDefaultValue("32000")
     sym_pck6_freq.setReadOnly(True)
 
     sym_pck7_freq = clk_comp.createStringSymbol("PCK7_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck7_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_pck7_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_PCKx")
     sym_pck7_freq.setLabel("Programmable clock #7 Frequency (HZ)")
     sym_pck7_freq.setDefaultValue("32000")
     sym_pck7_freq.setReadOnly(True)
 
     sym_usb_fs_freq = clk_comp.createStringSymbol("USBFS_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_usb_fs_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_usb_fs_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_USB")
     sym_usb_fs_freq.setLabel("USB Clock Frequency (HZ)")
     sym_usb_fs_freq.setDefaultValue("48000000")
     sym_usb_fs_freq.setReadOnly(True)
 
     sym_usb_hs_freq = clk_comp.createStringSymbol("USBHS_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_usb_hs_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:%NOREGISTER%")
+    sym_usb_hs_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_e70;register:PMC_USB")
     sym_usb_hs_freq.setLabel("USB High Speed Clock Frequency (HZ)")
     sym_usb_hs_freq.setDefaultValue("480000000")
     sym_usb_hs_freq.setReadOnly(True)

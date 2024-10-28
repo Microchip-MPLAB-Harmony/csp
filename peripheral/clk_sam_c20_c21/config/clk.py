@@ -209,14 +209,14 @@ swCalibRowAddr.setVisible(False)
 ############################   XOSC Components    ##############################
 #XOSC Oscillator Enable
 oscctrlSym_XOSC_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONFIG_CLOCK_XOSC_ENABLE", oscctrlXosc_Menu)
-oscctrlSym_XOSC_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+oscctrlSym_XOSC_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:XOSCCTRL")
 oscctrlSym_XOSC_CONFIG_ENABLE.setLabel("External Multipurpose Crystal Oscillator(XOSC) Enable")
 oscctrlSym_XOSC_CONFIG_ENABLE.setDescription("External Crystal Oscillator Enable Feature")
 oscctrlSym_XOSC_CONFIG_ENABLE.setDefaultValue(False)
 
 #XOSC Automatic Gain Control Mode
 oscctrlSym_XOSC_AMPGC = coreComponent.createBooleanSymbol("XOSC_AMPGC", oscctrlXosc_Menu)
-oscctrlSym_XOSC_AMPGC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+oscctrlSym_XOSC_AMPGC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:XOSCCTRL")
 oscctrlSym_XOSC_AMPGC.setLabel("Automatic Gain Control ")
 oscctrlSym_XOSC_AMPGC.setDefaultValue(False)
 
@@ -231,7 +231,7 @@ oscctrlSym_XOSC_OSCILLATORMODE.setDefaultValue(1)
 
 #XOSC Oscillator Frequency
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY = coreComponent.createIntegerSymbol("CONFIG_CLOCK_XOSC_FREQUENCY", oscctrlXosc_Menu)
-oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:XOSCCTRL")
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setLabel("Frequency")
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDescription("Setting the XOSC Frequency")
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDefaultValue(12000000)
@@ -323,7 +323,7 @@ oscctrlSym_CFDPRESC_CFDPRESC.setOutputMode("Value")
 oscctrlSym_CFDPRESC_CFDPRESC.setDisplayMode("Description")
 
 clkSym_XOSC_Freq = coreComponent.createIntegerSymbol("XOSC_FREQ", calculatedFreq_Menu)
-clkSym_XOSC_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+clkSym_XOSC_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:XOSCCTRL")
 clkSym_XOSC_Freq.setLabel("XOSC Clock Frequency")
 clkSym_XOSC_Freq.setReadOnly(True)
 clkSym_XOSC_Freq.setDependencies(setXOSCFreq, ["CONFIG_CLOCK_XOSC_ENABLE", "CONFIG_CLOCK_XOSC_FREQUENCY"])
@@ -331,14 +331,14 @@ clkSym_XOSC_Freq.setDependencies(setXOSCFreq, ["CONFIG_CLOCK_XOSC_ENABLE", "CONF
 ############################   OSC48M Components    ############################
 #OSC48M Internal Oscillator Enable
 oscctrlSym_OSC48M_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC48M_ENABLE", oscctrlosc48_Menu)
-oscctrlSym_OSC48M_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+oscctrlSym_OSC48M_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:OSC48MCTRL")
 oscctrlSym_OSC48M_CONFIG_ENABLE.setLabel("48MHz Internal Oscillator(OSC48M) Enable")
 oscctrlSym_OSC48M_CONFIG_ENABLE.setDescription("Internal 48mhz Oscillator Configuration enable feature")
 oscctrlSym_OSC48M_CONFIG_ENABLE.setDefaultValue(True)
 
 #OSC48M Internal Oscillator ONDEMAND Mode
 oscctrlSym_OSC48MCTRL_ONDEMAND = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_OSC48M_ONDEMAND", oscctrlosc48_Menu)
-oscctrlSym_OSC48MCTRL_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+oscctrlSym_OSC48MCTRL_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:OSC48MCTRL")
 oscctrlSym_OSC48MCTRL_ONDEMAND.setLabel("Oscillator On-Demand Control")
 oscctrlSym_OSC48MCTRL_ONDEMAND.setOutputMode("Key")
 oscctrlSym_OSC48MCTRL_ONDEMAND.setDisplayMode("Description")
@@ -402,7 +402,7 @@ oscctrlSym_OSC48STUP_STARTUP.setOutputMode("Value")
 oscctrlSym_OSC48STUP_STARTUP.setDisplayMode("Description")
 
 oscctrlSym_OSC48Cal = coreComponent.createKeyValueSetSymbol("CALIBRATION_ROW", oscctrlosc48_Menu )
-oscctrlSym_OSC48Cal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+oscctrlSym_OSC48Cal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:CAL48M")
 oscctrlSym_OSC48Cal.addKey("CAL48M 5V", "0", "VDD = 3.6V to 5.5V")
 oscctrlSym_OSC48Cal.addKey("CAL48M 3V3", "1", "VDD = 2.7V to 3.6V")
 oscctrlSym_OSC48Cal.setLabel("Calibration Value Selection")
@@ -412,7 +412,7 @@ oscctrlSym_OSC48Cal.setDisplayMode("Description")
 
 
 clkSym_OSC48M_Freq = coreComponent.createIntegerSymbol("OSC48M_CLOCK_FREQ", calculatedFreq_Menu)
-clkSym_OSC48M_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+clkSym_OSC48M_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:OSC48MDIV")
 clkSym_OSC48M_Freq.setLabel("OSC48M Clock Frequency")
 clkSym_OSC48M_Freq.setReadOnly(True)
 clkSym_OSC48M_Freq.setDefaultValue(48000000)
@@ -421,7 +421,7 @@ clkSym_OSC48M_Freq.setDependencies(setOSC48ClockFreq, ["CONFIG_CLOCK_OSC48M_ENAB
 ############################   DPLL Components    ############################
 #Digital Phase Locked Loop(DPLL) Enable
 oscctrlSym_DPLL_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DPLL_ENABLE", dpll96_Menu)
-oscctrlSym_DPLL_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+oscctrlSym_DPLL_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:DPLLCTRLA")
 oscctrlSym_DPLL_CONFIG_ENABLE.setLabel("Digital Phase Locked Loop(DPLL) Enable ")
 oscctrlSym_DPLL_CONFIG_ENABLE.setDescription("DPLL Configuration enabling feature")
 oscctrlSym_DPLL_CONFIG_ENABLE.setDefaultValue(False)
@@ -592,7 +592,7 @@ oscctrlSym_DPLLCTRLB_DIV.setDependencies(calcDpllXoscDivider,["CONFIG_CLOCK_DPLL
 
 
 clkSym_DPLL96M_Freq = coreComponent.createIntegerSymbol("DPLL96M_CLOCK_FREQ", calculatedFreq_Menu)
-clkSym_DPLL96M_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+clkSym_DPLL96M_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:DPLLCTRLA")
 clkSym_DPLL96M_Freq.setReadOnly(True)
 clkSym_DPLL96M_Freq.setDefaultValue(0)
 clkSym_DPLL96M_Freq.setLabel("FDPLL96M Clock Frequency")
@@ -672,7 +672,7 @@ clkSym_OSCULP32K_Freq.setDefaultValue(32768)
 clkSym_OSCULP32K_Freq.setReadOnly(True)
 
 clkSym_OSCULP1K_Freq = coreComponent.createIntegerSymbol("OSCULP1K_FREQ", calculatedFreq_Menu)
-clkSym_OSCULP1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+clkSym_OSCULP1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:OSCULP32K")
 clkSym_OSCULP1K_Freq.setLabel("OSCULP1K Clock Frequency")
 clkSym_OSCULP1K_Freq.setDefaultValue(1024)
 clkSym_OSCULP1K_Freq.setReadOnly(True)
@@ -722,7 +722,7 @@ osc32kctrlSym_XOSC32K_EN1K.setLabel("Enable 1KHz Output")
 
 #XOSC32K External Oscillator 1KHz Output Frequency Mode
 clkSym_XOSC1K_Freq = coreComponent.createIntegerSymbol("XOSC1K_FREQ", calculatedFreq_Menu)
-clkSym_XOSC1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+clkSym_XOSC1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:OSCULP32K")
 clkSym_XOSC1K_Freq.setLabel("XOSC1K Clock Frequency")
 clkSym_XOSC1K_Freq.setDefaultValue(0)
 clkSym_XOSC1K_Freq.setReadOnly(True)
@@ -856,7 +856,7 @@ clkSym_OSC32K_Freq.setReadOnly(True)
 clkSym_OSC32K_Freq.setDependencies(setOSC32KFreq, ["OSC32K_EN32K", "CONF_CLOCK_OSC32K_ENABLE"])
 
 clkSym_OSC1K_Freq = coreComponent.createIntegerSymbol("OSC1K_FREQ", calculatedFreq_Menu)
-clkSym_OSC1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+clkSym_OSC1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:OSCULP32K")
 clkSym_OSC1K_Freq.setLabel("OSC1K Clock Frequency")
 clkSym_OSC1K_Freq.setDefaultValue(0)
 clkSym_OSC1K_Freq.setReadOnly(True)
@@ -1185,7 +1185,7 @@ for pad in range (0 , len(wakeup_signals)):
 for gclknumber in range(0,9):
     gclkSym_num.append(gclknumber)
     gclkSym_num[gclknumber] = coreComponent.createBooleanSymbol("GCLK_INST_NUM" + str(gclknumber),gclkGen_Menu)
-    gclkSym_num[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    gclkSym_num[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:GENCTRL1")
     gclkSym_num[gclknumber].setLabel("Enable Generic Clock Generator " + str(gclknumber))
     if( gclknumber == 0):
         gclkSym_num[gclknumber].setDefaultValue(True)
@@ -1237,7 +1237,7 @@ for gclknumber in range(0,9):
         numPads = numPads + 1
         gclkSym_GCLK_IO_FREQ.append(gclknumber)
         gclkSym_GCLK_IO_FREQ[gclknumber] = coreComponent.createIntegerSymbol("GCLK_IO_" + str(gclknumber) +"_FREQ", gclkSym_GENCTRL_OE[gclknumber])
-        gclkSym_GCLK_IO_FREQ[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+        gclkSym_GCLK_IO_FREQ[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:GENCTRL1")
         gclkSym_GCLK_IO_FREQ[gclknumber].setLabel("External Output (GCLK_IO[" + str(gclknumber) + "]) Frequency")
         gclkSym_GCLK_IO_FREQ[gclknumber].setDefaultValue(0)
         gclkSym_GCLK_IO_FREQ[gclknumber].setReadOnly(True)
@@ -1256,7 +1256,7 @@ for gclknumber in range(0,9):
         gclkSym_GENCTRL_OOV[gclknumber].setDisplayMode("Description")
 
     gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
-    gclkInFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    gclkInFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:GENCTRL1")
     gclkInFreq.setLabel("Gclk Input Frequency")
     gclkInFreq.setDefaultValue(0)
     gclkInFreq.setDependencies(writeEnable, ["GCLK_" + str(gclknumber) + "_OUTPUTENABLE"])
@@ -1313,7 +1313,7 @@ for gclknumber in range(0,9):
 
     gclkSym_Freq.append(gclknumber)
     gclkSym_Freq[gclknumber]=coreComponent.createIntegerSymbol("GCLK_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
-    gclkSym_Freq[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    gclkSym_Freq[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:GENCTRL1")
     gclkSym_Freq[gclknumber].setLabel("GCLK" + str(gclknumber) + " Clock Frequency")
     gclkSym_Freq[gclknumber].setReadOnly(True)
     if(gclknumber == 0):
@@ -1386,13 +1386,13 @@ for index in sorted(channelMap.iterkeys()):
 
     #GCLK Peripheral Channel Enable
     clkSymPeripheral = coreComponent.createBooleanSymbol(key + "_CHEN", gclkPeriChannel_menu)
-    clkSymPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    clkSymPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:PCHCTRL0")
     clkSymPeripheral.setLabel("Peripheral Channel " + str(index) + " Clock Enable")
     clkSymPeripheral.setDefaultValue(False)
 
     #GCLK Peripheral Channel Name
     gclkSym_PERCHANNEL_NAME = coreComponent.createStringSymbol(key + "_NAME", clkSymPeripheral)
-    gclkSym_PERCHANNEL_NAME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    gclkSym_PERCHANNEL_NAME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:PCHCTRL0")
     gclkSym_PERCHANNEL_NAME.setLabel("Peripheral")
     gclkSym_PERCHANNEL_NAME.setReadOnly(True)
     gclkSym_PERCHANNEL_NAME.setDefaultValue(name)
@@ -1428,7 +1428,7 @@ for index in sorted(channelMap.iterkeys()):
     gclkSym_PCHCTRL_GEN.setDisplayMode("Key")
 
     gclkSym_PCHCTRL_FREQ = coreComponent.createIntegerSymbol(key + "_FREQ", clkSymPeripheral)
-    gclkSym_PCHCTRL_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    gclkSym_PCHCTRL_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:PCHCTRL0")
     gclkSym_PCHCTRL_FREQ.setLabel("Peripheral Channel " + str(index) + " Frequency ")
     gclkSym_PCHCTRL_FREQ.setReadOnly(True)
     gclkSym_PCHCTRL_FREQ.setDependencies(setPCHCTRLFREQVisibleProperty, [key + "_CHEN",key + "_GENSEL", "GCLK_0_FREQ", "GCLK_1_FREQ", "GCLK_2_FREQ", "GCLK_3_FREQ", "GCLK_4_FREQ",
@@ -1449,13 +1449,13 @@ peripheralList.sort()
 for name in peripheralList:
     #GCLK Peripheral Channel Enable
     clkSymExtPeripheral = coreComponent.createBooleanSymbol(name + "_CLOCK_ENABLE", peripheralClockMenu)
-    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:PCHCTRL0")
     clkSymExtPeripheral.setLabel(name + " Clock Enable")
     clkSymExtPeripheral.setDefaultValue(False)
     triggerdepList.append(name + "_CLOCK_ENABLE")
 
     clkSymExtPeripheral = coreComponent.createIntegerSymbol(name + "_CLOCK_FREQUENCY", clkSymExtPeripheral)
-    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:PCHCTRL0")
     clkSymExtPeripheral.setLabel(name + " Clock Frequency")
     clkSymExtPeripheral.setReadOnly(True)
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
@@ -1676,7 +1676,7 @@ def setFreq(symbol, event):
     symbol.setValue(freq, 2)
 
 clkSym_MAIN_CLK_FREQ = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", calculatedFreq_Menu)
-clkSym_MAIN_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:%NOREGISTER%")
+clkSym_MAIN_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_c20_c21;register:CPUDIV")
 clkSym_MAIN_CLK_FREQ.setLabel("Main Clock Frequency")
 clkSym_MAIN_CLK_FREQ.setReadOnly(True)
 clkSym_MAIN_CLK_FREQ.setDependencies(setMainClockFreq, ["GCLK_0_FREQ", "CONF_CPU_CLOCK_DIVIDER"])

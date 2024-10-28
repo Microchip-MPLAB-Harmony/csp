@@ -435,7 +435,7 @@ if __name__ == "__main__":
 
     moscxtfreq = clk_component.createIntegerSymbol("CLK_MOSCXTFREQ",
                                                                 mainck_menu)
-    moscxtfreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32cx_mt;register:%NOREGISTER%")
+    moscxtfreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32cx_mt;register:CKGR_MOR")
     moscxtfreq.setLabel("MOSCXTFREQ")
     moscxtfreq.setDescription("Main Oscillator/External Clock Frequency")
     moscxtfreq.setMin(12000000)
@@ -753,7 +753,7 @@ if __name__ == "__main__":
 
                 gclk_en = clk_component.createBooleanSymbol(
                             "CLK_"+instance_name+"_GCLKEN", gclk_periph)
-                gclk_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32cx_mt;register:%NOREGISTER%")
+                gclk_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32cx_mt;register:GCLKEN")
                 gclk_en.setLabel("GCLKEN")
                 gclk_freq_deps.append(gclk_en.getID())
 
@@ -814,7 +814,7 @@ if __name__ == "__main__":
         pckx_freq_deps = []
         pckx_en = clk_component.createBooleanSymbol(
                                         "CLK_SCER_PCK"+str(pckx), pck_menu)
-        pckx_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32cx_mt;register:%NOREGISTER%")
+        pckx_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32cx_mt;register:PMC_SCER")
         pckx_en.setLabel("PCK"+str(pckx))
         pckx_freq_deps.append(pckx_en.getID())
 

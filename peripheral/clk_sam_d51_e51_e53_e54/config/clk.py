@@ -267,7 +267,7 @@ for i in range(0, 2):
     # XOSC Oscillator Frequency
     oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY = coreComponent.createIntegerSymbol(
         "CONFIG_CLOCK_XOSC" + str(i) + "_FREQUENCY", oscctrlXosc_Menu[i])
-    oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:XOSCCTRL")
     oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setLabel("Frequency")
     oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDescription(
         "Setting the XOSC Frequency")
@@ -389,7 +389,7 @@ for i in range(0, 2):
 
     clkSym_XOSC_Freq = coreComponent.createIntegerSymbol(
         "XOSC" + str(i) + "_FREQ", calculatedFreq_Menu)
-    clkSym_XOSC_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    clkSym_XOSC_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:XOSCCTRL")
     clkSym_XOSC_Freq.setLabel("XOSC" + str(i) + " Clock Frequency")
     clkSym_XOSC_Freq.setReadOnly(True)
     clkSym_XOSC_Freq.setDependencies(setXOSCFreq, [
@@ -401,7 +401,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Enable
     oscctrlSym_DPLL_CONFIG_ENABLE = coreComponent.createBooleanSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_ENABLE", dpll_Menu[i])
-    oscctrlSym_DPLL_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLL_CONFIG_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLA")
     oscctrlSym_DPLL_CONFIG_ENABLE.setLabel(
         "Digital Phase Locked Loop(DPLL) Enable ")
     oscctrlSym_DPLL_CONFIG_ENABLE.setDescription(
@@ -411,7 +411,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) ONDEMAND Mode
     oscctrlSym_DPLLCTRLA_ONDEMAND = coreComponent.createKeyValueSetSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_ONDEMAND", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLA_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLA_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLA")
     oscctrlSym_DPLLCTRLA_ONDEMAND.setLabel("DPLL On-Demand Control")
     oscctrlSym_DPLLCTRLA_ONDEMAND.setDescription(
         "Configures the DPLL on Demand Behavior")
@@ -425,7 +425,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Run StandBy Control
     oscctrlSym_DPLLCTRLA_RUNSTDBY = coreComponent.createBooleanSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_RUNSTDY", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLA")
     oscctrlSym_DPLLCTRLA_RUNSTDBY.setLabel("Run DPLL in Standby Sleep Mode")
     oscctrlSym_DPLLCTRLA_RUNSTDBY.setDescription(
         "DPLL to run in standby mode or not")
@@ -434,7 +434,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Loop Divider Ration(LDR) Integer part
     oscctrlSym_DPLLRATIO_LDR = coreComponent.createIntegerSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_LDR_INTEGER", dpll_Menu[i])
-    oscctrlSym_DPLLRATIO_LDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLRATIO_LDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLRATIO")
     oscctrlSym_DPLLRATIO_LDR.setLabel("DPLL Loop Divider Ratio Integer Part")
     oscctrlSym_DPLLRATIO_LDR.setDescription("Loop divider ratio integer value")
     oscctrlSym_DPLLRATIO_LDR.setDefaultValue(0)
@@ -444,7 +444,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Loop Divider Ration(LDR) Fraction part
     oscctrlSym_DPLLRATIO_LDRFRAC = coreComponent.createIntegerSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_LDRFRAC_FRACTION", dpll_Menu[i])
-    oscctrlSym_DPLLRATIO_LDRFRAC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLRATIO_LDRFRAC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLRATIO")
     oscctrlSym_DPLLRATIO_LDRFRAC.setLabel(
         "DPLL Loop Divider Ratio Fractional Part")
     oscctrlSym_DPLLRATIO_LDRFRAC.setDescription(
@@ -464,7 +464,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Lock Bypass
     oscctrlSym_DPLLCTRLB_LBYPASS = coreComponent.createBooleanSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_LOCK_BYPASS", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_LBYPASS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_LBYPASS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_LBYPASS.setLabel("Bypass DPLL Lock?")
     oscctrlSym_DPLLCTRLB_LBYPASS.setDescription(
         "DPLL Lock signal is always asserted or DPLL Lock signal drives the DPLL controller internal logic.")
@@ -473,7 +473,7 @@ for i in range(0, 2):
     # DCO Filter Enable
     oscctrlSym_DPLLCTRLB_DCOEN = coreComponent.createBooleanSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_DCOEN", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_DCOEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_DCOEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_DCOEN.setLabel("DCO Filter Enable")
     oscctrlSym_DPLLCTRLB_DCOEN.setDescription("DCO Filter Enable")
     oscctrlSym_DPLLCTRLB_DCOEN.setDefaultValue(False)
@@ -481,7 +481,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Filter
     oscctrlSym_DPLLCTRLB_DCOFILTER = coreComponent.createKeyValueSetSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_DCOFILTER", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_DCOFILTER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_DCOFILTER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_DCOFILTER.setLabel("Sigma-Delta DCO Filter Selection")
     oscctrlSym_DPLLCTRLB_DCOFILTER.setDescription("Sigma-Delta DCO Filter Selection")
     oscctrlSymDPLLFilterNode = ATDF.getNode(
@@ -511,7 +511,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) wakeUp Fast
     oscctrlSym_DPLLCTRLB_WUF = coreComponent.createBooleanSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_WAKEUP_FAST", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_WUF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_WUF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_WUF.setLabel("DPLL Fast Output Enable")
     oscctrlSym_DPLLCTRLB_WUF.setDescription(
         "DPLL clock is Output after startup and lock time or only after the startup")
@@ -520,7 +520,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Lock Time
     oscctrlSym_DPLLCTRLB_LTIME = coreComponent.createKeyValueSetSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_LOCK_TIME", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_LTIME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_LTIME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_LTIME.setLabel("DPLL Lock Time-out")
     oscctrlSym_DPLLCTRLB_LTIME.setDescription(
         "select the lock time-out value:")
@@ -551,7 +551,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Filter
     oscctrlSym_DPLLCTRLB_FILTER = coreComponent.createKeyValueSetSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_FILTER", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_FILTER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_FILTER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_FILTER.setLabel("Proportional Integral Filter selection")
     oscctrlSym_DPLLCTRLB_FILTER.setDescription("Proportional Integral Filter selection")
     oscctrlSymDPLLFilterNode = ATDF.getNode(
@@ -580,7 +580,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Reference Clock
     oscctrlSym_DPLLCTRLB_REFCLK = coreComponent.createKeyValueSetSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_REF_CLOCK", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_REFCLK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_REFCLK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_REFCLK.setLabel("DPLL Reference Clock Source")
     oscctrlSym_DPLLCTRLB_REFCLK.setDescription(
         "DPLL reference clock selection")
@@ -601,7 +601,7 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Clock Divider
     oscctrlSym_DPLLCTRLB_DIV = coreComponent.createIntegerSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_DIVIDER", oscctrlSym_DPLLCTRLB_REFCLK)
-    oscctrlSym_DPLLCTRLB_DIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    oscctrlSym_DPLLCTRLB_DIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DPLLCTRLB")
     oscctrlSym_DPLLCTRLB_DIV.setLabel("DPLL Divider")
     oscctrlSym_DPLLCTRLB_DIV.setDescription(
         "XOSC clock division factor fdiv = (fxosc/((2*DIV)+1))")
@@ -618,7 +618,7 @@ for i in range(0, 2):
 
     clkSym_DPLL_Freq = coreComponent.createIntegerSymbol(
         "DPLL" + str(i) + "_CLOCK_FREQ", calculatedFreq_Menu)
-    clkSym_DPLL_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    clkSym_DPLL_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DFLLSYNC")
     clkSym_DPLL_Freq.setReadOnly(True)
     clkSym_DPLL_Freq.setDefaultValue(0)
     clkSym_DPLL_Freq.setLabel("FDPLL" + str(i) + " Clock Frequency")
@@ -646,14 +646,14 @@ for i in range(0, 2):
 
 dfllEnable = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_ENABLE", dfll_Menu)
-dfllEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+dfllEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DFLLCTRLA")
 dfllEnable.setLabel("Enable DFLL")
 dfllEnable.setDescription("Enable DFLL")
 dfllEnable.setDefaultValue(True)
 
 dfllOpmode = coreComponent.createKeyValueSetSymbol(
     "CONFIG_CLOCK_DFLL_OPMODE", dfll_Menu)
-dfllOpmode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+dfllOpmode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DFLLCTRLB")
 dfllOpmode.setLabel("DFLL operation mode")
 dfllOpmode.setDescription("Selects DFLL operating mode")
 dfllOpmode.setOutputMode("Value")
@@ -766,7 +766,7 @@ dfllMul.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllFreq = coreComponent.createIntegerSymbol(
     "DFLL_CLOCK_FREQ", calculatedFreq_Menu)
-dfllFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+dfllFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:DFLLCTRLA")
 dfllFreq.setReadOnly(True)
 dfllFreq.setDefaultValue(48000000)
 dfllFreq.setLabel("DFLL Clock Frequency")
@@ -826,7 +826,7 @@ clkSym_OSCULP32K_Freq.setReadOnly(True)
 
 clkSym_OSCULP1K_Freq = coreComponent.createIntegerSymbol(
     "OSCULP1K_FREQ", calculatedFreq_Menu)
-clkSym_OSCULP1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+clkSym_OSCULP1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:OSCULP32K")
 clkSym_OSCULP1K_Freq.setLabel("OSCULP1K Clock Frequency")
 clkSym_OSCULP1K_Freq.setDefaultValue(1024)
 clkSym_OSCULP1K_Freq.setReadOnly(True)
@@ -908,7 +908,7 @@ xosc32KGain.setDisplayMode("Description")
 # XOSC32K External Oscillator 1KHz Output Frequency Mode
 clkSym_XOSC1K_Freq = coreComponent.createIntegerSymbol(
     "XOSC1K_FREQ", calculatedFreq_Menu)
-clkSym_XOSC1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+clkSym_XOSC1K_Freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:OSCULP32K")
 clkSym_XOSC1K_Freq.setLabel("XOSC1K Clock Frequency")
 clkSym_XOSC1K_Freq.setDefaultValue(0)
 clkSym_XOSC1K_Freq.setReadOnly(True)
@@ -1338,7 +1338,7 @@ for gclknumber in range(0, 12):
     gclkSym_num.append(gclknumber)
     gclkSym_num[gclknumber] = coreComponent.createBooleanSymbol(
         "GCLK_INST_NUM" + str(gclknumber), gclkGen_Menu)
-    gclkSym_num[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    gclkSym_num[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:GENCTRL")
     gclkSym_num[gclknumber].setLabel(
         "Enable Generic Clock Generator " + str(gclknumber))
     if(gclknumber == 0):
@@ -1360,7 +1360,7 @@ for gclknumber in range(0, 12):
         gclkSym_GCLK_IO_FREQ.append(gclknumber)
         gclkSym_GCLK_IO_FREQ[gclknumber] = coreComponent.createIntegerSymbol(
             "GCLK_IO_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
-        gclkSym_GCLK_IO_FREQ[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+        gclkSym_GCLK_IO_FREQ[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:GENCTRL")
         gclkSym_GCLK_IO_FREQ[gclknumber].setLabel(
             "External Input (GCLK_IO[" + str(gclknumber) + "]) Frequency")
         gclkSym_GCLK_IO_FREQ[gclknumber].setDefaultValue(0)
@@ -1428,7 +1428,7 @@ for gclknumber in range(0, 12):
 
         gclkInFreq = coreComponent.createBooleanSymbol(
             "GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
-        gclkInFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+        gclkInFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:GENCTRL")
         gclkInFreq.setLabel("Gclk Input Frequency")
         gclkInFreq.setDefaultValue(0)
 
@@ -1495,7 +1495,7 @@ for gclknumber in range(0, 12):
     gclkSym_Freq.append(gclknumber)
     gclkSym_Freq[gclknumber] = coreComponent.createIntegerSymbol(
         "GCLK_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
-    gclkSym_Freq[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    gclkSym_Freq[gclknumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:GENCTRL")
     gclkSym_Freq[gclknumber].setLabel(
         "GCLK" + str(gclknumber) + " Clock Frequency")
     gclkSym_Freq[gclknumber].setReadOnly(True)
@@ -1586,7 +1586,7 @@ for index in sorted(channelMap.iterkeys()):
     # GCLK Peripheral Channel Enable
     clkSymPeripheral = coreComponent.createBooleanSymbol(
         key + "_CHEN", gclkPeriChannel_menu)
-    clkSymPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    clkSymPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:PCHCTRL")
     clkSymPeripheral.setLabel(
         "Peripheral Channel " + str(index) + " Clock Enable")
     clkSymPeripheral.setDefaultValue(False)
@@ -1594,7 +1594,7 @@ for index in sorted(channelMap.iterkeys()):
     # GCLK Peripheral Channel Name
     gclkSym_PERCHANNEL_NAME = coreComponent.createStringSymbol(
         key + "_NAME", clkSymPeripheral)
-    gclkSym_PERCHANNEL_NAME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    gclkSym_PERCHANNEL_NAME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:PCHCTRL")
     gclkSym_PERCHANNEL_NAME.setLabel("Peripheral")
     gclkSym_PERCHANNEL_NAME.setReadOnly(True)
     gclkSym_PERCHANNEL_NAME.setDefaultValue(name)
@@ -1638,7 +1638,7 @@ for index in sorted(channelMap.iterkeys()):
 
     gclkSym_PCHCTRL_FREQ = coreComponent.createIntegerSymbol(
         key + "_FREQ", clkSymPeripheral)
-    gclkSym_PCHCTRL_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    gclkSym_PCHCTRL_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:PCHCTRL")
     gclkSym_PCHCTRL_FREQ.setLabel(
         "Peripheral Channel " + str(index) + " Frequency ")
     gclkSym_PCHCTRL_FREQ.setReadOnly(True)
@@ -1674,14 +1674,14 @@ for name in peripheralList:
     # GCLK Peripheral Channel Enable
     clkSymExtPeripheral = coreComponent.createBooleanSymbol(
         name + "_CLOCK_ENABLE", peripheralClockMenu)
-    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:PCHCTRL")
     clkSymExtPeripheral.setLabel(name + " Clock Enable")
     clkSymExtPeripheral.setDefaultValue(False)
     triggerdepList.append(name + "_CLOCK_ENABLE")
 
     clkSymExtPeripheral = coreComponent.createIntegerSymbol(
         name + "_CLOCK_FREQUENCY", clkSymExtPeripheral)
-    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    clkSymExtPeripheral.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:PCHCTRL")
     clkSymExtPeripheral.setLabel(name + " Clock Frequency")
     clkSymExtPeripheral.setReadOnly(True)
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
@@ -1860,7 +1860,7 @@ peripheralsWithoutGclk = ["TRNG", "AES", "ICM", "PUKCC"]
 for i in range(0,len(peripheralsWithoutGclk)):
     peripheralClock = coreComponent.createBooleanSymbol(
         peripheralsWithoutGclk[i] + "_CLOCK_ENABLE", peripheralClockMenu)
-    peripheralClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+    peripheralClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:PCHCTRL")
     peripheralClock.setLabel(peripheralsWithoutGclk[i] + " Clock Enable")
     peripheralClock.setDefaultValue(False)
     gclkDependencyList.append( peripheralsWithoutGclk[i] + "_CLOCK_ENABLE")
@@ -1940,7 +1940,7 @@ def setFreq(symbol, event):
 
 clkSym_MAIN_CLK_FREQ = coreComponent.createIntegerSymbol(
     "CPU_CLOCK_FREQUENCY", calculatedFreq_Menu)
-clkSym_MAIN_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+clkSym_MAIN_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:GENCTRL")
 clkSym_MAIN_CLK_FREQ.setLabel("CPU Clock Frequency")
 clkSym_MAIN_CLK_FREQ.setReadOnly(True)
 clkSym_MAIN_CLK_FREQ.setDependencies(
@@ -1952,7 +1952,7 @@ clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
 
 clkMclkFreq = coreComponent.createIntegerSymbol(
     "MAIN_CLOCK_FREQUENCY", calculatedFreq_Menu)
-clkMclkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+clkMclkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:CPUDIV")
 clkMclkFreq.setLabel("Main Clock Frequency")
 clkMclkFreq.setReadOnly(True)
 clkMclkFreq.setDefaultValue(int(gclkSym_Freq[0].getValue()))
@@ -1963,14 +1963,14 @@ module_list = peripherals.getChildren()
 
 clkSym_WDT_CLK_FREQ = coreComponent.createIntegerSymbol(
     "WDT_CLOCK_FREQUENCY", calculatedFreq_Menu)
-clkSym_WDT_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+clkSym_WDT_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:OSCULP32K")
 clkSym_WDT_CLK_FREQ.setLabel("WDT Clock Frequency")
 clkSym_WDT_CLK_FREQ.setReadOnly(True)
 clkSym_WDT_CLK_FREQ.setDefaultValue(1024)
 
 clkSym_RTC_CLK_FREQ = coreComponent.createIntegerSymbol(
     "RTC_CLOCK_FREQUENCY", calculatedFreq_Menu)
-clkSym_RTC_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:%NOREGISTER%")
+clkSym_RTC_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:OSCULP32K")
 clkSym_RTC_CLK_FREQ.setLabel("RTC Clock Frequency")
 clkSym_RTC_CLK_FREQ.setReadOnly(True)
 clkSym_RTC_CLK_FREQ.setDefaultValue(1024)

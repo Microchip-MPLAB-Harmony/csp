@@ -477,7 +477,7 @@ if __name__ == "__main__":
     clk_remote_component = menu.getComponent()
 
     bootloader_clocks = clk_component.createBooleanSymbol("USE_BOOTLOADER_GENERATORS", menu)
-    bootloader_clocks.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    bootloader_clocks.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_XTALF")
     bootloader_clocks.setLabel("Use Clock generators configured by at91bootstrap")
     bootloader_clocks.setDefaultValue(True)
     bootloader_clocks.setDependencies(update_bootloader_clocks, ["USE_BOOTLOADER_GENERATORS"])
@@ -490,7 +490,7 @@ if __name__ == "__main__":
     td_oscel_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/register-group@[name="SCKC"]/register@[name="SCKC_CR"]/bitfield@[name="TD_OSCSEL"]')
     td_oscel_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/value-group@[name="'+td_oscel_node.getAttribute("values")+'"]')
     td_oscel = clk_component.createKeyValueSetSymbol("CLK_TD_OSCSEL", sckc_menu)
-    td_oscel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    td_oscel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:SCKC_CR")
     td_oscel.setLabel(td_oscel_node.getAttribute("name"))
     td_oscel.setDescription(td_oscel_node.getAttribute("caption"))
     td_oscel.setDisplayMode("Key")
@@ -519,20 +519,20 @@ if __name__ == "__main__":
 
     moscrcen_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCRCEN"]')
     moscrcen = clk_component.createBooleanSymbol("CLK_MOSCRCEN", mainck_menu)
-    moscrcen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    moscrcen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:CKGR_MOR")
     moscrcen.setLabel(moscrcen_node.getAttribute("name"))
     moscrcen.setDescription(moscrcen_node.getAttribute("caption"))
     moscrcen.setDefaultValue(True)
 
     moscxten_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTEN"]')
     moscxten = clk_component.createBooleanSymbol("CLK_MOSCXTEN", mainck_menu)
-    moscxten.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    moscxten.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:CKGR_MOR")
     moscxten.setLabel(moscxten_node.getAttribute("name"))
     moscxten.setDescription(moscxten_node.getAttribute("caption"))
 
     moscxtst_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTST"]')
     moscxtst = clk_component.createIntegerSymbol("CLK_MOSCXTST", mainck_menu)
-    moscxtst.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    moscxtst.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:CKGR_MOR")
     moscxtst.setLabel(moscxtst_node.getAttribute("name"))
     moscxtst.setDescription(moscxtst_node.getAttribute("caption"))
     moscxtst.setDefaultValue(255)
@@ -541,7 +541,7 @@ if __name__ == "__main__":
     moscxtst.setDefaultValue(18)
 
     moscxt_freq = clk_component.createIntegerSymbol("CLK_MOSCXT_FREQ", mainck_menu)
-    moscxt_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    moscxt_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:CKGR_MOR")
     moscxt_freq.setLabel("Main Crystal Oscillator Freq(Hz)")
     moscxt_freq.setMin(12000000)
     moscxt_freq.setMax(50000000)
@@ -550,7 +550,7 @@ if __name__ == "__main__":
     moscsel_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCSEL"]')
     moscsel_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+moscsel_node.getAttribute("values")+'"]')
     moscsel = clk_component.createKeyValueSetSymbol("CLK_MOSCSEL", mainck_menu)
-    moscsel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    moscsel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:CKGR_MOR")
     moscsel.setLabel(moscsel_node.getAttribute("name"))
     moscsel.setDescription(moscsel_node.getAttribute("caption"))
     moscsel.setDisplayMode("Key")
@@ -597,13 +597,13 @@ if __name__ == "__main__":
         pll_menu.setLabel(pll)
 
         pll_en = clk_component.createBooleanSymbol("CLK_{0}_EN".format(pll), pll_menu)
-        pll_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pll_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_CTRL0")
         pll_en.setLabel("Enable PLL".format(pll))
         pll_en.setDefaultValue(pll_default_config_dict[pll]["enable"])
 
         pll_mul_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL1"]/bitfield@[name="MUL"]')
         pll_mul = clk_component.createIntegerSymbol("CLK_{0}_MUL".format(pll), pll_en)
-        pll_mul.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pll_mul.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_CTRL1")
         pll_mul.setLabel(pll_mul_node.getAttribute("name"))
         pll_mul.setDescription(pll_mul_node.getAttribute("caption"))
         pll_mul.setMin(0)
@@ -612,7 +612,7 @@ if __name__ == "__main__":
 
         pll_fracr_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL1"]/bitfield@[name="FRACR"]')
         pll_fracr = clk_component.createIntegerSymbol("CLK_{0}_FRACR".format(pll), pll_en)
-        pll_fracr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pll_fracr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_CTRL1")
         pll_fracr.setLabel(pll_fracr_node.getAttribute("name"))
         pll_fracr.setDescription(pll_fracr_node.getAttribute("caption"))
         pll_fracr.setMin(0)
@@ -621,7 +621,7 @@ if __name__ == "__main__":
 
         pll_divpmc_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL0"]/bitfield@[name="DIVPMC"]')
         pll_divpmc = clk_component.createIntegerSymbol("CLK_{0}_DIVPMC".format(pll), pll_en)
-        pll_divpmc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pll_divpmc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_CTRL0")
         pll_divpmc.setLabel(pll_divpmc_node.getAttribute("name"))
         pll_divpmc.setDescription(pll_divpmc_node.getAttribute("caption"))
         pll_divpmc.setMin(0)
@@ -630,13 +630,13 @@ if __name__ == "__main__":
 
         pll_ss_en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="ENSPREAD"]')
         pll_ss_en = clk_component.createBooleanSymbol("CLK_{0}_SS".format(pll), pll_en)
-        pll_ss_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pll_ss_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_SSR")
         pll_ss_en.setLabel(pll_ss_en_node.getAttribute("name"))
         pll_ss_en.setDescription(pll_ss_en_node.getAttribute("caption"))
 
         pll_ss_nstep_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="NSTEP"]')
         pll_ss_nstep = clk_component.createIntegerSymbol("CLK_{0}_SS_NSTEP".format(pll), pll_ss_en)
-        pll_ss_nstep.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pll_ss_nstep.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_SSR")
         pll_ss_nstep.setLabel(pll_ss_nstep_node.getAttribute("name"))
         pll_ss_nstep.setDescription(pll_ss_nstep_node.getAttribute("caption"))
         pll_ss_nstep.setMin(0)
@@ -644,7 +644,7 @@ if __name__ == "__main__":
 
         pll_ss_step_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="STEP"]')
         pll_ss_step = clk_component.createIntegerSymbol("CLK_{0}_SS_STEP".format(pll), pll_ss_en)
-        pll_ss_step.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pll_ss_step.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_SSR")
         pll_ss_step.setLabel(pll_ss_step_node.getAttribute("name"))
         pll_ss_step.setDescription(pll_ss_step_node.getAttribute("caption"))
         pll_ss_step.setMin(0)
@@ -680,7 +680,7 @@ if __name__ == "__main__":
         if pll_default_config_dict.get(pll)["ioclock"]:
             pll_divio_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL0"]/bitfield@[name="DIVIO"]')
             pll_divio = clk_component.createIntegerSymbol("CLK_{0}_DIVIO".format(pll), pll_en)
-            pll_divio.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+            pll_divio.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_CTRL0")
             pll_divio.setLabel(pll_divio_node.getAttribute("name"))
             pll_divio.setDescription(pll_divio_node.getAttribute("caption"))
             pll_divio.setMin(0)
@@ -688,7 +688,7 @@ if __name__ == "__main__":
 
             pll_enio_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL0"]/bitfield@[name="ENIOPLLCK"]')
             pll_enio = clk_component.createBooleanSymbol("CLK_{0}_ENIOPLLCK".format(pll), pll_en)
-            pll_enio.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+            pll_enio.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PLL_CTRL0")
             pll_enio.setLabel(pll_enio_node.getAttribute("name"))
             pll_enio.setDescription(pll_enio_node.getAttribute("caption"))
             pll_enio.setDefaultValue(False)
@@ -711,7 +711,7 @@ if __name__ == "__main__":
     cpu_css_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_CPU_CKR"]/bitfield@[name="CSS"]')
     cpu_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+cpu_css_node.getAttribute("values")+'"]')
     cpu_css = clk_component.createKeyValueSetSymbol("CLK_CPU_CKR_CSS", cpu_menu)
-    cpu_css.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    cpu_css.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_CPU_CKR")
     cpu_css.setLabel(cpu_css_node.getAttribute("name"))
     cpu_css.setDescription(cpu_css_node.getAttribute("caption"))
     cpu_css.setDisplayMode("Key")
@@ -723,7 +723,7 @@ if __name__ == "__main__":
     cpu_pres_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_CPU_CKR"]/bitfield@[name="PRES"]')
     cpu_pres_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+cpu_pres_node.getAttribute("values")+'"]')
     cpu_pres = clk_component.createKeyValueSetSymbol("CLK_CPU_CKR_PRES", cpu_menu)
-    cpu_pres.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    cpu_pres.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_CPU_CKR")
     cpu_pres.setLabel(cpu_pres_node.getAttribute("name"))
     cpu_pres.setDescription(cpu_pres_node.getAttribute("caption"))
     cpu_pres.setDisplayMode("Key")
@@ -735,7 +735,7 @@ if __name__ == "__main__":
     cpu_mdiv_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_CPU_CKR"]/bitfield@[name="MDIV"]')
     cpu_mdiv_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+cpu_mdiv_node.getAttribute("values")+'"]')
     cpu_mdiv = clk_component.createKeyValueSetSymbol("CLK_CPU_CKR_MDIV", cpu_menu)
-    cpu_mdiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    cpu_mdiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_CPU_CKR")
     cpu_mdiv.setLabel(cpu_mdiv_node.getAttribute("name"))
     cpu_mdiv.setDescription(cpu_mdiv_node.getAttribute("caption"))
     cpu_mdiv.setDisplayMode("Key")
@@ -746,7 +746,7 @@ if __name__ == "__main__":
 
     cpu_ratio_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_CPU_RATIO"]/bitfield@[name="RATIO"]')
     cpu_ratio = clk_component.createIntegerSymbol("CLK_CPU_RATIO", cpu_menu)
-    cpu_ratio.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    cpu_ratio.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_CPU_RATIO")
     cpu_ratio.setLabel(cpu_ratio_node.getAttribute("name"))
     cpu_ratio.setDescription(cpu_ratio_node.getAttribute("caption"))
     cpu_ratio.setMax(15)
@@ -796,7 +796,7 @@ if __name__ == "__main__":
     mckx_div_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+mckx_div_node.getAttribute("values")+'"]')
     for x in range(1, 5):
         mckx_css =clk_component.createKeyValueSetSymbol("CLK_MCR_MCK{0}_CSS".format(x), mckx_menu)
-        mckx_css.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        mckx_css.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_MCR")
         mckx_css.setLabel("MCK{0}_CSS".format(x))
         mckx_css.setDescription("Clock source selection for MCK{0}".format(x))
         index = 0
@@ -812,7 +812,7 @@ if __name__ == "__main__":
         mckx_css.setDefaultValue(default)
 
         mckx_div = clk_component.createKeyValueSetSymbol("CLK_MCR_MCK{0}_DIV".format(x), mckx_menu)
-        mckx_div.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        mckx_div.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_MCR")
         mckx_div.setLabel("MCK{0}_DIV".format(x))
         mckx_div.setDescription("Divisor value for MCK{0}".format(x))
         index = 0
@@ -855,7 +855,7 @@ if __name__ == "__main__":
     for pckx in range(0, num_pcks):
         pckx_freq_deps = []
         pckx_en = clk_component.createBooleanSymbol("CLK_PCK"+str(pckx)+"_EN", pck_menu)
-        pckx_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+        pckx_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PCK")
         pckx_en.setLabel("Enable PCK"+str(pckx))
         pckx_freq_deps.append(pckx_en.getID())
 
@@ -962,7 +962,7 @@ if __name__ == "__main__":
                 gclk_freq_deps = [src + "_FREQUENCY" for src in gclk_srcs]
 
                 gclk_en = clk_component.createBooleanSymbol("CLK_"+instance_name+"_GCLKEN", gclk_periph)
-                gclk_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+                gclk_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PCR")
                 gclk_en.setLabel("Enable")
                 gclk_freq_deps.append(gclk_en.getID())
 
@@ -1012,12 +1012,12 @@ if __name__ == "__main__":
     system_counter_menu.setLabel("System Counter")
 
     system_counter_enable = clk_component.createBooleanSymbol("SYSTEM_COUNTER_ENABLE", system_counter_menu)
-    system_counter_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    system_counter_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PCR")
     system_counter_enable.setLabel("Enable System Counter")
     system_counter_enable.setDefaultValue(True)
 
     system_counter_frequency = clk_component.createIntegerSymbol("SYSTEM_COUNTER_FREQUENCY", system_counter_menu)
-    system_counter_frequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:%NOREGISTER%")
+    system_counter_frequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a7g5;register:PMC_PCR")
     system_counter_frequency.setLabel("System counter frequency")
     system_counter_frequency.setReadOnly(True)
     system_counter_frequency.setDefaultValue(clk_remote_component.getSymbolValue("MAINCK_FREQUENCY"))
