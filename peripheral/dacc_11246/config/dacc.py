@@ -173,13 +173,13 @@ def instantiateComponent(daccComponent):
 
         dacChannelMenu.append(channelID)
         dacChannelMenu[channelID] = daccComponent.createBooleanSymbol("DACC_CHER_CH"+str(channelID), None)
-        dacChannelMenu[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:%NOREGISTER%")
+        dacChannelMenu[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:DACC_CHER")
         dacChannelMenu[channelID].setLabel("Enable Channel "+str(channelID))
         dacChannelMenu[channelID].setDependencies(channel1Visibility, ["DACC_MR_DIFF"])
 
         dacChannelConversionMode.append(channelID)
         dacChannelConversionMode[channelID] = daccComponent.createKeyValueSetSymbol("CONVERSION_MODE_CH"+str(channelID), dacChannelMenu[channelID])
-        dacChannelConversionMode[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:%NOREGISTER%")
+        dacChannelConversionMode[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:DACC_MR")
         dacChannelConversionMode[channelID].setLabel("Select Conversion Mode")
         dacChannelConversionMode[channelID].addKey("FREE_RUNNING_MODE", "0", "Free-Running Mode")
         dacChannelConversionMode[channelID].addKey("MAX_SPEED_MODE", "1", "Maximum-Speed Mode")
@@ -190,7 +190,7 @@ def instantiateComponent(daccComponent):
 
         dacChannelBiasCurrent.append(channelID)
         dacChannelBiasCurrent[channelID] = daccComponent.createKeyValueSetSymbol("DACC_ACR_IBCTLCH"+str(channelID), dacChannelMenu[channelID])
-        dacChannelBiasCurrent[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:%NOREGISTER%")
+        dacChannelBiasCurrent[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:DACC_ACR")
         dacChannelBiasCurrent[channelID].setLabel("Select Conversion Speed")
         dacChannelBiasCurrent[channelID].addKey("BYPASS", "0", "Bypass mode: Disables output buffer to minimize power")
         dacChannelBiasCurrent[channelID].addKey("500K", "1", "<500 Ksps Conversion speed")
@@ -203,21 +203,21 @@ def instantiateComponent(daccComponent):
 
         dacChannelMaxSpeed.append(channelID)
         dacChannelMaxSpeed[channelID] = daccComponent.createBooleanSymbol("DACC_MR_MAXS"+str(channelID), dacChannelMenu[channelID])
-        dacChannelMaxSpeed[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:%NOREGISTER%")
+        dacChannelMaxSpeed[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:DACC_ACR")
         dacChannelMaxSpeed[channelID].setLabel("Max Speed Mode")
         dacChannelMaxSpeed[channelID].setVisible(False)
         dacChannelMaxSpeed[channelID].setDependencies(enableMaxSpeedMode, ["CONVERSION_MODE_CH"+str(channelID)])
 
         dacChannelTriggerEnable.append(channelID)
         dacChannelTriggerEnable[channelID] = daccComponent.createBooleanSymbol("DACC_TRIGR_TRGEN"+str(channelID), dacChannelMenu[channelID])
-        dacChannelTriggerEnable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:%NOREGISTER%")
+        dacChannelTriggerEnable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:DACC_TRIGR")
         dacChannelTriggerEnable[channelID].setLabel("Enable Trigger Mode")
         dacChannelTriggerEnable[channelID].setVisible(False)
         dacChannelTriggerEnable[channelID].setDependencies(enableTriggerMode, ["CONVERSION_MODE_CH"+str(channelID)])
 
         dacChannelTriggerSelect.append(channelID)
         dacChannelTriggerSelect[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_TRGSEL"+str(channelID), dacChannelMenu[channelID])
-        dacChannelTriggerSelect[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:%NOREGISTER%")
+        dacChannelTriggerSelect[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:DACC_TRIGR")
         dacChannelTriggerSelect[channelID].setLabel("Select Trigger Source")
         dacChannelTriggerSelect[channelID].setDefaultValue(0)
         dacChannelTriggerSelect[channelID].setOutputMode("Key")
@@ -234,7 +234,7 @@ def instantiateComponent(daccComponent):
             
         dacChannelOSR.append(channelID)
         dacChannelOSR[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_OSR"+str(channelID), dacChannelMenu[channelID])
-        dacChannelOSR[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:%NOREGISTER%")
+        dacChannelOSR[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dacc_11246;register:DACC_MR")
         dacChannelOSR[channelID].setLabel("Select Oversampling Ratio for Interpolation Filter")
         dacChannelOSR[channelID].setDefaultValue(0)
         dacChannelOSR[channelID].setOutputMode("Key")
