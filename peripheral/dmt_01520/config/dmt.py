@@ -130,7 +130,7 @@ dmtMenu.setLabel("DMT")
 
 #DMT Use
 dmtSym_Use = coreComponent.createBooleanSymbol("DMT_USE", dmtMenu)
-dmtSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmt_01520;register:%NOREGISTER%")
+dmtSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmt_01520;register:DMTCON")
 dmtSym_Use.setLabel("Use DMT ?")
 dmtSym_Use.setDefaultValue(isDMTEnabled)
 dmtSym_Use.setReadOnly(isDMTEnabled)
@@ -144,7 +144,7 @@ dmtSym_ConfigComment.setDependencies(updateDMTConfigCommentVisibleProperty, ["DM
 
 #DMT Count Select
 dmtSym_CountSelect = coreComponent.createStringSymbol("DMT_COUNT_SELECT", dmtSym_Use)
-dmtSym_CountSelect.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmt_01520;register:%NOREGISTER%")
+dmtSym_CountSelect.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmt_01520;register:DMTCNT")
 dmtSym_CountSelect.setLabel("Configured DMT Count Value")
 dmtSym_CountSelect.setDefaultValue(dmtCountSelectDictionary[dmtCountSelect])
 dmtSym_CountSelect.setReadOnly(True)
@@ -153,7 +153,7 @@ dmtSym_CountSelect.setDependencies(updateDMTCountSelectVisibleProperty, ["DMT_US
 
 #DMT Count Interval
 dmtSym_CountInterval = coreComponent.createStringSymbol("DMT_COUNT_INTERVAL", dmtSym_Use)
-dmtSym_CountInterval.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmt_01520;register:%NOREGISTER%")
+dmtSym_CountInterval.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmt_01520;register:DMTPSINTV")
 dmtSym_CountInterval.setLabel("Configured DMT Window Interval Value")
 dmtSym_CountInterval.setDefaultValue(dmtInteravalValueDictionary[dmtCountWindowInterval])
 dmtSym_CountInterval.setReadOnly(True)
