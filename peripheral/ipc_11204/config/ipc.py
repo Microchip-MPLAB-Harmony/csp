@@ -41,7 +41,7 @@ def instantiateComponent(ipc_component):
                                     ipc_instance_name.getValue() + "_InterruptHandler")
 
     ipc_wp = ipc_component.createBooleanSymbol("IPC_WRITE_PROTECT", None)
-    ipc_wp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ipc_11204;register:%NOREGISTER%")
+    ipc_wp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ipc_11204;register:IPC_WPMR")
     ipc_wp.setLabel("Enable Write protect")
 
     irq_menu = ipc_component.createMenuSymbol("IPC_IRQ_MENU", None)
@@ -49,7 +49,7 @@ def instantiateComponent(ipc_component):
 
     for irq in range(ipc_total_irqs.getValue()):
         irq_enable = ipc_component.createBooleanSymbol("IPC_IRQ{0}_ENABLE".format(irq), irq_menu)
-        irq_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ipc_11204;register:%NOREGISTER%")
+        irq_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ipc_11204;register:IPC_IECR")
         irq_enable.setLabel("Enable IRQ{0}".format(irq))
 
 
