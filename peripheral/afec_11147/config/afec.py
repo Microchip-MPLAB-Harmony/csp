@@ -605,7 +605,7 @@ def instantiateComponent(afecComponent):
     #clock selection
     global afecSym_Clock
     afecSym_Clock = afecComponent.createIntegerSymbol("AFEC_CLK", afecMenu)
-    afecSym_Clock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+    afecSym_Clock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_MR")
     afecSym_Clock.setLabel("Clock Frequency (Hz)")
     afecSym_Clock.setDefaultValue(18750000)
     afecSym_Clock.setVisible(True)
@@ -621,7 +621,7 @@ def instantiateComponent(afecComponent):
     #Added keys here as combining two bit-fields EMR_STM and EMR_RES
     global afecSym_EMR_RES_VALUE
     afecSym_EMR_RES_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_RES_VALUE", afecMenu)
-    afecSym_EMR_RES_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+    afecSym_EMR_RES_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_EMR")
     afecSym_EMR_RES_VALUE.setLabel("Result Resolution")
     afecSym_EMR_RES_VALUE.setDefaultValue(0)
     afecSym_EMR_RES_VALUE.setOutputMode("Value")
@@ -722,7 +722,7 @@ def instantiateComponent(afecComponent):
         #Channel enable
         afecSym_CH_CHER.append(channelID)
         afecSym_CH_CHER[channelID] = afecComponent.createBooleanSymbol("AFEC_"+str(channelID)+"_CHER", afecCHMenu[channelID])
-        afecSym_CH_CHER[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+        afecSym_CH_CHER[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CHE")
         afecSym_CH_CHER[channelID].setLabel("Enable Channel " + str(channelID))
         afecSym_CH_CHER[channelID].setDefaultValue(False)
         #enable corresponding channel pair of dual mode
@@ -739,7 +739,7 @@ def instantiateComponent(afecComponent):
         #Channel name
         afecSym_CH_NAME.append(channelID)
         afecSym_CH_NAME[channelID] = afecComponent.createStringSymbol("AFEC_"+str(channelID)+"_NAME", afecSym_CH_CHER[channelID])
-        afecSym_CH_NAME[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+        afecSym_CH_NAME[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CHE")
         afecSym_CH_NAME[channelID].setLabel("Name")
         afecSym_CH_NAME[channelID].setDefaultValue("CHANNEL_"+str(channelID))
         afecSym_CH_NAME[channelID].setVisible(False)
@@ -748,7 +748,7 @@ def instantiateComponent(afecComponent):
         #Channel positive input
         afecSym_CH_PositiveInput.append(channelID)
         afecSym_CH_PositiveInput[channelID] = afecComponent.createStringSymbol("AFEC_"+str(channelID)+"_POS_INP", afecSym_CH_CHER[channelID])
-        afecSym_CH_PositiveInput[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+        afecSym_CH_PositiveInput[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CHE")
         afecSym_CH_PositiveInput[channelID].setLabel("Positive Input")
         afecSym_CH_PositiveInput[channelID].setDefaultValue("AN"+str(channelID))
         afecSym_CH_PositiveInput[channelID].setReadOnly(True)
@@ -764,7 +764,7 @@ def instantiateComponent(afecComponent):
             afecSym_CH_NegativeInput[channelID].setReadOnly(True)
         else:
             afecSym_CH_NegativeInput[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_NEG_INP", afecSym_CH_CHER[channelID], afec_EvenChNegInput)
-            afecSym_CH_NegativeInput[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+            afecSym_CH_NegativeInput[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CHE")
             if (channel[channelID + 1] == "False"):
                 afecSym_CH_NegativeInput[channelID].setReadOnly(True)
         afecSym_CH_NegativeInput[channelID].setLabel("Negative Input")
@@ -776,7 +776,7 @@ def instantiateComponent(afecComponent):
         afecSym_CH_SHMR_DUAL.append(channelID)
         if(channelID < len(channel)/2):
             afecSym_CH_SHMR_DUAL[channelID] = afecComponent.createBooleanSymbol("AFEC_"+str(channelID)+"_SHMR_DUAL", afecSym_CH_CHER[channelID])
-            afecSym_CH_SHMR_DUAL[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+            afecSym_CH_SHMR_DUAL[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_SHMR")
             afecSym_CH_SHMR_DUAL[channelID].setLabel("Dual Sample and Hold")
             afecSym_CH_SHMR_DUAL[channelID].setDefaultValue(False)
             afecSym_CH_SHMR_DUAL[channelID].setVisible(False)
@@ -793,7 +793,7 @@ def instantiateComponent(afecComponent):
         afecGainValues = ["X1", "X2", "X4"]
         afecSym_CH_CGR_GAIN.append(channelID)
         afecSym_CH_CGR_GAIN[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_CGR_GAIN", afecSym_CH_CHER[channelID], afecGainValues)
-        afecSym_CH_CGR_GAIN[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+        afecSym_CH_CGR_GAIN[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CGR")
         afecSym_CH_CGR_GAIN[channelID].setLabel("Gain")
         afecSym_CH_CGR_GAIN[channelID].setDefaultValue("X1")
         afecSym_CH_CGR_GAIN[channelID].setVisible(False)
@@ -813,7 +813,7 @@ def instantiateComponent(afecComponent):
         #Channel interrupt
         afecSym_CH_IER_EOC.append(channelID)
         afecSym_CH_IER_EOC[channelID] = afecComponent.createBooleanSymbol("AFEC_"+str(channelID)+"_IER_EOC", afecSym_CH_CHER[channelID])
-        afecSym_CH_IER_EOC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+        afecSym_CH_IER_EOC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_IER")
         afecSym_CH_IER_EOC[channelID].setLabel("End of conversion interrupt")
         afecSym_CH_IER_EOC[channelID].setDefaultValue(False)
         afecSym_CH_IER_EOC[channelID].setVisible(False)
@@ -828,7 +828,7 @@ def instantiateComponent(afecComponent):
             afecSym_CH_TEMPMR_RTCT.setDependencies(afecTempModeVisibility, ["AFEC_"+str(channelID)+"_CHER"])
 
             afecSym_CH_TEMP_CMP_MODE_EN = afecComponent.createBooleanSymbol("AFEC_TEMP_CMP_MODE_EN", afecSym_CH_CHER[channelID])
-            afecSym_CH_TEMP_CMP_MODE_EN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
+            afecSym_CH_TEMP_CMP_MODE_EN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CR")
             afecSym_CH_TEMP_CMP_MODE_EN.setLabel("Enable Temperature Comparision")
             afecSym_CH_TEMP_CMP_MODE_EN.setDefaultValue(False)
             afecSym_CH_TEMP_CMP_MODE_EN.setVisible(False)
