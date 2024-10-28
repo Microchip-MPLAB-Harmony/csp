@@ -264,7 +264,7 @@ def instantiateComponent(nvmctrlComponent):
 
     # Configures the library for interrupt mode operations
     nvmctrlSym_Interrupt = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
-    nvmctrlSym_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
+    nvmctrlSym_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:INTENSET")
     nvmctrlSym_Interrupt.setLabel("Enable Interrupt?")
     nvmctrlSym_Interrupt.setDefaultValue(False)
 
@@ -281,7 +281,7 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSym_MemoryStartAddr = nvmctrlComponent.createStringSymbol("START_ADDRESS", None)
     nvmctrlSym_MemoryStartAddr.setLabel("NVM Media Start Address")
-    nvmctrlSym_MemoryStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
+    nvmctrlSym_MemoryStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:ADDR")
     nvmctrlSym_MemoryStartAddr.setVisible(False)
     nvmctrlSym_MemoryStartAddr.setDefaultValue(nvmOffset[2:])
     nvmctrlSym_MemoryStartAddr.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
@@ -290,14 +290,14 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSym_MemoryMediaSize = nvmctrlComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
     nvmctrlSym_MemoryMediaSize.setLabel("NVM Media Size (KB)")
-    nvmctrlSym_MemoryMediaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
+    nvmctrlSym_MemoryMediaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:CTRLB")
     nvmctrlSym_MemoryMediaSize.setVisible(False)
     nvmctrlSym_MemoryMediaSize.setDefaultValue(memMediaSizeKB)
     nvmctrlSym_MemoryMediaSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     nvmctrlSym_MemoryEraseEnable = nvmctrlComponent.createBooleanSymbol("ERASE_ENABLE", None)
     nvmctrlSym_MemoryEraseEnable.setLabel("NVM Erase Enable")
-    nvmctrlSym_MemoryEraseEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
+    nvmctrlSym_MemoryEraseEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:CTRLB")
     nvmctrlSym_MemoryEraseEnable.setVisible(False)
     nvmctrlSym_MemoryEraseEnable.setDefaultValue(True)
     nvmctrlSym_MemoryEraseEnable.setReadOnly(True)
@@ -372,7 +372,7 @@ def instantiateComponent(nvmctrlComponent):
 
     if isEccPresent == True:
         nvmctrlSym_ECCTestingEnable = nvmctrlComponent.createBooleanSymbol("NVMCTRL_ECC_TESTING_ENABLE", None)
-        nvmctrlSym_ECCTestingEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
+        nvmctrlSym_ECCTestingEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:ECCCTRL")
         nvmctrlSym_ECCTestingEnable.setLabel("ECC Testing Enable")
         nvmctrlSym_ECCTestingEnable.setDefaultValue(False)
 
