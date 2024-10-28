@@ -270,7 +270,7 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
         for elem in moduleInstance:
             subVectorToSharedVector[ elem ] = interruptName
             subVectorEnable = component.createBooleanSymbol( elem + interruptLastNameEnable, aicVectorEnable )
-            subVectorEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:%NOREGISTER%")
+            subVectorEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:AIC_SSR")
             subVectorEnable.setLabel( "Enable " + elem )
             subVectorEnable.setDefaultValue( False )
             enableDependencies.append( elem + interruptLastNameEnable )     # Parent enable depends on children
@@ -280,7 +280,7 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
             subVectorHandlerLock.setVisible( False )
 
             subVectorHandler = component.createStringSymbol( elem + interruptLastNameHandler, subVectorEnable )
-            subVectorHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:%NOREGISTER%")
+            subVectorHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:AIC_SMR")
             subVectorHandler.setLabel( elem + " Handler" )
             subVectorHandler.setDefaultValue( elem + "_Handler" )
 
@@ -431,7 +431,7 @@ for interrupt in interruptsChildren:
     aicInterruptFirstName.setVisible( False )
     ###
     aicVectorEnable = coreComponent.createBooleanSymbol( interruptName + interruptLastNameEnable, aicMenu )
-    aicVectorEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:%NOREGISTER%")
+    aicVectorEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:AIC_SSR")
     aicVectorEnable.setLabel( "Enable " + aicNumber + " -- " + getInterruptDescription( interrupt ) )
     aicVectorEnable.setDefaultValue( False )
     ###
@@ -457,7 +457,7 @@ for interrupt in interruptsChildren:
     aicVectorLock.setVisible( False )
 
     aicVectorHandler = coreComponent.createStringSymbol( interruptName + interruptLastNameHandler, aicVectorEnable )
-    aicVectorHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:%NOREGISTER%")
+    aicVectorHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:AIC_SVR")
     aicVectorHandler.setLabel( "Handler" )
     aicVectorHandler.setDefaultValue( interruptName + "_Handler" )
     ###
@@ -465,7 +465,7 @@ for interrupt in interruptsChildren:
     setupSharedVectorFtlSymbols( coreComponent, interrupt, aicVectorEnable )
     #
     aicMapType = coreComponent.createStringSymbol( interruptName + interruptLastNameMapType, aicVectorEnable )
-    aicMapType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:%NOREGISTER%")
+    aicMapType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:AIC_SMR")
     aicMapType.setLabel( "Map Type" )
     aicMapType.setDefaultValue( mapTypeDefault )
     aicMapType.setVisible( aicMapTypeVisibility )
@@ -474,7 +474,7 @@ for interrupt in interruptsChildren:
     aicMapType.setDependencies( aicMapTypeRedirectionCallback, [ "SECURE_TO_NONSECURE_REDIRECTION" ] )
 
     aicVectorSourceType = coreComponent.createKeyValueSetSymbol( interruptName + interruptLastNameSrcType, aicVectorEnable )
-    aicVectorSourceType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:%NOREGISTER%")
+    aicVectorSourceType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:AIC_SMR")
     aicVectorSourceType.setLabel( "Source Type" )
     for tupleElem in aicSrcTypes:
         if (aicNumber not in externalList) and ("internal" not in tupleElem[ 2 ]):
@@ -487,7 +487,7 @@ for interrupt in interruptsChildren:
     aicVectorSourceType.setSelectedKey( str( aicSrcTypes[ 0 ][ 0 ] ), 0 )
 
     aicVectorPriority = coreComponent.createKeyValueSetSymbol( interruptName + interruptLastNamePriority, aicVectorEnable )
-    aicVectorPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:%NOREGISTER%")
+    aicVectorPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:aic_11051;register:AIC_SMR")
     aicVectorPriority.setLabel( "Priority" )
     for tupleElem in aicPriorityChoices:
         aicVectorPriority.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
