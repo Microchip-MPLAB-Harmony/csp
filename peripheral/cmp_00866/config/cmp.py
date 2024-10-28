@@ -221,7 +221,7 @@ def instantiateComponent(cmpComponent):
             _get_bitfield_names(cmpValGrp_CM1CON_CREF, cmp1CREF_names)
             cmpSym_CMxCON_CREF.append(index)
             cmpSym_CMxCON_CREF[index - 1] = cmpComponent.createKeyValueSetSymbol("CMP_CM" + str(index) + "CON_CREF", cmpSym_Menu)
-            cmpSym_CMxCON_CREF[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:%NOREGISTER%")
+            cmpSym_CMxCON_CREF[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:CM1CON")
             cmpSym_CMxCON_CREF[index - 1].setLabel(cmpBitFld_CM1CON_CREF.getAttribute("caption"))
             cmpSym_CMxCON_CREF[index - 1].setDefaultValue(0)
             cmpSym_CMxCON_CREF[index - 1].setOutputMode("Value")
@@ -234,7 +234,7 @@ def instantiateComponent(cmpComponent):
             _get_bitfield_names(cmpValGrp_CM1CON_CCH, cmp1CCH_names)
             cmpSym_CMxCON_CCH.append(index)
             cmpSym_CMxCON_CCH[index - 1] = cmpComponent.createKeyValueSetSymbol("CMP_CM" + str(index) + "CON_CCH", cmpSym_Menu)
-            cmpSym_CMxCON_CCH[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:%NOREGISTER%")
+            cmpSym_CMxCON_CCH[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:CM1CON")
             cmpSym_CMxCON_CCH[index - 1].setLabel(cmpBitFld_CM1CON_CCH.getAttribute("caption"))
             cmpSym_CMxCON_CCH[index - 1].setDefaultValue(0)
             cmpSym_CMxCON_CCH[index - 1].setOutputMode("Value")
@@ -247,7 +247,7 @@ def instantiateComponent(cmpComponent):
             _get_bitfield_names(cmpValGrp_CM1CON_EVPOL, cmp1EVPOL_names)
             cmpSym_CMxCON_EVPOL.append(index)
             cmpSym_CMxCON_EVPOL[index - 1] = cmpComponent.createKeyValueSetSymbol("CMP_CM" + str(index) + "CON_EVPOL", cmpSym_Menu)
-            cmpSym_CMxCON_EVPOL[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:%NOREGISTER%")
+            cmpSym_CMxCON_EVPOL[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:CM1CON")
             cmpSym_CMxCON_EVPOL[index - 1].setLabel(cmpBitFld_CM1CON_EVPOL.getAttribute("caption"))
             cmpSym_CMxCON_EVPOL[index - 1].setDefaultValue(0)
             cmpSym_CMxCON_EVPOL[index - 1].setOutputMode("Value")
@@ -258,13 +258,13 @@ def instantiateComponent(cmpComponent):
             #Comparator output invert
             cmpSym_CMxCON_CPOL.append(index)
             cmpSym_CMxCON_CPOL[index - 1] = cmpComponent.createBooleanSymbol("CMP_CM" + str(index) + "CON_CPOL", cmpSym_Menu)
-            cmpSym_CMxCON_CPOL[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:%NOREGISTER%")
+            cmpSym_CMxCON_CPOL[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:CM1CON")
             cmpSym_CMxCON_CPOL[index - 1].setLabel(cmpBitFld_CM1CON_CPOL.getAttribute("caption"))
 
             #Comparator output on pin
             cmpSym_CMxCON_COE.append(index)
             cmpSym_CMxCON_COE[index - 1] = cmpComponent.createBooleanSymbol("CMP_CM" + str(index) + "CON_COE", cmpSym_Menu)
-            cmpSym_CMxCON_COE[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:%NOREGISTER%")
+            cmpSym_CMxCON_COE[index - 1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_00866;register:CM1CON")
             cmpSym_CMxCON_COE[index - 1].setLabel(cmpBitFld_CM1CON_COE.getAttribute("caption"))
 
             #Collecting user input to combine into CMPxCON register

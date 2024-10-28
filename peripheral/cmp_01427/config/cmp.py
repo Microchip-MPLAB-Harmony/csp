@@ -486,7 +486,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_CREF.append(id)
         _get_bitfield_names(cmpValGrp_CMx_CON_CREF, cmp_x_CREF_names)
         cmpSym_CMx_CON_CREF[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_CON_CREF", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_CREF[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_CREF[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
         cmpSym_CMx_CON_CREF[id].setLabel(cmpBitFld_CMx_CON_CREF.getAttribute("caption"))
         cmpSym_CMx_CON_CREF[id].setDefaultValue(0)
         cmpSym_CMx_CON_CREF[id].setOutputMode("Value")
@@ -499,7 +499,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_CCH.append(id)
         _get_bitfield_names(cmpValGrp_CMx_CON_CCH, cmp_x_CCH_names)
         cmpSym_CMx_CON_CCH[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_CON_CCH", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_CCH[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_CCH[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
         cmpSym_CMx_CON_CCH[id].setLabel(cmpValGrp_CMx_CON_CCH.getAttribute("caption"))
         cmpSym_CMx_CON_CCH[id].setDefaultValue(0)
         cmpSym_CMx_CON_CCH[id].setOutputMode("Value")
@@ -512,7 +512,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_EVPOL.append(id)
         _get_bitfield_names(cmpValGrp_CMx_CON_EVPOL, cmp_x_EVPOL_names)
         cmpSym_CMx_CON_EVPOL[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_CON_EVPOL", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_EVPOL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_EVPOL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
         cmpSym_CMx_CON_EVPOL[id].setLabel(cmpBitFld_CMx_CON_EVPOL.getAttribute("caption"))
         cmpSym_CMx_CON_EVPOL[id].setDefaultValue(0)
         cmpSym_CMx_CON_EVPOL[id].setOutputMode("Value")
@@ -526,7 +526,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_AMPMOD_present.append(id)
         if (id != 3):
             cmpSym_CMx_CON_AMPMOD[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_AMPMOD", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_AMPMOD[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_CON_AMPMOD[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             if("AMPMOD" in CMxCON_list):
                 cmpSym_CMx_CON_AMPMOD[id].setLabel(cmpBitFld_CMx_CON_AMPMOD.getAttribute("caption"))
                 cmpSym_CMx_CON_AMPMOD_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_AMPMOD_PRESENT", cmpSym_CMx_CON_STRING[id])
@@ -541,7 +541,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_OAO_present.append(id)
         if (id != 3):
             cmpSym_CMx_CON_OAO[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OAO", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_OAO[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_CON_OAO[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             if("OAO" in CMxCON_list):
                 cmpSym_CMx_CON_OAO[id].setLabel(cmpBitFld_CMx_CON_OAO.getAttribute("caption"))
                 cmpSym_CMx_CON_OAO_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OAO_PRESENT", cmpSym_CMx_CON_STRING[id])
@@ -554,7 +554,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_OPLPWR.append(id)
         cmpSym_CMx_CON_OPLPWR_present.append(id)
         cmpSym_CMx_CON_OPLPWR[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPLPWR", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_OPLPWR[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_OPLPWR[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%CM1CON")
         if(("OPLPWR" in CMxCON_list) and ("OPAON" in CMxCON_list)):
             cmpSym_CMx_CON_OPLPWR[id].setLabel("Op Amp Low Power Mode Enable bit")
             cmpSym_CMx_CON_OPLPWR_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPLPWR_PRESENT", cmpSym_CMx_CON_STRING[id])
@@ -568,7 +568,7 @@ def instantiateComponent(cmpComponent):
         _get_bitfield_names(cmpValGrp_CMx_CON_CPOL, cmp_x_CPOL_names)
         cmpSym_CMx_CON_CPOL.append(id)
         cmpSym_CMx_CON_CPOL[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_CON_CPOL", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_CPOL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_CPOL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
         cmpSym_CMx_CON_CPOL[id].setLabel(cmpBitFld_CMx_CON_CPOL.getAttribute("caption"))
         cmpSym_CMx_CON_CPOL[id].setOutputMode("Value")
         cmpSym_CMx_CON_CPOL[id].setDisplayMode("Description")
@@ -578,7 +578,7 @@ def instantiateComponent(cmpComponent):
         #Comparator output on pin
         cmpSym_CMx_CON_COE.append(id)
         cmpSym_CMx_CON_COE[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_COE", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_COE[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_COE[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
         cmpSym_CMx_CON_COE[id].setLabel(cmpBitFld_CMx_CON_COE.getAttribute("caption"))
         cmpSym_CMx_CON_COE[id].setDefaultValue(False)
 
@@ -588,7 +588,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_OPAON_present.append(id)
         if (id != 3):
             cmpSym_CMx_CON_OPAON[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPAON", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_OPAON[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_CON_OPAON[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             if("OPAON" in CMxCON_list):
                 cmpSym_CMx_CON_OPAON[id].setLabel(cmpBitFld_CMx_CON_OPAON.getAttribute("caption"))
                 cmpSym_CMx_CON_OPAON_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPAON_PRESENT", cmpSym_CMx_CON_STRING[id])
@@ -603,7 +603,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_ENPGA_present.append(id)
         if (id != 3):
             cmpSym_CMx_CON_ENPGA[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_ENPGA[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_CON_ENPGA[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             if("ENPGA" in CMxCON_list):
                 cmpSym_CMx_CON_ENPGA[id].setLabel("Opamp 1X Gain Mode Enable bit")
                 cmpSym_CMx_CON_ENPGA_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA_PRESENT", cmpSym_CMx_CON_STRING[id])
@@ -617,7 +617,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_HYSPOL.append(id)
         cmpSym_CMx_CON_HYSPOL_present.append(id)
         cmpSym_CMx_CON_HYSPOL[id] =  cmpComponent.createKeyValueSetSymbol("CMP_"+str(id+1)+"_CON_HYSPOL", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_HYSPOL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_HYSPOL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
         if("HYSPOL" in CMxCON_list):
             _get_bitfield_names(cmpValGrp_CMx_CON_HYSPOL, cmp_x_HYSPOL_names)
             cmpSym_CMx_CON_HYSPOL[id].setLabel(cmpBitFld_CMx_CON_HYSPOL.getAttribute("caption"))
@@ -640,7 +640,7 @@ def instantiateComponent(cmpComponent):
             cmp_x_HYSSEL_names = []
             _get_bitfield_names(cmpValGrp_CMx_CON_HYSSEL, cmp_x_HYSSEL_names)
             cmpSym_CMx_CON_HYSSEL[id] =  cmpComponent.createKeyValueSetSymbol("CMP_"+str(id+1)+"_CON_HYSSEL", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_HYSSEL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_CON_HYSSEL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_CON_HYSSEL[id].setLabel(cmpBitFld_CMx_CON_HYSSEL.getAttribute("caption"))
             cmpSym_CMx_CON_HYSSEL[id].setDefaultValue(0)
             for ii in cmp_x_HYSSEL_names:
@@ -659,7 +659,7 @@ def instantiateComponent(cmpComponent):
             cmp_x_CFSEL_names = []
             _get_bitfield_names(cmpValGrp_CMx_CON_CFSEL, cmp_x_CFSEL_names)
             cmpSym_CMx_CON_CFSEL[id] =  cmpComponent.createKeyValueSetSymbol("CMP_"+str(id+1)+"_CON_CFSEL", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_CFSEL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_CON_CFSEL[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_CON_CFSEL[id].setLabel(cmpBitFld_CMx_CON_CFSEL.getAttribute("caption"))
             cmpSym_CMx_CON_CFSEL[id].setDefaultValue(0)
             for ii in cmp_x_CFSEL_names:
@@ -673,7 +673,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_CFLTREN.append(id)
         cmpSym_CMx_CON_CFLTREN_present.append(id)
         cmpSym_CMx_CON_CFLTREN[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_CFLTREN", cmpSym_CMx_CON_STRING[id])
-        cmpSym_CMx_CON_CFLTREN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+        cmpSym_CMx_CON_CFLTREN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
         if("CFLTREN" in CMxCON_list):
             cmpSym_CMx_CON_CFLTREN[id].setLabel(cmpBitFld_CMx_CON_CFLTREN.getAttribute("caption"))
             cmpSym_CMx_CON_CFLTREN_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_CFLTREN_PRESENT", cmpSym_CMx_CON_STRING[id])
@@ -691,7 +691,7 @@ def instantiateComponent(cmpComponent):
             cmp_x_CFDIV_names = []
             _get_bitfield_names(cmpValGrp_CMx_CON_CFDIV, cmp_x_CFDIV_names)
             cmpSym_CMx_CON_CFDIV[id] =  cmpComponent.createKeyValueSetSymbol("CMP_"+str(id+1)+"_CON_CFDIV", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_CFDIV[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_CON_CFDIV[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_CON_CFDIV[id].setLabel(cmpBitFld_CMx_CON_CFDIV.getAttribute("caption"))
             cmpSym_CMx_CON_CFDIV[id].setDefaultValue(0)
             for ii in cmp_x_CFDIV_names:
@@ -720,7 +720,7 @@ def instantiateComponent(cmpComponent):
             #Takes the inverted value of CPOL
             cmpSym_CMx_MSKCON_HLMS.append(id)
             cmpSym_CMx_MSKCON_HLMS[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_HLMS", cmpSym_CMx_MSKCON_STRING[id])
-            cmpSym_CMx_MSKCON_HLMS[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_HLMS[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_HLMS[id].setLabel(cmpBitFld_CMx_MSKCON_HLMS.getAttribute("caption"))
             cmpSym_CMx_MSKCON_HLMS[id].setVisible(False)
             cmpSym_CMx_MSKCON_HLMS[id].setDependencies(setHLMSVisibility, ["CMP_" +  str(id + 1) + "_CON_CPOL"])
@@ -735,7 +735,7 @@ def instantiateComponent(cmpComponent):
             cmpSym_CMx_MSKCON_SELSRCA.append(id)
             _get_bitfield_names(cmpValGrp_CMx_MSKCON_SELSRCA, cmp_x_SELSRCA_names)
             cmpSym_CMx_MSKCON_SELSRCA[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_MSKCON_SELSRCA", cmpSym_CMx_MSKCON_SUBMENU_MASKA[id])
-            cmpSym_CMx_MSKCON_SELSRCA[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_SELSRCA[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_SELSRCA[id].setLabel("Mask A Input Select bits")
             cmpSym_CMx_MSKCON_SELSRCA[id].setDefaultValue(0)
             cmpSym_CMx_MSKCON_SELSRCA[id].setOutputMode("Value")
@@ -746,25 +746,25 @@ def instantiateComponent(cmpComponent):
             #AND Gate 'A' Inverted Input Enable
             cmpSym_CMx_MSKCON_AANEN.append(id)
             cmpSym_CMx_MSKCON_AANEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_AANEN", cmpSym_CMx_MSKCON_SUBMENU_MASKA[id])
-            cmpSym_CMx_MSKCON_AANEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_AANEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_AANEN[id].setLabel(cmpBitFld_CMx_MSKCON_AANEN.getAttribute("caption"))
 
             #AND Gate 'A' Input Enable
             cmpSym_CMx_MSKCON_AAEN.append(id)
             cmpSym_CMx_MSKCON_AAEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_AAEN", cmpSym_CMx_MSKCON_SUBMENU_MASKA[id])
-            cmpSym_CMx_MSKCON_AAEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_AAEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_AAEN[id].setLabel(cmpBitFld_CMx_MSKCON_AAEN.getAttribute("caption"))
 
             #OR Gate 'A' Inverted Input Enable
             cmpSym_CMx_MSKCON_OANEN.append(id)
             cmpSym_CMx_MSKCON_OANEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_OANEN", cmpSym_CMx_MSKCON_SUBMENU_MASKA[id])
-            cmpSym_CMx_MSKCON_OANEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_OANEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_OANEN[id].setLabel(cmpBitFld_CMx_MSKCON_OANEN.getAttribute("caption"))
 
             #OR Gate 'A' Input  Enable
             cmpSym_CMx_MSKCON_OAEN.append(id)
             cmpSym_CMx_MSKCON_OAEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_OAEN", cmpSym_CMx_MSKCON_SUBMENU_MASKA[id])
-            cmpSym_CMx_MSKCON_OAEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_OAEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_OAEN[id].setLabel(cmpBitFld_CMx_MSKCON_OAEN.getAttribute("caption"))
 
             #SubMenu item for Mask B configuration
@@ -775,7 +775,7 @@ def instantiateComponent(cmpComponent):
             #Mask B Input Select
             cmpSym_CMx_MSKCON_SELSRCB.append(id)
             cmpSym_CMx_MSKCON_SELSRCB[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_MSKCON_SELSRCB", cmpSym_CMx_MSKCON_SUBMENU_MASKB[id])
-            cmpSym_CMx_MSKCON_SELSRCB[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_SELSRCB[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_SELSRCB[id].setLabel("Mask B Input Select bits")
             cmpSym_CMx_MSKCON_SELSRCB[id].setDefaultValue(0)
             cmpSym_CMx_MSKCON_SELSRCB[id].setOutputMode("Value")
@@ -786,25 +786,25 @@ def instantiateComponent(cmpComponent):
             #AND Gate 'B' Inverted Input Enable
             cmpSym_CMx_MSKCON_ABNEN.append(id)
             cmpSym_CMx_MSKCON_ABNEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_ABNEN", cmpSym_CMx_MSKCON_SUBMENU_MASKB[id])
-            cmpSym_CMx_MSKCON_ABNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_ABNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_ABNEN[id].setLabel(cmpBitFld_CMx_MSKCON_ABNEN.getAttribute("caption"))
 
             #AND Gate 'B' Input Enable
             cmpSym_CMx_MSKCON_ABEN.append(id)
             cmpSym_CMx_MSKCON_ABEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_ABEN", cmpSym_CMx_MSKCON_SUBMENU_MASKB[id])
-            cmpSym_CMx_MSKCON_ABEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_ABEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_ABEN[id].setLabel(cmpBitFld_CMx_MSKCON_ABEN.getAttribute("caption"))
 
             #OR Gate 'B' Inverted Input Enable
             cmpSym_CMx_MSKCON_OBNEN.append(id)
             cmpSym_CMx_MSKCON_OBNEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_OBNEN", cmpSym_CMx_MSKCON_SUBMENU_MASKB[id])
-            cmpSym_CMx_MSKCON_OBNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_OBNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_OBNEN[id].setLabel(cmpBitFld_CMx_MSKCON_OBNEN.getAttribute("caption"))
 
             #OR Gate 'B' Input  Enable
             cmpSym_CMx_MSKCON_OBEN.append(id)
             cmpSym_CMx_MSKCON_OBEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_OBEN", cmpSym_CMx_MSKCON_SUBMENU_MASKB[id])
-            cmpSym_CMx_MSKCON_OBEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_OBEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_OBEN[id].setLabel(cmpBitFld_CMx_MSKCON_OBEN.getAttribute("caption"))
 
             #SubMenu item for Mask C configuration
@@ -815,7 +815,7 @@ def instantiateComponent(cmpComponent):
             #Mask C Input Select
             cmpSym_CMx_MSKCON_SELSRCC.append(id)
             cmpSym_CMx_MSKCON_SELSRCC[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_MSKCON_SELSRCC", cmpSym_CMx_MSKCON_SUBMENU_MASKC[id])
-            cmpSym_CMx_MSKCON_SELSRCC[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_SELSRCC[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_SELSRCC[id].setLabel("Mask C Input Select bits")
             cmpSym_CMx_MSKCON_SELSRCC[id].setDefaultValue(0)
             cmpSym_CMx_MSKCON_SELSRCC[id].setOutputMode("Value")
@@ -826,37 +826,37 @@ def instantiateComponent(cmpComponent):
             #AND Gate 'C' Inverted Input Enable
             cmpSym_CMx_MSKCON_ACNEN.append(id)
             cmpSym_CMx_MSKCON_ACNEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_ACNEN", cmpSym_CMx_MSKCON_SUBMENU_MASKC[id])
-            cmpSym_CMx_MSKCON_ACNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_ACNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_ACNEN[id].setLabel(cmpBitFld_CMx_MSKCON_ACNEN.getAttribute("caption"))
 
             #AND Gate 'C' Input Enable
             cmpSym_CMx_MSKCON_ACEN.append(id)
             cmpSym_CMx_MSKCON_ACEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_ACEN", cmpSym_CMx_MSKCON_SUBMENU_MASKC[id])
-            cmpSym_CMx_MSKCON_ACEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_ACEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_ACEN[id].setLabel(cmpBitFld_CMx_MSKCON_ACEN.getAttribute("caption"))
 
             #OR Gate 'C' Inverted Input Enable
             cmpSym_CMx_MSKCON_OCNEN.append(id)
             cmpSym_CMx_MSKCON_OCNEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_OCNEN", cmpSym_CMx_MSKCON_SUBMENU_MASKC[id])
-            cmpSym_CMx_MSKCON_OCNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_OCNEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_OCNEN[id].setLabel(cmpBitFld_CMx_MSKCON_OCNEN.getAttribute("caption"))
 
             #OR Gate 'C' Input  Enable
             cmpSym_CMx_MSKCON_OCEN.append(id)
             cmpSym_CMx_MSKCON_OCEN[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_OCEN", cmpSym_CMx_MSKCON_SUBMENU_MASKC[id])
-            cmpSym_CMx_MSKCON_OCEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_OCEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_OCEN[id].setLabel(cmpBitFld_CMx_MSKCON_OCEN.getAttribute("caption"))
 
             #Positive AND Gate Output Select
             cmpSym_CMx_MSKCON_PAGS.append(id)
             cmpSym_CMx_MSKCON_PAGS[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_PAGS", cmpSym_CMx_MSKCON_STRING[id])
-            cmpSym_CMx_MSKCON_PAGS[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_PAGS[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_PAGS[id].setLabel(cmpBitFld_CMx_MSKCON_PAGS.getAttribute("caption"))
 
             #Negative AND Gate Output Select
             cmpSym_CMx_MSKCON_NAGS.append(id)
             cmpSym_CMx_MSKCON_NAGS[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_MSKCON_NAGS", cmpSym_CMx_MSKCON_STRING[id])
-            cmpSym_CMx_MSKCON_NAGS[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:%NOREGISTER%")
+            cmpSym_CMx_MSKCON_NAGS[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cmp_01427;register:CM1CON")
             cmpSym_CMx_MSKCON_NAGS[id].setLabel(cmpBitFld_CMx_MSKCON_NAGS.getAttribute("caption"))
 
             #Collecting user input to combine into CMxMSKCON register
