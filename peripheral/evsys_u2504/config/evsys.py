@@ -377,7 +377,7 @@ def instantiateComponent(evsysComponent):
     for id in range(0,len(user_node_children)):
         users_list.append(user_node_children[id].getAttribute("name")+"-"+user_node_children[id].getAttribute("index"))
     symEvsysUsersList = evsysComponent.createComboSymbol("EVSYS_USERS", evsysSym_Menu, users_list)
-    symEvsysUsersList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:%NOREGISTER%")
+    symEvsysUsersList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:USER")
     symEvsysUsersList.setLabel("User list")
     symEvsysUsersList.setVisible(False)
 
