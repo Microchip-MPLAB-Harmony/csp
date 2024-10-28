@@ -188,7 +188,7 @@ def instantiateComponent(dbguComponent):
     # variable accordingly to inter-operate correctly
     dbguInterrupt = dbguComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     dbguInterrupt.setLabel("Interrupt Mode")
-    dbguInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_IER")
     dbguInterrupt.setReadOnly(True)
     dbguInterrupt.setVisible(False)
     dbguInterrupt.setDefaultValue(True)
@@ -197,7 +197,7 @@ def instantiateComponent(dbguComponent):
     #Enable Ring buffer?
     dbguSym_RingBuffer_Enable = dbguComponent.createBooleanSymbol("DBGU_RING_BUFFER_ENABLE", None)
     dbguSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
-    dbguSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_MR")
     dbguSym_RingBuffer_Enable.setDefaultValue(False)
     dbguSym_RingBuffer_Enable.setVisible(False)
     dbguSym_RingBuffer_Enable.setReadOnly(True)
@@ -207,7 +207,7 @@ def instantiateComponent(dbguComponent):
     #Interrupt/Non-Interrupt Mode
     dbguSym_UsartIntMode = dbguComponent.createBooleanSymbol("DBGU_INTERRUPT_MODE_ENABLE", None)
     dbguSym_UsartIntMode.setLabel("Enable Interrupts ?")
-    dbguSym_UsartIntMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguSym_UsartIntMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_IER")
     dbguSym_UsartIntMode.setDefaultValue(True)
     dbguSym_UsartIntMode.setVisible(False)
     dbguSym_UsartIntMode.setReadOnly(True)
@@ -215,13 +215,13 @@ def instantiateComponent(dbguComponent):
     #Enable Ring buffer?
     dbguSym_RingBuffer_Mode = dbguComponent.createBooleanSymbol("DBGU_RING_BUFFER_MODE_ENABLE", None)
     dbguSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
-    dbguSym_RingBuffer_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguSym_RingBuffer_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_CR")
     dbguSym_RingBuffer_Mode.setDefaultValue(False)
     dbguSym_RingBuffer_Mode.setVisible(False)
     dbguSym_RingBuffer_Mode.setReadOnly(True)
 
     dbguSym_UsartOperatingMode = dbguComponent.createKeyValueSetSymbol("DBGU_OPERATING_MODE", None)
-    dbguSym_UsartOperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguSym_UsartOperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_MR")
     dbguSym_UsartOperatingMode.setLabel("Operating Mode")
     dbguSym_UsartOperatingMode.addKey("BLOCKING", "0", "Blocking mode")
     dbguSym_UsartOperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
@@ -238,7 +238,7 @@ def instantiateComponent(dbguComponent):
     dbguSym_UsartRingBufferSizeConfig.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_MODE_ENABLE"])
 
     dbguSym_TXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_TX_RING_BUFFER_SIZE", dbguSym_UsartRingBufferSizeConfig)
-    dbguSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_CR")
     dbguSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
     dbguSym_TXRingBuffer_Size.setMin(2)
     dbguSym_TXRingBuffer_Size.setMax(65535)
@@ -247,7 +247,7 @@ def instantiateComponent(dbguComponent):
     dbguSym_TXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_MODE_ENABLE"])
 
     dbguSym_RXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_RX_RING_BUFFER_SIZE", dbguSym_UsartRingBufferSizeConfig)
-    dbguSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_CR")
     dbguSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
     dbguSym_RXRingBuffer_Size.setMin(2)
     dbguSym_RXRingBuffer_Size.setMax(65535)
@@ -271,7 +271,7 @@ def instantiateComponent(dbguComponent):
     dbguClkSrc.setDefaultValue(0)
 
     dbguClkValue = dbguComponent.createIntegerSymbol("DBGU_CLOCK_FREQ", None)
-    dbguClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_MR")
     dbguClkValue.setLabel("Clock Frequency")
     dbguClkValue.setReadOnly(True)
     dbguClkValue.setDependencies(clockSourceFreq, ["DBGU_CLK_SRC", "core." + dbguInstanceName.getValue() + "_CLOCK_FREQUENCY"])
@@ -282,7 +282,7 @@ def instantiateComponent(dbguComponent):
     dbguClockInvalidSym.setVisible(False)
 
     dbguBaud = dbguComponent.createIntegerSymbol("BAUD_RATE", None)
-    dbguBaud.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguBaud.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_BRGR")
     dbguBaud.setLabel("Baud Rate")
     dbguBaud.setDefaultValue(115200)
 
@@ -294,7 +294,7 @@ def instantiateComponent(dbguComponent):
     dbguBRGValue.setDefaultValue(brgVal)
 
     dbguDataWidth = dbguComponent.createComboSymbol("DBGU_MR_DATA_WIDTH", None, ["8 BIT"])
-    dbguDataWidth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguDataWidth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_MR")
     dbguDataWidth.setLabel("Data")
     dbguDataWidth.setDefaultValue("8_BIT")
     dbguDataWidth.setReadOnly(True)
@@ -351,7 +351,7 @@ def instantiateComponent(dbguComponent):
     dbguSym_MR_PAR_NO_Mask.setVisible(False)
 
     dbguStopBit = dbguComponent.createComboSymbol("DBGU_MR_STOP_BITS", None, ["1 BIT"])
-    dbguStopBit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:%NOREGISTER%")
+    dbguStopBit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dbgu_6059;register:DBGU_MR")
     dbguStopBit.setLabel("Stop")
     dbguStopBit.setDefaultValue("1_BIT")
     dbguStopBit.setReadOnly(True)
