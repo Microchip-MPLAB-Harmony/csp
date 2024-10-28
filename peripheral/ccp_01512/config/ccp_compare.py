@@ -64,7 +64,7 @@ ccpSym_CompareMenu.setDependencies(ccpCompareVisible, ["CCP_OPERATION_MODE"])
 
 global ccpSym_Comp_CCPCON1_MOD
 ccpSym_Comp_CCPCON1_MOD = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON1_MOD", ccpSym_CompareMenu)
-ccpSym_Comp_CCPCON1_MOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Comp_CCPCON1_MOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON1")
 ccpSym_Comp_CCPCON1_MOD.setLabel("Select Output Compare Mode")
 ccpSym_Comp_CCPCON1_MOD.addKey("16-Bit/32-Bit Single Edge mode: Drives output high on compare match", "1", "16-Bit/32-Bit Single Edge mode: Drives output high on compare match")
 ccpSym_Comp_CCPCON1_MOD.addKey("16-Bit/32-Bit Single Edge mode: Drives output low on compare match", "2", "16-Bit/32-Bit Single Edge mode: Drives output low on compare match")
@@ -82,7 +82,7 @@ ccpcon1_depList.append("CCP_COMP_CCPCON1_MOD")
 #ICS source
 global ccpSym_Comp_CCPCON2_ICS
 ccpSym_Comp_CCPCON2_ICS = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON2_ICS", ccpSym_Comp_CCPCON1_MOD)
-ccpSym_Comp_CCPCON2_ICS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Comp_CCPCON2_ICS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON1")
 ccpSym_Comp_CCPCON2_ICS.setLabel("Select Input Capture Source")
 capture_source = []
 _get_bitfield_names(ccpValGrp_CCPCON2_ICS, capture_source)
@@ -98,7 +98,7 @@ ccpcon2_depList.append("CCP_COMP_CCPCON2_ICS")
 
 #period value
 ccpSym_Comp_CCPPR = ccpComponent.createLongSymbol("CCP_COMP_CCPPR", ccpSym_CompareMenu)
-ccpSym_Comp_CCPPR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Comp_CCPPR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1PR")
 ccpSym_Comp_CCPPR.setLabel("Period Value")
 ccpSym_Comp_CCPPR.setDefaultValue(4000)
 ccpSym_Comp_CCPPR.setMin(0)
@@ -107,7 +107,7 @@ ccpSym_Comp_CCPPR.setDependencies(ccpCompMaxValue, ["CCP_CCPCON1_T32"])
 
 #Compare value RA
 ccspSym_Comp_CCPRA = ccpComponent.createLongSymbol("CCP_COMP_CCPRA", ccpSym_CompareMenu)
-ccspSym_Comp_CCPRA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccspSym_Comp_CCPRA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1RA")
 ccspSym_Comp_CCPRA.setLabel("Compare A Value")
 ccspSym_Comp_CCPRA.setDefaultValue(500)
 ccspSym_Comp_CCPRA.setMin(0)
@@ -116,7 +116,7 @@ ccspSym_Comp_CCPRA.setDependencies(ccpCompMaxValue, ["CCP_CCPCON1_T32"])
 
 #Compare value RB
 ccspSym_Comp_CCPRB = ccpComponent.createLongSymbol("CCP_COMP_CCPRB", ccpSym_CompareMenu)
-ccspSym_Comp_CCPRB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccspSym_Comp_CCPRB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1RB")
 ccspSym_Comp_CCPRB.setLabel("Compare B Value")
 ccspSym_Comp_CCPRB.setDefaultValue(1000)
 ccspSym_Comp_CCPRB.setMin(0)
@@ -128,7 +128,7 @@ if mccpPresent.getValue() == True:
     global ccpSym_Comp_CCPCON3_OUTM
     #PWM output mode
     ccpSym_Comp_CCPCON3_OUTM = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON3_OUTM", ccpSym_CompareMenu)
-    ccpSym_Comp_CCPCON3_OUTM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON3_OUTM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON3")
     ccpSym_Comp_CCPCON3_OUTM.setLabel("PWM Output Mode Control")
     ccpSym_Comp_CCPCON3_OUTM.setOutputMode( "Value" )
     ccpSym_Comp_CCPCON3_OUTM.setDisplayMode( "Description" )
@@ -143,14 +143,14 @@ if mccpPresent.getValue() == True:
 
     #dead-time
     ccpSym_Comp_CCPCON3_DT = ccpComponent.createIntegerSymbol("CCP_COMP_CCPCON3_DT", ccpSym_CompareMenu)
-    ccpSym_Comp_CCPCON3_DT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON3_DT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON3")
     ccpSym_Comp_CCPCON3_DT.setLabel("PWM Dead-Time")
     ccpSym_Comp_CCPCON3_DT.setMin(0)
     ccpSym_Comp_CCPCON3_DT.setMax(63)
     ccpcon3_depList.append("CCP_COMP_CCPCON3_DT")
     
 ccpSym_Comp_Interrupt = ccpComponent.createBooleanSymbol("CCP_COMP_INTERRUPT", ccpSym_CompareMenu)
-ccpSym_Comp_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Comp_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:IEC2")
 ccpSym_Comp_Interrupt.setLabel("Enable Compare Interrupt")
 
 ccpSym_OutputsMenu = ccpComponent.createMenuSymbol("CCP_COMP_OUTPUTS_MENU", ccpSym_CompareMenu)
@@ -158,39 +158,39 @@ ccpSym_OutputsMenu.setLabel("Outputs")
 
 #output pin enable
 ccpSym_Comp_CCPCON2_OCAEN = ccpComponent.createBooleanSymbol("CCP_COMP_CCPCON2_OCAEN", ccpSym_OutputsMenu)
-ccpSym_Comp_CCPCON2_OCAEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Comp_CCPCON2_OCAEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
 ccpSym_Comp_CCPCON2_OCAEN.setLabel("Enable Output Pin A")
 ccpcon2_depList.append("CCP_COMP_CCPCON2_OCAEN")
 
 if mccpPresent.getValue() == True:
     ccpSym_Comp_CCPCON2_OCBEN = ccpComponent.createBooleanSymbol("CCP_COMP_CCPCON2_OCBEN", ccpSym_OutputsMenu)
-    ccpSym_Comp_CCPCON2_OCBEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON2_OCBEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_Comp_CCPCON2_OCBEN.setLabel("Enable Output Pin B")
     ccpcon2_depList.append("CCP_COMP_CCPCON2_OCBEN")
 
     ccpSym_Comp_CCPCON2_OCCEN = ccpComponent.createBooleanSymbol("CCP_COMP_CCPCON2_OCCEN", ccpSym_OutputsMenu)
-    ccpSym_Comp_CCPCON2_OCCEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON2_OCCEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_Comp_CCPCON2_OCCEN.setLabel("Enable Output Pin C")
     ccpcon2_depList.append("CCP_COMP_CCPCON2_OCCEN")
 
     ccpSym_Comp_CCPCON2_OCDEN = ccpComponent.createBooleanSymbol("CCP_COMP_CCPCON2_OCDEN", ccpSym_OutputsMenu)
-    ccpSym_Comp_CCPCON2_OCDEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON2_OCDEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_Comp_CCPCON2_OCDEN.setLabel("Enable Output Pin D")
     ccpcon2_depList.append("CCP_COMP_CCPCON2_OCDEN")
 
     ccpSym_Comp_CCPCON2_OCEEN = ccpComponent.createBooleanSymbol("CCP_COMP_CCPCON2_OCEEN", ccpSym_OutputsMenu)
-    ccpSym_Comp_CCPCON2_OCEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON2_OCEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_Comp_CCPCON2_OCEEN.setLabel("Enable Output Pin E")
     ccpcon2_depList.append("CCP_COMP_CCPCON2_OCEEN")
 
     ccpSym_Comp_CCPCON2_OCFEN = ccpComponent.createBooleanSymbol("CCP_COMP_CCPCON2_OCFEN", ccpSym_OutputsMenu)
-    ccpSym_Comp_CCPCON2_OCFEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON2_OCFEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_Comp_CCPCON2_OCFEN.setLabel("Enable Output Pin F")
     ccpcon2_depList.append("CCP_COMP_CCPCON2_OCFEN")
 
 global ccpSym_Comp_CCPCON2_OENSYNC
 ccpSym_Comp_CCPCON2_OENSYNC = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON2_OENSYNC", ccpSym_OutputsMenu)
-ccpSym_Comp_CCPCON2_OENSYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Comp_CCPCON2_OENSYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
 ccpSym_Comp_CCPCON2_OENSYNC.setLabel("Output Enable Synchronization")
 sync_source = []
 _get_bitfield_names(ccpValGrp_CCPCON2_OENSYNC, sync_source)
@@ -204,7 +204,7 @@ ccpcon2_depList.append("CCP_COMP_CCPCON2_OENSYNC")
 #output polarity for high side output pins
 global ccpSym_Comp_CCPCON3_POLACE
 ccpSym_Comp_CCPCON3_POLACE = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON3_POLACE", ccpSym_OutputsMenu)
-ccpSym_Comp_CCPCON3_POLACE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Comp_CCPCON3_POLACE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON3")
 ccpSym_Comp_CCPCON3_POLACE.setLabel("Output Polarity for High Side Outputs")
 polarity_source = []
 _get_bitfield_names(ccpValGrp_CCPCON3_POLACE, polarity_source)
@@ -219,7 +219,7 @@ if mccpPresent.getValue() == True:
     global ccpSym_Comp_CCPCON3_POLBDF
     #output polarity for low side output pins
     ccpSym_Comp_CCPCON3_POLBDF = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON3_POLBDF", ccpSym_OutputsMenu)
-    ccpSym_Comp_CCPCON3_POLBDF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+    ccpSym_Comp_CCPCON3_POLBDF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register: CCP1CON3")
     ccpSym_Comp_CCPCON3_POLBDF.setLabel("Output Polarity for Low Side Outputs")
     ccpSym_Comp_CCPCON3_POLBDF.setOutputMode( "Value" )
     ccpSym_Comp_CCPCON3_POLBDF.setDisplayMode( "Description" )

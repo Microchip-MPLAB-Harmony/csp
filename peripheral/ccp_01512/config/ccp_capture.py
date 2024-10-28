@@ -43,7 +43,7 @@ ccpSym_CaptureMenu.setDependencies(ccpCaptureVisible, ["CCP_OPERATION_MODE"])
 #input capture mode
 global ccpSym_Cap_CCPCON1_MOD
 ccpSym_Cap_CCPCON1_MOD = ccpComponent.createKeyValueSetSymbol("CCP_CAP_CCPCON1_MOD", ccpSym_CaptureMenu)
-ccpSym_Cap_CCPCON1_MOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Cap_CCPCON1_MOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
 ccpSym_Cap_CCPCON1_MOD.setLabel("Select Input Capture Mode")
 ccpSym_Cap_CCPCON1_MOD.setOutputMode( "Value" )
 ccpSym_Cap_CCPCON1_MOD.setDisplayMode( "Description" )
@@ -61,7 +61,7 @@ global ccpSym_Cap_CCPCON2_ICS
 ccpValGrp_CCPCON2_ICS = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP" + str(instanceNum) + "CON2__ICS\"]")
 
 ccpSym_Cap_CCPCON2_ICS = ccpComponent.createKeyValueSetSymbol("CCP_CAP_CCPCON2_ICS", ccpSym_CaptureMenu)
-ccpSym_Cap_CCPCON2_ICS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Cap_CCPCON2_ICS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
 ccpSym_Cap_CCPCON2_ICS.setLabel("Select Input Capture Source")
 capture_source = []
 _get_bitfield_names(ccpValGrp_CCPCON2_ICS, capture_source)
@@ -74,5 +74,5 @@ ccpSym_Cap_CCPCON2_ICS.setVisible(True)
 ccpcon2_depList.append("CCP_CAP_CCPCON2_ICS")
 
 ccpSym_Cap_Interrupt = ccpComponent.createBooleanSymbol("CCP_CAP_INTERRUPT", ccpSym_CaptureMenu)
-ccpSym_Cap_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
+ccpSym_Cap_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:IEC2")
 ccpSym_Cap_Interrupt.setLabel("Enable Capture Interrupt")
