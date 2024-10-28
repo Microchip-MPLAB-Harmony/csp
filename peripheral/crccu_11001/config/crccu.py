@@ -69,7 +69,7 @@ def instantiateComponent(crccuComponent):
     crccuBitorder.setDefaultValue(0)
 
     crccuTwidth = crccuComponent.createKeyValueSetSymbol("CRCCU_TWIDTH", None)
-    crccuTwidth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:crccu_11001;register:%NOREGISTER%")
+    crccuTwidth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:crccu_11001;register:CRCCU_DSCR")
     crccuTwidth.setLabel("Select CRC Transfer Width")
     crccuTwidth.addKey("BYTE", "0", "1 byte")
     crccuTwidth.addKey("HALFWORD", "1", "2 byte")
