@@ -390,7 +390,7 @@ def instantiateComponent(ebiComponent):
     ebiADDWIDTH_names = []
     populate_CFGEBIA_values(addressLines, ebiADDWIDTH_names)
     ebiSym_CFGEBIA_EBIADD = ebiComponent.createKeyValueSetSymbol("CFGEBIA_EBIADD", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIA_EBIADD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIA_EBIADD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIA")
     ebiSym_CFGEBIA_EBIADD.setLabel("Address Bus Width")
     ebiSym_CFGEBIA_EBIADD.setDefaultValue(24)
     ebiSym_CFGEBIA_EBIADD.setOutputMode("Value")
@@ -400,7 +400,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_CFGEBIA_EBIADD.setVisible(True)
 
     ebiSym_CFGEBIC_EBIDAT = ebiComponent.createKeyValueSetSymbol("CFGEBIC_EBIDAT", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIC_EBIDAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIDAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIDAT.setLabel("Data Bus Width")
     ebiSym_CFGEBIC_EBIDAT.setDefaultValue(0)
     ebiSym_CFGEBIC_EBIDAT.setOutputMode("Value")
@@ -429,91 +429,91 @@ def instantiateComponent(ebiComponent):
 
     #EBIRDYINV1_ENABLE
     ebiSym_CFGEBIC_EBIRDYINV1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYINV1", ebiSym_EBIRDYPIN_SETUP)
-    ebiSym_CFGEBIC_EBIRDYINV1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRDYINV1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRDYINV1.setLabel("EBIRDY1 Inversion Control bit")
     ebiSym_CFGEBIC_EBIRDYINV1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYINV1.setVisible(True)
 
     #EBIRDYEN1_ENABLE
     ebiSym_CFGEBIC_EBIRDYEN1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYEN1", ebiSym_EBIRDYPIN_SETUP)
-    ebiSym_CFGEBIC_EBIRDYEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRDYEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRDYEN1.setLabel("EBIRDY1 Pin Enable bit")
     ebiSym_CFGEBIC_EBIRDYEN1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYEN1.setVisible(True)
 
     #EBIRDYINV2_ENABLE
     ebiSym_CFGEBIC_EBIRDYINV2 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYINV2", ebiSym_EBIRDYPIN_SETUP)
-    ebiSym_CFGEBIC_EBIRDYINV2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRDYINV2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRDYINV2.setLabel("EBIRDY2 Inversion Control bit")
     ebiSym_CFGEBIC_EBIRDYINV2.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYINV2.setVisible(True)
 
     #EBIRDYEN2_ENABLE
     ebiSym_CFGEBIC_EBIRDYEN2 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYEN2", ebiSym_EBIRDYPIN_SETUP)
-    ebiSym_CFGEBIC_EBIRDYEN2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRDYEN2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRDYEN2.setLabel("EBIRDY2 Pin Enable bit")
     ebiSym_CFGEBIC_EBIRDYEN2.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYEN2.setVisible(True)
 
     #EBIRDYINV3_ENABLE
     ebiSym_CFGEBIC_EBIRDYINV3 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYINV3", ebiSym_EBIRDYPIN_SETUP)
-    ebiSym_CFGEBIC_EBIRDYINV3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRDYINV3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRDYINV3.setLabel("EBIRDY3 Inversion Control bit")
     ebiSym_CFGEBIC_EBIRDYINV3.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYINV3.setVisible(True)
 
     #EBIRDYEN3_ENABLE
     ebiSym_CFGEBIC_EBIRDYEN3 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYEN3", ebiSym_EBIRDYPIN_SETUP)
-    ebiSym_CFGEBIC_EBIRDYEN3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRDYEN3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRDYEN3.setLabel("EBIRDY3 Pin Enable bit")
     ebiSym_CFGEBIC_EBIRDYEN3.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYEN3.setVisible(True)
 
     #EBIRDYLVL_ENABLE
     ebiSym_CFGEBIC_EBIRDYLVL = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYLVL", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIC_EBIRDYLVL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRDYLVL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRDYLVL.setLabel("EBIRDYx Pin Sensitivity Control bit")
     ebiSym_CFGEBIC_EBIRDYLVL.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYLVL.setVisible(True)
 
     #EBIRPEN_ENABLE
     ebiSym_CFGEBIC_EBIRPEN = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRPEN", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIC_EBIRPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIRPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIRPEN.setLabel("/EBIRP Pin Sensitivity Control bit")
     ebiSym_CFGEBIC_EBIRPEN.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRPEN.setVisible(True)
 
     #EBIWEEN_ENABLE
     ebiSym_CFGEBIC_EBIWEEN = ebiComponent.createBooleanSymbol("CFGEBIC_EBIWEEN", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIC_EBIWEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIWEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIWEEN.setLabel("/EBIWE Pin Enable bit")
     ebiSym_CFGEBIC_EBIWEEN.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIWEEN.setVisible(True)
 
     #EBIOEEN_ENABLE
     ebiSym_CFGEBIC_EBIOEEN = ebiComponent.createBooleanSymbol("CFGEBIC_EBIOEEN", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIC_EBIOEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIOEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIOEEN.setLabel("/EBIOE Pin Enable bit")
     ebiSym_CFGEBIC_EBIOEEN.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIOEEN.setVisible(True)
 
     #EBIBSEN0_ENABLE
     ebiSym_CFGEBIC_EBIBSEN0 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIBSEN0", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIC_EBIBSEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIBSEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIBSEN0.setLabel("/EBIBS1 Pin Enable bit")
     ebiSym_CFGEBIC_EBIBSEN0.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIBSEN0.setVisible(True)
 
     #EBIBSEN1_ENABLE
     ebiSym_CFGEBIC_EBIBSEN1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIBSEN1", ebiSym_PIN_SETUP)
-    ebiSym_CFGEBIC_EBIBSEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBIBSEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBIBSEN1.setLabel("/EBIBS0 Pin Enable bit")
     ebiSym_CFGEBIC_EBIBSEN1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIBSEN1.setVisible(True)
 
     #EBICS0_ENABLE
     ebiSym_CFGEBIC_EBICSEN0 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN0", None)
-    ebiSym_CFGEBIC_EBICSEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBICSEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBICSEN0.setLabel("/EBICS0 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN0.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN0.setVisible(True)
@@ -530,7 +530,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS1_ENABLE
     ebiSym_CFGEBIC_EBICSEN1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN1", None)
-    ebiSym_CFGEBIC_EBICSEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBICSEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBICSEN1.setLabel("/EBICS1 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN1.setVisible(chipSelects)
@@ -547,7 +547,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS2_ENABLE
     ebiSym_CFGEBIC_EBICSEN2 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN2", None)
-    ebiSym_CFGEBIC_EBICSEN2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBICSEN2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBICSEN2.setLabel("/EBICS2 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN2.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN2.setVisible(chipSelects)
@@ -564,7 +564,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS3_ENABLE
     ebiSym_CFGEBIC_EBICSEN3 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN3", None)
-    ebiSym_CFGEBIC_EBICSEN3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
+    ebiSym_CFGEBIC_EBICSEN3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:CFGEBIC")
     ebiSym_CFGEBIC_EBICSEN3.setLabel("/EBICS3 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN3.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN3.setVisible(chipSelects)

@@ -171,7 +171,7 @@ def instantiateComponent(ebiComponent):
     ebiSmcSym_GlobalMenu.setLabel("SMC Global Features")
 
     ebiSmcSym_WPMR_WPEN = ebiComponent.createBooleanSymbol("EBI_SMC_WRITE_PROTECTION", ebiSmcSym_GlobalMenu)
-    ebiSmcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:%NOREGISTER%")
+    ebiSmcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:WPMR")
     ebiSmcSym_WPMR_WPEN.setLabel("Enable Write Protection")
     ebiSmcSym_WPMR_WPEN.setDefaultValue(False)
 
@@ -187,7 +187,7 @@ def instantiateComponent(ebiComponent):
 
     for ebiChipSelNum in range(0, ebiChipSelCount):
         ebiSmcSym_CS = ebiComponent.createBooleanSymbol("EBI_SMC_CHIP_SELECT" + str(ebiChipSelNum), ebiSmcSym_Chip_Select)
-        ebiSmcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:%NOREGISTER%")
+        ebiSmcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_SETUP")
         ebiSmcSym_CS.setLabel("Enable Chip Select "+ str(ebiChipSelNum))
 
         # EBI SMC Read Setup, Pulse and Cycle Timings
