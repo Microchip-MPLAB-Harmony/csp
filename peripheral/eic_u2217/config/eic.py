@@ -191,7 +191,7 @@ def instantiateComponent(eicComponent):
     for extIntIndex in range(0 , extIntCount):
 
         eicPLX1 = eicComponent.createBooleanSymbol("EIC_CHAN_" + str(extIntIndex) , None)
-        eicPLX1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2217;register:%NOREGISTER%")
+        eicPLX1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2217;register:CTRL")
         eicPLX1.setLabel("Enable EIC Channel" + str(extIntIndex))
 
         eicConfiguration = eicComponent.createMenuSymbol("EIC_MENU" + str(extIntIndex), eicPLX1)
@@ -203,13 +203,13 @@ def instantiateComponent(eicComponent):
         eicSym_Channel.append("EIC_CHAN_" + str(extIntIndex))
 
         eicINT = eicComponent.createBooleanSymbol("EIC_INT_" + str(extIntIndex) , eicConfiguration)
-        eicINT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2217;register:%NOREGISTER%")
+        eicINT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2217;register:INTENSET")
         eicINT.setLabel("Enable Interrupt")
         eicSym_InterruptList.append("EIC_INT_" + str(extIntIndex))
 
         #EVCTRL - External Interrupt Event Output Enable 0..7 Channel number
         EVCCTRL_EXTINTEO_Selection = eicComponent.createBooleanSymbol("EIC_EXTINTEO_" + str(extIntIndex) , eicConfiguration)
-        EVCCTRL_EXTINTEO_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2217;register:%NOREGISTER%")
+        EVCCTRL_EXTINTEO_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2217;register:EVCTRL")
         EVCCTRL_EXTINTEO_Selection.setLabel("Enable Event Output")
 
         # populate a list with IDs for code generation dependency

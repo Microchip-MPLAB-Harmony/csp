@@ -389,7 +389,7 @@ def instantiateComponent(eicComponent):
 
     # CTRLA - Clock Selection
     CTRLA_CKSEL_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_CLKSEL" , None)
-    CTRLA_CKSEL_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:%NOREGISTER%")
+    CTRLA_CKSEL_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRLA")
     CTRLA_CKSEL_SelectionSymbol.setLabel("EIC Clock Source Selection")
 
     eicClkselNode = getValueGroupNode__EIC("EIC", "EIC", "CTRLA", "CKSEL")
@@ -407,7 +407,7 @@ def instantiateComponent(eicComponent):
     #Non-Maskable Interrupt Control
 
     eicPLX4 = eicComponent.createBooleanSymbol("NMI_CTRL", None)
-    eicPLX4.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRL")
+    eicPLX4.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRLA")
     eicPLX4.setLabel("Non Maskable Interrupt Control")
 
     nmiConfMenu = eicComponent.createMenuSymbol("NMI_MENU", eicPLX4)
@@ -489,7 +489,7 @@ def instantiateComponent(eicComponent):
     for extIntIndex in range(0 , extIntCount):
 
         eicPLX1 = eicComponent.createBooleanSymbol("EIC_CHAN_" + str(extIntIndex) , None)
-        eicPLX1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:%NOREGISTER%")
+        eicPLX1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRLA")
         eicPLX1.setLabel("Enable EIC Channel" + str(extIntIndex))
 
         eicConfiguration = eicComponent.createMenuSymbol("EIC_MENU" + str(extIntIndex), eicPLX1)
@@ -521,7 +521,7 @@ def instantiateComponent(eicComponent):
 
         #EVCTRL - External Interrupt Event Output Enable 0..7/15 Channel number
         EVCCTRL_EXTINTEO_Selection = eicComponent.createBooleanSymbol("EIC_EXTINTEO_" + str(extIntIndex) , eicConfiguration)
-        EVCCTRL_EXTINTEO_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:%NOREGISTER%")
+        EVCCTRL_EXTINTEO_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:EVCTRL")
         EVCCTRL_EXTINTEO_Selection.setLabel("Enable Event Output")
 
         # populate a list with IDs for code generation dependency
