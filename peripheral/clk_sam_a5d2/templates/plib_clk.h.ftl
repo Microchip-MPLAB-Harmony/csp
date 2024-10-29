@@ -69,6 +69,8 @@
 
 void CLK_Initialize ( void );
 
+void CLK_UTMIPLLEnable(void);
+void CLK_UTMIPLLDisable(void);
 #ifdef __cplusplus
 }
 #endif
