@@ -477,7 +477,7 @@ def instantiateComponent(spiComponent):
     Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     spiSymInterruptMode = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
-    spiSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spiSymInterruptMode.setLabel("Enable Interrupts ?")
     spiSymInterruptMode.setDefaultValue(True)
     spiSymInterruptMode.setDependencies(updateIntReadOnlyAttr, ["SPI_MSTR_MODE_EN"])
@@ -606,7 +606,7 @@ def instantiateComponent(spiComponent):
     msten_names = []
     _get_bitfield_names(spiValGrp_SPI2CON_MSTEN, msten_names)
     spiSym_SPICON_MSTEN = spiComponent.createKeyValueSetSymbol( "SPI_MSTR_MODE_EN",None)
-    spiSym_SPICON_MSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSym_SPICON_MSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spiSym_SPICON_MSTEN.setLabel(spiBitField_SPI2CON_MSTEN.getAttribute("caption"))
     spiSym_SPICON_MSTEN.setDefaultValue(0)
     spiSym_SPICON_MSTEN.setReadOnly(False)
@@ -619,7 +619,7 @@ def instantiateComponent(spiComponent):
     clkpol_names = []
     _get_bitfield_names(spiValGrp_SPI2CON_CKP, clkpol_names)
     spiSym_SPICON_CLKPOL = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_CLK_POL",None)
-    spiSym_SPICON_CLKPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSym_SPICON_CLKPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spiSym_SPICON_CLKPOL.setLabel(spiBitField_SPI2CON_CKP.getAttribute("caption"))
     spiSym_SPICON_CLKPOL.setDefaultValue(1)
     spiSym_SPICON_CLKPOL.setOutputMode( "Value" )
@@ -631,7 +631,7 @@ def instantiateComponent(spiComponent):
     clkph_names = []
     _get_bitfield_names(spiValGrp_SPI2CON_CKE, clkph_names)
     spiSym_SPICON_CLKPH = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_CLK_PH",None)
-    spiSym_SPICON_CLKPH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSym_SPICON_CLKPH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spiSym_SPICON_CLKPH.setLabel(spiBitField_SPI2CON_CKE.getAttribute("caption"))
     spiSym_SPICON_CLKPH.setDefaultValue(0)
     spiSym_SPICON_CLKPH.setOutputMode( "Value" )
@@ -643,7 +643,7 @@ def instantiateComponent(spiComponent):
     smp_names = []
     _get_bitfield_names(spiValGrp_SPI2CON_SMP, smp_names)
     spiSym_SPICON_SMP = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_SMP",None)
-    spiSym_SPICON_SMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSym_SPICON_SMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spiSym_SPICON_SMP.setLabel("SPI Data Input Sample Phase bit")
     spiSym_SPICON_SMP.setDefaultValue(1)
     spiSym_SPICON_SMP.setOutputMode( "Value" )
@@ -657,7 +657,7 @@ def instantiateComponent(spiComponent):
         ssen_names = []
         _get_bitfield_names(spiValGrp_SPI2CON_MSSEN, ssen_names)
         spiSym_SPICON_MSSEN = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MSSEN",None)
-        spiSym_SPICON_MSSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+        spiSym_SPICON_MSSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
         spiSym_SPICON_MSSEN.setLabel(spiBitField_SPI2CON_MSSEN.getAttribute("caption"))
         spiSym_SPICON_MSSEN.setDefaultValue(0)
         spiSym_SPICON_MSSEN.setOutputMode( "Value" )
@@ -668,7 +668,7 @@ def instantiateComponent(spiComponent):
 
     ## SPI data width(Mode)
     spiSym_SPICON_MODE = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MODE",None)
-    spiSym_SPICON_MODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSym_SPICON_MODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spiSym_SPICON_MODE.setLabel("Data Width")
     spiSym_SPICON_MODE.setDefaultValue(3)
     spiSym_SPICON_MODE.setOutputMode( "Value" )
@@ -680,7 +680,7 @@ def instantiateComponent(spiComponent):
     spiSym_SPICON_MODE.addKey( "8-bit", "0", "8-bit")
 
     spiSym_Baud_Rate = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
-    spiSym_Baud_Rate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSym_Baud_Rate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxBRG")
     spiSym_Baud_Rate.setLabel("Baud Rate in Hz")
     spiSym_Baud_Rate.setDefaultValue(1000000)
     spiSym_Baud_Rate.setMin(1)
@@ -717,7 +717,7 @@ def instantiateComponent(spiComponent):
     spiSym_SPIBRG_VALUE.setValue(defaultSPIBR, 1)
 
     spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
-    spiSymDummyData.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spiSymDummyData.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spiSymDummyData.setLabel("Dummy Data")
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
@@ -731,7 +731,7 @@ def instantiateComponent(spiComponent):
     # SPIS_TX_BUFFER_SIZE
     spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", None)
     spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-    spisSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spisSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spisSym_TXBuffer_Size.setMin(1)
     spisSym_TXBuffer_Size.setMax(65535)
     spisSym_TXBuffer_Size.setDefaultValue(256)
@@ -741,7 +741,7 @@ def instantiateComponent(spiComponent):
     # SPIS_RX_BUFFER_SIZE
     spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", None)
     spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-    spisSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:%NOREGISTER%")
+    spisSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_00753;register:SPIxCON")
     spisSym_RXBuffer_Size.setMin(1)
     spisSym_RXBuffer_Size.setMax(65535)
     spisSym_RXBuffer_Size.setDefaultValue(256)
