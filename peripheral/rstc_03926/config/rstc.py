@@ -49,7 +49,7 @@ def instantiateComponent(rstcComponent):
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
 
     rstcSym_Enable = rstcComponent.createBooleanSymbol("RSTC_ENABLE", None)
-    rstcSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_03926;register:%NOREGISTER%")
+    rstcSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_03926;register:RCAUSE")
     rstcSym_Enable.setLabel("Use Reset Controller ?")
     rstcSym_Enable.setDefaultValue(True)
     rstcSym_Enable.setReadOnly(True)

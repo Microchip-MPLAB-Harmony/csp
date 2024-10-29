@@ -70,7 +70,7 @@ def instantiateComponent(rstcComponent):
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
 
     rstcSym_Enable = rstcComponent.createBooleanSymbol("RSTC_ENABLE", None)
-    rstcSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:%NOREGISTER%")
+    rstcSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:RCAUSE")
     rstcSym_Enable.setLabel("Use Reset Controller ?")
     rstcSym_Enable.setDefaultValue(True)
     rstcSym_Enable.setReadOnly(True)
@@ -135,13 +135,13 @@ def instantiateComponent(rstcComponent):
 
                 for i in range(0, rstcWakeupNum.getValue()):
                     wakeupEnable = rstcComponent.createBooleanSymbol("WAKEUP_" + str(i) + "_ENABLE" , rstcwakeupMenu)
-                    wakeupEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:%NOREGISTER%")
+                    wakeupEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:RCAUSE")
                     wakeupEnable.setLabel("Enable Wakeup " + str(i))
                     wakeupEnable.setDefaultValue(False)
                     wakeupEnableDependencyList.append("WAKEUP_" + str(i) + "_ENABLE")
 
                     wakeupPolarity = rstcComponent.createKeyValueSetSymbol("WAKEUP_" + str(i) + "_POLARITY", wakeupEnable)
-                    wakeupPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:%NOREGISTER%")
+                    wakeupPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:RCAUSE")
                     wakeupPolarity.setLabel("Wakeup Polarity")
                     wakeupPolarity.addKey("Active Low", "0", "Input pin x is active low.")
                     wakeupPolarity.addKey("Active High", "1", "Input pin x is active High.")
