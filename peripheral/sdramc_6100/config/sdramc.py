@@ -116,7 +116,7 @@ def instantiateComponent(sdramcComponent):
 
     sdramcSymClkFreq = sdramcComponent.createIntegerSymbol("SDRAMC_CPU_CLK_FREQ", None)
     sdramcSymClkFreq.setLabel("Get Core Clock Frequency")
-    sdramcSymClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
+    sdramcSymClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_MR")
     sdramcSymClkFreq.setVisible(False)
     sdramcSymClkFreq.setDefaultValue(cpuclk)
 
@@ -229,7 +229,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CFR1_TMRD.setDefaultValue(SDARMC_CFR1_TMRD_DEFAULT_VALUE)
 
     sdramcSym_REFRESH_TIME_IN_MS = sdramcComponent.createIntegerSymbol("SDRAMC_REFRESH_TIME_IN_MS", sdramcSymMenu_TIMING_MENU)
-    sdramcSym_REFRESH_TIME_IN_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
+    sdramcSym_REFRESH_TIME_IN_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_TR")
     sdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
     sdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
     sdramcSym_REFRESH_TIME_IN_MS.setMin(0)
@@ -254,14 +254,14 @@ def instantiateComponent(sdramcComponent):
     sdramcSymMenu_MR_MENU.setLabel("SDRAMC Mode Register Configurations")
 
     sdramcSym_BURST_LENGTH = sdramcComponent.createIntegerSymbol("SDRAMC_BURST_LENGTH", sdramcSymMenu_MR_MENU)
-    sdramcSym_BURST_LENGTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
+    sdramcSym_BURST_LENGTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_MR")
     sdramcSym_BURST_LENGTH.setLabel("Burst Length")
     sdramcSym_BURST_LENGTH.setMin(SDRAMC_DEFAULT_MIN_VALUE)
     sdramcSym_BURST_LENGTH.setMax(SDRAMC_BURST_LENGHT_MAX_VALUE)
     sdramcSym_BURST_LENGTH.setDefaultValue(SDRAMC_DEFAULT_MIN_VALUE)
 
     sdramcSym_BURST_TYPE = sdramcComponent.createComboSymbol("SDRAMC_BURST_TYPE", sdramcSymMenu_MR_MENU, ComboVal_BURST_TYPE)
-    sdramcSym_BURST_TYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
+    sdramcSym_BURST_TYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_MR")
     sdramcSym_BURST_TYPE.setLabel("Burst Type")
     sdramcSym_BURST_TYPE.setDefaultValue("SEQUENTIAL")
 
