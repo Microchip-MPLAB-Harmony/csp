@@ -48,17 +48,17 @@ def instantiateComponent(tramComponent):
     Log.writeInfoMessage("Running " + tramInstanceName.getValue())
 
     tramSilentAccess = tramComponent.createBooleanSymbol("TRAM_SILENT_ACCESS", None)
-    tramSilentAccess.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tram_u2801;register:%NOREGISTER%")
+    tramSilentAccess.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tram_u2801;register:CTRLA")
     tramSilentAccess.setLabel("Enable Silent Access")
     tramSilentAccess.setDefaultValue(False)
 
     tramDRP = tramComponent.createBooleanSymbol("TRAM_DRP", None)
-    tramDRP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tram_u2801;register:%NOREGISTER%")
+    tramDRP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tram_u2801;register:CTRLA")
     tramDRP.setLabel("Enable Data Remanence Prevention")
     tramDRP.setDefaultValue(False)
 
     tramTamper = tramComponent.createBooleanSymbol("TRAM_TAMPER", None)
-    tramTamper.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tram_u2801;register:%NOREGISTER%")
+    tramTamper.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tram_u2801;register:CTRLA")
     tramTamper.setLabel("Erase Data on Tamper Detection")
     tramTamper.setDefaultValue(False)
     
