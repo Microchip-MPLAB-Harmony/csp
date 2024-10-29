@@ -192,13 +192,13 @@ def instantiateComponent(qspiComponent):
     qspiSMM.setDependencies(setupQspiIntSymbolAndIntHandler, ["QSPI_SMM"])
 
     qspiCSMODE = qspiComponent.createComboSymbol("QSPI_CSMODE", qspiMenu, qspiValGrp_MR_CSMODE.getValueNames())
-    qspiCSMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
+    qspiCSMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_MR")
     qspiCSMODE.setVisible(False)
     qspiCSMODE.setLabel(qspiBitField_MR_CSMODE.getDescription())
     qspiCSMODE.setDefaultValue("LASTXFER")
 
     qspiCPOL = qspiComponent.createKeyValueSetSymbol("QSPI_CPOL", qspiMenu)
-    qspiCPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
+    qspiCPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_SCR")
     qspiCPOL.setLabel(qspiBitField_SCR_CPOL.getDescription())
     qspiCPOL.setVisible(True)
     qspiCPOL.addKey("LOW", "0", "Clock is Low when inactive (CPOL=0)")
@@ -208,7 +208,7 @@ def instantiateComponent(qspiComponent):
     qspiCPOL.setSelectedKey("LOW")
 
     qspiCPHA = qspiComponent.createKeyValueSetSymbol("QSPI_CPHA", qspiMenu)
-    qspiCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
+    qspiCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_SCR")
     qspiCPHA.setLabel(qspiBitField_SCR_CPHA.getDescription())
     qspiCPHA.setVisible(True)
     qspiCPHA.addKey("LEADING", "1", "Data is Valid on Clock Leading Edge (CPHA=0)")
@@ -218,7 +218,7 @@ def instantiateComponent(qspiComponent):
     qspiCPOL.setSelectedKey("LEADING")
 
     qspiClkFreq = qspiComponent.createIntegerSymbol("QSPI_CLK_FREQ", qspiMenu)
-    qspiClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
+    qspiClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_MR")
     qspiClkFreq.setLabel("QSPI Core Clock Frequency")
     qspiClkFreq.setVisible(False)
     qspiClkFreq.setMax(200000000)
