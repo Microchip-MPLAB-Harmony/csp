@@ -343,7 +343,7 @@ usartSym_Interrupt_Mode.setDependencies(updateInterruptMode, ["USART_INTERRUPT_M
 
 #Enable Ring buffer?
 usartSym_RingBuffer_Enable = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", sercomSym_OperationMode)
-usartSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+usartSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
 usartSym_RingBuffer_Enable.setDefaultValue(False)
 usartSym_RingBuffer_Enable.setVisible(False)
@@ -362,14 +362,14 @@ usartSym_Int_Mode.setReadOnly(True)
 
 #Enable Ring buffer?
 usartSym_RingBuffer_Mode = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_MODE_ENABLE", sercomSym_OperationMode)
-usartSym_RingBuffer_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+usartSym_RingBuffer_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
 usartSym_RingBuffer_Mode.setDefaultValue(False)
 usartSym_RingBuffer_Mode.setVisible(False)
 usartSym_RingBuffer_Mode.setReadOnly(True)
 
 usartSym_OperatingMode = sercomComponent.createKeyValueSetSymbol("USART_OPERATING_MODE", sercomSym_OperationMode)
-usartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+usartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_OperatingMode.setLabel("Operating Mode")
 usartSym_OperatingMode.addKey("BLOCKING", "0", "Blocking mode")
 usartSym_OperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
@@ -386,7 +386,7 @@ usartSym_UsartRingBufferSizeConfig.setVisible(False)
 usartSym_UsartRingBufferSizeConfig.setDependencies(ringBufferConfigVisibility, ["SERCOM_MODE", "USART_RING_BUFFER_MODE_ENABLE"])
 
 usartSym_TXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_UsartRingBufferSizeConfig)
-usartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+usartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
 usartSym_TXRingBuffer_Size.setMin(2)
 usartSym_TXRingBuffer_Size.setMax(65535)
@@ -395,7 +395,7 @@ usartSym_TXRingBuffer_Size.setVisible(False)
 usartSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_MODE_ENABLE", "USART_TX_ENABLE"])
 
 usartSym_RXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", usartSym_UsartRingBufferSizeConfig)
-usartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+usartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
 usartSym_RXRingBuffer_Size.setMin(2)
 usartSym_RXRingBuffer_Size.setMax(65535)
@@ -454,7 +454,7 @@ usartSym_CTRLC_BRKLEN_Node = getValueGrp("SERCOM", "SERCOM", "CTRLC", "BRKLEN", 
 
 if usartSym_CTRLC_BRKLEN_Node != None:
     usartSym_CTRLC_BRKLEN = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_BREAK_LEN", sercomSym_OperationMode)
-    usartSym_CTRLC_BRKLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    usartSym_CTRLC_BRKLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLC")
     usartSym_CTRLC_BRKLEN.setLabel("LIN Master Break Length")
     usartSym_CTRLC_BRKLEN_Values = usartSym_CTRLC_BRKLEN_Node.getChildren()
 
@@ -477,7 +477,7 @@ usartSym_CTRLC_HDRDLY_Node = getValueGrp("SERCOM", "SERCOM", "CTRLC", "HDRDLY", 
 
 if usartSym_CTRLC_HDRDLY_Node != None:
     usartSym_CTRLC_HDRDLY = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_HDRDLY", sercomSym_OperationMode)
-    usartSym_CTRLC_HDRDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    usartSym_CTRLC_HDRDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLC")
     usartSym_CTRLC_HDRDLY.setLabel("LIN Master Hardware Delay")
     usartSym_CTRLC_HDRDLY_Values = usartSym_CTRLC_HDRDLY_Node.getChildren()
 

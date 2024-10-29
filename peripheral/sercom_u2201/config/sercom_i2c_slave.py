@@ -93,7 +93,7 @@ global i2csSym_CTRLB_SMEN
 
 #I2C Interrupt Mode
 i2csSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("I2CS_INTERRUPT_MODE", sercomSym_OperationMode)
-i2csSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2csSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:INTENSET")
 i2csSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 i2csSym_Interrupt_Mode.setDefaultValue(True)
 i2csSym_Interrupt_Mode.setVisible(False)
@@ -114,7 +114,7 @@ for index in range(len(ctrlaValue)):
 if speedSupported == True:
     # I2C Transfer Speed Mode
     i2csSym_mode = sercomComponent.createKeyValueSetSymbol("I2CS_MODE", sercomSym_OperationMode)
-    i2csSym_mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2csSym_mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2csSym_mode.setLabel("Transfer Speed Mode")
     i2csSym_mode.setVisible(False)
 
@@ -135,7 +135,7 @@ if speedSupported == True:
 
 # I2C Smart Mode Enable
 i2csSym_CTRLB_SMEN = sercomComponent.createBooleanSymbol("I2CS_SMEN", sercomSym_OperationMode)
-i2csSym_CTRLB_SMEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2csSym_CTRLB_SMEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 i2csSym_CTRLB_SMEN.setLabel("Enable Smart Mode")
 i2csSym_CTRLB_SMEN.setDefaultValue(False)
 i2csSym_CTRLB_SMEN.setVisible(False)
@@ -153,7 +153,7 @@ for index in range(len(ctrlaValue)):
 
 if sclsmSupported == True:
     i2csSym_CTRLA_SCLSM = sercomComponent.createIntegerSymbol("I2CS_SCLSM", sercomSym_OperationMode)
-    i2csSym_CTRLA_SCLSM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2csSym_CTRLA_SCLSM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2csSym_CTRLA_SCLSM.setLabel("Clock Stretch Mode")
     i2csSym_CTRLA_SCLSM.setVisible(False)
     i2csSym_CTRLA_SCLSM.setDefaultValue(0)
@@ -161,7 +161,7 @@ if sclsmSupported == True:
 #-----------------------------------------------------------------------------------
 # SDA Hold Time
 i2csSym_CTRLA_SDAHOLD = sercomComponent.createKeyValueSetSymbol("I2CS_SDAHOLD_TIME", sercomSym_OperationMode)
-i2csSym_CTRLA_SDAHOLD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2csSym_CTRLA_SDAHOLD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 i2csSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
 i2csSym_CTRLA_SDAHOLD.setVisible(False)
 
@@ -204,7 +204,7 @@ if sdaSetupTimeSupported == True:
         if str(sdaSetupTimeValue[index].getAttribute("name")) == "SDASETUP":
             sdaSetupTimeMask = int(sdaSetupTimeValue[index].getAttribute("mask"), 16)
             i2csSym_SDASETUP_MaxValue = sercomComponent.createIntegerSymbol("I2CS_SDASETUP_MAX_VALUE", sercomSym_OperationMode)
-            i2csSym_SDASETUP_MaxValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+            i2csSym_SDASETUP_MaxValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
             i2csSym_SDASETUP_MaxValue.setLabel("SDA Setup Time Max Register Value")
             i2csSym_SDASETUP_MaxValue.setVisible(False)
             i2csSym_SDASETUP_MaxValue.setDefaultValue(sdaSetupTimeMask)
@@ -218,7 +218,7 @@ if sdaSetupTimeSupported == True:
     i2csSym_SDASETUP.setValue(True)
 
     i2csSym_SDASETUP_Value = sercomComponent.createIntegerSymbol("I2CS_SDASETUP_TIME_NS", sercomSym_OperationMode)
-    i2csSym_SDASETUP_Value.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2csSym_SDASETUP_Value.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2csSym_SDASETUP_Value.setLabel("SDA Setup Time (ns)")
     i2csSym_SDASETUP_Value.setVisible(False)
     i2csSym_SDASETUP_Value.setMin(0)
@@ -296,7 +296,7 @@ for index in range(len(lowToutValue)):
 
 if lowToutSupported == True:
     i2csSym_LOWTOUT = sercomComponent.createBooleanSymbol("I2CS_LOWTOUT_SUPPORT", sercomSym_OperationMode)
-    i2csSym_LOWTOUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2csSym_LOWTOUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2csSym_LOWTOUT.setLabel("Enable SCL Low Time-Out")
     i2csSym_LOWTOUT.setVisible(False)
     i2csSym_LOWTOUT.setDefaultValue(False)
@@ -316,7 +316,7 @@ for index in range(len(lowExtendToutValue)):
 
 if lowExtendToutSupported == True:
     i2csSym_SEXTTOEN = sercomComponent.createBooleanSymbol("I2CS_SEXTTOEN_SUPPORT", sercomSym_OperationMode)
-    i2csSym_SEXTTOEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2csSym_SEXTTOEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2csSym_SEXTTOEN.setLabel("Enable SCL Low Extend Time-Out")
     i2csSym_SEXTTOEN.setVisible(False)
     i2csSym_SEXTTOEN.setDefaultValue(False)
@@ -336,7 +336,7 @@ i2csSym_SEXTTOUTErrorStatus.setDefaultValue(lowExtendToutSupported)
 #-----------------------------------------------------------------------------------
 # Run In Standby
 i2csSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("I2CS_RUNSTDBY", sercomSym_OperationMode)
-i2csSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2csSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 i2csSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
 i2csSym_CTRLA_RUNSTDBY.setVisible(False)
 i2csSym_CTRLA_RUNSTDBY.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["SERCOM_MODE"])

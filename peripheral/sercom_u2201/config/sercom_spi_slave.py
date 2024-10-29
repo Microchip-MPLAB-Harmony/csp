@@ -78,7 +78,7 @@ global spisSym_TXBuffer_Size
 
 #SPI Interrupt Mode
 spisSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("SPIS_INTERRUPT_MODE", sercomSym_OperationMode)
-spisSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:INTENSET")
 spisSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 spisSym_Interrupt_Mode.setDefaultValue(True)
 spisSym_Interrupt_Mode.setVisible(False)
@@ -87,14 +87,14 @@ spisSym_Interrupt_Mode.setDependencies(updateSPISlaveConfigurationVisiblePropert
 
 #SPI Standby Mode
 spisSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("SPIS_RUNSTDBY", sercomSym_OperationMode)
-spisSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spisSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
 spisSym_CTRLA_RUNSTDBY.setVisible(False)
 spisSym_CTRLA_RUNSTDBY.setDependencies(updateSPISlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI DataOut PinOut
 spisSym_CTRLA_DOPO = sercomComponent.createKeyValueSetSymbol("SPIS_DOPO", sercomSym_OperationMode)
-spisSym_CTRLA_DOPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_CTRLA_DOPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spisSym_CTRLA_DOPO.setLabel("SPI Data Out Pad")
 spisSym_CTRLA_DOPO.setVisible(False)
 
@@ -115,7 +115,7 @@ spisSym_CTRLA_DOPO.setDependencies(updateSPISlaveConfigurationVisibleProperty, [
 
 #SPI DataIn pinOut
 spisSym_CTRLA_DIPO = sercomComponent.createKeyValueSetSymbol("SPIS_DIPO", sercomSym_OperationMode)
-spisSym_CTRLA_DIPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_CTRLA_DIPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spisSym_CTRLA_DIPO.setLabel("SPI Data In Pad Selection")
 spisSym_CTRLA_DIPO.setVisible(False)
 
@@ -157,7 +157,7 @@ spisSym_CTRLA_DORD.setDependencies(updateSPISlaveConfigurationVisibleProperty, [
 
 #SPI Character Size
 spisSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("SPIS_CHARSIZE_BITS", sercomSym_OperationMode)
-spisSym_CTRLB_CHSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_CTRLB_CHSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 spisSym_CTRLB_CHSIZE.setLabel("SPI Data Character Size")
 spisSym_CTRLB_CHSIZE.setVisible(False)
 
@@ -177,7 +177,7 @@ spisSym_CTRLB_CHSIZE.setDependencies(updateSPISlaveConfigurationVisibleProperty,
 
 #SPI Clock Phase
 spisSym_CTRLA_ClockPhase = sercomComponent.createKeyValueSetSymbol("SPIS_CLOCK_PHASE", sercomSym_OperationMode)
-spisSym_CTRLA_ClockPhase.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_CTRLA_ClockPhase.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spisSym_CTRLA_ClockPhase.setLabel("SPI Clock Phase")
 spisSym_CTRLA_ClockPhase.setVisible(False)
 
@@ -197,7 +197,7 @@ spisSym_CTRLA_ClockPhase.setDependencies(updateSPISlaveConfigurationVisiblePrope
 
 #SPI Clock Polarity
 spisSym_CTRLA_ClockPolarity = sercomComponent.createKeyValueSetSymbol("SPIS_CLOCK_POLARITY", sercomSym_OperationMode)
-spisSym_CTRLA_ClockPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_CTRLA_ClockPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spisSym_CTRLA_ClockPolarity.setLabel("SPI Clock Polarity")
 spisSym_CTRLA_ClockPolarity.setVisible(False)
 
@@ -229,7 +229,7 @@ for index in range(len(ctrlbValue)):
 if ssdeSupported == True:
     #SPI Hardware Slave Select control
     spisSym_CTRLB_SSDE = sercomComponent.createBooleanSymbol("SPIS_SSDE", sercomSym_OperationMode)
-    spisSym_CTRLB_SSDE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    spisSym_CTRLB_SSDE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     spisSym_CTRLB_SSDE.setLabel("Slave Select Low Detect Enable")
     spisSym_CTRLB_SSDE.setDefaultValue(True)
     spisSym_CTRLB_SSDE.setVisible(False)
@@ -237,7 +237,7 @@ if ssdeSupported == True:
     spisSym_CTRLB_SSDE.setDependencies(updateSPISlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 spisSym_TXBuffer_Size = sercomComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", sercomSym_OperationMode)
-spisSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
 spisSym_TXBuffer_Size.setMin(1)
 spisSym_TXBuffer_Size.setMax(65535)
@@ -246,7 +246,7 @@ spisSym_TXBuffer_Size.setVisible(False)
 spisSym_TXBuffer_Size.setDependencies(updateSPISlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 spisSym_RXBuffer_Size = sercomComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", sercomSym_OperationMode)
-spisSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+spisSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
 spisSym_RXBuffer_Size.setMin(1)
 spisSym_RXBuffer_Size.setMax(65535)

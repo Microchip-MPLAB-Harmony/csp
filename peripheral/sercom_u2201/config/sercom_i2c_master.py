@@ -181,7 +181,7 @@ global i2cSym_Interrupt_Mode
 
 #I2C Interrupt Mode
 i2cSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("I2C_INTERRUPT_MODE", sercomSym_OperationMode)
-i2cSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2cSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 i2cSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 i2cSym_Interrupt_Mode.setDefaultValue(True)
 i2cSym_Interrupt_Mode.setVisible(False)
@@ -201,7 +201,7 @@ for index in range(len(ctrlaValue)):
 if speedSupported == True:
     # I2C Transfer Speed Mode
     i2cmSym_mode = sercomComponent.createKeyValueSetSymbol("I2CM_MODE", sercomSym_OperationMode)
-    i2cmSym_mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2cmSym_mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2cmSym_mode.setLabel("Transfer Speed Mode")
     
     i2cmTransferSpeedNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SPEED", "I2CM")
@@ -241,7 +241,7 @@ for index in range(len(ctrlaValue)):
 
 if sclsmSupported == True:
     i2cmSym_CTRLA_SCLSM = sercomComponent.createIntegerSymbol("I2C_SCLSM", sercomSym_OperationMode)
-    i2cmSym_CTRLA_SCLSM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2cmSym_CTRLA_SCLSM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2cmSym_CTRLA_SCLSM.setLabel("Clock Stretch Mode")
     i2cmSym_CTRLA_SCLSM.setVisible(False)
     i2cmSym_CTRLA_SCLSM.setDefaultValue(0)
@@ -249,14 +249,14 @@ if sclsmSupported == True:
 
 # Run In Standby
 i2cmSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("I2C_RUNSTDBY", sercomSym_OperationMode)
-i2cmSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2cmSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 i2cmSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
 i2cmSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 i2cmSym_CTRLA_RUNSTDBY.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # SDA Hold Time
 i2cmSym_CTRLA_SDAHOLD = sercomComponent.createKeyValueSetSymbol("I2C_SDAHOLD_TIME", sercomSym_OperationMode)
-i2cmSym_CTRLA_SDAHOLD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2cmSym_CTRLA_SDAHOLD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 i2cmSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
 
 i2cmSDAHoldTimeReferenceNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SDAHOLD", "I2CM")
@@ -276,7 +276,7 @@ i2cmSym_CTRLA_SDAHOLD.setDependencies(updateI2CMasterConfigurationVisiblePropert
 
 # Operating speed
 i2cmSym_BAUD = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED", sercomSym_OperationMode)
-i2cmSym_BAUD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2cmSym_BAUD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 i2cmSym_BAUD.setLabel("I2C Speed in KHz")
 i2cmSym_BAUD.setMin(1)
 i2cmSym_BAUD.setMax(400)
@@ -290,7 +290,7 @@ i2cmSym_BAUD.setDependencies(baudDependencyChanged, ["SERCOM_MODE", "I2CM_MODE"]
 
 # Operating speed (Hz)
 i2cmSym_BAUD_Hz = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", sercomSym_OperationMode)
-i2cmSym_BAUD_Hz.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+i2cmSym_BAUD_Hz.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 i2cmSym_BAUD_Hz.setLabel("I2C Speed in Hz")
 i2cmSym_BAUD_Hz.setDefaultValue(i2cmSym_BAUD.getValue() * 1000)
 i2cmSym_BAUD_Hz.setVisible(False)
@@ -331,7 +331,7 @@ slewRateValGrp = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SLEWRATE", "I2CM")
 # SLEW RATE Control
 if slewRateValGrp != None:
     i2cmSym_CTRLA_SLEWRATE = sercomComponent.createKeyValueSetSymbol("I2C_SLEWRATE", sercomSym_OperationMode)
-    i2cmSym_CTRLA_SLEWRATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
+    i2cmSym_CTRLA_SLEWRATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     i2cmSym_CTRLA_SLEWRATE.setLabel("I2C Slew Rate Control")
     
     i2cmSlewRateReferenceValues = slewRateValGrp.getChildren()
