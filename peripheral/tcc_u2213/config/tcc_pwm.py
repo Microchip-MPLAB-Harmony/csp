@@ -585,7 +585,7 @@ if size == 32:
     tccSym_Ramp_Period = tccComponent.createLongSymbol("TCC_RAMP_CYCLEA_PERIOD", tccSym_Ramp_CycleA_Menu)
 else:
     tccSym_Ramp_Period = tccComponent.createIntegerSymbol("TCC_RAMP_CYCLEA_PERIOD", tccSym_Ramp_CycleA_Menu)
-    tccSym_Ramp_Period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
+    tccSym_Ramp_Period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CTRLA")
 tccSym_Ramp_Period.setLabel("Cycle A Period Value (PER)")
 tccSym_Ramp_Period.setValue(tccSym_PER_PER.getValue())
 tccSym_Ramp_Period.setReadOnly(True)
@@ -603,7 +603,7 @@ if size == 32:
     tccSym_Ramp_Ch1_Duty = tccComponent.createLongSymbol("TCC_RAMP_CH1_DUTY", tccSym_Ramp_CycleA_Menu)
 else:
     tccSym_Ramp_Ch1_Duty = tccComponent.createIntegerSymbol("TCC_RAMP_CH1_DUTY", tccSym_Ramp_CycleA_Menu)
-    tccSym_Ramp_Ch1_Duty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
+    tccSym_Ramp_Ch1_Duty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CCBUF")
 tccSym_Ramp_Ch1_Duty.setLabel("Cycle A Duty Value")
 tccSym_Ramp_Ch1_Duty.setValue(0)
 tccSym_Ramp_Ch1_Duty.setReadOnly(True)
@@ -624,7 +624,7 @@ if size == 32:
     tccSym_Ramp_CycleB_Period = tccComponent.createLongSymbol("TCC_RAMP_CYCLEB_PERIOD", tccSym_Ramp_CycleB_Menu)
 else:
     tccSym_Ramp_CycleB_Period = tccComponent.createIntegerSymbol("TCC_RAMP_CYCLEB_PERIOD", tccSym_Ramp_CycleB_Menu)
-    tccSym_Ramp_CycleB_Period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
+    tccSym_Ramp_CycleB_Period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:PER")
 tccSym_Ramp_CycleB_Period.setLabel("Cycle B Period Value (PER)")
 tccSym_Ramp_CycleB_Period.setValue(tccSym_PER_PER.getValue())
 tccSym_Ramp_CycleB_Period.setReadOnly(True)
@@ -634,7 +634,7 @@ if size == 32:
     tccSym_Ramp_Ch2_Duty = tccComponent.createLongSymbol("TCC_RAMP_CH2_DUTY", tccSym_Ramp_CycleB_Menu)
 else:
     tccSym_Ramp_Ch2_Duty = tccComponent.createIntegerSymbol("TCC_RAMP_CH2_DUTY", tccSym_Ramp_CycleB_Menu)
-    tccSym_Ramp_Ch2_Duty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
+    tccSym_Ramp_Ch2_Duty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CCBUF")
 tccSym_Ramp_Ch2_Duty.setLabel("Cycle B Duty Value")
 tccSym_Ramp_Ch2_Duty.setDependencies(tccRampBdutyCalc, ["TCC_WAVE_RAMP", "TCC_0_CC", "TCC_1_CC"])
 tccSym_Ramp_Ch2_Duty.setReadOnly(True)

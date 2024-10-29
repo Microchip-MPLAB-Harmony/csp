@@ -452,7 +452,7 @@ def instantiateComponent(tcComponent):
 
     global tySym_Slave_Mode
     tySym_Slave_Mode = tcComponent.createBooleanSymbol("TC_SLAVE_MODE", None)
-    tySym_Slave_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
+    tySym_Slave_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     tySym_Slave_Mode.setLabel("Slave Mode")
     tySym_Slave_Mode.setDefaultValue(isMasterSlaveModeEnable)
     if isMasterSlaveModeEnable == True:
@@ -499,13 +499,13 @@ def instantiateComponent(tcComponent):
 
     sysTimePlibMode = tcComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
     sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
-    sysTimePlibMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
+    sysTimePlibMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     sysTimePlibMode.setVisible(False)
     sysTimePlibMode.setDefaultValue("")
 
     sysTimeComponentId = tcComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
-    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
@@ -612,7 +612,7 @@ def instantiateComponent(tcComponent):
     #TC clock frequency
     tcSym_Frequency = tcComponent.createIntegerSymbol("TC_FREQUENCY", None)
     tcSym_Frequency.setLabel("Clock Frequency")
-    tcSym_Frequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
+    tcSym_Frequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     tcSym_Frequency.setVisible(False)
     tcSym_Frequency.setDefaultValue (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_FREQUENCY"))
     tcSym_Frequency.setDependencies(tcFreqCalc, ["core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", "TC_CTRLA_PRESCALER"])
@@ -622,7 +622,7 @@ def instantiateComponent(tcComponent):
     global tcSym_OperationMode
     tcSym_OperationMode = tcComponent.createComboSymbol("TC_OPERATION_MODE", None, tcOperationModeList)
     tcSym_OperationMode.setLabel("Operating Mode")
-    tcSym_OperationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
+    tcSym_OperationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     tcSym_OperationMode.setDefaultValue("Timer")
     if isMasterSlaveModeEnable == True:
         tcSym_OperationMode.setVisible(False)

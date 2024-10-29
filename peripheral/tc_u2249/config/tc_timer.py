@@ -116,7 +116,7 @@ tcSym_Timer_CTRLBSET_ONESHOT.setLabel("Enable One-Shot Mode")
 global tcSym_TimerUnit
 timerUnit = ["millisecond", "microsecond", "nanosecond"]
 tcSym_TimerUnit = tcComponent.createComboSymbol("TC_TIMER_UNIT", tcSym_TimerMenu, timerUnit)
-tcSym_TimerUnit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+tcSym_TimerUnit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:CTRLA")
 tcSym_TimerUnit.setLabel("Timer Period Unit")
 tcSym_TimerUnit.setDefaultValue("millisecond")
 
@@ -128,7 +128,7 @@ if clock_freq == 0:
 resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / clock_freq
 max = (65536.0 * resolution / 1000000)
 tcSym_Timer_TIME_MS = tcComponent.createFloatSymbol("TC_TIMER_TIME_MS", tcSym_TimerMenu)
-tcSym_Timer_TIME_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+tcSym_Timer_TIME_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:CTRLA")
 tcSym_Timer_TIME_MS.setLabel("Time")
 tcSym_Timer_TIME_MS.setDefaultValue(1)
 tcSym_Timer_TIME_MS.setMin(0.0)

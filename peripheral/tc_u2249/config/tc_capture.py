@@ -140,7 +140,7 @@ tcSym_CaptureMenu.setVisible(False)
 tcSym_CaptureMenu.setDependencies(updateCaptureMenuVisibleProperty, ["TC_OPERATION_MODE"])
 
 tcSym_CaptureNumChannels = tcComponent.createIntegerSymbol("TC_NUM_CHANNELS", tcSym_OperationMode)
-tcSym_CaptureNumChannels.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+tcSym_CaptureNumChannels.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:CTRLA")
 tcSym_CaptureNumChannels.setLabel("Number of capture channels")
 tcSym_CaptureNumChannels.setVisible(False)
 tcSym_CaptureNumChannels.setDefaultValue(int(NUM_CAPTURE_CHANNELS))
@@ -172,7 +172,7 @@ for channelID in range (0, NUM_CAPTURE_CHANNELS):
     #capture trigger edge
     tcSym_Capture_Trigger_Edge.append(channelID)
     tcSym_Capture_Trigger_Edge[channelID] = tcComponent.createKeyValueSetSymbol("TC_CAPTURE_TRIGGER_EDGE"+str(channelID), tcSym_Capture_Channel[channelID])
-    tcSym_Capture_Trigger_Edge[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+    tcSym_Capture_Trigger_Edge[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:CTRLA")
     tcSym_Capture_Trigger_Edge[channelID].setLabel("Capture Trigger Edge")
     tcSym_Capture_Trigger_Edge[channelID].addKey("RISE_EDGE", "0", "Rising Edge")
     tcSym_Capture_Trigger_Edge[channelID].addKey("FALL_EDGE", "1", "Falling Edge")
@@ -185,7 +185,7 @@ for channelID in range (0, NUM_CAPTURE_CHANNELS):
     if (channelID == 0):
         tcSym_Capture_Trigger_Action.append(channelID)
         tcSym_Capture_Trigger_Action[channelID] = tcComponent.createKeyValueSetSymbol("TC_CAPTURE_TRIGGER_ACTION"+str(channelID), tcSym_Capture_Channel[channelID])
-        tcSym_Capture_Trigger_Action[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+        tcSym_Capture_Trigger_Action[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:CTRLA")
         tcSym_Capture_Trigger_Action[channelID].setLabel("Capture Trigger Action")
         tcSym_Capture_Trigger_Action[channelID].addKey("STAMP", "4", "Time stamp capture")
         tcSym_Capture_Trigger_Action[channelID].addKey("PPW", "5", "Period captured in CC0, pulse width in CC1")
@@ -200,7 +200,7 @@ for channelID in range (0, NUM_CAPTURE_CHANNELS):
     #capture channel counter/compare interrupt
     tcSym_Capture_INTENSET_MC.append(channelID)
     tcSym_Capture_INTENSET_MC[channelID] = tcComponent.createBooleanSymbol("TC_CAPTURE_INTSET_MC"+str(channelID), tcSym_Capture_Channel[channelID])
-    tcSym_Capture_INTENSET_MC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+    tcSym_Capture_INTENSET_MC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:INTENSET")
     tcSym_Capture_INTENSET_MC[channelID].setLabel("Enable Capture " + str(channelID) + " Interrupt")
     tcSym_Capture_INTENSET_MC[channelID].setDefaultValue(False)
     tcSym_Capture_INTENSET_MC[channelID].setDependencies(tcChannelVisible, ["TC_CAPTURE_CHANNEL_"+str(channelID)])
@@ -215,12 +215,12 @@ for channelID in range (0, NUM_CAPTURE_CHANNELS):
 
 #capture error interrupt
 tcSym_Capture_INTENSET_ERR = tcComponent.createBooleanSymbol("TC_CAPTURE_ERR_INTERRUPT_MODE", tcSym_CaptureMenu)
-tcSym_Capture_INTENSET_ERR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+tcSym_Capture_INTENSET_ERR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:INTENSET")
 tcSym_Capture_INTENSET_ERR.setLabel("Enable Capture Error Interrupt")
 
 #capture overflow interrupt
 tcSym_Capture_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_CAPTURE_OVF_INTERRUPT_MODE", tcSym_CaptureMenu)
-tcSym_Capture_INTENSET_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:%NOREGISTER%")
+tcSym_Capture_INTENSET_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2249;register:INTENSET")
 tcSym_Capture_INTENSET_OVF.setLabel("Enable Capture Overflow Interrupt")
 
 #capture interrupt
