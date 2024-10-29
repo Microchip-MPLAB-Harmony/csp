@@ -82,7 +82,7 @@
 typedef uint32_t PROGRAM_FLASH_BANK;
 
     /* Boot Flash Page 0 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_0     (0
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_0     (0)
 
     /* Boot Flash Page 1 Write Protect */
 #define    FCW_BOOT_WRITE_PROTECT_PAGE_1     (1)
