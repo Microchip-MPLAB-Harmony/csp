@@ -217,7 +217,7 @@ def instantiateComponent(rtccComponent):
     Database.setSymbolValue("core", rtccInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     rtccSymInterruptMode = rtccComponent.createBooleanSymbol("RTCC_INTERRUPT_MODE", None)
-    rtccSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:IEC1")
     rtccSymInterruptMode.setLabel("Enable Interrupt ?")
 
     # Get register names, mask values, bit shifts based on vector number
@@ -264,7 +264,7 @@ def instantiateComponent(rtccComponent):
         clkSel_names = []
         _get_bitfield_names(rtcValGrp_RTCCON_RTCCLKSEL, clkSel_names)
         rtccSym_RTCCON_RTCCLKSEL = rtccComponent.createKeyValueSetSymbol("RTCC_CLOCK_SOURCE", rtccClockMenu )
-        rtccSym_RTCCON_RTCCLKSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+        rtccSym_RTCCON_RTCCLKSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2")
         rtccSym_RTCCON_RTCCLKSEL.setLabel("RTCC Clock Source Select")
         rtccSym_RTCCON_RTCCLKSEL.setOutputMode( "Value" )
         rtccSym_RTCCON_RTCCLKSEL.setDisplayMode( "Description" )
@@ -280,7 +280,7 @@ def instantiateComponent(rtccComponent):
 
     # PWRLCLK pin frequency
     rtccSym_PWRLCLK_IN_FREQ = rtccComponent.createIntegerSymbol("RTCC_PWRLCLK_PIN_FREQ", rtccClockMenu)
-    rtccSym_PWRLCLK_IN_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_PWRLCLK_IN_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2")
     rtccSym_PWRLCLK_IN_FREQ.setLabel("PWRLCLK Input Pin Frequency (Hz)")
     rtccSym_PWRLCLK_IN_FREQ.setDefaultValue(0)
 
@@ -288,7 +288,7 @@ def instantiateComponent(rtccComponent):
     clkPrescaler_names = []
     _get_bitfield_names(rtcValGrp_RTCCON2_PS, clkPrescaler_names)
     rtccSym_RTCCON2_PS = rtccComponent.createKeyValueSetSymbol("RTCC_CLOCK_PRESCALER", rtccClockMenu )
-    rtccSym_RTCCON2_PS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCCON2_PS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2)
     rtccSym_RTCCON2_PS.setLabel(rtcBitField_RTCCON2_PS.getAttribute("caption"))
     rtccSym_RTCCON2_PS.setOutputMode("Value")
     rtccSym_RTCCON2_PS.setDisplayMode("Description")
@@ -297,20 +297,20 @@ def instantiateComponent(rtccComponent):
     rtccSym_RTCCON2_PS.setDefaultValue(3) #1:1
 
     rtccClkDivder = rtccComponent.createHexSymbol("RTCC_CLOCK_DIVIDER", rtccClockMenu)
-    rtccClkDivder.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccClkDivder.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2")
     rtccClkDivder.setLabel("RTCC Clock Divider")
     rtccClkDivder.setDefaultValue(0x3FFF)
     rtccClkDivder.setMin(0)
     rtccClkDivder.setMax(0xFFFF)
 
     rtccSym_RTCCON2_FDIV = rtccComponent.createIntegerSymbol("RTCC_FRACTIONAL_CLOCK_DIVIDER", rtccClockMenu)
-    rtccSym_RTCCON2_FDIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCCON2_FDIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2")
     rtccSym_RTCCON2_FDIV.setLabel("RTCC Fractional Clock Divider")
     rtccSym_RTCCON2_FDIV.setDescription("This is to calibrate RTCC Clock")
     rtccSym_RTCCON2_FDIV.setDefaultValue(0)
 
     rtccSym_finalClock = rtccComponent.createFloatSymbol("RTCC_FINAL_CLOCK_FREQ", rtccClockMenu)
-    rtccSym_finalClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_finalClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2")
     rtccSym_finalClock.setLabel("RTCC Timer Clock Frequency (Hz)")
     rtccSym_finalClock.setDescription("This frequency should be 2 Hz for correct RTCC operation")
     rtccSym_finalClock.setReadOnly(True)
@@ -328,7 +328,7 @@ def instantiateComponent(rtccComponent):
 
     # RTCC output enable
     rtccSym_RTCCON_RTCOE = rtccComponent.createBooleanSymbol("RTCC_OUTPUT_ENABLE", None)
-    rtccSym_RTCCON_RTCOE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCCON_RTCOE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_RTCCON_RTCOE.setLabel(rtcBitField_RTCCON_RTCOE.getAttribute("caption"))
 
     # output select
@@ -338,7 +338,7 @@ def instantiateComponent(rtccComponent):
     _get_bitfield_names(rtcValGrp_RTCCON_RTCOUTSEL, rtcOutSel_names)
     rtccOutputLabel = rtcBitField_RTCCON_RTCOUTSEL.getAttribute("caption")
     rtccSym_RTCCON_RTCOUTSEL = rtccComponent.createKeyValueSetSymbol("RTCC_OUTPUT_SELECT", rtccSym_RTCCON_RTCOE)
-    rtccSym_RTCCON_RTCOUTSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCCON_RTCOUTSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_RTCCON_RTCOUTSEL.setLabel(rtccOutputLabel)
     rtccSym_RTCCON_RTCOUTSEL.setOutputMode( "Value" )
     rtccSym_RTCCON_RTCOUTSEL.setDisplayMode( "Description" )
@@ -349,7 +349,7 @@ def instantiateComponent(rtccComponent):
     rtccSym_RTCCON_RTCOUTSEL.setDependencies(updateSymbolVisblity, ["RTCC_OUTPUT_ENABLE"])
 
     rtccSym_RTCCON_TIMEDATE = rtccComponent.createBooleanSymbol("RTC_TIMEANDDATE", None)
-    rtccSym_RTCCON_TIMEDATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCCON_TIMEDATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCTIME")
     rtccSym_RTCCON_TIMEDATE.setLabel("Initialize Time & Date")
     rtccSym_RTCCON_TIMEDATE.setDefaultValue(False)
 
@@ -363,7 +363,7 @@ def instantiateComponent(rtccComponent):
 
     # Date.  User's entry here spans most significant 24 bits of register RTCDATE
     rtccSym_RTCDATE_DATE = rtccComponent.createStringSymbol("RTCTIME_DATE",rtccSym_RTCCON_TIMEDATE)
-    rtccSym_RTCDATE_DATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCDATE_DATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCDATE")
     rtccSym_RTCDATE_DATE.setLabel("Date (YYMMDD, where YY:00-99, MM:01-12, DD:01-31)")
     rtccSym_RTCDATE_DATE.setDefaultValue("181231")
     rtccSym_RTCDATE_DATE.setVisible(False)
@@ -371,7 +371,7 @@ def instantiateComponent(rtccComponent):
 
     # Day of week.
     rtccSym_RTCDATE_WEEKDAY = rtccComponent.createIntegerSymbol("RTCTIME_WEEKDAY",rtccSym_RTCCON_TIMEDATE)
-    rtccSym_RTCDATE_WEEKDAY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCDATE_WEEKDAY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCDATE")
     rtccSym_RTCDATE_WEEKDAY.setLabel("Weekday (0-6)")
     rtccSym_RTCDATE_WEEKDAY.setDefaultValue(0)
     rtccSym_RTCDATE_WEEKDAY.setMin(0)
@@ -380,13 +380,13 @@ def instantiateComponent(rtccComponent):
     rtccSym_RTCDATE_WEEKDAY.setDependencies(updateSymbolVisblity, ["RTC_TIMEANDDATE"])
 
     rtccSym_RTCCON_ALARMMENU = rtccComponent.createBooleanSymbol("RTC_ALARM", None)
-    rtccSym_RTCCON_ALARMMENU.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCCON_ALARMMENU.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_RTCCON_ALARMMENU.setLabel("Initialize Alarm Time and Date")
     rtccSym_RTCCON_ALARMMENU.setDefaultValue(False)
 
     # Alarm time.  Note: the user entry spans the upper 24 bits of the register ALRMTIME
     rtccSym_ALRMTIME_TIME = rtccComponent.createStringSymbol("RTCALRM_TIME",rtccSym_RTCCON_ALARMMENU)
-    rtccSym_ALRMTIME_TIME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCALRM")
+    rtccSym_ALRMTIME_TIME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_ALRMTIME_TIME.setLabel("Alarm Time (HHMMSS, where HH:00-24, MM:00-59, SS:00-59)")
     rtccSym_ALRMTIME_TIME.setDefaultValue("235955")
     rtccSym_ALRMTIME_TIME.setVisible(False)
@@ -394,7 +394,7 @@ def instantiateComponent(rtccComponent):
 
     # Alarm date.  User settings span a contiguous set of bitfields.
     rtccSym_RTCCON_ALRMDATE = rtccComponent.createStringSymbol("RTCALRM_DATE",rtccSym_RTCCON_ALARMMENU)
-    rtccSym_RTCCON_ALRMDATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCALRM")
+    rtccSym_RTCCON_ALRMDATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_RTCCON_ALRMDATE.setLabel("Alarm Date (MMDD, where MM:01-12, DD:01-31)")
     rtccSym_RTCCON_ALRMDATE.setDefaultValue("1231")
     rtccSym_RTCCON_ALRMDATE.setVisible(False)
@@ -404,7 +404,7 @@ def instantiateComponent(rtccComponent):
     alrmMask_names = []
     _get_bitfield_names(rtcValGrp_RTCALRM_AMASK, alrmMask_names)
     rtccSym_RTCALRM_AMASK = rtccComponent.createKeyValueSetSymbol( "RTCC_ALARM_MASK", rtccSym_RTCCON_ALARMMENU )
-    rtccSym_RTCALRM_AMASK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCALRM_AMASK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_RTCALRM_AMASK.setLabel("Alarm Frequency")
     rtccSym_RTCALRM_AMASK.setOutputMode( "Value" )
     rtccSym_RTCALRM_AMASK.setDisplayMode( "Description" )
@@ -416,7 +416,7 @@ def instantiateComponent(rtccComponent):
 
     # Alarm day of week.  Only allowed to be user-set if alarm mask is set to once a week.
     rtccSym_ALRMTIME_WDAY = rtccComponent.createIntegerSymbol("RTCALRM_DAY", rtccSym_RTCALRM_AMASK)
-    rtccSym_ALRMTIME_WDAY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCALRM")
+    rtccSym_ALRMTIME_WDAY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_ALRMTIME_WDAY.setLabel("Alarm Weekday (0-6)")
     rtccSym_ALRMTIME_WDAY.setDefaultValue(0)
     rtccSym_ALRMTIME_WDAY.setMin(0)
@@ -426,14 +426,14 @@ def instantiateComponent(rtccComponent):
 
     # Alarm repeat forever
     rtccSym_RTCALRM_ARPT = rtccComponent.createBooleanSymbol("RTCC_ALARM_REPEAT_FOREVER", None)
-    rtccSym_RTCALRM_ARPT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:%NOREGISTER%")
+    rtccSym_RTCALRM_ARPT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_RTCALRM_ARPT.setVisible(True)
     rtccSym_RTCALRM_ARPT.setLabel("Alarm Repeats Forever")
     rtccSym_RTCALRM_ARPT.setDefaultValue(False)
 
     # Alarm repeat count
     rtccSym_RTCALRM_ARPTCNT = rtccComponent.createIntegerSymbol("RTCALRM_ARPT", rtccSym_RTCALRM_ARPT)
-    rtccSym_RTCALRM_ARPTCNT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCALRM")
+    rtccSym_RTCALRM_ARPTCNT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON1")
     rtccSym_RTCALRM_ARPTCNT.setVisible(True)
     rtccSym_RTCALRM_ARPTCNT.setLabel(rtcBitField_RTCALRM_ARPT.getAttribute("caption"))
     rtccSym_RTCALRM_ARPTCNT.setDescription("Alarm will repeat n+1 number of times")
