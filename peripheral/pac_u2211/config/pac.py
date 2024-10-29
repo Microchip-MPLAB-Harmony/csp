@@ -47,7 +47,7 @@ pacSym_Menu.setLabel("PAC")
 
 #PAC Use
 pacSym_Use = coreComponent.createBooleanSymbol("PAC_USE", pacSym_Menu)
-pacSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pac_u2211;register:%NOREGISTER%")
+pacSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pac_u2211;register:WPSET")
 pacSym_Use.setLabel("Use PAC ?")
 
 pacInstanceName = coreComponent.createStringSymbol("PAC_INSTANCE_NAME", pacSym_Menu)
