@@ -100,7 +100,7 @@ def rswdtcounter_cal(rswdtCounterValueTime, event):
     rswdtCounterValueTime.setValue(int(round(data)),2)
 
 rswdtCounterValueTime = coreComponent.createIntegerSymbol("rswdtWDVTIME", rswdtCfgMenu)
-rswdtCounterValueTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rswdt_11110;register:%NOREGISTER%")
+rswdtCounterValueTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rswdt_11110;register:RSWDT_MR")
 rswdtCounterValueTime.setLabel("Counter value in ms")
 rswdtCounterValueTime.setDependencies(rswdtcounter_cal, ["rswdtWDV"])
 rswdtCounterValueTime.setReadOnly(True)
