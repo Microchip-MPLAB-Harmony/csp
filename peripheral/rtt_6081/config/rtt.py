@@ -163,7 +163,7 @@ def instantiateComponent(rttComponent):
 
     sysTimeComponentId = rttComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
-    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MR")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
@@ -212,13 +212,13 @@ def instantiateComponent(rttComponent):
 
     global rttAlarm
     rttAlarm = rttComponent.createBooleanSymbol("rttALMIEN", rttMenu)
-    rttAlarm.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
+    rttAlarm.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MR")
     rttAlarm.setLabel("Enable Alarm Interrupt")
     rttAlarm.setDefaultValue(True)
 
     if rttINC2Support.getValue():
         rttInc2Enable = rttComponent.createBooleanSymbol("rttINC2EN", rttMenu)
-        rttInc2Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
+        rttInc2Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MR")
         rttInc2Enable.setLabel("Enable RTTINC2 Interrupt")
         rttInc2Enable.setDefaultValue(False)
 
@@ -239,7 +239,7 @@ def instantiateComponent(rttComponent):
 
     if rttEVASupport.getValue():
         rttEventEnable = rttComponent.createBooleanSymbol("rttEVAEN", rttMenu)
-        rttEventEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
+        rttEventEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MR")
         rttEventEnable.setLabel("Generate Alarm Interrupt on RTT event")
         rttEventEnable.setDefaultValue(False)
 
@@ -259,7 +259,7 @@ def instantiateComponent(rttComponent):
         rttSeltrgev.setDisplayMode("Description")
 
     rttClkSrc = rttComponent.createBooleanSymbol("rttRTC1HZ", rttMenu)
-    rttClkSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
+    rttClkSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MR")
     rttClkSrc.setLabel("Use RTC 1Hz as clock Source")
     rttClkSrc.setDefaultValue(False)
 
