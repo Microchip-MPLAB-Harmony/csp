@@ -1349,14 +1349,15 @@ def instantiateComponent(adchsComponent):
 
         #Find ADC input pins from ADCHS signals
         adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADCHS\"]/instance@[name=\""+adchsInstanceName.getValue()+"\"]/signals")
-        adc_signals = adc.getChildren()
-        for pad in range(0, len(adc_signals)):
-            group = adc_signals[pad].getAttribute("group")
-            if (("AIN" in group) and ("index" in adc_signals[pad].getAttributeList())):
-                padSignal = adc_signals[pad].getAttribute("pad")
-                if padSignal in availablePins:
-                    ADC_Input_Signals_List[int(adc_signals[pad].getAttribute("index"))] = True
-                    ADC_Input_Signals_Type_Map["AIN" + adc_signals[pad].getAttribute("index")] = "External"
+        if (adc != None):
+            adc_signals = adc.getChildren()
+            for pad in range(0, len(adc_signals)):
+                group = adc_signals[pad].getAttribute("group")
+                if (("AIN" in group) and ("index" in adc_signals[pad].getAttributeList())):
+                    padSignal = adc_signals[pad].getAttribute("pad")
+                    if padSignal in availablePins:
+                        ADC_Input_Signals_List[int(adc_signals[pad].getAttribute("index"))] = True
+                        ADC_Input_Signals_Type_Map["AIN" + adc_signals[pad].getAttribute("index")] = "External"
 
         #Find internal ADC signals from ADCHS parameters
         adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADCHS\"]/instance@[name=\""+adchsInstanceName.getValue()+"\"]/parameters")
@@ -1931,13 +1932,13 @@ def instantiateComponent(adchsComponent):
             adchsCONMenu[signalID] = adchsComponent.createBooleanSymbol(
                 "AN"+str(signalID), menu)
             signalLabel = "Configure Analog Input AN" + str(signalID)
-            if ADC_Input_Signals_Type_Map["AIN"+str(signalID)] != "External":
+            if ("AIN"+str(signalID) in ADC_Input_Signals_Type_Map) and (ADC_Input_Signals_Type_Map["AIN"+str(signalID)] != "External"):
                 signalLabel += " (" + ADC_Input_Signals_Type_Map["AIN"+str(signalID)] + ")"
             adchsCONMenu[signalID].setLabel(signalLabel)
 
             RegisterName = RegisterBaseName_ADCIMCON + str((signalID/16)+1)
             index = int(((signalID/16)))
-            
+
             adchsSym_ADCIMCON__SIGN[signalID] = adchsAddBooleanFromATDF1ValueValueGroup(
                 adchsComponent, Module, RegisterName, BitFieldBaseName_SIGN + str(signalID),
                 adchsCONMenu[signalID], False)
@@ -2414,7 +2415,7 @@ def instantiateComponent(adchsComponent):
     adchsSystemDefFile.setSourcePath("../peripheral/adchs_02508/templates/system/definitions.h.ftl")
     adchsSystemDefFile.setMarkup(True)
 
-    
+
     adchsComponent.addPlugin(
         "../../harmony-services/plugins/generic_plugin.jar",
         "ADCHS_UI_MANAGER_ID_adchs_02508",
