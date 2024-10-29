@@ -264,7 +264,7 @@ def instantiateComponent(sqiComponent):
         Database.setSymbolValue("core", InterruptVectorSecurity, sqiIsNonSecure)      
 
     sqiInterruptEnable = sqiComponent.createBooleanSymbol("INTERRUPT_ENABLE", sqiMenu)
-    sqiInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_04044;register:%NOREGISTER%")
+    sqiInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_04044;register:INTENSET")
     sqiInterruptEnable.setLabel("SQI Interrupt Enabled")
     sqiInterruptEnable.setDefaultValue(True)
     sqiInterruptEnable.setReadOnly(True)
@@ -288,7 +288,7 @@ def instantiateComponent(sqiComponent):
     sqiVectorNum.setVisible(False)
 
     sqiFlashStatusCheck = sqiComponent.createBooleanSymbol("SQI_FLASH_STATUS_CHECK", sqiMenu)
-    sqiFlashStatusCheck.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_04044;register:%NOREGISTER%")
+    sqiFlashStatusCheck.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_04044;register:MEMSTAT")
     sqiFlashStatusCheck.setLabel("Enable Flash Status Check?")
     sqiFlashStatusCheck.setDefaultValue(True)
 
