@@ -202,7 +202,7 @@ def instantiateComponent(sdadcComponent):
     #Trigger selection
     global sdadcSym_TRIGGER
     sdadcSym_TRIGGER = sdadcComponent.createKeyValueSetSymbol("SDADC_TRIGGER", None)
-    sdadcSym_TRIGGER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
+    sdadcSym_TRIGGER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:SWTRIG")
     sdadcSym_TRIGGER.setLabel("Select Conversion Trigger")
     sdadcSym_TRIGGER.addKey("FREE_RUN", "0", "Free Run")
     sdadcSym_TRIGGER.addKey("SW_TRIGGER", "1", "Software Trigger")
@@ -236,7 +236,7 @@ def instantiateComponent(sdadcComponent):
     # Auto sequencer
     sdadcSym_AUTO_SEQUENCE = sdadcComponent.createBooleanSymbol("SDADC_AUTO_SEQUENCE", None)
     sdadcSym_AUTO_SEQUENCE.setLabel("Enable Automatic Sequencing")
-    sdadcSym_AUTO_SEQUENCE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
+    sdadcSym_AUTO_SEQUENCE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:CTRLA")
     sdadcSym_AUTO_SEQUENCE.setVisible(False)
     sdadcSym_AUTO_SEQUENCE.setDependencies(sdadcOptionVisible, ["SDADC_TRIGGER"])
 
@@ -338,12 +338,12 @@ def instantiateComponent(sdadcComponent):
 
     #Run StandBy
     sdadcSym_CTRLA_RUNSTDBY = sdadcComponent.createBooleanSymbol("SDADC_RUNSTDBY", sdadcSym_Sleep_Menu)
-    sdadcSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
+    sdadcSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:CTRLA")
     sdadcSym_CTRLA_RUNSTDBY.setLabel("Run During Standby")
 
     #On Demand
     sdadcSym_CTRLA_ONDEMAND = sdadcComponent.createBooleanSymbol("SDADC_ONDEMAND", sdadcSym_Sleep_Menu)
-    sdadcSym_CTRLA_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
+    sdadcSym_CTRLA_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:CTRLA")
     sdadcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
 
     ############################################################################
