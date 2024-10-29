@@ -103,7 +103,7 @@ def instantiateComponent(sdhcComponent):
     sdhcUseEMMC.setDefaultValue(False)
 
     sdhcDescLines = sdhcComponent.createIntegerSymbol("SDHC_NUM_DESCRIPTOR_LINES", None)
-    sdhcDescLines.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
+    sdhcDescLines.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:SDHCCAP")
     sdhcDescLines.setLabel("Number of ADMA2 Descriptor Lines")
     sdhcDescLines.setMin(1)
     sdhcDescLines.setMax(10)
