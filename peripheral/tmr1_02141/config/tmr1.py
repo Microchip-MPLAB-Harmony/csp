@@ -466,7 +466,7 @@ def instantiateComponent(tmr1Component):
     Database.setSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     tmr1SymInterruptMode = tmr1Component.createBooleanSymbol("TMR1_INTERRUPT_MODE", None)
-    tmr1SymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1SymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:IEC0")
     tmr1SymInterruptMode.setLabel("Enable Interrrupts ?")
     tmr1SymInterruptMode.setDefaultValue(True)
 
@@ -498,7 +498,7 @@ def instantiateComponent(tmr1Component):
     prescale_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_PRESCALER, prescale_names)
     tmr1Sym_T1CON_PRESCALER = tmr1Component.createKeyValueSetSymbol("TIMER1_PRE_SCALER", None)
-    tmr1Sym_T1CON_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1Sym_T1CON_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1Sym_T1CON_PRESCALER.setLabel("Select Prescaler")
     tmr1Sym_T1CON_PRESCALER.setOutputMode("Value")
     tmr1Sym_T1CON_PRESCALER.setDisplayMode("Description")
@@ -518,7 +518,7 @@ def instantiateComponent(tmr1Component):
     tcs_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TCS, tcs_names)
     tmr1Sym_T1CON_SOURCE_SEL = tmr1Component.createKeyValueSetSymbol("TIMER1_SRC_SEL", None)
-    tmr1Sym_T1CON_SOURCE_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1Sym_T1CON_SOURCE_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1Sym_T1CON_SOURCE_SEL.setLabel("Select Timer Clock Source")
     tmr1Sym_T1CON_SOURCE_SEL.setOutputMode("Value")
     tmr1Sym_T1CON_SOURCE_SEL.setDisplayMode("Description")
@@ -530,7 +530,7 @@ def instantiateComponent(tmr1Component):
     tecs_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TECS, tecs_names)
     tmr1SymField_T1CON_TECS = tmr1Component.createKeyValueSetSymbol("TIMER1_TECS", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1SymField_T1CON_TECS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1SymField_T1CON_TECS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1SymField_T1CON_TECS.setLabel(tmr1BitField_T1CON_TECS.getAttribute("caption"))
     tmr1SymField_T1CON_TECS.setOutputMode( "Value" )
     tmr1SymField_T1CON_TECS.setDisplayMode( "Description" )
@@ -541,7 +541,7 @@ def instantiateComponent(tmr1Component):
     tmr1SymField_T1CON_TECS.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
 
     tmr1Sym_EXT_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_EXT_CLOCK_FREQ", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1Sym_EXT_CLOCK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1Sym_EXT_CLOCK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1Sym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
     tmr1Sym_EXT_CLOCK_FREQ.setVisible(False)
     tmr1Sym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
@@ -551,7 +551,7 @@ def instantiateComponent(tmr1Component):
     tsync_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TSYNC, tsync_names)
     tmr1Sym_T1CON_TSYNC = tmr1Component.createKeyValueSetSymbol("TIMER1_TSYNC", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1Sym_T1CON_TSYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1Sym_T1CON_TSYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1Sym_T1CON_TSYNC.setLabel(tmr1BitField_T1CON_TSYNC.getAttribute("caption"))
     tmr1Sym_T1CON_TSYNC.setOutputMode("Value")
     tmr1Sym_T1CON_TSYNC.setDisplayMode("Description")
@@ -565,7 +565,7 @@ def instantiateComponent(tmr1Component):
     twdis_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TWDIS, twdis_names)
     tmr1SymField_T1CON_TWDIS = tmr1Component.createKeyValueSetSymbol("TIMER1_TWDIS", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1SymField_T1CON_TWDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1SymField_T1CON_TWDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1SymField_T1CON_TWDIS.setLabel(tmr1BitField_T1CON_TWDIS.getAttribute("caption"))
     tmr1SymField_T1CON_TWDIS.setVisible(False)
     tmr1SymField_T1CON_TWDIS.setOutputMode( "Value" )
@@ -576,7 +576,7 @@ def instantiateComponent(tmr1Component):
     tmr1SymField_T1CON_TWDIS.setDependencies(tmr1AsyncSetting, ["TIMER1_SRC_SEL", "TIMER1_TSYNC"])
 
     tmr1Sym_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_CLOCK_FREQ", None)
-    tmr1Sym_CLOCK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1Sym_CLOCK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1Sym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
     tmr1Sym_CLOCK_FREQ.setVisible(True)
     tmr1Sym_CLOCK_FREQ.setReadOnly(True)
@@ -587,7 +587,7 @@ def instantiateComponent(tmr1Component):
     global tmrSym_TimerUnit
     timerUnit = ["millisecond", "microsecond", "nanosecond"]
     tmrSym_TimerUnit = tmr1Component.createComboSymbol("TIMER_UNIT", None, timerUnit)
-    tmrSym_TimerUnit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmrSym_TimerUnit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmrSym_TimerUnit.setLabel("Timer Period Unit")
     tmrSym_TimerUnit.setDefaultValue("millisecond")
 
@@ -599,7 +599,7 @@ def instantiateComponent(tmr1Component):
         max = 0
 
     tmr1Sym_PERIOD_MS = tmr1Component.createFloatSymbol("TIMER1_TIME_PERIOD_MS", None)
-    tmr1Sym_PERIOD_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1Sym_PERIOD_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1Sym_PERIOD_MS.setLabel("Time")
     tmr1Sym_PERIOD_MS.setDefaultValue(0.3)
     tmr1Sym_PERIOD_MS.setMin(0.0)
@@ -614,7 +614,7 @@ def instantiateComponent(tmr1Component):
 
     #Timer1 Period Register
     tmr1Sym_PR1 = tmr1Component.createLongSymbol("TIMER1_PERIOD", tmr1Sym_PERIOD_MS)
-    tmr1Sym_PR1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1Sym_PR1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1Sym_PR1.setLabel("Period Register")
     tmr1Sym_PR1.setDefaultValue(long(period))
     tmr1Sym_PR1.setReadOnly(True)
@@ -627,7 +627,7 @@ def instantiateComponent(tmr1Component):
     sidl_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_SIDL, sidl_names)
     tmr1SymField_T1CON_SIDL = tmr1Component.createKeyValueSetSymbol("TIMER1_SIDL", None)
-    tmr1SymField_T1CON_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1SymField_T1CON_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1SymField_T1CON_SIDL.setLabel(tmr1BitField_T1CON_SIDL.getAttribute("caption"))
     tmr1SymField_T1CON_SIDL.setOutputMode( "Value" )
     tmr1SymField_T1CON_SIDL.setDisplayMode( "Description" )
@@ -639,7 +639,7 @@ def instantiateComponent(tmr1Component):
     tgate_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TGATE, tgate_names)
     tmr1SymField_T1CON_TGATE = tmr1Component.createKeyValueSetSymbol("TIMER1_TGATE", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1SymField_T1CON_TGATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    tmr1SymField_T1CON_TGATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON)
     tmr1SymField_T1CON_TGATE.setLabel(tmr1BitField_T1CON_TGATE.getAttribute("caption"))
     tmr1SymField_T1CON_TGATE.setOutputMode( "Value" )
     tmr1SymField_T1CON_TGATE.setDisplayMode( "Description" )
@@ -681,7 +681,7 @@ def instantiateComponent(tmr1Component):
 
     sysTimeComponentId = tmr1Component.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
-    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:%NOREGISTER%")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
