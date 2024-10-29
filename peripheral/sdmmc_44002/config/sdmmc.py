@@ -66,7 +66,7 @@ def instantiateComponent(sdmmcComponent):
     Database.setSymbolValue("core", interruptHandlerLock, True)
 
     sdmmcInterrupt = sdmmcComponent.createBooleanSymbol("INTERRUPT_MODE", None)
-    sdmmcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:%NOREGISTER%")
+    sdmmcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:SDMMC_NISTR")
     sdmmcInterrupt.setLabel("Interrupt Mode")
     sdmmcInterrupt.setDefaultValue(True)
     sdmmcInterrupt.setReadOnly(True)
@@ -77,7 +77,7 @@ def instantiateComponent(sdmmcComponent):
     sdmmcHClk.setDependencies(updateClockFrequency, ["core." + sdmmcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     sdmmcBaseClk = sdmmcComponent.createIntegerSymbol("SDMMC_BASECLK_FREQ", None)
-    sdmmcBaseClk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:%NOREGISTER%")
+    sdmmcBaseClk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:SDMMC_CCR")
     sdmmcBaseClk.setLabel("Base Clock Frequency (Hz)")
     sdmmcBaseClk.setDefaultValue(int(round(Database.getSymbolValue("core", sdmmcInstanceName.getValue() + "_BASECLK_FREQUENCY"), 3)))
     sdmmcBaseClk.setDependencies(updateClockFrequency, ["core." + sdmmcInstanceName.getValue() + "_BASECLK_FREQUENCY"])
@@ -89,7 +89,7 @@ def instantiateComponent(sdmmcComponent):
     sdmmcBaseClkSrcComment.setDependencies(showCommentOnZero, ["SDMMC_BASECLK_FREQ"])
     
     sdmmcMultClk = sdmmcComponent.createIntegerSymbol("SDMMC_MULTCLK_FREQ", None)
-    sdmmcMultClk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:%NOREGISTER%")
+    sdmmcMultClk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:SDMMC_CCR")
     sdmmcMultClk.setLabel("Programmable Clock Frequency (Hz)")
     sdmmcMultClk.setReadOnly(True)
     sdmmcMultClk.setDefaultValue(int(round(Database.getSymbolValue("core", sdmmcInstanceName.getValue() + "_MULTCLK_FREQUENCY"), -3)))
@@ -119,7 +119,7 @@ def instantiateComponent(sdmmcComponent):
 
     sdmmcEMMCSupport = sdmmcComponent.createBooleanSymbol("SDCARD_EMMC_SUPPORT", None)
     sdmmcEMMCSupport.setLabel("EMMC capability")
-    sdmmcEMMCSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:%NOREGISTER%")
+    sdmmcEMMCSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:SDMMC_MC1R")
     sdmmcEMMCSupport.setReadOnly(True)
     sdmmcEMMCSupport.setVisible(False)
     sdmmcEMMCSupport.setDefaultValue(True)
@@ -133,7 +133,7 @@ def instantiateComponent(sdmmcComponent):
 
     sdmmcWPSupport = sdmmcComponent.createBooleanSymbol("SDCARD_SDWP_SUPPORT", None)
     sdmmcWPSupport.setLabel("Write protect support available")
-    sdmmcWPSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:%NOREGISTER%")
+    sdmmcWPSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:SDMMC_PCR")
     sdmmcWPSupport.setReadOnly(True)
     sdmmcWPSupport.setVisible(False)
     sdmmcWPSupport.setDefaultValue(supportWPPin)
@@ -172,7 +172,7 @@ def instantiateComponent(sdmmcComponent):
     sdmmcUseEMMC.setDefaultValue(False)
 
     sdmmcDescLines = sdmmcComponent.createIntegerSymbol("SDMMC_NUM_DESCRIPTOR_LINES", None)
-    sdmmcDescLines.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:%NOREGISTER%")
+    sdmmcDescLines.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:SDMMC_PSR")
     sdmmcDescLines.setLabel("Number of ADMA2 Descriptor Lines")
     sdmmcDescLines.setMin(1)
     sdmmcDescLines.setMax(10)

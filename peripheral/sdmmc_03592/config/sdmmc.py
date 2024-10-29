@@ -125,7 +125,7 @@ def instantiateComponent(sdmmcComponent):
     sdmmcUseEMMC.setDefaultValue(False)
 
     sdmmcDescLines = sdmmcComponent.createIntegerSymbol("SDMMC_NUM_DESCRIPTOR_LINES", None)
-    sdmmcDescLines.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_03592;register:%NOREGISTER%")
+    sdmmcDescLines.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_03592;register:CA0R")
     sdmmcDescLines.setLabel("Number of ADMA2 Descriptor Lines")
     sdmmcDescLines.setMin(1)
     sdmmcDescLines.setMax(10)
