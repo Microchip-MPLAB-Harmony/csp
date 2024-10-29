@@ -96,7 +96,7 @@ def instantiateComponent(trngComponent):
 
     trngReserved = trngComponent.createBooleanSymbol("TRNG_Reserved", None)
     trngReserved.setLabel("TRNG Reserved")
-    trngReserved.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:trng_6334;register:%NOREGISTER%")
+    trngReserved.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:trng_6334;register:TRNG_CR")
     trngReserved.setVisible(False)
 
     trngWarning = trngComponent.createCommentSymbol("TRNG_COMMENT", None)
@@ -111,7 +111,7 @@ def instantiateComponent(trngComponent):
 
     #Create a Checkbox to enable disable interrupts
     trngInterrupt = trngComponent.createBooleanSymbol("trngEnableInterrupt", trngMenu)
-    trngInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:trng_6334;register:%NOREGISTER%")
+    trngInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:trng_6334;register:TRNG_IER")
     trngInterrupt.setLabel("Enable Interrupts")
     trngInterrupt.setDefaultValue(False)
 
