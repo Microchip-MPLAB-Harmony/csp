@@ -170,7 +170,7 @@ def instantiateComponent(pmpComponent):
 
     #Stop in Idle mode
     pmpSym_SIDL = pmpComponent.createBooleanSymbol("PMP_SIDL", None)
-    pmpSym_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:%NOREGISTER%")
+    pmpSym_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMCON")
     pmpSym_SIDL.setLabel("Stop in Idle Mode bit")
 
     pmpMODE_names = []
@@ -191,7 +191,7 @@ def instantiateComponent(pmpComponent):
     pmpSym_MasterModeMenu.setLabel("Master Mode Configuration")
 
     pmpSymInterruptMode = pmpComponent.createBooleanSymbol("PMP_INTERRUPT_MODE", pmpSym_MasterModeMenu)
-    pmpSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:%NOREGISTER%")
+    pmpSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:IEC1")
     pmpSymInterruptMode.setLabel("Enable Interrrupts ?")
 
     ## PMP IRQ
