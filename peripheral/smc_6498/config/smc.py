@@ -158,7 +158,7 @@ def instantiateComponent(smcComponent):
     smcSym_GlobalMenu.setLabel("SMC Global Features")
 
     smcSym_WPMR_WPEN = smcComponent.createBooleanSymbol("SMC_WRITE_PROTECTION", smcSym_GlobalMenu)
-    smcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:%NOREGISTER%")
+    smcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_WPMR")
     smcSym_WPMR_WPEN.setLabel("Enable Write Protection")
     smcSym_WPMR_WPEN.setDefaultValue(False)
 
@@ -185,7 +185,7 @@ def instantiateComponent(smcComponent):
 
     for smcChipSelNum in range(0, smcChipSelCount):
         smcSym_CS = smcComponent.createBooleanSymbol("SMC_CHIP_SELECT" + str(smcChipSelNum), smcSym_Chip_Select)
-        smcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:%NOREGISTER%")
+        smcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_SETUP")
         smcSym_CS.setLabel("Enable Chip Select "+ str(smcChipSelNum))
 
         smcSym_OCMS_CS_SE = smcComponent.createBooleanSymbol("SMC_MEM_SCRAMBLING_CS" + str(smcChipSelNum), smcSym_CS)

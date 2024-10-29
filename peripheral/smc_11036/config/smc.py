@@ -305,7 +305,7 @@ def instantiateComponent( smcComponent ):
     nfcConfigurationMenu.setLabel( "NFC Configuration" )
     # -----
     nfcControllerEnable = smcComponent.createBooleanSymbol( "SMC_NFC_CONTROLLER_ENABLE", nfcConfigurationMenu )
-    nfcControllerEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    nfcControllerEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CTRL")
     nfcControllerEnable.setLabel( bitField_CTRL_NFCEN.getAttribute( "caption" ) )
 
     nfcPageSize = smcComponent.createKeyValueSetSymbol( "SMC_NFC_PAGE_SIZE", nfcConfigurationMenu )
@@ -335,14 +335,14 @@ def instantiateComponent( smcComponent ):
 
     nfcDataTimeOutCycleName = "SMC_NFC_DATA_TIMEOUT_CYCLE"
     nfcDataTimeOutCycle = smcComponent.createIntegerSymbol( nfcDataTimeOutCycleName, nfcConfigurationMenu )
-    nfcDataTimeOutCycle.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    nfcDataTimeOutCycle.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcDataTimeOutCycle.setLabel( bitField_CFG_DTOCYC.getAttribute( "caption" ) )
     nfcDataTimeOutCycle.setMin( DEFAULT_NFC_MIN_VALUE )
     nfcDataTimeOutCycle.setMax( convertMaskToInt( bitField_CFG_DTOCYC.getAttribute( "mask" ) ) )
 
     nfcDataTimeOutMultiplierName = "SMC_NFC_DATA_TIMEOUT_MULTIPLIER"
     nfcDataTimeOutMuliplier = smcComponent.createKeyValueSetSymbol( nfcDataTimeOutMultiplierName, nfcConfigurationMenu )
-    nfcDataTimeOutMuliplier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    nfcDataTimeOutMuliplier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcDataTimeOutMuliplier.setLabel( bitField_CFG_DTOMUL.getAttribute( "caption" ) )
     nfcDataTimeOutMuliplier.setOutputMode( "Key" )
     nfcDataTimeOutMuliplier.setDisplayMode( "Description" )
@@ -353,7 +353,7 @@ def instantiateComponent( smcComponent ):
     nfcSpareAreaSizeName = "SMC_NFC_SPARE_AREA_SIZE"
     nfcSpareAreaSizeCaption = bitField_CFG_NFCSPARESIZE.getAttribute( "caption" )
     nfcSpareAreaSize = smcComponent.createIntegerSymbol( nfcSpareAreaSizeName, nfcConfigurationMenu )
-    nfcSpareAreaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    nfcSpareAreaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcSpareAreaSize.setLabel( nfcSpareAreaSizeCaption )
     nfcSpareAreaSize.setMin( DEFAULT_NFC_MIN_VALUE )
     nfcSpareAreaSize.setMax( convertMaskToInt( bitField_CFG_NFCSPARESIZE.getAttribute( "mask" ) ) )
@@ -377,7 +377,7 @@ def instantiateComponent( smcComponent ):
     pmeccMenu.setLabel( "Programmable Multi-bit Error Correction Code" )
     # -----
     pmeccEnable = smcComponent.createBooleanSymbol( "SMC_PMECC_ENABLE", pmeccMenu )
-    pmeccEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    pmeccEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCTRL")
     pmeccEnable.setLabel( bitField_PMECCTRL_ENABLE.getAttribute( "caption" ) )
     # -----
     pmeccErrorCorrectionCapability = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_ERROR_CORRECTION_CAPABILITY", pmeccMenu )
@@ -452,7 +452,7 @@ def instantiateComponent( smcComponent ):
     pmeccErrorLocationMenu.setLabel( "PMECC Error Location" )
     # -----
     pmeccErrorLocationDisable = smcComponent.createBooleanSymbol( "SMC_PMECC_ERROR_LOCATION_DISABLE", pmeccErrorLocationMenu )
-    pmeccErrorLocationDisable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    pmeccErrorLocationDisable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccErrorLocationDisable.setLabel( bitField_ELDIS_DIS.getAttribute( "caption" ) )
     # -----
     pmeccErrorLocationEnable = smcComponent.createIntegerSymbol( "SMC_PMECC_ERROR_LOCATION_ENABLE_CODEWORD", pmeccErrorLocationMenu )
@@ -463,7 +463,7 @@ def instantiateComponent( smcComponent ):
     pmeccErrorLocationEnable.setDefaultValue( DEFAULT_PMECC_ERROR_LOCATION_CODEWORD )
     # -----
     pmeccErrorLocationSectorSize = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_ERROR_LOCATION_SECTOR_SIZE", pmeccErrorLocationMenu )
-    pmeccErrorLocationSectorSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    pmeccErrorLocationSectorSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccErrorLocationSectorSize.setLabel( bitField_ELCFG_SECTORSZ.getAttribute( "caption" ) )
     pmeccErrorLocationSectorSize.setOutputMode( "Key" )
     pmeccErrorLocationSectorSize.setDisplayMode( "Description" )
@@ -492,7 +492,7 @@ def instantiateComponent( smcComponent ):
     for csNumIndex in range(0, smcCsCount):
         csNum = str( csNumIndex )
         chipSelectEnable = smcComponent.createBooleanSymbol( "SMC_CHIP_SELECT_ENABLE" + csNum, chipSelectionMenu)
-        chipSelectEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        chipSelectEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_SETUP")
         chipSelectEnable.setLabel( "Chip Select " + csNum + " Enable" )
         # Mode register
         modeSettingsMenu = smcComponent.createMenuSymbol( "SMC_MODE_SETTINGS" + csNum, chipSelectEnable )
@@ -501,14 +501,14 @@ def instantiateComponent( smcComponent ):
         modeTdfModeNameStem = "SMC_MODE_TDF_MODE"
         modeTdfModeName = modeTdfModeNameStem + csNum
         modeTdfMode = smcComponent.createBooleanSymbol( modeTdfModeName, modeSettingsMenu )
-        modeTdfMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        modeTdfMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_MODE")
         modeTdfMode.setLabel( bitField_MODE_TDF_MODE.getAttribute( "caption" ) )
         modeTdfMode.setDefaultValue(True)
 
         modeTdfCyclesNameStem = "SMC_MODE_TDF_CYCLES"
         modeTdfCyclesName = modeTdfCyclesNameStem + csNum
         modeTdfCycles = smcComponent.createIntegerSymbol( modeTdfCyclesName, modeSettingsMenu )
-        modeTdfCycles.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        modeTdfCycles.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CYCLE")
         modeTdfCycles.setLabel( bitField_MODE_TDF_CYCLES.getAttribute( "caption" ) )
         modeTdfCycles.setMin( DEFAULT_SMC_MODE_MIN_VALUE )
         modeTdfCycles.setMax( convertMaskToInt( bitField_MODE_TDF_CYCLES.getAttribute( "mask" ) ) )
@@ -518,7 +518,7 @@ def instantiateComponent( smcComponent ):
         modeDbwNameStem = "SMC_MODE_DBW"
         modeDbwName = modeDbwNameStem + csNum
         modeDbw = smcComponent.createKeyValueSetSymbol( modeDbwName, modeSettingsMenu )
-        modeDbw.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        modeDbw.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_MODE")
         modeDbw.setLabel( bitField_MODE_DBW.getAttribute( "caption" ) )
         modeDbw.setOutputMode( "Key" )
         modeDbw.setDisplayMode( "Description" )
@@ -529,7 +529,7 @@ def instantiateComponent( smcComponent ):
         modeBatNameStem = "SMC_MODE_BAT"
         modeBatName = modeBatNameStem + csNum
         modeBat = smcComponent.createKeyValueSetSymbol( modeBatName, modeSettingsMenu )
-        modeBat.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        modeBat.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_MODE")
         modeBat.setLabel( bitField_MODE_BAT.getAttribute( "caption" ) )
         modeBat.setOutputMode( "Key" )
         modeBat.setDisplayMode( "Description" )
@@ -541,7 +541,7 @@ def instantiateComponent( smcComponent ):
         modeNWaitNameStem = "SMC_MODE_NWAIT"
         modeNWaitName = modeNWaitNameStem + csNum
         modeNWait = smcComponent.createKeyValueSetSymbol( modeNWaitName, modeSettingsMenu )
-        modeNWait.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        modeNWait.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_MODE")
         modeNWait.setLabel( bitField_MODE_EXNW_MODE.getAttribute( "caption" ) )
         modeNWait.setOutputMode( "Key" )
         modeNWait.setDisplayMode( "Description" )
@@ -559,7 +559,7 @@ def instantiateComponent( smcComponent ):
         modeReadModeNameStem = "SMC_MODE_READ_MODE"
         modeReadModeName = modeReadModeNameStem + csNum
         modeReadMode = smcComponent.createKeyValueSetSymbol( modeReadModeName, readCycleConfiguration )
-        modeReadMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        modeReadMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_MODE")
         modeReadMode.setLabel( bitField_MODE_READ_MODE.getAttribute( "caption" ) )
         modeReadMode.setOutputMode( "Key" )
         modeReadMode.setDisplayMode( "Description" )
@@ -571,7 +571,7 @@ def instantiateComponent( smcComponent ):
         setupNCsRdName = setupNCsRdNameStem + csNum
         setupNCsRdCaption = bitField_SETUP_NCS_RD.getAttribute( "caption" )
         setupNCsRd = smcComponent.createIntegerSymbol( setupNCsRdName, readCycleConfiguration)
-        setupNCsRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        setupNCsRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_SETUP")
         setupNCsRd.setLabel( setupNCsRdCaption )
         setupNCsRd.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
         setupNCsRd.setMax( convertMaskToInt( bitField_SETUP_NCS_RD.getAttribute( "mask" ) ) )
@@ -581,7 +581,7 @@ def instantiateComponent( smcComponent ):
         pulseNCsRdName = pulseNCsRdNameStem + csNum
         pulseNCsRdCaption = bitField_PULSE_NCS_RD.getAttribute( "caption" )
         pulseNCsRd = smcComponent.createIntegerSymbol( pulseNCsRdName, readCycleConfiguration)
-        pulseNCsRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        pulseNCsRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PULSE")
         pulseNCsRd.setLabel( pulseNCsRdCaption )
         pulseNCsRd.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
         pulseNCsRd.setMax( convertMaskToInt( bitField_PULSE_NCS_RD.getAttribute( "mask" ) ) )
@@ -591,7 +591,7 @@ def instantiateComponent( smcComponent ):
         setupNRdName = setupNRdNameStem + csNum
         setupNRdCaption = bitField_SETUP_NRD.getAttribute( "caption" )
         setupNRd = smcComponent.createIntegerSymbol( setupNRdName, readCycleConfiguration)
-        setupNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        setupNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_SETUP")
         setupNRd.setLabel( setupNRdCaption )
         setupNRd.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
         setupNRd.setMax( convertMaskToInt( bitField_SETUP_NRD.getAttribute( "mask" ) ) )
@@ -601,7 +601,7 @@ def instantiateComponent( smcComponent ):
         pulseNRdName = pulseNRdNameStem + csNum
         pulseNRdCaption = bitField_PULSE_NRD.getAttribute( "caption" )
         pulseNRd = smcComponent.createIntegerSymbol( pulseNRdName, readCycleConfiguration)
-        pulseNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        pulseNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PULSE")
         pulseNRd.setLabel( pulseNRdCaption )
         pulseNRd.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
         pulseNRd.setMax( convertMaskToInt( bitField_PULSE_NRD.getAttribute( "mask" ) ) )
@@ -611,7 +611,7 @@ def instantiateComponent( smcComponent ):
         cycleNRdName = cycleNRdNameStem + csNum
         cycleNRdCaption = bitField_CYCLE_NRD.getAttribute( "caption" )
         cycleNRd = smcComponent.createIntegerSymbol( cycleNRdName, readCycleConfiguration )
-        cycleNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        cycleNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CYCLE")
         cycleNRd.setLabel( cycleNRdCaption )
         cycleNRd.setMin( DEFAULT_SMC_CYCLE_MIN_VALUE )
         cycleNRd.setMax( convertMaskToInt( bitField_CYCLE_NRD.getAttribute( "mask" ) ) )
@@ -620,7 +620,7 @@ def instantiateComponent( smcComponent ):
         modeWriteModeNameStem = "SMC_MODE_WRITE_MODE"
         modeWriteModeName = modeWriteModeNameStem + csNum
         modeWriteMode = smcComponent.createKeyValueSetSymbol( modeWriteModeName, writeCycleConfiguration )
-        modeWriteMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        modeWriteMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_MODE")
         modeWriteMode.setLabel( bitField_MODE_WRITE_MODE.getAttribute( "caption" ) )
         modeWriteMode.setOutputMode( "Key" )
         modeWriteMode.setDisplayMode( "Description" )
@@ -632,7 +632,7 @@ def instantiateComponent( smcComponent ):
         setupNCsWrName = setupNCsWrNameStem + csNum
         setupNCsWrCaption = bitField_SETUP_NCS_WR.getAttribute( "caption" )
         setupNCsWr = smcComponent.createIntegerSymbol( setupNCsWrName, writeCycleConfiguration)
-        setupNCsWr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        setupNCsWr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_SETUP")
         setupNCsWr.setLabel( setupNCsWrCaption )
         setupNCsWr.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
         setupNCsWr.setMax( convertMaskToInt( bitField_SETUP_NCS_WR.getAttribute( "mask" ) ) )
@@ -642,7 +642,7 @@ def instantiateComponent( smcComponent ):
         pulseNCsWrName = pulseNCsWrNameStem + csNum
         pulseNCsWrCaption = bitField_PULSE_NCS_WR.getAttribute( "caption" )
         pulseNCsWr = smcComponent.createIntegerSymbol( pulseNCsWrName, writeCycleConfiguration)
-        pulseNCsWr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        pulseNCsWr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PULSE")
         pulseNCsWr.setLabel( pulseNCsWrCaption )
         pulseNCsWr.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
         pulseNCsWr.setMax( convertMaskToInt( bitField_PULSE_NCS_WR.getAttribute( "mask" ) ) )
@@ -652,7 +652,7 @@ def instantiateComponent( smcComponent ):
         setupNWeName = setupNWeNameStem + csNum
         setupNWeCaption = bitField_SETUP_NWE.getAttribute( "caption" )
         setupNWe = smcComponent.createIntegerSymbol( setupNWeName, writeCycleConfiguration )
-        setupNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        setupNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_SETUP")
         setupNWe.setLabel( setupNWeCaption )
         setupNWe.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
         setupNWe.setMax( convertMaskToInt( bitField_SETUP_NWE.getAttribute( "mask" ) ) )
@@ -662,7 +662,7 @@ def instantiateComponent( smcComponent ):
         pulseNWeName = pulseNWeNameStem + csNum
         pulseNWeCaption = bitField_PULSE_NWE.getAttribute( "caption" )
         pulseNWe = smcComponent.createIntegerSymbol( pulseNWeName, writeCycleConfiguration )
-        pulseNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        pulseNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PULSE")
         pulseNWe.setLabel( pulseNWeCaption )
         pulseNWe.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
         pulseNWe.setMax( convertMaskToInt( bitField_PULSE_NWE.getAttribute( "mask" ) ) )
@@ -672,7 +672,7 @@ def instantiateComponent( smcComponent ):
         cycleNWeName = cycleNWeNameStem + csNum
         cycleNWeCaption = bitField_CYCLE_NWE.getAttribute( "caption" )
         cycleNWe = smcComponent.createIntegerSymbol( cycleNWeName, writeCycleConfiguration)
-        cycleNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        cycleNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CYCLE")
         cycleNWe.setLabel( cycleNWeCaption )
         cycleNWe.setMin( DEFAULT_SMC_CYCLE_MIN_VALUE )
         cycleNWe.setMax( convertMaskToInt( bitField_CYCLE_NWE.getAttribute( "mask" ) ) )
@@ -684,7 +684,7 @@ def instantiateComponent( smcComponent ):
         timingsNfSelNameStem = "SMC_TIMINGS_NFSEL"
         timingsNfSelName = timingsNfSelNameStem + csNum
         timingsNfSel = smcComponent.createBooleanSymbol( timingsNfSelName, timingsMenu)
-        timingsNfSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        timingsNfSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_TIMINGS")
         timingsNfSel.setLabel( bitField_TIMINGS_NFSEL.getAttribute( "caption" ) )
         timingsNfSel.setDefaultValue(True)
 
@@ -692,7 +692,7 @@ def instantiateComponent( smcComponent ):
         timingsTwbName = timingsTwbNameStem + csNum
         timingsTwbCaption = bitField_TIMINGS_TWB.getAttribute( "caption" )
         timingsTwb = smcComponent.createIntegerSymbol( timingsTwbName, timingsMenu)
-        timingsTwb.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        timingsTwb.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_TIMINGS")
         timingsTwb.setLabel( timingsTwbCaption )
         timingsTwb.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTwb.setMax( convertMaskToInt( bitField_TIMINGS_TWB.getAttribute( "mask" ) ) )
@@ -702,7 +702,7 @@ def instantiateComponent( smcComponent ):
         timingsTrrName = timingsTrrNameStem + csNum
         timingsTrrCaption = bitField_TIMINGS_TRR.getAttribute( "caption" )
         timingsTrr = smcComponent.createIntegerSymbol( timingsTrrName, timingsMenu)
-        timingsTrr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        timingsTrr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_TIMINGS")
         timingsTrr.setLabel( timingsTrrCaption )
         timingsTrr.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTrr.setMax( convertMaskToInt( bitField_TIMINGS_TRR.getAttribute( "mask" ) ) )
@@ -711,7 +711,7 @@ def instantiateComponent( smcComponent ):
         timingsOcmsNameStem = "SMC_TIMINGS_OCMS"
         timingsOcmsName = timingsOcmsNameStem + csNum
         timingsOcms = smcComponent.createBooleanSymbol( timingsOcmsName, timingsMenu )
-        timingsOcms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        timingsOcms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_TIMINGS")
         timingsOcms.setLabel( bitField_TIMINGS_OCMS.getAttribute( "caption" ) )
         timingsOcms.setDefaultValue( False )
 
@@ -719,7 +719,7 @@ def instantiateComponent( smcComponent ):
         timingsTarName = timingsTarNameStem + csNum
         timingsTarCaption = bitField_TIMINGS_TAR.getAttribute( "caption" )
         timingsTar = smcComponent.createIntegerSymbol( timingsTarName, timingsMenu)
-        timingsTar.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        timingsTar.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_TIMINGS")
         timingsTar.setLabel( timingsTarCaption )
         timingsTar.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTar.setMax( convertMaskToInt( bitField_TIMINGS_TAR.getAttribute( "mask" ) ) )
@@ -729,7 +729,7 @@ def instantiateComponent( smcComponent ):
         timingsTadlName = timingsTadlNameStem + csNum
         timingsTadlCaption = bitField_TIMINGS_TADL.getAttribute( "caption" )
         timingsTadl = smcComponent.createIntegerSymbol( timingsTadlName, timingsMenu )
-        timingsTadl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        timingsTadl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_TIMINGS")
         timingsTadl.setLabel( timingsTadlCaption )
         timingsTadl.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTadl.setMax( convertMaskToInt( bitField_TIMINGS_TADL.getAttribute( "mask" ) ) )
@@ -739,7 +739,7 @@ def instantiateComponent( smcComponent ):
         timingsTclrName = timingsTclrNameStem + csNum
         timingsTclrCaption = bitField_TIMINGS_TCLR.getAttribute( "caption" )
         timingsTclr = smcComponent.createIntegerSymbol( timingsTclrName, timingsMenu)
-        timingsTclr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+        timingsTclr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_TIMINGS")
         timingsTclr.setLabel( timingsTclrCaption )
         timingsTclr.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTclr.setMax( convertMaskToInt( bitField_TIMINGS_TCLR.getAttribute( "mask" ) ) )
@@ -762,7 +762,7 @@ def instantiateComponent( smcComponent ):
     scramblingKey2.setLabel( bitField_KEY2_KEY2.getAttribute( "caption" ) )
     scramblingKey2.setMax(0xFFFFFFFF)
     writeProtectionEnable = smcComponent.createBooleanSymbol( "SMC_WRITE_PROTECTION", None )
-    writeProtectionEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
+    writeProtectionEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_WPMR")
     writeProtectionEnable.setLabel( bitField_WPMR_WPEN.getAttribute( "caption" ) )
     writeProtectionEnable.setDefaultValue( False )
 
