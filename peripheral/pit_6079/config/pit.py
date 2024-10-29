@@ -157,7 +157,7 @@ def instantiateComponent( pitComponent ):
     clk = clk / 16
     maxval = float(pow(2,20) * 1000.0 / float(clk))
     period = pitComponent.createFloatSymbol("PERIOD_MS", None)
-    period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit_6079;register:%NOREGISTER%")
+    period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit_6079;register:PIT_MR")
     period.setLabel("Period (ms)")
     period.setMax(maxval)
     period.setMin(1001.0 / float(clk))
