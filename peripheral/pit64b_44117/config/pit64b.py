@@ -110,7 +110,7 @@ def instantiateComponent(pit64Component):
     period_lsb.setDependencies(lambda symbol, event:symbol.setValue(event['value'] & 0xFFFFFFFF), ['PERIOD'])
 
     period_us = pit64Component.createFloatSymbol("PERIOD_US", None)
-    period_us.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:%NOREGISTER%")
+    period_us.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_MR")
     period_us.setLabel("Timer Period(us)")
     period_us.setReadOnly(True)
     input_freq = Database.getSymbolValue("core", instanceName.getValue() + "_CLOCK_FREQUENCY")
