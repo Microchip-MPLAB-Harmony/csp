@@ -126,7 +126,7 @@ def instantiateComponent(supcComponent):
 
     # SM configuration
     supcSMMenu= supcComponent.createBooleanSymbol("SM_ENABLE", None)
-    supcSMMenu.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:%NOREGISTER%")
+    supcSMMenu.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_SMMR")
     supcSMMenu.setLabel("Enable Supply Monitor")
     supcSMMenu.setDependencies(enableSM,["SUPC_WUMR_SMEN"])
 
@@ -266,7 +266,7 @@ def instantiateComponent(supcComponent):
 
        supcSym_WUIR_WKUPT.append(id)
        supcSym_WUIR_WKUPT[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUIR_WKUPT" + str(id), supcSym_WUIR_WKUPEN[id])
-       supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:%NOREGISTER%")
+       supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUIR")
        supcSym_WUIR_WKUPT[id].setLabel("Select Wakeup Edge")
        supcSym_WUIR_WKUPT[id].addKey("LOW", "0", "Falling Edge")
        supcSym_WUIR_WKUPT[id].addKey("HIGH", "1", "Rising Edge")

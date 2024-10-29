@@ -336,7 +336,7 @@ if __name__ == "__main__":
 
                 supcSym_WUIR_WKUPT.append(id)
                 supcSym_WUIR_WKUPT[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUIR_WKUPT" + str(id), supcSym_WUIR_WKUPEN[id])
-                supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:%NOREGISTER%")
+                supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_WUMR")
                 supcSym_WUIR_WKUPT[id].setLabel("Select Wakeup Edge")
                 supcSym_WUIR_WKUPT[id].addKey("LOW", "0", "Falling Edge")
                 supcSym_WUIR_WKUPT[id].addKey("HIGH", "1", "Rising Edge")
@@ -360,7 +360,7 @@ if __name__ == "__main__":
             for id in range (0, 5):
                 supcSym_WUMR_LPDBC.append(id)
                 supcSym_WUMR_LPDBC[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_LPDBC" + str(id), supcDBMenu)
-                supcSym_WUMR_LPDBC[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:%NOREGISTER%")
+                supcSym_WUMR_LPDBC[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_WUMR")
                 supcSym_WUMR_LPDBC[id].setLabel("Minimum Pulse Width on WKUP" + str(id) + " pin")
                 supcValGrp_WUMR_LPDBC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_WUMR__LPDBC' + str(id) + '"]')
                 supcValGrp_WUMR_LPDBC_Values = supcValGrp_WUMR_LPDBC.getChildren()
@@ -375,7 +375,7 @@ if __name__ == "__main__":
 
                 supcSym_WUMR_LPDBCEN.append(id)
                 supcSym_WUMR_LPDBCEN[id] = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN" + str(id), supcDBMenu)
-                supcSym_WUMR_LPDBCEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:%NOREGISTER%")
+                supcSym_WUMR_LPDBCEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_WUMR")
                 supcSym_WUMR_LPDBCEN[id].setLabel("Enable Low-Power Debouncer WKUP" + str(id))
 
                 supcSym_IER_LPDBC.append(id)

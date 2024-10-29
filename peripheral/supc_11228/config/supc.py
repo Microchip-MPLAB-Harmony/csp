@@ -279,7 +279,7 @@ def instantiateComponent(supcComponent):
 
             supcSym_WUIR_WKUPT.append(id)
             supcSym_WUIR_WKUPT[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUIR_WKUPT" + str(id), supcSym_WUIR_WKUPEN[id])
-            supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_11228;register:%NOREGISTER%")
+            supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_11228;register:SUPC_WUIR")
             supcSym_WUIR_WKUPT[id].setLabel("Select Wakeup Edge")
             supcSym_WUIR_WKUPT[id].addKey("LOW", "0", "Falling Edge")
             supcSym_WUIR_WKUPT[id].addKey("HIGH", "1", "Rising Edge")

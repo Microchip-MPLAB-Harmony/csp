@@ -86,7 +86,7 @@ def instantiateComponent(supcComponent):
 
         #BORVDDUSB Interrupt Enable
         supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", None)
-        supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:%NOREGISTER%")
+        supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:SUPC_SMMR")
         supcSym_INTENSET.setLabel("Enable BORVDDUSB Interrupt")
         supcSym_INTENSET.setDefaultValue(False)
         supcSym_INTENSET.setDependencies(interruptControl, ["SUPC_INTERRUPT_ENABLE"])

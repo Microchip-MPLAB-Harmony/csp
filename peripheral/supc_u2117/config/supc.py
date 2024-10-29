@@ -153,7 +153,7 @@ def instantiateComponent(supcComponent):
     
     #Interrupt mode
     supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", supcSym_BODVDD_Menu)
-    supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+    supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:INTENSET")
     supcSym_INTENSET.setLabel("Enable BOD Interrupt")
     supcSym_INTENSET.setDefaultValue(False)
 
@@ -165,7 +165,7 @@ def instantiateComponent(supcComponent):
 
     #BODVDD ACTCFG mode
     supcSym_BODVDD_ACTCFG = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_ACTCFG", supcSym_BODVDD_Menu)
-    supcSym_BODVDD_ACTCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+    supcSym_BODVDD_ACTCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BODVDD")
     supcSym_BODVDD_ACTCFG.setLabel("Select Active mode operation")
     supcSym_BODVDD_ACTCFG.setDescription("Configures whether BODVDD should operate in continuous or sampling mode in Active mode")
     supcSym_BODVDD_ACTCFG.addKey("CONT_MODE", "0", "Continuous Mode")
@@ -176,13 +176,13 @@ def instantiateComponent(supcComponent):
     
     #BODVDD RUNSTDBY enable
     supcSym_BODVDD_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_"+BODname+"_RUNSTDBY", supcSym_BODVDD_Menu)
-    supcSym_BODVDD_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+    supcSym_BODVDD_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BODVDD")
     supcSym_BODVDD_RUNSTDBY.setLabel("Run in Standby mode")
     supcSym_BODVDD_RUNSTDBY.setDescription("Configures BODVDD operation in Standby Sleep Mode")
 
     #BODVDD STDBYCFG mode
     supcSym_BODVDD_STDBYCFG = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_STDBYCFG", supcSym_BODVDD_Menu)
-    supcSym_BODVDD_STDBYCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+    supcSym_BODVDD_STDBYCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BODVDD")
     supcSym_BODVDD_STDBYCFG.setLabel("Select Standby mode operation")
     supcSym_BODVDD_STDBYCFG.setDescription("Configures whether BODVDD should operate in continuous or sampling mode in Standby Sleep mode")
     supcSym_BODVDD_STDBYCFG.addKey("CONT_MODE", "0", "Continuous Mode")
@@ -196,13 +196,13 @@ def instantiateComponent(supcComponent):
     if "HAS_RUNBKUP_BIT" in parameters:
         #BODVDD RUNBKUP enable
         supcSym_BOD33_RUNBKUP = supcComponent.createBooleanSymbol("SUPC_"+BODname+"_RUNBKUP", supcSym_BODVDD_Menu)
-        supcSym_BOD33_RUNBKUP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+        supcSym_BOD33_RUNBKUP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BODVDD")
         supcSym_BOD33_RUNBKUP.setLabel("Run in Backup mode")
         supcSym_BOD33_RUNBKUP.setDescription("Configures BODVDD operation in Backup Sleep Mode")
         
     #BODVDD PSEL
     supcSym_BODVDD_PSEL = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_PSEL", supcSym_BODVDD_Menu)
-    supcSym_BODVDD_PSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+    supcSym_BODVDD_PSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BODVDD")
     supcSym_BODVDD_PSEL.setLabel("Select Prescaler for Sampling Clock")
     supcSym_BODVDD_PSEL.setDescription("Configures the sampling clock prescaler when BODVDD is operating in sampling mode")
     supcSym_BODVDD_PSEL.setVisible(True)
@@ -222,7 +222,7 @@ def instantiateComponent(supcComponent):
 
     if "HAS_VREFSEL_BIT" in parameters:
         supcSym_BODVDD_VREFSEL = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_VREFSEL", supcSym_BODVDD_Menu)
-        supcSym_BODVDD_VREFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+        supcSym_BODVDD_VREFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BODVDD")
         supcSym_BODVDD_VREFSEL.setLabel("BOD33 Voltage Reference Selection")    
         supcBODVrefselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_"+BODname+"__VREFSEL\"]")
         supcBODVrefselValues = []
@@ -241,7 +241,7 @@ def instantiateComponent(supcComponent):
     if "HAS_VMON_BIT" in parameters:
         #BODVDD VMON selection
         supcSym_BOD33_VMON = supcComponent.createBooleanSymbol("SUPC_"+BODname+"_VMON", supcSym_BODVDD_Menu)
-        supcSym_BOD33_VMON.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
+        supcSym_BOD33_VMON.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BODVDD")
         supcSym_BOD33_VMON.setLabel("Monitor VBAT supply?")
         supcSym_BOD33_VMON.setDescription("BOD33 monitors either VDD or VBAT in active and standby mode")
 
