@@ -467,7 +467,7 @@ def instantiateComponent(uartComponent):
     # Enable Interrupts?
     uartSymInterruptMode = uartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     uartSymInterruptMode.setLabel("Enable Interrrupts ?")
-    uartSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:IEC1")
     uartSymInterruptMode.setDefaultValue(True)
     uartSymInterruptMode.setVisible(False)
     uartSymInterruptMode.setReadOnly(True)
@@ -476,7 +476,7 @@ def instantiateComponent(uartComponent):
     #Enable Ring buffer?
     uartSym_RingBuffer_Enable = uartComponent.createBooleanSymbol("UART_RING_BUFFER_ENABLE", None)
     uartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
-    uartSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
     uartSym_RingBuffer_Enable.setDefaultValue(False)
     uartSym_RingBuffer_Enable.setVisible(False)
     uartSym_RingBuffer_Enable.setReadOnly(True)
@@ -486,7 +486,7 @@ def instantiateComponent(uartComponent):
     # Enable Interrupts?
     uartSymInterruptModeEnable = uartComponent.createBooleanSymbol("UART_INTERRUPT_MODE_ENABLE", None)
     uartSymInterruptModeEnable.setLabel("Enable Interrrupts ?")
-    uartSymInterruptModeEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSymInterruptModeEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:IEC1")
     uartSymInterruptModeEnable.setDefaultValue(True)
     uartSymInterruptModeEnable.setReadOnly(True)
     uartSymInterruptModeEnable.setVisible(False)
@@ -494,13 +494,13 @@ def instantiateComponent(uartComponent):
     #Enable Ring buffer?
     uartSym_RingBufferMode_Enable = uartComponent.createBooleanSymbol("UART_RING_BUFFER_MODE_ENABLE", None)
     uartSym_RingBufferMode_Enable.setLabel("Enable Ring Buffer ?")
-    uartSym_RingBufferMode_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_RingBufferMode_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
     uartSym_RingBufferMode_Enable.setDefaultValue(False)
     uartSym_RingBufferMode_Enable.setReadOnly(True)
     uartSym_RingBufferMode_Enable.setVisible(False)
 
     uartSym_OperatingMode = uartComponent.createKeyValueSetSymbol("UART_OPERATING_MODE", None)
-    uartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxSTASET")
     uartSym_OperatingMode.setLabel("Operating Mode")
     uartSym_OperatingMode.addKey("BLOCKING", "0", "Blocking mode")
     uartSym_OperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
@@ -517,7 +517,7 @@ def instantiateComponent(uartComponent):
     uartSym_RingBufferSizeConfig.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_MODE_ENABLE"])
 
     uartSym_TXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_TX_RING_BUFFER_SIZE", uartSym_RingBufferSizeConfig)
-    uartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxSTA")
     uartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
     uartSym_TXRingBuffer_Size.setMin(2)
     uartSym_TXRingBuffer_Size.setMax(65535)
@@ -526,7 +526,7 @@ def instantiateComponent(uartComponent):
     uartSym_TXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_MODE_ENABLE"])
 
     uartSym_RXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_RX_RING_BUFFER_SIZE", uartSym_RingBufferSizeConfig)
-    uartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxSTA")
     uartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
     uartSym_RXRingBuffer_Size.setMin(2)
     uartSym_RXRingBuffer_Size.setMax(65535)
@@ -626,7 +626,7 @@ def instantiateComponent(uartComponent):
     stsel_names = []
     _get_bitfield_names(uartValGrp_U1MODE_STSEL, stsel_names)
     uartSym_U1MODE_STSEL = uartComponent.createKeyValueSetSymbol("UART_STOPBIT_SELECT", None)
-    uartSym_U1MODE_STSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_U1MODE_STSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
     uartSym_U1MODE_STSEL.setLabel(uartBitField_U1MODE_STSEL.getAttribute("caption"))
     uartSym_U1MODE_STSEL.setDefaultValue(1)
     uartSym_U1MODE_STSEL.setOutputMode( "Value" )
@@ -638,7 +638,7 @@ def instantiateComponent(uartComponent):
     pdsel_names = []
     _get_bitfield_names(uartValGrp_U1MODE_PDSEL, pdsel_names)
     uartSym_U1MODE_PDSEL = uartComponent.createKeyValueSetSymbol("UART_PDBIT_SELECT", None)
-    uartSym_U1MODE_PDSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_U1MODE_PDSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
     uartSym_U1MODE_PDSEL.setLabel (uartBitField_U1MODE_PDSEL.getAttribute("caption"))
     uartSym_U1MODE_PDSEL.setDefaultValue(3)
     uartSym_U1MODE_PDSEL.setOutputMode( "Value" )
@@ -650,7 +650,7 @@ def instantiateComponent(uartComponent):
     ##Automatic Address Detection Enable
     uartSym_AutoAddr_Enable = uartComponent.createBooleanSymbol("UART_AUTOMATIC_ADDR_DETECTION_ENABLE", None)
     uartSym_AutoAddr_Enable.setLabel("Enable Automatic Address Detection?")
-    uartSym_AutoAddr_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_AutoAddr_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
     uartSym_AutoAddr_Enable.setDefaultValue(False)
     uartSym_AutoAddr_Enable.setVisible(False)
     uartSym_AutoAddr_Enable.setDependencies(updateAutoAddrSymVisibility, ["UART_PDBIT_SELECT"])
@@ -658,7 +658,7 @@ def instantiateComponent(uartComponent):
     ##Address value
     uartSym_9BitMode_Addr = uartComponent.createIntegerSymbol("UART_9BIT_MODE_ADDR", None)
     uartSym_9BitMode_Addr.setLabel("Address")
-    uartSym_9BitMode_Addr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_9BitMode_Addr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:U1MODE")
     uartSym_9BitMode_Addr.setMin(0)
     uartSym_9BitMode_Addr.setMax(255)
     uartSym_9BitMode_Addr.setDefaultValue(1)
@@ -670,7 +670,7 @@ def instantiateComponent(uartComponent):
     BRGH_names = []
     _get_bitfield_names(uartValGrp_U1MODE_BRGH, BRGH_names)
     uartSym_U1MODE_BRGH = uartComponent.createKeyValueSetSymbol("UART_BRGH", None)
-    uartSym_U1MODE_BRGH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartSym_U1MODE_BRGH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:U1BRG")
     uartSym_U1MODE_BRGH.setLabel(uartBitField_U1MODE_BRGH.getAttribute("caption"))
     uartSym_U1MODE_BRGH.setDefaultValue(1)
     uartSym_U1MODE_BRGH.setOutputMode( "Value" )
@@ -690,7 +690,7 @@ def instantiateComponent(uartComponent):
         uensel_names = []
         _get_bitfield_names(uartValGrp_U1MODE_UEN, uensel_names)
         uartSym_U1MODE_UENEL = uartComponent.createKeyValueSetSymbol("UART_UEN_SELECT", None)
-        uartSym_U1MODE_UENEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+        uartSym_U1MODE_UENEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
         uartSym_U1MODE_UENEL.setLabel(uartBitField_U1MODE_UEN.getAttribute("caption"))
         uartSym_U1MODE_UENEL.setOutputMode( "Value" )
         uartSym_U1MODE_UENEL.setDisplayMode( "Description" )
@@ -716,7 +716,7 @@ def instantiateComponent(uartComponent):
 
     ## UART Clock Frequency
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
-    uartClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
     uartClkValue.setLabel("Clock Frequency")
     uartClkValue.setReadOnly(True)
     uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")))
@@ -724,7 +724,7 @@ def instantiateComponent(uartComponent):
 
     ## Baud Rate setting
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
-    uartBaud.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:%NOREGISTER%")
+    uartBaud.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_00734;register:UxMODE")
     uartBaud.setLabel("Baud Rate")
     uartBaud.setDefaultValue(115200)
 
