@@ -95,7 +95,7 @@ wdtMenu = coreComponent.createMenuSymbol("WDT_MENU", None)
 wdtMenu.setLabel("WDT")
 
 wdtEnable = coreComponent.createBooleanSymbol("WDT_ENABLE", wdtMenu)
-wdtEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:%NOREGISTER%")
+wdtEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_MR")
 wdtEnable.setLabel("Enable Watch Dog Timer?")
 wdtEnable.setDefaultValue(False)
 
