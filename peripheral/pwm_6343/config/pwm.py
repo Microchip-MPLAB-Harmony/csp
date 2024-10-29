@@ -579,7 +579,7 @@ def instantiateComponent(pwmComponent):
 
     #enable clock A
     pwmSym_PWM_CLKA_ENABLE = pwmComponent.createBooleanSymbol("PWM_CLK_A_ENABLE", pwmClockMenu)
-    pwmSym_PWM_CLKA_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+    pwmSym_PWM_CLKA_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_CLK")
     pwmSym_PWM_CLKA_ENABLE.setLabel("Enable Clock A")
     pwmSym_PWM_CLKA_ENABLE.setDefaultValue(False)
 
@@ -611,7 +611,7 @@ def instantiateComponent(pwmComponent):
 
     #enable clock A
     pwmSym_PWM_CLKB_ENABLE = pwmComponent.createBooleanSymbol("PWM_CLK_B_ENABLE", pwmClockMenu)
-    pwmSym_PWM_CLKB_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+    pwmSym_PWM_CLKB_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_CLK")
     pwmSym_PWM_CLKB_ENABLE.setLabel("Enable Clock B")
     pwmSym_PWM_CLKB_ENABLE.setDefaultValue(False)
 
@@ -658,14 +658,14 @@ def instantiateComponent(pwmComponent):
         #channel enable
         pwmSym_CH_Enable.append(channelID)
         pwmSym_CH_Enable[channelID] = pwmComponent.createBooleanSymbol("PWM_CH_"+str(channelID)+"_ENABLE", pwmChannelMenu[channelID])
-        pwmSym_CH_Enable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_CH_Enable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_CMR")
         pwmSym_CH_Enable[channelID].setLabel("Enable")
         pwmSym_CH_Enable[channelID].setDefaultValue(False)
 
         #sync enable
         pwmSym_CH_SyncEnable.append(channelID)
         pwmSym_CH_SyncEnable[channelID] = pwmComponent.createBooleanSymbol("PWM_CH_"+str(channelID)+"_SYNCENABLE", pwmSym_CH_Enable[channelID])
-        pwmSym_CH_SyncEnable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_CH_SyncEnable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_SCM")
         pwmSym_CH_SyncEnable[channelID].setLabel("Enable Sync Mode")
         pwmSym_CH_SyncEnable[channelID].setDefaultValue(False)
         pwmSym_CH_SyncEnable[channelID].setVisible(False)
@@ -722,7 +722,7 @@ def instantiateComponent(pwmComponent):
         #update selection
         pwmSym_PWM_CMR_UPDS.append(channelID)
         pwmSym_PWM_CMR_UPDS[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_CMR_UPDS", pwmSym_PWM_CMR_CALG[channelID])
-        pwmSym_PWM_CMR_UPDS[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_PWM_CMR_UPDS[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_CMR")
         pwmSym_PWM_CMR_UPDS[channelID].setLabel("Select Duty-Cycle Update Trigger")
         childrenNodes = []
         bitfieldNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/register-group@[name=\"PWM_CH_NUM\"]/register@[name=\"PWM_CMR\"]/bitfield@[name=\"UPDS\"]")
@@ -737,7 +737,7 @@ def instantiateComponent(pwmComponent):
         #counter event selection
         pwmSym_PWM_CMR_CES.append(channelID)
         pwmSym_PWM_CMR_CES[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_CMR_CES", pwmSym_PWM_CMR_CALG[channelID])
-        pwmSym_PWM_CMR_CES[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_PWM_CMR_CES[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_CMR")
         pwmSym_PWM_CMR_CES[channelID].setLabel("Select Counter Event Occurrence")
         childrenNodes = []
         bitfieldNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/register-group@[name=\"PWM_CH_NUM\"]/register@[name=\"PWM_CMR\"]/bitfield@[name=\"CES\"]")
@@ -825,7 +825,7 @@ def instantiateComponent(pwmComponent):
         #fault enable
         pwmSym_PWM_Fault_Enable.append(channelID)
         pwmSym_PWM_Fault_Enable[channelID] = pwmComponent.createBooleanSymbol("PWM_CH_"+str(channelID)+"_FAULT_ENABLE", pwmSym_CH_Enable[channelID])
-        pwmSym_PWM_Fault_Enable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_PWM_Fault_Enable[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_FPE")
         pwmSym_PWM_Fault_Enable[channelID].setLabel("Enable Fault")
         pwmSym_PWM_Fault_Enable[channelID].setDefaultValue(False)
         pwmSym_PWM_Fault_Enable[channelID].setVisible(False)
@@ -852,7 +852,7 @@ def instantiateComponent(pwmComponent):
         #output polarity after fault
         pwmSym_PWM_FPV_FPVL.append(channelID)
         pwmSym_PWM_FPV_FPVL[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_FAULT_"+str(channelID)+"_FPV_FPVL", pwmSym_PWM_Fault_Enable[channelID])
-        pwmSym_PWM_FPV_FPVL[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_PWM_FPV_FPVL[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_FPV1")
         pwmSym_PWM_FPV_FPVL[channelID].setLabel("Select low-side Output Polarity after Fault")
         pwmSym_PWM_FPV_FPVL[channelID].addKey("LOW", "0", "Low")
         pwmSym_PWM_FPV_FPVL[channelID].addKey("HIGH", "1", "High")
@@ -865,7 +865,7 @@ def instantiateComponent(pwmComponent):
 
         pwmSym_PWM_FPV_FPVH.append(channelID)
         pwmSym_PWM_FPV_FPVH[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_FAULT_"+str(channelID)+"_FPV_FPVH", pwmSym_PWM_Fault_Enable[channelID])
-        pwmSym_PWM_FPV_FPVH[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_PWM_FPV_FPVH[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_FPV1")
         pwmSym_PWM_FPV_FPVH[channelID].setLabel("Select high-side Output Polarity after Fault")
         pwmSym_PWM_FPV_FPVH[channelID].addKey("LOW", "0", "Low")
         pwmSym_PWM_FPV_FPVH[channelID].addKey("HIGH", "1", "High")
@@ -878,7 +878,7 @@ def instantiateComponent(pwmComponent):
         global pwmSym_PWM_IER1_FCHID
         pwmSym_PWM_IER1_FCHID.append(channelID)
         pwmSym_PWM_IER1_FCHID[channelID] = pwmComponent.createBooleanSymbol("PWM_FAULT_"+str(channelID)+"_IER1_FCHID", pwmSym_PWM_Fault_Enable[channelID])
-        pwmSym_PWM_IER1_FCHID[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_PWM_IER1_FCHID[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_IER1")
         pwmSym_PWM_IER1_FCHID[channelID].setLabel("Enable Fault Interrupt")
         pwmSym_PWM_IER1_FCHID[channelID].setVisible(False)
         pwmSym_PWM_IER1_FCHID[channelID].setDependencies(pwmChannelConfVisible, ["PWM_CH_"+str(channelID)+"_FAULT_ENABLE"])
@@ -887,7 +887,7 @@ def instantiateComponent(pwmComponent):
         #interrupt enable
         pwmSym_PWM_IER1_CHID.append(channelID)
         pwmSym_PWM_IER1_CHID[channelID] = pwmComponent.createBooleanSymbol("PWM_CH_"+str(channelID)+"_IER1_CHID", pwmSym_CH_Enable[channelID])
-        pwmSym_PWM_IER1_CHID[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+        pwmSym_PWM_IER1_CHID[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_IER1")
         pwmSym_PWM_IER1_CHID[channelID].setLabel("Enable Counter Period Interrupt")
         pwmSym_PWM_IER1_CHID[channelID].setDefaultValue(False)
         pwmSym_PWM_IER1_CHID[channelID].setVisible(False)
@@ -934,7 +934,7 @@ def instantiateComponent(pwmComponent):
             # Fault polarity
             pwmFPOLSymName = "PWM_FMR_FPOL_INDEX_" + faultID
             pwmSym_PWM_FMR_FPOL = pwmComponent.createKeyValueSetSymbol(pwmFPOLSymName, pwmFaultIndexMenu)
-            pwmSym_PWM_FMR_FPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+            pwmSym_PWM_FMR_FPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_FMR")
             pwmSym_PWM_FMR_FPOL.setLabel("Select Fault Polarity")
             pwmSym_PWM_FMR_FPOL.addKey("LOW", "0", "Active when fault input is low")
             pwmSym_PWM_FMR_FPOL.addKey("HIGH", "1", "Active when fault input is high")
@@ -950,7 +950,7 @@ def instantiateComponent(pwmComponent):
             global pwmSym_PWM_FMR_FMOD
             pwmFMODSymName = "PWM_FMR_FMOD_INDEX_" + faultID
             pwmSym_PWM_FMR_FMOD = pwmComponent.createKeyValueSetSymbol(pwmFMODSymName, pwmFaultIndexMenu)
-            pwmSym_PWM_FMR_FMOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+            pwmSym_PWM_FMR_FMOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_FMR")
             pwmSym_PWM_FMR_FMOD.setLabel("Select Fault Mode")
             pwmSym_PWM_FMR_FMOD.addKey("CLEAR_AT_PERIPHERAL", "0", "Fault is active until cleared at peripheral level")
             pwmSym_PWM_FMR_FMOD.addKey("CLEAR_AT_PERIPHERAL_AND_REGISTER", "1", "Fault is active until cleared at peripheral level AND cleared in PWM_FCR register")
@@ -963,7 +963,7 @@ def instantiateComponent(pwmComponent):
             #Fault Filter
             pwmFFILSymName = "PWM_FMR_FFIL_INDEX_" + faultID
             pwmSym_PWM_FMR_FFIL = pwmComponent.createKeyValueSetSymbol(pwmFFILSymName, pwmFaultIndexMenu)
-            pwmSym_PWM_FMR_FFIL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+            pwmSym_PWM_FMR_FFIL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_FMR")
             pwmSym_PWM_FMR_FFIL.setLabel("Select Fault Filter")
             pwmSym_PWM_FMR_FFIL.addKey("DISABLE_FILTER", "0", "Fault input is not filtered")
             pwmSym_PWM_FMR_FFIL.addKey("ENABLE_FILTER", "1", "Fault input is filtered")
@@ -1034,7 +1034,7 @@ def instantiateComponent(pwmComponent):
         #Event line mode
         for elmID in range(elmTotal):
             elmSym = pwmComponent.createBooleanSymbol("PWM_COMP_{0}_ELMR{1}_CSEL".format(compareID, elmID), pwmSym_PWM_CMPM_CEN[compareID])
-            elmSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:%NOREGISTER%")
+            elmSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6343;register:PWM_ELMR")
             elmSym.setLabel("Generate Pulse on Event Line " + str(elmID))
             elmSym.setDefaultValue(False)
 

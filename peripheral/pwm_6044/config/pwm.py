@@ -133,13 +133,13 @@ def instantiateComponent(pwmComponent):
 
         #clock enable
         pwmClockAEnable = pwmComponent.createBooleanSymbol("CLK" + clock + "_EN", pwmClockMenu)
-        pwmClockAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:%NOREGISTER%")
+        pwmClockAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:PWM_MR")
         pwmClockAEnable.setLabel("Enable Clock ")
         pwmClockAEnable.setDefaultValue(False)
 
         #clock Prescaler
         pwmClockAPrescaler = pwmComponent.createKeyValueSetSymbol("CLK" + clock + "_PRES", pwmClockMenu)
-        pwmClockAPrescaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:%NOREGISTER%")
+        pwmClockAPrescaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:PWM_MR")
         pwmClockAPrescaler.setLabel("Prescaler")
         setSymbolValueFromATDF(pwmClockAPrescaler, "PWM", "PWM_MR__PRE" + clock )
         pwmClockAPrescaler.setDisplayMode("Description")
@@ -149,7 +149,7 @@ def instantiateComponent(pwmComponent):
 
         #clock Divider
         pwmClockADivider = pwmComponent.createIntegerSymbol("CLK" + clock + "_DIV", pwmClockMenu)
-        pwmClockADivider.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:%NOREGISTER%")
+        pwmClockADivider.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:PWM_MR")
         pwmClockADivider.setLabel("Divider")
         pwmClockADivider.setMin(1)
         pwmClockADivider.setMax(255)
@@ -158,7 +158,7 @@ def instantiateComponent(pwmComponent):
 
         #clock Frequency
         pwmClockAFrequency = pwmComponent.createIntegerSymbol("CLK" + clock + "_FREQUENCY", pwmClockMenu)
-        pwmClockAFrequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:%NOREGISTER%")
+        pwmClockAFrequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:PWM_MR")
         pwmClockAFrequency.setLabel("Frequency")
         pwmClockAFrequency.setReadOnly(True)
         pwmClockAFrequency.setDefaultValue(0)
@@ -176,7 +176,7 @@ def instantiateComponent(pwmComponent):
 
         #Channel enable
         pwmChannelEnable = pwmComponent.createBooleanSymbol("CH" + str(channel) + "_EN", pwmChannelMenu)
-        pwmChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:%NOREGISTER%")
+        pwmChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:PWM_CMRx")
         pwmChannelEnable.setLabel("Enable")
         pwmChannelEnable.setDefaultValue(False)
 
@@ -193,7 +193,7 @@ def instantiateComponent(pwmComponent):
 
         #Channel frequency
         pwmChannelFrequency = pwmComponent.createIntegerSymbol("CH" + str(channel) + "_FREQUENCY", pwmChannelMenu)
-        pwmChannelFrequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:%NOREGISTER%")
+        pwmChannelFrequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:PWM_CMRx")
         pwmChannelFrequency.setLabel("Frequency")
         pwmChannelFrequency.setReadOnly(True)
         pwmChannelFrequency.setDefaultValue(0)
@@ -227,7 +227,7 @@ def instantiateComponent(pwmComponent):
 
         #Channel Interrupt
         pwmChannelInterrupt = pwmComponent.createBooleanSymbol("CH" + str(channel) + "_IER_CHID", pwmChannelMenu)
-        pwmChannelInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:%NOREGISTER%")
+        pwmChannelInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_6044;register:PWM_IER")
         pwmChannelInterrupt.setLabel("Interrupt Enable")
         pwmChannelInterrupt.setDefaultValue(False)
         pwmChannelInterrupt.setDependencies(enableSymbol, ["CH" + str(channel) + "_EN"])
