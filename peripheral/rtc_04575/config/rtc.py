@@ -106,7 +106,7 @@ def instantiateComponent(rtcComponent):
 
     #Create a Checkbox to enable disable interrupts
     rtcInterrupt = rtcComponent.createBooleanSymbol("rtcEnableInterrupt", None)
-    rtcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:%NOREGISTER%")
+    rtcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:RTC_IER")
     rtcInterrupt.setLabel("Enable Interrupt")
     rtcInterrupt.setDefaultValue(True)
 
@@ -204,7 +204,7 @@ def instantiateComponent(rtcComponent):
         for id in range(0, len(rtcTamperControlNode.getChildren())):
             if "TAMPEN" in rtcTamperControlNode.getChildren()[id].getAttribute("name"):
                 rtcTampEn = rtcComponent.createBooleanSymbol("RTC_TAMPEN" + str(id), rtcTampMenu)
-                rtcTampEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:%NOREGISTER%")
+                rtcTampEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:RTC_TCR")
                 rtcTampEn.setLabel("Enable Tampering of TMP" + str(id) + " Input")
                 rtcTampEn.setDescription("Tamper event on TMP" + str(id) + " input is timestamped")
                 rtcTampEn.setDefaultValue(False)
@@ -215,11 +215,11 @@ def instantiateComponent(rtcComponent):
         rtcTampChannels.setDefaultValue(tamperChannels)
 
         rtcTampClear = rtcComponent.createBooleanSymbol("RTC_TAMPCLR", rtcTampMenu)
-        rtcTampClear.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:%NOREGISTER%")
+        rtcTampClear.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:RTC_TCR")
         rtcTampClear.setLabel("Clear GPBR Registers on Tamper Detection")
 
         rtcTampFGPBRCLR = rtcComponent.createBooleanSymbol("RTC_FGPBRCLR", rtcTampClear)
-        rtcTampFGPBRCLR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:%NOREGISTER%")
+        rtcTampFGPBRCLR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_04575;register:RTC_TCR")
         rtcTampFGPBRCLR.setLabel("Clear Full GPBR Registers")
 
     configName = Variables.get("__CONFIGURATION_NAME")

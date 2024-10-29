@@ -502,13 +502,13 @@ def instantiateComponent(rtcComponent):
 
     sysTimeComponentId = rtcComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
-    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:%NOREGISTER%")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:CTRL")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
     sysTimePlibMode = rtcComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
     sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
-    sysTimePlibMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:%NOREGISTER%")
+    sysTimePlibMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:CTRL")
     sysTimePlibMode.setVisible(False)
     sysTimePlibMode.setDefaultValue("")
 
@@ -584,7 +584,7 @@ def instantiateComponent(rtcComponent):
 
     #Interrupt Enable Set
     rtcSymMode0_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE0_INTERRUPT", rtcSymMode0Menu)
-    rtcSymMode0_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:%NOREGISTER%")
+    rtcSymMode0_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:INTENSET")
     rtcSymMode0_INTENSET.setLabel("Enable Interrupts ?")
     rtcSymMode0_INTENSET.setDefaultValue(True)
 
@@ -678,7 +678,7 @@ def instantiateComponent(rtcComponent):
 
     #Configure the RTC Interrupts
     rtcSymMode1_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE1_INTERRUPT", rtcSymMode1Menu)
-    rtcSymMode1_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:%NOREGISTER%")
+    rtcSymMode1_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:INTENSET")
     rtcSymMode1_INTENSET.setLabel("Enable Interrupts ?")
     rtcSymMode1_INTENSET.setDefaultValue(True)
 
@@ -781,12 +781,12 @@ def instantiateComponent(rtcComponent):
 
     #Interrupt Enable Set
     rtcSymMode2_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE2_INTERRUPT", rtcSymMode2Menu)
-    rtcSymMode2_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:%NOREGISTER%")
+    rtcSymMode2_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:INTENSET")
     rtcSymMode2_INTENSET.setLabel("Enable Interrupts?")
 
     #Prescaler
     rtcSymMode2_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol("RTC_MODE2_PRESCALER", rtcSymMode2Menu)
-    rtcSymMode2_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:%NOREGISTER%")
+    rtcSymMode2_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:CTRL")
     rtcSymMode2_CTRLA_PRESCALER.setLabel("RTC Prescaler")
 
     rtcMode2ReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"RTC_MODE2_CTRL__PRESCALER\"]")
@@ -810,7 +810,7 @@ def instantiateComponent(rtcComponent):
 
     #Reference Year
     rtcSymMode2_REFERENCE_YEAR = rtcComponent.createIntegerSymbol("RTC_MODE2_REFERENCE_YEAR",rtcSymMode2Menu)
-    rtcSymMode2_REFERENCE_YEAR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:%NOREGISTER%")
+    rtcSymMode2_REFERENCE_YEAR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2202;register:CLOCK")
     rtcSymMode2_REFERENCE_YEAR.setLabel("Reference Year(Leap Year)")
     rtcSymMode2_REFERENCE_YEAR.setDefaultValue(2016)
 

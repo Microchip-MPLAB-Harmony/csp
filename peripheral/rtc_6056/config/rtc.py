@@ -106,7 +106,7 @@ def instantiateComponent(rtcComponent):
 
     #Create a Checkbox to enable disable interrupts
     rtcInterrupt = rtcComponent.createBooleanSymbol("rtcEnableInterrupt", None)
-    rtcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:%NOREGISTER%")
+    rtcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_IDR")
     rtcInterrupt.setLabel("Enable Interrupt")
     rtcInterrupt.setDefaultValue(True)
 
