@@ -287,24 +287,36 @@ def handleMessage(messageID, args):
 
     elif (messageID == "ADC_CONFIG_HW_IO"):
         component = str(adcInstanceName.getValue()).lower()
-        channel, muxInput, enable = args['config']
+        setting, muxInput, enable = args['config']
 
-        adcInputCtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__{}\"]".format(muxInput))
-        adcInputValues = adcInputCtrlNode.getChildren()
+        if "VREF" in setting.upper():
+            extRefNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_REFCTRL__REFSEL\"]/value@[caption=\"External reference B\"]")
+            symbolName = "ADC_REFCTRL_REFSEL"
+            symbolValue = int(extRefNode.getAttribute("value"), 0)
+            res = Database.setSymbolValue(component, symbolName, symbolValue)
+            if res == True:
+                dict = {"Result": "Success"}
+            else:
+                dict = {"Result": "DB Error in setting ADC_REFCTRL_REFSEL value".format(symbolValue)}
+        else:
+            channel = "".join(filter(lambda x: x.isdigit(), setting))
+            
+            adcInputCtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__{}\"]".format(muxInput))
+            adcInputValues = adcInputCtrlNode.getChildren()
 
-        dict = {"Result": "AIN{} is not a permitted value for ADC_INPUTCTRL_{}".format(channel, muxInput)}
-        
-        for adcInputValue in adcInputValues:
-            if adcInputValue.getAttribute("name") == "PIN{}".format(channel):
-                if enable == False:
-                    res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
-                else:
-                    res = Database.setSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput), int(channel))
-                    
-                if res == True:
-                    dict = {"Result": "Success"}
-                else:
-                    dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
+            dict = {"Result": "AIN{} is not a permitted value for ADC_INPUTCTRL_{}".format(channel, muxInput)}
+            
+            for adcInputValue in adcInputValues:
+                if adcInputValue.getAttribute("name") == "PIN{}".format(channel):
+                    if enable == False:
+                        res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
+                    else:
+                        res = Database.setSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput), int(channel))
+                        
+                    if res == True:
+                        dict = {"Result": "Success"}
+                    else:
+                        dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
 
     return dict
 

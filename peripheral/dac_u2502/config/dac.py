@@ -106,9 +106,24 @@ def evsysSetup(symbol, event):
 def handleMessage(messageID, args):
     retDict = {}
     if (messageID == "DAC_CONFIG_HW_IO"):
-        channel = args['config']
+        component = 'dac'
+        setting = args['config'].upper()
         enable = args['enable']
-        res = Database.setSymbolValue('dac', "DAC_CHANNEL_{}_ENABLE".format(channel), enable)
+
+        if "VREF" in setting:
+            extRefNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DAC\"]/value-group@[name=\"DAC_CTRLB__REFSEL\"]/value@[caption=\"External reference\"]")
+            symbolName = "DAC_REFSEL"
+            symbolValue = int(extRefNode.getAttribute("value"))
+        else:
+            channel = "".join(filter(lambda x: x.isdigit(), setting))
+            symbolName = "DAC_CHANNEL_{}_ENABLE".format(channel)
+            symbolValue = enable
+
+        if enable == False:
+            res = Database.clearSymbolValue(component, symbolName)
+        else:
+            res = Database.setSymbolValue(component, symbolName, symbolValue)
+        
         if res == True:
             retDict = {"Result": "Success"}
         else:

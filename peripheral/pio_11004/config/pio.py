@@ -70,21 +70,52 @@ global getPinConfigurationValue
 global clearPinConfigurationValue
 
 def setPinConfigurationValue(pinNumber, setting, value):
+    global pin_map
+    
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
+        symbol.setReadOnly(False)
         symbol.clearValue()
         symbol.setValue(value)
         symbol.setReadOnly(True)
 
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('peripheralfunction')
+        periphFnValue = value
+        if symbol:
+            if periphFnValue != "GPIO":
+                instance = value.split("_")[0]
+                module = "".join(filter(lambda x: x.isalpha(), instance))
+                pad = pin_map[pinNumber]
+                query = '/avr-tools-device-file/devices/device/peripherals/module@[name=\"{}\"]/instance@[name=\"{}\"]/signals/signal@[pad=\"{}\"]'.format(module, instance, pad)
+                node = ATDF.getNode(query)
+                if node is not None:
+                    periphFnValue = node.getAttribute("function")
+
+                if periphFnValue not in pioSymChannel:
+                    periphFnValue = "Alternate"
+                
+            symbol.clearValue()
+            symbol.setValue(periphFnValue)
+            symbol.setReadOnly(True)
+
+
 def getPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    return symbol.getValue()
+    if symbol:
+        return symbol.getValue()
 
 def clearPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
+
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('peripheralfunction')
+        if symbol:
+            symbol.setReadOnly(False)
+            symbol.clearValue()
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):
@@ -587,6 +618,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinPeripheralFunction[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11004;register:PIO_ABCDSR")
     pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
     pinPeripheralFunction[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('peripheralfunction', pinPeripheralFunction[pinNumber-1])
 
     pinType.append(pinNumber)
     pinType[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin[pinNumber-1])

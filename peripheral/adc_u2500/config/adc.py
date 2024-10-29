@@ -388,17 +388,33 @@ def handleMessage(messageID, args):
 
         dict = {"Result": "AIN{} is not a permitted value for ADC_INPUTCTRL_{} - adcInputValues: {}".format(channel, muxInput, adcInputValues)}
         
-        for adcInputValue in adcInputValues:
-            if adcInputValue.getAttribute("name") == "AIN{}".format(channel):
-                if enable == False:
-                    res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
+        if channel == "PTC":
+            symbolValue = 0
+            for adcInputValue in adcInputValues:
+                if adcInputValue.getAttribute("name") == "PTC":
+                    if enable == False:
+                        res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
+                    else:
+                        res = Database.setSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput), symbolValue)
+                        
+                    if res == True:
+                        dict = {"Result": "Success"}
+                    else:
+                        dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
                 else:
-                    res = Database.setSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput), int(channel))
-                    
-                if res == True:
-                    dict = {"Result": "Success"}
-                else:
-                    dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
+                    symbolValue = symbolValue + 1
+        else:
+            for adcInputValue in adcInputValues:
+                if adcInputValue.getAttribute("name") == "AIN{}".format(channel):
+                    if enable == False:
+                        res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
+                    else:
+                        res = Database.setSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput), int(channel))
+                        
+                    if res == True:
+                        dict = {"Result": "Success"}
+                    else:
+                        dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
 
     return dict
 

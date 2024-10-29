@@ -432,30 +432,45 @@ def handleMessage(messageID, args):
 
     elif (messageID == "ADC_CONFIG_HW_IO"):
         component = str(adcInstanceName.getValue()).lower()
-        channel, muxInput, enable = args['config']
+        setting, muxInput, enable = args['config']
 
-        adcInputCtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__{}\"]".format(muxInput))
-        adcInputValues = adcInputCtrlNode.getChildren()
-
-        dict = {"Result": "AIN{} is not a permitted value for ADC_INPUTCTRL_{}".format(channel, muxInput)}
-
-        if enable == False:
-            res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
-            if muxInput == 'MUXNEG':
-                Database.clearSymbolValue(component, "ADC_CTRLC_DIFFMODE")
+        if "VREF" in setting.upper():
+            extRefNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_REFCTRL__REFSEL\"]/value@[caption=\"External Reference\"]")
+            symbolName = "ADC_REFCTRL_REFSEL"
+            symbolValue = int(extRefNode.getAttribute("value"), 0)
+            res = Database.setSymbolValue(component, symbolName, symbolValue)
+            if res == True:
+                dict = {"Result": "Success"}
+            else:
+                dict = {"Result": "DB Error in setting ADC_REFCTRL_REFSEL value".format(symbolValue)}
         else:
-            for adcInputValue in adcInputValues:
-                if adcInputValue.getAttribute("name") == "AIN{}".format(channel):
-                    if muxInput == 'MUXNEG':
-                        Database.setSymbolValue(component, "ADC_CTRLC_DIFFMODE", enable)
-                        adcSym_INPUTCTRL_MUXNEG.setSelectedKey("AIN{}".format(channel))
-                    else:
-                        adcSym_INPUTCTRL_MUXPOS.setSelectedKey("AIN{}".format(channel))
+            channel = "".join(filter(lambda x: x.isdigit(), setting))
+
+            adcInputCtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__{}\"]".format(muxInput))
+            adcInputValues = adcInputCtrlNode.getChildren()
+
+            dict = {"Result": "AIN{} is not a permitted value for ADC_INPUTCTRL_{}".format(channel, muxInput)}
+
+            if enable == False:
+                Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
+                if muxInput == 'MUXNEG':
+                    Database.clearSymbolValue(component, "ADC_CTRLC_DIFFMODE")
                     
-                    if res == True:
-                        dict = {"Result": "Success"}
-                    else:
-                        dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
+                dict = {"Result": "Success"}
+            else:
+                for adcInputValue in adcInputValues:
+                    if adcInputValue.getAttribute("name") == "AIN{}".format(channel):
+                        if muxInput == 'MUXNEG':
+                            res = Database.setSymbolValue(component, "ADC_CTRLC_DIFFMODE", enable)
+                            adcSym_INPUTCTRL_MUXNEG.setSelectedKey("AIN{}".format(channel))
+                        else:
+                            res = True
+                            adcSym_INPUTCTRL_MUXPOS.setSelectedKey("AIN{}".format(channel))
+                        
+                        if res == True:
+                            dict = {"Result": "Success"}
+                        else:
+                            dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
 
     return dict
 

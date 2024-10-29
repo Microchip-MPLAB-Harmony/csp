@@ -114,6 +114,39 @@ def sdadcHWEventVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+
+def handleMessage(messageID, args):
+    dict = {}
+    if (messageID == "SDADC_CONFIG_HW_IO"):
+        component = str(sdadcInstanceName.getValue()).lower()
+        setting, pinId, enable = args['config']
+        
+        sdadcSignalsNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SDADC\"]/instance@[name=\"SDADC\"]/signals")
+        sdadcSignals = sdadcSignalsNode.getChildren()
+
+        for signal in sdadcSignals:
+            if signal.getAttribute("pad") == pinId:
+                sdadcGroup = signal.getAttribute("group")
+                if sdadcGroup == "VREFP":
+                    symbolName = "SDADC_REFCTRL_REFSEL"
+                    extRefValueNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SDADC\"]/value-group@[name=\"SDADC_REFCTRL__REFSEL\"]/value@[caption=\"External Reference\"]")
+                    symbolValue = int(extRefValueNode.getAttribute("value"))
+                else:
+                    sdadcIndex = signal.getAttribute("index")
+                    symbolName = "SDADC_INPUTCTRL_MUXSEL"
+                    symbolValue = int(sdadcIndex)
+
+                if enable == False:
+                    res = Database.clearSymbolValue(component, symbolName)
+                else:
+                    res = Database.setSymbolValue(component, symbolName, symbolValue)
+                    
+                if res == True:
+                    dict = {"Result": "Success"}
+                else:
+                    dict = {"Result": "DB Error in setting {} value: {}".format(symbolName, symbolValue)}
+
+    return dict
 ###########################################################################################
 ####                                   SDADC Database Components
 ###########################################################################################

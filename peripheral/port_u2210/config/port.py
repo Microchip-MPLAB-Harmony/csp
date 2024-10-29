@@ -30,6 +30,9 @@ global peripheralFunctionality
 
 peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL", "VBUS_AH", "VBUS_AL", "RTC", "SUPC", "RTC_IN", "RTC_OUT"]
 
+global portPeripheralFunc
+portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"]
+
 global availablePinDictionary
 availablePinDictionary = {}
 
@@ -68,34 +71,153 @@ global getPinConfigurationValue
 global clearPinConfigurationValue
 
 def setPinConfigurationValue(pinNumber, setting, value):
-    if setting == "direction" and value == "In":
-        setting = "input"
-        value = "True"
+    global pin_map
+
+    if setting == "direction":
+        if value == "In":
+            symbol = pinSymbolsDictionary.get(pinNumber).get("input")
+            symbol.setValue("True")
+            symbol = pinSymbolsDictionary.get(pinNumber).get("direction")
+            symbol.clearValue()
+        elif value == "Out":
+            symbol = pinSymbolsDictionary.get(pinNumber).get("input")
+            symbol.clearValue()
+            symbol = pinSymbolsDictionary.get(pinNumber).get("direction")
+            symbol.setValue("Out")
+        elif value == "In/Out":
+            symbol = pinSymbolsDictionary.get(pinNumber).get("input")
+            symbol.setValue("True")
+            symbol = pinSymbolsDictionary.get(pinNumber).get("direction")
+            symbol.setValue("Out")
+    else:
+        symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+        if symbol:
+            symbol.setReadOnly(False)
+            symbol.clearValue()
+            symbol.setValue(value)
+            symbol.setReadOnly(True)
+
+        if setting == 'function':
+            symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
+            if symbol != None:
+                if (value.startswith("ADC") or (value.startswith("DAC")) or (value.startswith("PTC"))) and value[-1].isnumeric():
+                    symbol.setValue("ANALOG")
+                elif value.startswith("SDADC"):
+                    symbol.setValue("ANALOG")
+                else:
+                    symbol.clearValue()
+                    
+            symbol = pinSymbolsDictionary.get(pinNumber).get('peripheralfunction')
+            periphFnValue = value
+            if symbol:
+                if periphFnValue != "GPIO":
+                    instance = value.split("_")[0]
+                    module = "".join(filter(lambda x: x.isalpha(), instance))
+                    pad = pin_map[pinNumber]
+                    query = '/avr-tools-device-file/devices/device/peripherals/module@[name=\"{}\"]/instance@[name=\"{}\"]/signals/signal@[pad=\"{}\"]'.format(module, instance, pad)
+                    node = ATDF.getNode(query)
+                    if node is not None:
+                        periphFnValue = node.getAttribute("function")
+
+                    if ((periphFnValue not in portPeripheralFunc) and (periphFnValue not in peripheralFunctionality)):
+                        periphFnValue = "GPIO"
+                    
+                symbol.clearValue()
+                symbol.setValue(periphFnValue)
+                symbol.setReadOnly(True)
+
+        elif setting == 'pull up':
+            if value == "True":
+                symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+                symbol.setValue("True")
+                symbol = pinSymbolsDictionary.get(pinNumber).get('latch')
+                symbol.setValue("High")
+            else:
+                symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+                symbol.clearValue()
+
+        elif setting == 'pull down':
+            if value == "True":
+                symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+                symbol.setValue("True")
+                symbol = pinSymbolsDictionary.get(pinNumber).get('latch')
+                symbol.clearValue()
+            else:
+                symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+                symbol.clearValue()
+            
         
-    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    if symbol:
-        symbol.setReadOnly(False)
-        symbol.clearValue()
-        symbol.setValue(value)
 
 def getPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
         return symbol.getValue()
 
-def clearPinConfigurationValue(pinNumber, setting):
-    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    if symbol:
-        symbol.setReadOnly(False)
-        if setting == "direction":
-            symbolInput = pinSymbolsDictionary.get(pinNumber).get("input")
-            if symbolInput.getValue() == "True":
-                symbolInput.setReadOnly(False)
-                symbolInput.clearValue()
-            else:
-                symbol.clearValue()
+    if setting == 'pull up':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+        pullen = symbol.getValue()
+        symbol = pinSymbolsDictionary.get(pinNumber).get('latch')
+        pulllatch = symbol.getValue()
+        if pullen ==" True" and pulllatch == "High":
+            return "True"
         else:
+            return "False"
+
+    elif setting == 'pull down':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+        pullen = symbol.getValue()
+        symbol = pinSymbolsDictionary.get(pinNumber).get('latch')
+        pulllatch = symbol.getValue()
+        if pullen ==" True" and (pulllatch == "Low" or pulllatch == ""):
+            return "True"
+        else:
+            return "False"
+        
+    elif setting == "direction":
+        symbol = pinSymbolsDictionary.get(pinNumber).get("input")
+        inputValue = symbol.getValue
+        symbol = pinSymbolsDictionary.get(pinNumber).get("direction")
+        dirValue = symbol.getValue
+        if inputValue == "True" and dirValue == "":
+            return "In"
+        elif dirValue == "Out" and (inputValue == "" or inputValue == "False"):
+            return "Out"
+        elif inputValue == "True" and dirValue == "Out":
+            return "In/Out"
+
+def clearPinConfigurationValue(pinNumber, setting):
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+        symbol.clearValue()
+        symbol = pinSymbolsDictionary.get(pinNumber).get('peripheralfunction')
+        if symbol != None:
+            symbol.setReadOnly(False)
             symbol.clearValue()
+        
+        symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
+        if symbol != None:
+            symbol.setReadOnly(False)
+            symbol.clearValue()
+
+    elif setting == 'pull up' or setting == 'pull down':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+        symbol.clearValue()
+        symbol = pinSymbolsDictionary.get(pinNumber).get('latch')
+        symbol.clearValue()
+
+    elif setting == "direction":
+        symbol = pinSymbolsDictionary.get(pinNumber).get("input")
+        symbol.clearValue()
+        symbol = pinSymbolsDictionary.get(pinNumber).get("direction")
+        symbol.clearValue()
+        
+    else:
+        symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+        if symbol:
+            symbol.setReadOnly(False)
+            symbol.clearValue()
+        
+        
     
 portSecAliasRegSpace = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/register-group@[name=\"PORT_SEC\"]")
 
@@ -206,7 +328,6 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
         if (Database.getSymbolValue("core", "PORT_GROUP_PINCFG_DRVSTR")) == True:
             driveStrength = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_DRVSTR")
         peripheralFunc = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) +"_PERIPHERAL_FUNCTION")
-
 
         if groupName != "None":
 
@@ -648,12 +769,14 @@ for pinNumber in range(1, internalPincount + 1):
     pinPeripheralFunction[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:WRCONFIG")
     pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
     pinPeripheralFunction[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('peripheralfunction', pinPeripheralFunction[pinNumber-1])
 
     pinMode.append(pinNumber)
     pinMode[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pin[pinNumber-1])
     pinMode[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:WRCONFIG")
     pinMode[pinNumber-1].setLabel("Mode")
     pinMode[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('mode', pinMode[pinNumber-1])
 
     pinDirection.append(pinNumber)
     pinDirection[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
@@ -674,7 +797,7 @@ for pinNumber in range(1, internalPincount + 1):
     pinPullEnable[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:WRCONFIG")
     pinPullEnable[pinNumber-1].setLabel("Pull Enable")
     pinPullEnable[pinNumber-1].setReadOnly(True)
-    symbolsDict.setdefault('pull up', pinPullEnable[pinNumber-1])
+    symbolsDict.setdefault('pullen', pinPullEnable[pinNumber-1])
 
     pinInputEnable.append(pinNumber)
     pinInputEnable[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_INEN", pin[pinNumber-1])
@@ -784,9 +907,6 @@ portSym_Count.setDefaultValue(int(portModuleGC.getAttribute("count")))
 portSym_PinCount = coreComponent.createIntegerSymbol("PORT_PIN_COUNT", portMenu)
 portSym_PinCount.setVisible(False)
 portSym_PinCount.setDefaultValue(internalPincount)
-
-global portPeripheralFunc
-portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"]
 
 global group
 group = [0 for i in range(int(portModuleGC.getAttribute("count")))]

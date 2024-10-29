@@ -51,6 +51,17 @@ availablePinDictionary = {}
 ## SHD: Dictionary to store symbols created for each pin
 global pinSymbolsDictionary
 pinSymbolsDictionary = dict()
+global ppsSymbolsDictionary
+ppsSymbolsDictionary = dict()
+global PORTS_REMAP_INPUT_FUNCTION
+PORTS_REMAP_INPUT_FUNCTION= {}
+
+global ppsInputPinMap
+ppsInputPinMap = {}
+global ppsOutputFunctionMap
+ppsOutputFunctionMap = {}
+global PPSPinCount
+PPSPinCount = 60
 
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
@@ -69,13 +80,99 @@ global setPinConfigurationValue
 global getPinConfigurationValue
 global clearPinConfigurationValue
 
+global checkPPSPin
+def checkPPSPin(ppsPad):
+    global ppsSymbolsDictionary
+    
+    for pinNum in range(0, PPSPinCount):
+        usePPSSymbol = ppsSymbolsDictionary.get("USE_PPS_OUTPUT_{}".format(pinNum))
+        if usePPSSymbol != None and usePPSSymbol.getValue() == True:
+            pinSymbol = ppsSymbolsDictionary.get("SYS_PORT_PPS_OUTPUT_PIN_{}".format(pinNum))
+            selPad = pinSymbol.getSelectedKey()
+            if selPad == ppsPad:
+                return (pinNum, "OUTPUT")
+        
+        usePPSSymbol = ppsSymbolsDictionary.get("USE_PPS_INPUT_{}".format(pinNum))
+        if usePPSSymbol != None and usePPSSymbol.getValue() == True:
+            pinSymbol = ppsSymbolsDictionary.get("SYS_PORT_PPS_INPUT_PIN_{}".format(pinNum))
+            selPad = pinSymbol.getSelectedKey()
+            if selPad == ppsPad:
+                return (pinNum, "INPUT")
+
+    return (PPSPinCount, "")
+
 def setPinConfigurationValue(pinNumber, setting, value):
+    global ppsOutputFunctionMap
+    global ppsInputPinMap
+    global PPSPinCount
+    global ppsSymbolsDictionary
+
+    symbolValue = value
+    
+    if setting == 'function' and value != "GPIO":
+        symbolValue = symbolValue.replace(" (in)", "")
+        symbolValue = symbolValue.replace(" (out)", "")
+        symbolValue = symbolValue.replace(" (in/out)", "")
+
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
-        symbol.setValue(value)
+        symbol.setValue(symbolValue)
         symbol.setReadOnly(True)
+
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
+        if symbol != None:
+            if value.startswith("AN") or value.startswith("AIN") and value[-1].isnumeric():
+                symbol.setValue("ANALOG")
+            else:
+                symbol.setValue("DIGITAL")
+
+        if value != "GPIO":
+            ppsPad = None
+            # Look for input/output PAD
+            for pin, pad in availablePinDictionary.items():
+                if int(pin) == pinNumber:
+                    ppsPad = pad.replace("R", "RP")
+                    break
+
+            # Check if ppsPad has been previously configured 
+            (pinNum, direction) = checkPPSPin(ppsPad)
+            if pinNum == PPSPinCount:
+                # ppsPad not configured
+                if ppsInputPinMap.get(ppsPad) != None:
+                    ppsFunction = value
+                    ppsOutputPin = ppsOutputFunctionMap.get(ppsFunction)
+                    ppsDirection = ""
+                    ppsPinNum = ""
+                    if ppsOutputPin != None:
+                        for pinNum in range(0, PPSPinCount):
+                            usePPSSymbol = ppsSymbolsDictionary.get("USE_PPS_OUTPUT_{}".format(pinNum))
+                            if usePPSSymbol != None and usePPSSymbol.getValue() == False:
+                                usePPSSymbol.setValue(True)
+                                ppsDirection = "OUTPUT"
+                                ppsPinNum = pinNum
+                                break
+                            
+                    else:
+                        if PORTS_REMAP_INPUT_FUNCTION.get(ppsFunction) != None:
+                            for pinNum in range(0, PPSPinCount):
+                                usePPSSymbol = ppsSymbolsDictionary.get("USE_PPS_INPUT_{}".format(pinNum))
+                                if usePPSSymbol != None and usePPSSymbol.getValue() == False:
+                                    usePPSSymbol.setValue(True)
+                                    ppsDirection = "INPUT"
+                                    ppsPinNum = pinNum
+                                    break
+
+                    if ppsDirection != "":
+                        symbol = ppsSymbolsDictionary.get("SYS_PORT_PPS_{}_FUNCTION_{}".format(ppsDirection, ppsPinNum))
+                        if symbol != None:
+                            symbol.setSelectedKey(ppsFunction)
+
+                        symbol = ppsSymbolsDictionary.get("SYS_PORT_PPS_{}_PIN_{}".format(ppsDirection, ppsPinNum))
+                        if symbol != None:
+                            symbol.setSelectedKey(ppsPad)
 
 def getPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
@@ -87,6 +184,29 @@ def clearPinConfigurationValue(pinNumber, setting):
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
+        
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
+        if symbol != None:
+            symbol.clearValue()
+
+        ppsPad = None
+        # Find input/output PAD
+        for pin, pad in availablePinDictionary.items():
+            if int(pin) == pinNumber:
+                ppsPad = pad.replace("R", "RP")
+                break
+
+        # Clear symbols if needed
+        if ppsPad != None:
+            (pinNum, direction) = checkPPSPin(ppsPad)
+            if pinNum != PPSPinCount:
+                symbol = ppsSymbolsDictionary.get("SYS_PORT_PPS_{}_FUNCTION_{}".format(direction, pinNum))
+                symbol.clearValue()
+                symbol = ppsSymbolsDictionary.get("SYS_PORT_PPS_{}_PIN_{}".format(direction, pinNum))
+                symbol.clearValue()
+                symbol = ppsSymbolsDictionary.get("USE_PPS_{}_{}".format(direction, pinNum))
+                symbol.clearValue()
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):
@@ -615,6 +735,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinMode[pinNumber-1].setDefaultValue("")
     pinMode[pinNumber-1].setReadOnly(False)
     pinMode[pinNumber-1].setDependencies(pinModeCal, ["BSP_PIN_" + str(pinNumber) + "_MODE" ])
+    symbolsDict.setdefault('mode', pinMode[pinNumber-1])
 
     pinDirection.append(pinNumber)
     pinDirection[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
@@ -693,8 +814,6 @@ for pinNumber in range(1, packagePinCount + 1):
 ###################################################################################################
 pioSymChannel.sort()
 
-PPSPinCount = 60
-
 ppsPinInputConfiguration= coreComponent.createMenuSymbol("GPIO_PPS_PIN_INPUT_CONFIGURATION", pioEnable)
 ppsPinInputConfiguration.setLabel("PPS Input Pin Configuration")
 
@@ -715,11 +834,8 @@ ppsInputPin = []
 ppsOutputEnable = []
 ppsOutputFunction = []
 ppsOutputPin = []
-ppsInputPinMap = {}
-ppsOutputFunctionMap = {}
 global PORTS_REMAP_OUTPUT_PIN
 PORTS_REMAP_OUTPUT_PIN = {}
-PORTS_REMAP_INPUT_FUNCTION= {}
 
 # parse XML and populate PPS lists and dictionaries
 global ppsXmlPath
@@ -752,6 +868,7 @@ for pinNumber in range(0, PPSPinCount):
     ppsInputEnable[pinNumber].setLabel("USE PPS Input" + str(pinNumber))
     ppsInputEnable[pinNumber].setDefaultValue(False)
     ppsInputEnable[pinNumber].setReadOnly(False)
+    ppsSymbolsDictionary.setdefault("USE_PPS_INPUT_" + str(pinNumber), ppsInputEnable[pinNumber])
 
     ppsInputFunction.append(pinNumber)
     ppsInputFunction[pinNumber] = coreComponent.createKeyValueSetSymbol("SYS_PORT_PPS_INPUT_FUNCTION_" + str(pinNumber), ppsInputEnable[pinNumber])
@@ -765,8 +882,8 @@ for pinNumber in range(0, PPSPinCount):
     for key, value in PORTS_REMAP_INPUT_FUNCTION.items():
         ppsInputFunction[pinNumber].addKey(key, value, value)
     ppsInputFunction[pinNumber].setDependencies(PPSOptionsVisibilityControl, ["USE_PPS_INPUT_" + str(pinNumber)])
+    ppsSymbolsDictionary.setdefault("SYS_PORT_PPS_INPUT_FUNCTION_" + str(pinNumber), ppsInputFunction[pinNumber])
 
-    
     ppsInputPin.append(pinNumber)
     ppsInputPin[pinNumber] = coreComponent.createKeyValueSetSymbol("SYS_PORT_PPS_INPUT_PIN_" + str(pinNumber), ppsInputEnable[pinNumber])
     ppsInputPin[pinNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_02467;register:%NOREGISTER%")
@@ -779,7 +896,8 @@ for pinNumber in range(0, PPSPinCount):
     for key, value in ppsInputPinMap.items():
         ppsInputPin[pinNumber].addKey(key, value, key)
     ppsInputPin[pinNumber].setDependencies(ppsInputPinValueUpdate, ["SYS_PORT_PPS_INPUT_FUNCTION_" + str(pinNumber), "USE_PPS_INPUT_" + str(pinNumber), "SYS_PORT_PPS_INPUT_PIN_" + str(pinNumber)])
-    
+    ppsSymbolsDictionary.setdefault("SYS_PORT_PPS_INPUT_PIN_" + str(pinNumber), ppsInputPin[pinNumber])
+
 
     #PPS Output pin Configuration
     ppsOutputEnable.append(pinNumber)
@@ -788,8 +906,8 @@ for pinNumber in range(0, PPSPinCount):
     ppsOutputEnable[pinNumber].setLabel("USE PPS Output" + str(pinNumber))
     ppsOutputEnable[pinNumber].setDefaultValue(False)
     ppsOutputEnable[pinNumber].setReadOnly(False)
+    ppsSymbolsDictionary.setdefault("USE_PPS_OUTPUT_" + str(pinNumber), ppsOutputEnable[pinNumber])
 
-    
     ppsOutputFunction.append(pinNumber)
     ppsOutputFunction[pinNumber] = coreComponent.createKeyValueSetSymbol("SYS_PORT_PPS_OUTPUT_FUNCTION_" + str(pinNumber), ppsOutputEnable[pinNumber])
     ppsOutputFunction[pinNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_02467;register:%NOREGISTER%")
@@ -802,6 +920,7 @@ for pinNumber in range(0, PPSPinCount):
     for key, value in ppsOutputFunctionMap.items():
         ppsOutputFunction[pinNumber].addKey(key, value, key)
     ppsOutputFunction[pinNumber].setDependencies(PPSOptionsVisibilityControl, ["USE_PPS_OUTPUT_" + str(pinNumber)])
+    ppsSymbolsDictionary.setdefault("SYS_PORT_PPS_OUTPUT_FUNCTION_" + str(pinNumber), ppsOutputFunction[pinNumber])
     
     ppsOutputPin.append(pinNumber)
     ppsOutputPin[pinNumber] = coreComponent.createKeyValueSetSymbol("SYS_PORT_PPS_OUTPUT_PIN_" + str(pinNumber), ppsOutputEnable[pinNumber])
@@ -815,6 +934,7 @@ for pinNumber in range(0, PPSPinCount):
     for key, value in PORTS_REMAP_OUTPUT_PIN.items():
         ppsOutputPin[pinNumber].addKey(key, value, value)
     ppsOutputPin[pinNumber].setDependencies(ppsOutputPinValueUpdate, ["SYS_PORT_PPS_OUTPUT_FUNCTION_" + str(pinNumber),"USE_PPS_OUTPUT_" + str(pinNumber), "SYS_PORT_PPS_OUTPUT_PIN_" + str(pinNumber)])
+    ppsSymbolsDictionary.setdefault("SYS_PORT_PPS_OUTPUT_PIN_" + str(pinNumber), ppsOutputPin[pinNumber])
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################

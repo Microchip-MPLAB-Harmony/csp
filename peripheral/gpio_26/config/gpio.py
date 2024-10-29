@@ -72,6 +72,25 @@ def setPinConfigurationValue(pinNumber, setting, value):
         symbol.setValue(value)
         symbol.setReadOnly(True)
 
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pin_num).get('peripheralfunction')
+        periphFnValue = value
+        if symbol:
+            if periphFnValue != "GPIO":
+                instance = value.split("_")[0]
+                module = "".join(filter(lambda x: x.isalpha(), instance))
+                query = '/avr-tools-device-file/devices/device/peripherals/module@[name=\"{}\"]/instance@[name=\"{}\"]/signals/signal@[pad=\"{}\"]'.format(module, instance, pad)
+                node = ATDF.getNode(query)
+                if node is not None:
+                    periphFnValue = node.getAttribute("function")
+
+                if ((periphFnValue not in gpioPeripheralFunc) and (periphFnValue not in peripheralFunctionality)):
+                    periphFnValue = "GPIO"
+                
+            symbol.clearValue()
+            symbol.setValue(periphFnValue)
+            symbol.setReadOnly(True)
+
 def getPinConfigurationValue(pinNumber, setting):
     global pad_map
     global availablePinDictionary
@@ -92,6 +111,12 @@ def clearPinConfigurationValue(pinNumber, setting):
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
+
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pin_num).get('peripheralfunction')
+        if symbol:
+            symbol.setReadOnly(False)
+            symbol.clearValue()
 
 def packageChange(symbol, pinout):
     global uniquePinout
@@ -374,6 +399,7 @@ for pinNumber in range(1, internalPincount + 1):
     pinPeripheralFunction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinPeripheralFunction.setLabel("Peripheral Selection")
     pinPeripheralFunction.setReadOnly(True)
+    symbolsDict.setdefault('peripheralfunction', pinPeripheralFunction)
 
     pinDirection = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin)
     pinDirection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")

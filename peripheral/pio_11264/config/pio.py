@@ -184,21 +184,52 @@ global getPinConfigurationValue
 global clearPinConfigurationValue
 
 def setPinConfigurationValue(pinNumber, setting, value):
+    global pin_map
+    
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
+        symbol.setReadOnly(False)
         symbol.clearValue()
         symbol.setValue(value)
         symbol.setReadOnly(True)
 
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('peripheralfunction')
+        periphFnValue = value
+        if symbol:
+            if periphFnValue != "GPIO":
+                instance = value.split("_")[0]
+                module = "".join(filter(lambda x: x.isalpha(), instance))
+                pad = pin_map[pinNumber]
+                query = '/avr-tools-device-file/devices/device/peripherals/module@[name=\"{}\"]/instance@[name=\"{}\"]/signals/signal@[pad=\"{}\"]'.format(module, instance, pad)
+                node = ATDF.getNode(query)
+                if node is not None:
+                    periphFnValue = node.getAttribute("function")
+
+                if periphFnValue not in pioSymChannel:
+                    periphFnValue = "Alternate"
+                
+            symbol.clearValue()
+            symbol.setValue(periphFnValue)
+            symbol.setReadOnly(True)
+
+
 def getPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    return symbol.getValue()
+    if symbol:
+        return symbol.getValue()
 
 def clearPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
+
+    if setting == 'function':
+        symbol = pinSymbolsDictionary.get(pinNumber).get('peripheralfunction')
+        if symbol:
+            symbol.setReadOnly(False)
+            symbol.clearValue()
 
 def packageChange(symbol, pinout):
     global uniquePinout
@@ -281,6 +312,7 @@ def updateInputFilter(symbol, event):
 def portFunc(pin, func):
     global port_mskr
     global per_func
+    
     pin_num = int(str(pin.getID()).split("PIN_")[1].split("_PIO_PIN")[0])
     port = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_CHANNEL")
     bit_pos = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_PIN")
@@ -552,6 +584,7 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinPeriphFuncSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:PIO_CFGR")
     pinPeriphFuncSym.setLabel("Peripheral Selection")
     pinPeriphFuncSym.setReadOnly(True)
+    symbolsDict.setdefault('peripheralfunction', pinPeriphFuncSym)
 
     pinBitPosSym = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PIO_PIN", pinSym)
     pinBitPosSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:PIO_CFGR")
