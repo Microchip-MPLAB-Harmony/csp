@@ -243,7 +243,7 @@ def DMA_ATDF_Read(coreComponent, dmaEnable):
 
     # DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
     dmaChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmaEnable)
-    dmaChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+    dmaChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_CTRL")
     dmaChCount.setLabel("DMA (DMAC) Channels Count")
     dmaChCount.setDefaultValue(dmaChannelCount)
     dmaChCount.setVisible(False)
@@ -321,7 +321,7 @@ dmaMenu.setDescription("DMA (DMAC) Configuration")
 
 # DMA_IP: Needed to generate IP specific code in DMA System Service
 dmaPLIBIp = coreComponent.createStringSymbol("DMA_IP", dmaMenu)
-dmaPLIBIp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+dmaPLIBIp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_CTRL")
 dmaPLIBIp.setLabel("DMA IP")
 dmaPLIBIp.setDefaultValue("dma_85")
 dmaPLIBIp.setVisible(False)
@@ -343,7 +343,7 @@ dmaLowLevelAPIOnly.setVisible(True)
 
 # Interrupt type selection
 dmaInterruptType = coreComponent.createKeyValueSetSymbol("DMA_INTERRUPT_TYPE", dmaEnable)
-dmaInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+dmaInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_IEN")
 dmaInterruptType.setLabel("Interrupt Type")
 dmaInterruptType.addKey("DIRECT", "0", "Direct")
 dmaInterruptType.addKey("AGGREGATE", "1", "Aggregate")
@@ -355,7 +355,7 @@ dmaInterruptType.setDependencies(interruptTypeChange, ["DMA_INTERRUPT_TYPE"])
 
 # Needed for code generation
 dmaHighestCh = coreComponent.createIntegerSymbol("DMA_HIGHEST_CHANNEL", dmaEnable)
-dmaHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+dmaHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_CTRL")
 dmaHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
 dmaHighestCh.setVisible(False)
 
@@ -372,7 +372,7 @@ for channelID in range(0, channelCount):
 
     # Channel enable
     dmaChannelEnable = coreComponent.createBooleanSymbol("DMA_ENABLE_CH_" + str(channelID), dmaMenu)
-    dmaChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+    dmaChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_ACTIVATE")
     dmaChannelEnable.setLabel("Use DMA Channel " + str(channelID))
     dmaChannelEnable.setDefaultValue(False)
     dmaChannelEnable.setDependencies(onDMAChannelEnable, ["DMA_ENABLE_CH_" + str(channelID)])
@@ -453,7 +453,7 @@ for channelID in range(0, channelCount):
     if channelID == 0:
         # CRC engine configuration
         dmaCRCEnable = coreComponent.createBooleanSymbol("DMA_CRC_ENABLE_CH_" + str(channelID), dmaChannelEnable)
-        dmaCRCEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+        dmaCRCEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_CRC_EN")
         dmaCRCEnable.setLabel("CRC Engine Enable")
         dmaCRCEnable.setDefaultValue(False)
         dmaCRCEnable.setDependencies(setVisibleOnDMAChEnable, ["DMA_ENABLE_CH_" + str(channelID)])
@@ -476,19 +476,19 @@ dmaHighestCh.setDependencies(onDMAChannelEnable, dmaChannelIds)
 # Interface for Peripheral clients
 for per in per_instance.keys():
     dmaChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(per), dmaMenu)
-    dmaChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+    dmaChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_CTRL")
     dmaChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(per))
     dmaChannelNeeded.setVisible(False)
     peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(per))
 
     dmaChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(per), dmaMenu)
-    dmaChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+    dmaChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_CTRL")
     dmaChannel.setLabel("Local DMA_CH_FOR_" + str(per))
     dmaChannel.setDefaultValue(-1)
     dmaChannel.setVisible(False)
 
 dmaPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", dmaChannelEnable)
-dmaPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
+dmaPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CHAN00_CTRL")
 dmaPERIDChannelUpdate.setLabel("Local dmaChannelAllocLogic")
 dmaPERIDChannelUpdate.setVisible(False)
 dmaPERIDChannelUpdate.setDependencies(dmaChannelAllocLogic, peridValueListSymbols)

@@ -125,12 +125,12 @@ wdtMenu.setLabel("WDT")
 
 #WDT Use
 wdtSym_Enable = coreComponent.createBooleanSymbol("WDT_ENABLE", wdtMenu)
-wdtSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
+wdtSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:WDT_CTRL")
 wdtSym_Enable.setLabel("Enable WDT ?")
 wdtSym_Enable.setDefaultValue(False)
 
 wdtSym_TimeoutAction = coreComponent.createComboSymbol("WDT_ACTION", wdtMenu, ["Reset", "Generate Interrupt"])
-wdtSym_TimeoutAction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
+wdtSym_TimeoutAction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:WDT_CTRL")
 wdtSym_TimeoutAction.setLabel("Timeout Action")
 wdtSym_TimeoutAction.setDefaultValue("Reset")
 wdtSym_TimeoutAction.setVisible(False)
@@ -142,7 +142,7 @@ nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_sourc
 
 # Interrupt type selection
 wdtTmrInterruptType = coreComponent.createKeyValueSetSymbol("WDT_TMR_INTERRUPT_TYPE", wdtMenu)
-wdtTmrInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
+wdtTmrInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:WDT_IEN")
 wdtTmrInterruptType.setLabel("Interrupt Type")
 if nvic_int_num["direct_nvic_num"] != None:
     wdtTmrInterruptType.addKey("DIRECT", "0", "Direct")

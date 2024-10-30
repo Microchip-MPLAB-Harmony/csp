@@ -149,12 +149,12 @@ def instantiateComponent(pwmComponent):
     pwmClkDivider.setDefaultValue(0)
 
     pwmOnTimeCounter = pwmComponent.createIntegerSymbol("PWM_ON_TIME_COUNTER", None)
-    pwmOnTimeCounter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:%NOREGISTER%")
+    pwmOnTimeCounter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:CFG")
     pwmOnTimeCounter.setLabel("PWM On Time Counter")
     pwmOnTimeCounter.setDefaultValue(100)
 
     pwmOffTimeCounter = pwmComponent.createIntegerSymbol("PWM_OFF_TIME_COUNTER", None)
-    pwmOffTimeCounter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:%NOREGISTER%")
+    pwmOffTimeCounter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:CFG")
     pwmOffTimeCounter.setLabel("PWM Off Time Counter")
     pwmOffTimeCounter.setDefaultValue(100)
 

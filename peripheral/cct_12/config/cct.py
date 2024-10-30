@@ -215,7 +215,7 @@ def instantiateComponent(cctComponent):
 
     # Interrupt type selection
     cctInterruptType = cctComponent.createKeyValueSetSymbol("CCT_INTERRUPT_TYPE", None)
-    cctInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+    cctInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:CTRL")
     cctInterruptType.setLabel("Interrupt Type")
     cctInterruptType.addKey("DIRECT", "0", "Direct")
     cctInterruptType.addKey("AGGREGATE", "1", "Aggregate")
@@ -226,7 +226,7 @@ def instantiateComponent(cctComponent):
     nvicUpdateDepList.append("CCT_INTERRUPT_TYPE")
 
     cctOvfInputerruptEn = cctComponent.createBooleanSymbol("CCT_OVF_INTERRUPT_EN", None)
-    cctOvfInputerruptEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+    cctOvfInputerruptEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:CTRL")
     cctOvfInputerruptEn.setLabel("Timer Overflow Interrupt Enable")
     cctOvfInputerruptEn.setDefaultValue(False)
 
@@ -234,7 +234,7 @@ def instantiateComponent(cctComponent):
 
     for capChannel in range (0, numCapRegisters):
         cctCaptureEn = cctComponent.createBooleanSymbol("CCT_ENABLE_CAPTURE_" + str(capChannel), None)
-        cctCaptureEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+        cctCaptureEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:CTRL")
         cctCaptureEn.setLabel("Enable Capture Channel " + str(capChannel))
         cctCaptureEn.setDefaultValue(False)
 
@@ -266,7 +266,7 @@ def instantiateComponent(cctComponent):
         cctCapInputerruptEn.setDependencies(updateVisibility, ["CCT_ENABLE_CAPTURE_" + str(capChannel)])
 
         cctInputFilterEn = cctComponent.createBooleanSymbol("CCT_INPUT_FLTR_EN_" + str(capChannel), cctCaptureEn)
-        cctInputFilterEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+        cctInputFilterEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:CAP0")
         cctInputFilterEn.setLabel("Input Filter Enable")
         cctInputFilterEn.setDefaultValue(False)
         cctInputFilterEn.setVisible(False)
@@ -287,19 +287,19 @@ def instantiateComponent(cctComponent):
 
     for compChannel in range (0, numCmpRegisters):
         cctCompareEn = cctComponent.createBooleanSymbol("CCT_ENABLE_COMPARE_" + str(compChannel), None)
-        cctCompareEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+        cctCompareEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:CTRL")
         cctCompareEn.setLabel("Enable Compare Channel " + str(compChannel))
         cctCompareEn.setDefaultValue(False)
 
         cctCompareVal = cctComponent.createIntegerSymbol("CCT_COMPARE_VALUE_" + str(compChannel), cctCompareEn)
-        cctCompareVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+        cctCompareVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:COMP0")
         cctCompareVal.setLabel("Compare Value")
         cctCompareVal.setDefaultValue(32768)
         cctCompareVal.setVisible(False)
         cctCompareVal.setDependencies(updateVisibility, ["CCT_ENABLE_COMPARE_" + str(compChannel)])
 
         cctCompInputerruptEn = cctComponent.createBooleanSymbol("CCT_CMP_INTERRUPT_EN_" + str(compChannel), cctCompareEn)
-        cctCompInputerruptEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+        cctCompInputerruptEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:CTRL")
         cctCompInputerruptEn.setLabel("Interrupt Enable")
         cctCompInputerruptEn.setDefaultValue(False)
         cctCompInputerruptEn.setVisible(False)
@@ -318,7 +318,7 @@ def instantiateComponent(cctComponent):
     # Symbol to save SYS Time ID
     sysTimeComponentId = cctComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
-    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:%NOREGISTER%")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cct_12;register:CTRL")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
     

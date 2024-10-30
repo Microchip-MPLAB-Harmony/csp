@@ -285,7 +285,7 @@ def instantiateComponent(uartComponent):
 
     # UART_OPERATING_MODE
     uartSym_OperatingMode = uartComponent.createKeyValueSetSymbol("UART_OPERATING_MODE", None)
-    uartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_MCR")
     uartSym_OperatingMode.setLabel("Operating Mode")
     uartSym_OperatingMode.addKey("BLOCKING", "0", "Blocking mode")
     uartSym_OperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
@@ -297,7 +297,7 @@ def instantiateComponent(uartComponent):
 
     # UART Interrupt Type - Aggregate or Direct
     uartInterruptType = uartComponent.createKeyValueSetSymbol("UART_INTERRUPT_TYPE", None)
-    uartInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uartInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_IEN")
     uartInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         uartInterruptType.addKey("DIRECT", "0", "Direct")
@@ -316,7 +316,7 @@ def instantiateComponent(uartComponent):
 
     # UART_TX_RING_BUFFER_SIZE
     uartSym_TXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_TX_RING_BUFFER_SIZE", uartSym_RingBufferSizeConfig)
-    uartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_MCR")
     uartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
     uartSym_TXRingBuffer_Size.setMin(2)
     uartSym_TXRingBuffer_Size.setMax(65535)
@@ -326,7 +326,7 @@ def instantiateComponent(uartComponent):
 
     # UART_RX_RING_BUFFER_SIZE
     uartSym_RXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_RX_RING_BUFFER_SIZE", uartSym_RingBufferSizeConfig)
-    uartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_MCR")
     uartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
     uartSym_RXRingBuffer_Size.setMin(2)
     uartSym_RXRingBuffer_Size.setMax(65535)
@@ -341,7 +341,7 @@ def instantiateComponent(uartComponent):
     _get_bitfield_names(uartValGrp_UART_CFG_SEL__CLK_SRC, clk_src_bitfields)
 
     uart_CFG_SEL_CLK_SRC_SELECT = uartComponent.createKeyValueSetSymbol("UART_CFG_SEL_CLK_SRC", None)
-    uart_CFG_SEL_CLK_SRC_SELECT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uart_CFG_SEL_CLK_SRC_SELECT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_CFG_SEL")
     uart_CFG_SEL_CLK_SRC_SELECT.setLabel("Clock Source")
     uart_CFG_SEL_CLK_SRC_SELECT.setDefaultValue(0)
     uart_CFG_SEL_CLK_SRC_SELECT.setOutputMode( "Value" )
@@ -355,7 +355,7 @@ def instantiateComponent(uartComponent):
     baud_clk_bitfields = []
     _get_bitfield_names(uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL, baud_clk_bitfields)
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL = uartComponent.createKeyValueSetSymbol("UART_BAUDRT_MSB_BAUD_CLK_SEL", None)
-    uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_BAUDRT_MSB")
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setLabel("Baud Clock Select")
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setOutputMode( "Value" )
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setDisplayMode( "Key" )
@@ -370,13 +370,13 @@ def instantiateComponent(uartComponent):
 
     # Baud Rate
     uartBaudRate = uartComponent.createIntegerSymbol("UART_BAUDRATE", None)
-    uartBaudRate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uartBaudRate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_BAUDRT_MSB")
     uartBaudRate.setLabel("Baud Rate")
     uartBaudRate.setDefaultValue(115200)
 
     # Baud Rate Divisor
     uartBaudRateDiv = uartComponent.createIntegerSymbol("UART_BAUDRATE_DIVISOR", None)
-    uartBaudRateDiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uartBaudRateDiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_BAUDRT_MSB")
     uartBaudRateDiv.setLabel("Baud Rate Divisor")
     uartBaudRateDiv.setDefaultValue(baudDivisorCalc(uart_CFG_SEL_CLK_SRC_SELECT.getSelectedKey(), uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.getSelectedKey(), uartBaudRate.getValue()))
     uartBaudRateDiv.setVisible(True)
@@ -438,7 +438,7 @@ def instantiateComponent(uartComponent):
     uartLCRRegDepList.append("UART_LCR_PARITY_SELECT")
 
     uart_CFG_SEL_POLARITY = uartComponent.createBooleanSymbol("UART_CFG_SEL_POLARITY", None)
-    uart_CFG_SEL_POLARITY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
+    uart_CFG_SEL_POLARITY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:UART_CFG_SEL")
     uart_CFG_SEL_POLARITY.setLabel("Invert UART RX and TX pins ?")
     uart_CFG_SEL_POLARITY.setDefaultValue(False)
 
