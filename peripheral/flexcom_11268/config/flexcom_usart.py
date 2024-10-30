@@ -171,6 +171,28 @@ def symbolVisible(symbol, event):
     else :
         symbol.setVisible(False)
 
+def symbolISO7816NoVisible(symbol, event):
+    value  = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
+        if value == "IS07816_T_0":
+            symbol.setVisible(False)
+        else :
+            symbol.setVisible(True)
+    else :
+        symbol.setVisible(False)
+
+def symbolISO7816Visible(symbol, event):
+    value  = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
+        if value == "IS07816_T_0":
+            symbol.setVisible(True)
+        else :
+            symbol.setVisible(False)
+    else :
+        symbol.setVisible(False)
+
 def fifoOptionsVisible(symbol, event):
    usartMode = flexcomSym_UsartMode.getSelectedKey()
    fifoEnable = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE").getValue()
@@ -323,7 +345,7 @@ for index in range(len(flexcomSym_UsartMode_Values)):
     flexcomSym_UsartMode_Key_Name = flexcomSym_UsartMode_Values[index].getAttribute("name")
     flexcomSym_UsartMode_Key_Value = flexcomSym_UsartMode_Values[index].getAttribute("value")
     flexcomSym_UsartMode_Key_Description = flexcomSym_UsartMode_Values[index].getAttribute("caption")
-    if flexcomSym_UsartMode_Key_Name == "NORMAL" or flexcomSym_UsartMode_Key_Name == "RS485" or flexcomSym_UsartMode_Key_Name == "HW_HANDSHAKING" or flexcomSym_UsartMode_Key_Name == "IRDA":
+    if flexcomSym_UsartMode_Key_Name == "NORMAL" or flexcomSym_UsartMode_Key_Name == "RS485" or flexcomSym_UsartMode_Key_Name == "HW_HANDSHAKING" or flexcomSym_UsartMode_Key_Name == "IRDA" or flexcomSym_UsartMode_Key_Name == "IS07816_T_0":
         flexcomSym_UsartMode.addKey(flexcomSym_UsartMode_Key_Name, flexcomSym_UsartMode_Key_Value, flexcomSym_UsartMode_Key_Description)
 flexcomSym_UsartMode.setDisplayMode("Key")
 flexcomSym_UsartMode.setOutputMode("Key")
@@ -432,6 +454,15 @@ flexcomSym_UsartFIFORX2Threshold.setDefaultValue(flexcomUSARTFIFOSize/2)
 flexcomSym_UsartFIFORX2Threshold.setVisible(False)
 flexcomSym_UsartFIFORX2Threshold.setDependencies(rxFifo2OptionVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
 
+flexcomSym_OutputClock = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_OUTPUTCLOCK", flexcomSym_OperatingMode)
+flexcomSym_OutputClock.setHelp("USART_7816_CLOCK_OUTPUT")
+flexcomSym_OutputClock.setLabel("Output clock in Hz")
+flexcomSym_OutputClock.setDefaultValue(2000000)
+flexcomSym_OutputClock.setMin(1000000)
+flexcomSym_OutputClock.setMax(5000000)
+flexcomSym_OutputClock.setVisible(False)
+flexcomSym_OutputClock.setDependencies(symbolISO7816Visible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
+
 flexcomSym_TimeGuardValue = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_TTGR", flexcomSym_OperatingMode)
 flexcomSym_TimeGuardValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_US_TTGR")
 flexcomSym_TimeGuardValue.setLabel("Time Guard Value")
@@ -530,7 +561,7 @@ flexcomSym_Usart_MR_CHRL.setDisplayMode("Description")
 flexcomSym_Usart_MR_CHRL.setOutputMode("Key")
 flexcomSym_Usart_MR_CHRL.setDefaultValue(3)
 flexcomSym_Usart_MR_CHRL.setVisible(False)
-flexcomSym_Usart_MR_CHRL.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+flexcomSym_Usart_MR_CHRL.setDependencies(symbolISO7816NoVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
 
 flexcomSym_Usart_MR_MODE9 = flexcomComponent.createBooleanSymbol("FLEX_USART_MR_MODE9", flexcomSym_OperatingMode)
 flexcomSym_Usart_MR_MODE9.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_US_MR")
@@ -579,7 +610,7 @@ flexcomSym_Usart_MR_PAR.setDefaultValue(4)
 flexcomSym_Usart_MR_PAR.setDisplayMode("Key")
 flexcomSym_Usart_MR_PAR.setOutputMode("Key")
 flexcomSym_Usart_MR_PAR.setVisible(False)
-flexcomSym_Usart_MR_PAR.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+flexcomSym_Usart_MR_PAR.setDependencies(symbolISO7816NoVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
 
 #FLEXCOM USART EVEN Parity Mask
 flexcomSym_Usart_MR_PAR_EVEN_Mask = flexcomComponent.createStringSymbol("USART_PARITY_EVEN_MASK", flexcomSym_OperatingMode)
@@ -626,7 +657,7 @@ flexcomSym_Usart_MR_NBSTOP.setDisplayMode("Description")
 flexcomSym_Usart_MR_NBSTOP.setOutputMode("Key")
 flexcomSym_Usart_MR_NBSTOP.setDefaultValue(0)
 flexcomSym_Usart_MR_NBSTOP.setVisible(False)
-flexcomSym_Usart_MR_NBSTOP.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+flexcomSym_Usart_MR_NBSTOP.setDependencies(symbolISO7816NoVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
 
 #FLEXCOM USART Stop 1-bit Mask
 flexcomSym_Usart_MR_NBSTOP_1_Mask = flexcomComponent.createStringSymbol("USART_STOP_1_BIT_MASK", flexcomSym_OperatingMode)

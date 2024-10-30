@@ -111,6 +111,26 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
 void ${FLEXCOM_INSTANCE_NAME}_USART_IrDA_DirectionSet(FLEXCOM_IRDA_DIR dir);
 </#if>
 
+<#if FLEXCOM_USART_MR_USART_MODE == "IS07816_T_0">
+void ${FLEXCOM_INSTANCE_NAME}_ISO7816_Icc_Power_On( void );
+
+void ${FLEXCOM_INSTANCE_NAME}_ISO7816_Icc_Power_Off( void );
+
+bool ${FLEXCOM_INSTANCE_NAME}_ISO7816_Card_Detect( void );
+
+void ${FLEXCOM_INSTANCE_NAME}_ISO7816_Vcc_Enable( void );
+
+void ${FLEXCOM_INSTANCE_NAME}_ISO7816_Vcc_Disable( void );
+
+void ${FLEXCOM_INSTANCE_NAME}_ISO7816_Warm_Reset( void );
+
+void ${FLEXCOM_INSTANCE_NAME}_ISO7816_Decode_Atr( uint8_t *p_atr, uint8_t size);
+
+uint8_t ${FLEXCOM_INSTANCE_NAME}_ISO7816_Data_Read_Atr( uint8_t *p_atr );
+
+uint16_t ${FLEXCOM_INSTANCE_NAME}_ISO7816_Xfr_Block_Tpdu( uint8_t *apdu_cmd_buffer, uint8_t *apdu_res_buffer, const size_t apdu_cmd_length );
+</#if>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
