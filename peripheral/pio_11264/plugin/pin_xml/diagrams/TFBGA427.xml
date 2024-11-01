@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<diagram min_x="1200" min_y="1200">
+    <shape type="rect" width="900" height="760" x="-365" y="-450" />
+    <shape type="string" x="15" y="-525" line="000000" val="$DEVICE_NAME" orientation="right"
+        size="14" />
+    <shape type="string_array" x="-395" y="-420" line="000000"
+        vals="A,B,C,D,E,F,G,H,J,K,L,M,N,P,R,T,U,V,W,Y,AA" orientation="down" size="14" margin="35"
+        stroke="2" />
+    <shape type="string_array" x="-340" y="-460" line="000000"
+        vals="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25" orientation="right"
+        size="14" margin="35"
+        stroke="2" />
+    <layout type="row">
+        <row pins="A1-A25" x="-345" y="-435" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="B1-B25" x="-345" y="-400" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="C1-C25" x="-345" y="-365" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="D1-D25" x="-345" y="-330" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="E1-E25" x="-345" y="-295" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="F1-F25" x="-345" y="-260" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="G1-G25" x="-345" y="-225" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="H1-H25" x="-345" y="-190" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="J1-J25" x="-345" y="-155" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="K1-K25" x="-345" y="-120" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="L1-L25" x="-345" y="-85" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="M1-M25" x="-345" y="-50" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="N1-N25" x="-345" y="-15" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="P1-P25" x="-345" y="20" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="R1-R25" x="-345" y="55" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="T1-T25" x="-345" y="90" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="U1-U25" x="-345" y="125" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="V1-V25" x="-345" y="160" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="W1-W25" x="-345" y="195" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="Y1-Y25" x="-345" y="230" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="AA1-AA25" x="-345" y="265" margin="13" direction="right" pin_radius="11"
+            pin_name_location="none" pin_number_location="inside" pin_number_size="10"
+            pin_number_margin="6" pin_number_orientation="up" />
+    </layout>
+</diagram>
