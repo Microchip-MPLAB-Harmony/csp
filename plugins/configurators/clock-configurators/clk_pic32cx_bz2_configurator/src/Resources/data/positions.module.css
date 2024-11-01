@@ -1,0 +1,936 @@
+.main-block-diagram {
+    position: absolute;
+    width: 1417px;
+    height: 1370px;
+    left: 0;
+    top: 0
+    }
+.jcombo_spllSource {
+    height: 30px;
+    position: absolute;
+    width: 80px;
+    top: 80px;
+    left: 172px
+    }
+.combo_spll_div2 {
+    height: 30px;
+    position: absolute;
+    width: 80px;
+    top: 218px;
+    left: 234px
+    }
+.spinner_splldiv1 {
+    height: 30px;
+    position: absolute;
+    width: 60px;
+    padding: 0;
+    left: 243px;
+    top: 365px
+    }
+.label_spll_div1Label {
+    height: 20px;
+    position: absolute;
+    width: 30px;
+    left: 271px;
+    top: 327px
+    }
+.label_spll_div2Label {
+    height: 20px;
+    position: absolute;
+    width: 25px;
+    left: 273px;
+    top: 174px
+    }
+.label_spll2Freq {
+    height: 20px;
+    position: absolute;
+    width: 70px;
+    left: 334px;
+    top: 184px
+    }
+.label_spll3Freq1 {
+    height: 20px;
+    position: absolute;
+    width: 70px;
+    left: 334px;
+    top: 286px
+    }
+.systemPll_settings {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 267px;
+    top: 435px
+    }
+.systemPll_reset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 298px;
+    top: 435px
+    }
+.autoCalculateRefClk {
+    height: 50px;
+    position: absolute;
+    width: 95px;
+    top: 434px;
+    left: 668px
+    }
+.refclkReset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    top: 482px;
+    left: 890px
+    }
+.refClkSettings {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    top: 482px;
+    left: 859px
+    }
+.refclkix1 {
+    height: 30px;
+    position: absolute;
+    width: 100px;
+    left: 454px;
+    top: 215px
+    }
+.cb_refclk_enable1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 210px;
+    left: 638px
+    }
+.checkbox_idlelmode {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 658px;
+    top: 136px
+    }
+.checkbox_Sleepmode {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 658px;
+    top: 104px
+    }
+.refClk0Radio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 592px;
+    top: 81px
+    }
+.refClk0Radio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 118px;
+    left: 592px
+    }
+.refClk0Radio2 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 592px;
+    top: 160px
+    }
+.refClk0Radio3 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 591px;
+    top: 198px
+    }
+.refClk0Radio4 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 243px;
+    left: 592px
+    }
+.refClk0Radio5 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 284px;
+    left: 591px
+    }
+.refClk0Radio6 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 324px;
+    left: 592px
+    }
+.refClk0Radio7 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 591px;
+    top: 367px
+    }
+.refClk0Radio8 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 592px;
+    top: 405px
+    }
+.pbclk1Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    left: 503px;
+    top: 150px
+    }
+.lprc_res1 {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 111px;
+    left: 503px
+    }
+.sosc_res1 {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 276px;
+    left: 501px
+    }
+.lbl_poscFreq1 {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 191px;
+    left: 504px
+    }
+.label_spll1Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 315px;
+    left: 503px
+    }
+.lbl_frcFreq1 {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 73px;
+    left: 504px
+    }
+.trimvalue1 {
+    height: 30px;
+    position: absolute;
+    width: 80px;
+    left: 708px;
+    top: 202px
+    }
+.cb_refclkoe1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 374px;
+    left: 863px
+    }
+.runInSleepModeLabel {
+    height: 20px;
+    position: absolute;
+    width: 180px;
+    font-family: Calibri;
+    left: 684px;
+    top: 102px
+    }
+.runInIdleModeLabel {
+    height: 20px;
+    position: absolute;
+    width: 180px;
+    font-family: Calibri;
+    left: 682px;
+    top: 136px
+    }
+.refoscdiv1 {
+    height: 30px;
+    position: absolute;
+    width: 80px;
+    left: 706px;
+    top: 299px
+    }
+.refclk0FreqHz {
+    position: absolute;
+    height: 20px;
+    width: 25px;
+    left: 557px;
+    top: 225px
+    }
+.refClkTab {
+    position: absolute;
+    width: 70px;
+    height: 160px;
+    top: 27px;
+    left: 920px
+    }
+.refClckNumber {
+    height: 20px;
+    position: absolute;
+    width: 30px;
+    left: 788px;
+    top: 59px
+    }
+.refclkRefoNumber {
+    height: 20px;
+    position: absolute;
+    width: 50px;
+    left: 1034px;
+    top: 411px
+    }
+.lbl_refClkOxFreq {
+    height: 20px;
+    position: absolute;
+    width: 100px;
+    left: 927px;
+    top: 425px
+    }
+.periClockConfig {
+    height: 50px;
+    position: absolute;
+    width: 100px;
+    left: 1180px;
+    top: 358px
+    }
+.lbl_refClk2Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 241px;
+    left: 1030px
+    }
+.lbl_lpck_1Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    left: 1031px;
+    top: 377px
+    }
+.lbl_refClk1Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 206px;
+    left: 1031px
+    }
+.lbl_refClk4Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    left: 1032px;
+    top: 317px
+    }
+.lbl_refClk3Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    left: 1031px;
+    top: 279px
+    }
+.lbl_refClk5Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 345px;
+    left: 1032px
+    }
+.lbl_refClk0Freq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 172px;
+    left: 1031px
+    }
+.ethclkouten {
+    position: absolute;
+    height: 30px;
+    width: 80px;
+    left: 899px;
+    top: 95px
+    }
+.poscmod {
+    height: 30px;
+    position: absolute;
+    width: 65px;
+    left: 257px;
+    top: 679px
+    }
+.poscfrequency {
+    height: 30px;
+    position: absolute;
+    width: 100px;
+    left: 173px;
+    top: 570px
+    }
+.lbl_Hz {
+    height: 20px;
+    position: absolute;
+    width: 30px;
+    left: 274px;
+    top: 579px
+    }
+.label_poscFreqInput {
+    height: 20px;
+    position: absolute;
+    width: 100px;
+    left: 318px;
+    top: 627px
+    }
+.frcdiv {
+    height: 30px;
+    position: absolute;
+    width: 95px;
+    left: 542px;
+    top: 724px
+    }
+.label_spll1Freq1 {
+    height: 20px;
+    position: absolute;
+    width: 75px;
+    top: 571px;
+    left: 630px
+    }
+.lbl_poscFreq {
+    height: 20px;
+    position: absolute;
+    width: 75px;
+    top: 626px;
+    left: 629px
+    }
+.lbl_frcdivFreq {
+    height: 20px;
+    position: absolute;
+    width: 75px;
+    left: 630px;
+    top: 683px
+    }
+.lprc_res {
+    height: 20px;
+    position: absolute;
+    width: 75px;
+    top: 816px;
+    left: 628px
+    }
+.sosc_res {
+    height: 20px;
+    position: absolute;
+    width: 75px;
+    left: 627px;
+    top: 877px
+    }
+.pllrefdiv {
+    height: 30px;
+    position: absolute;
+    width: 90px;
+    left: 155px;
+    top: 842px
+    }
+.lbl_Hz1 {
+    height: 20px;
+    position: absolute;
+    width: 40px;
+    left: 250px;
+    top: 849px
+    }
+.noscSourceRadio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 637px;
+    left: 728px
+    }
+.noscSourceRadio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 728px;
+    top: 885px
+    }
+.noscSourceRadio2 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 728px;
+    top: 694px
+    }
+.noscSourceRadio3 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 728px;
+    top: 823px
+    }
+.noscSourceRadio4 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 578px;
+    left: 727px
+    }
+.noscSourceLabelName0 {
+    height: 20px;
+    position: absolute;
+    width: 66.7625px;
+    text-align: center;
+    left: 555px;
+    top: 626px
+    }
+.noscSourceLabelName1 {
+    height: 20px;
+    position: absolute;
+    width: 66.7625px;
+    text-align: center;
+    left: 559px;
+    top: 878px
+    }
+.noscSourceLabelName2 {
+    height: 20px;
+    position: absolute;
+    width: 66.7625px;
+    text-align: center;
+    top: 668px;
+    left: 556px
+    }
+.noscSourceLabelName3 {
+    height: 20px;
+    position: absolute;
+    width: 66.7625px;
+    text-align: center;
+    left: 559px;
+    top: 813px
+    }
+.noscSourceLabelName4 {
+    height: 20px;
+    position: absolute;
+    width: 66.7625px;
+    text-align: center;
+    left: 556px;
+    top: 570px
+    }
+.sysclk_res {
+    height: 20px;
+    position: absolute;
+    width: 80px;
+    left: 936px;
+    top: 609px
+    }
+.label_sysClkFreq1 {
+    height: 20px;
+    position: absolute;
+    width: 90.475px;
+    left: 129px;
+    top: 1164px
+    }
+.label_lpckFreq1 {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    left: 130px;
+    top: 1114px
+    }
+.soscen {
+    height: 30px;
+    position: absolute;
+    width: 75px;
+    left: 193px;
+    top: 920px
+    }
+.jcombo_lpclkdiv {
+    height: 30px;
+    position: absolute;
+    width: 100px;
+    left: 767px;
+    top: 1167px
+    }
+.jcombo_rtcdiv {
+    height: 30px;
+    position: absolute;
+    width: 100px;
+    left: 766px;
+    top: 1002px
+    }
+.vbkp32kSourceRadio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 700px;
+    top: 1034px
+    }
+.vbkp32kSourceRadio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 700px;
+    top: 1073px
+    }
+.vbkp32kSourceRadio2 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 700px;
+    top: 1106px
+    }
+.vbkp32kSourceRadio3 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 700px;
+    top: 1144px
+    }
+.rtcntmSourceRadio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 911px;
+    top: 1134px
+    }
+.rtcntmSourceRadio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 912px;
+    top: 1087px
+    }
+.vbkp1kSourceRadio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 984px;
+    top: 1110px
+    }
+.vbkp1kSourceRadio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 1049px;
+    left: 983px
+    }
+.dsdwdtSourceRadio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 1051px;
+    top: 1244px
+    }
+.dsdwdtSourceRadio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 1283px;
+    left: 1052px
+    }
+.refSysclockDisplayFreq {
+    height: 20px;
+    position: absolute;
+    width: 89.02px;
+    top: 395px;
+    left: 500px
+    }
+.wdtrmcsSourceRadio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 233px;
+    top: 1103px
+    }
+.wdtrmcsSourceRadio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 233px;
+    top: 1149px
+    }
+.wdtrmcsSourceRadioName0 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    left: 132px;
+    top: 1092px
+    }
+.wdtrmcsSourceRadioName1 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    left: 131px;
+    top: 1139px
+    }
+.lbl_poscmod {
+    height: 20px;
+    position: absolute;
+    width: 80px;
+    left: 248px;
+    top: 715px
+    }
+.label_deepSleepFreq {
+    height: 20px;
+    position: absolute;
+    width: 80px;
+    left: 1099px;
+    top: 1274px
+    }
+.refClk0Radio10 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 578px;
+    top: 437px
+    }
+.refClk0Radio11 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 578px;
+    top: 469px
+    }
+.label_wdtFreq {
+    height: 20px;
+    position: absolute;
+    width: 80px;
+    top: 1140px;
+    left: 275px
+    }
+.jlabel_rtcdiv {
+    height: 20px;
+    position: absolute;
+    width: 40px;
+    left: 799px;
+    top: 1049px
+    }
+.jlabel_lpclkdiv {
+    height: 20px;
+    position: absolute;
+    width: 40px;
+    left: 800px;
+    top: 1134px
+    }
+.label_rtcFreq {
+    height: 20px;
+    position: absolute;
+    width: 90.4688px;
+    top: 1090px;
+    left: 1071px
+    }
+.label_lpckFreq {
+    height: 20px;
+    position: absolute;
+    width: 100px;
+    left: 991px;
+    top: 1186px
+    }
+.rtcntmSourceRadioName0 {
+    height: 20px;
+    position: absolute;
+    width: 65px;
+    left: 849px;
+    top: 1120px
+    }
+.rtcntmSourceRadioName1 {
+    height: 20px;
+    position: absolute;
+    width: 50px;
+    left: 848px;
+    top: 1076px
+    }
+.vbkp1kSourceRadioName0 {
+    height: 20px;
+    position: absolute;
+    width: 40px;
+    left: 946px;
+    top: 1102px
+    }
+.vbkp1kSourceRadioName1 {
+    height: 20px;
+    position: absolute;
+    width: 40px;
+    left: 945px;
+    top: 1041px
+    }
+.cb_pbclk_enable1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 861px;
+    top: 684px
+    }
+.peripheralBusClkDiv1 {
+    height: 30px;
+    position: absolute;
+    width: 60px;
+    left: 931px;
+    top: 816px
+    }
+.pbclkxFreq {
+    height: 20px;
+    position: absolute;
+    width: 90px;
+    top: 749px;
+    left: 1027px
+    }
+.peripheralBusClock_Settings {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 1054px;
+    top: 941px
+    }
+.peripheralBusClock_reset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 1086px;
+    top: 941px
+    }
+.lbl_pbxdiv {
+    height: 20px;
+    position: absolute;
+    width: 30px;
+    left: 952px;
+    top: 796px
+    }
+.lbl_pbclkNum {
+    height: 20px;
+    position: absolute;
+    width: 30px;
+    left: 1056px;
+    top: 670px
+    }
+.lbl_pbclkx {
+    height: 20px;
+    position: absolute;
+    width: 30px;
+    left: 1084px;
+    top: 725px
+    }
+.tabPane_pb {
+    position: absolute;
+    width: 60px;
+    height: 130px;
+    top: 663px;
+    left: 1116px
+    }
+.lbl_To1 {
+    height: 20px;
+    position: absolute;
+    width: 150px;
+    left: 849px;
+    top: 864px
+    }
+.txt_pbclkPeripherals {
+    position: absolute;
+    height: 85px;
+    width: 185px;
+    left: 849px;
+    top: 882px
+    }
+.spll3DisplayFreq {
+    height: 20px;
+    position: absolute;
+    width: 89.02px;
+    top: 358px;
+    left: 499px
+    }
+.clko {
+    height: 20px;
+    position: absolute;
+    width: 50px;
+    left: 214px;
+    top: 605px
+    }
+.refClk0RadioName0 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 75px;
+    left: 440px
+    }
+.refClk0RadioName1 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 113px;
+    left: 440px
+    }
+.refClk0RadioName2 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 152px;
+    left: 440px
+    }
+.refClk0RadioName3 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 193px;
+    left: 440px
+    }
+.refClk0RadioName4 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 247px;
+    left: 435px
+    }
+.refClk0RadioName5 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 282px;
+    left: 440px
+    }
+.refClk0RadioName6 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 317px;
+    left: 440px
+    }
+.refClk0RadioName7 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 359px;
+    left: 440px
+    }
+.refClk0RadioName8 {
+    height: 20px;
+    position: absolute;
+    width: 66.7656px;
+    text-align: center;
+    top: 396px;
+    left: 440px
+    }
+.refClk0RadioName10 {
+    height: 20px;
+    position: absolute;
+    width: 67px;
+    text-align: center;
+    left: 428px;
+    top: 429px
+    }
+.refClk0RadioName11 {
+    height: 20px;
+    position: absolute;
+    width: 67px;
+    text-align: center;
+    left: 428px;
+    top: 461px
+    }

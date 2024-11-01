@@ -1820,13 +1820,9 @@ if __name__ == "__main__":
     CLK_MENU_COMMENT = coreComponent.createCommentSymbol("clkSettingsComment", SYM_CLK_MENU)
     CLK_MENU_COMMENT.setLabel("**** All settings listed here should be ideally configured using the Clock Configurator ****")
 
-    CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
-    CLK_MANAGER_SELECT.setVisible(False)
     if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ2":
-        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
         pmdDict = pmdDict_bz2
     elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ3":
-        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
         pmdDict = pmdDict_bz3
     else:
         pmdDict = pmdDict_bz6
