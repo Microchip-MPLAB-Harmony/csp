@@ -82,52 +82,52 @@
 typedef uint32_t PROGRAM_FLASH_BANK;
 
     /* Boot Flash Page 0 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_0     (0)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_0     (1U << 0U)
 
     /* Boot Flash Page 1 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_1     (1)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_1     (1U << 1U)
 
     /* Boot Flash Page 2 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_2     (2)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_2     (1U << 2U)
 
     /* Boot Flash Page 3 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_3     (3)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_3     (1U << 3U)
 
     /* Boot Flash Page 4 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_4     (4)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_4     (1U << 4U)
 
     /* Boot Flash Page 5 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_5     (5)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_5     (1U << 5U)
 
     /* Boot Flash Page 6 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_6     (6)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_6     (1U << 6U)
 
     /* Boot Flash Page 7 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_7     (7)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_7     (1U << 7U)
 
     /* Boot Flash Page 8 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_8     (8)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_8     (1U << 8U)
 
     /* Boot Flash Page 9 Write Protect */
-#define   FCW_BOOT_WRITE_PROTECT_PAGE_9      (9)
+#define   FCW_BOOT_WRITE_PROTECT_PAGE_9      (1U << 9U)
 
     /* Boot Flash Page 10 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_10    (10)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_10    (1U << 10U)
 
     /* Boot Flash Page 11 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_11    (11)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_11    (1U << 11U)
 
     /* Boot Flash Page 12 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_12    (12)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_12    (1U << 12U)
 
     /* Boot Flash Page 13 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_13    (13)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_13    (1U << 13U)
 
     /* Boot Flash Page 14 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_14    (14)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_14    (1U << 14U)
 
     /* Boot Flash Page15 Write Protect */
-#define    FCW_BOOT_WRITE_PROTECT_PAGE_15    (15)
+#define    FCW_BOOT_WRITE_PROTECT_PAGE_15    (1U << 15U)
 
 typedef uint32_t FCW_BOOT_FLASH_WRITE_PROTECT;
 
