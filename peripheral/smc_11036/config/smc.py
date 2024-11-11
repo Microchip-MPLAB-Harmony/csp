@@ -396,7 +396,7 @@ def instantiateComponent( smcComponent ):
     pmeccSectorSize.setDisplayMode( "Description" )
     pmeccSectorSize.setDefaultValue( 0 )
     for tupleElem in getNameValueCaptionTuple( "HSMC_PMECCFG__SECTORSZ" ):
-        pmeccSectorSize.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
+        pmeccSectorSize.addKey( tupleElem[ 0 ], str(int(tupleElem[ 1 ], 0)), tupleElem[ 2 ] )
 
     pmeccSectorsPerPage = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_SECTORS_PER_PAGE", pmeccMenu )
     pmeccSectorsPerPage.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
@@ -765,6 +765,12 @@ def instantiateComponent( smcComponent ):
     writeProtectionEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
     writeProtectionEnable.setLabel( bitField_WPMR_WPEN.getAttribute( "caption" ) )
     writeProtectionEnable.setDefaultValue( False )
+
+    smcRemRegisterName = smcComponent.createStringSymbol("SMC_REM_REGS", None)
+    smcRemRegisterName.setVisible(False)
+    smcRemRegChildren = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_REM"]').getChildren()
+    smcRemRegName = smcRemRegChildren[0].getAttribute("name")
+    smcRemRegisterName.setDefaultValue(smcRemRegName if (len(smcRemRegChildren) > 1) else (smcRemRegName + "[0]"))
 
     #------------------------------------------------------------------------------
     # Dependency

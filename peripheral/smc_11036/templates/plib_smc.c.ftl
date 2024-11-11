@@ -298,8 +298,8 @@ uint8_t ${SMC_INSTANCE_NAME}_ErrorGet(void)
 
 int16_t ${SMC_INSTANCE_NAME}_RemainderGet(uint32_t sector, uint32_t remainderIndex)
 {
-    uint8_t lowByte = ((volatile const uint8_t *)${SMC_INSTANCE_NAME}_REGS->SMC_REM[sector].HSMC_REM)[remainderIndex * 2U];
-    uint8_t highByte = ((volatile const uint8_t *)${SMC_INSTANCE_NAME}_REGS->SMC_REM[sector].HSMC_REM)[remainderIndex * 2U + 1U];
+    uint8_t lowByte = ((volatile const uint8_t *)&${SMC_INSTANCE_NAME}_REGS->SMC_REM[sector].${SMC_REM_REGS})[remainderIndex * 2U];
+    uint8_t highByte = ((volatile const uint8_t *)&${SMC_INSTANCE_NAME}_REGS->SMC_REM[sector].${SMC_REM_REGS})[remainderIndex * 2U + 1U];
     uint32_t retVal = ((uint32_t)highByte << 8) + (uint32_t)lowByte;
     return (int16_t)retVal;
 }
