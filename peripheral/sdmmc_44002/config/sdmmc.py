@@ -36,7 +36,7 @@ def showCommentOnDisable(symbol, event):
     symbol.setVisible(not event["value"])
 
 
-# Show warning when a symbol value is zero 
+# Show warning when a symbol value is zero
 def showCommentOnZero(symbol, event):
     symbol.setVisible(event["value"] == 0)
 
@@ -71,6 +71,13 @@ def instantiateComponent(sdmmcComponent):
     sdmmcInterrupt.setDefaultValue(True)
     sdmmcInterrupt.setReadOnly(True)
 
+    extdw_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SDMMC"]/register-group@[name="SDMMC"]/'
+                 'register@[name="SDMMC_HC1R"]/bitfield@[name="EXTDW"]')
+    if extdw_node is not None:
+        emmc_prefix = sdmmcComponent.createStringSymbol("SDMMC_EMMC_PREFIX", None)
+        emmc_prefix.setVisible(False)
+        emmc_prefix.setDefaultValue(extdw_node.getAttribute("modes"))
+
     sdmmcHClk = sdmmcComponent.createIntegerSymbol("SDMMC_HCLOCK_FREQ", None)
     sdmmcHClk.setVisible(False)
     sdmmcHClk.setDefaultValue(int(round(Database.getSymbolValue("core", sdmmcInstanceName.getValue() + "_CLOCK_FREQUENCY"), -3)))
@@ -87,7 +94,7 @@ def instantiateComponent(sdmmcComponent):
     sdmmcBaseClkSrcComment.setVisible(sdmmcBaseClk.getValue() == 0)
     sdmmcBaseClkSrcComment.setLabel("Source clock for divided clock mode is not enabled !!!")
     sdmmcBaseClkSrcComment.setDependencies(showCommentOnZero, ["SDMMC_BASECLK_FREQ"])
-    
+
     sdmmcMultClk = sdmmcComponent.createIntegerSymbol("SDMMC_MULTCLK_FREQ", None)
     sdmmcMultClk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_44002;register:SDMMC_CCR")
     sdmmcMultClk.setLabel("Programmable Clock Frequency (Hz)")

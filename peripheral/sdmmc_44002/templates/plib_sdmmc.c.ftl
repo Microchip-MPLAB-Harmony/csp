@@ -1,8 +1,14 @@
 <#compress>
+<#--In some masks, emmc is labelled as "E_MMC" instead of "EMMC", so use prefix from atdf  -->
+<#assign EMMC_PREFIX = SDMMC_EMMC_PREFIX!"EMMC">
 <#--Use reg value prefix based on mode of operation  -->
-<#assign REG_VAL_PREFIX = SDCARD_EMMCEN?string("E_MMC", "SD_SDIO")>
+<#assign REG_VAL_PREFIX = SDCARD_EMMCEN?string(EMMC_PREFIX, "SD_SDIO")>
 <#-- Enable FCD if the mode of operation is EMMC or if CD capability exists but is not enabled  -->
-<#assign USE_FCD = SDCARD_EMMCEN || (SDCARD_SDCD_SUPPORT && !SDCARD_SDCDEN)>
+<#if SDCARD_SDCD_SUPPORT>
+<#assign USE_FCD = SDCARD_EMMCEN || !SDCARD_SDCDEN>
+<#else>
+<#assign USE_FCD = false>
+</#if>
 <#-- Disable card interrupt during initialization if used in sd card mode, has CD capability and the capability is not used  -->
 <#assign DISABLE_CD_INT_INIT = (!SDCARD_EMMCEN && SDCARD_SDCD_SUPPORT && !SDCARD_SDCDEN)>
 <#-- CD interrupt disable  -->
@@ -10,7 +16,7 @@
 <#-- CD interrupt enable -->
 <#assign SDMMC_CD_INT_ENABLE = " | (SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk)">
 <#-- Enable interrupts specific to EMMC or SDIO -->
-<#assign SDMMC_NISTER_VAL = SDCARD_EMMCEN?then("SDMMC_NISTER_E_MMC_Msk", "SDMMC_NISTER_SD_SDIO_Msk") + DISABLE_CD_INT_INIT?then(SDMMC_CD_INT_DISABLE,"")>
+<#assign SDMMC_NISTER_VAL = SDCARD_EMMCEN?then("SDMMC_NISTER_" + EMMC_PREFIX + "_Msk", "SDMMC_NISTER_SD_SDIO_Msk") + DISABLE_CD_INT_INIT?then(SDMMC_CD_INT_DISABLE,"")>
 </#compress>
 /*******************************************************************************
   ${SDMMC_INSTANCE_NAME} PLIB
@@ -279,18 +285,18 @@ void ${SDMMC_INSTANCE_NAME}_BusWidthSet ( SDMMC_BUS_WIDTH busWidth )
     uint8_t hc1r =  ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R;
     if(busWidth == SDMMC_BUS_WIDTH_8_BIT)
     {
-       hc1r |= SDMMC_HC1R_E_MMC_EXTDW_Msk;
+       hc1r |= SDMMC_HC1R_${EMMC_PREFIX}_EXTDW_Msk;
     }
     else
     {
-        hc1r &= ~SDMMC_HC1R_E_MMC_EXTDW_Msk;
+        hc1r &= ~SDMMC_HC1R_${EMMC_PREFIX}_EXTDW_Msk;
         if (busWidth == SDMMC_BUS_WIDTH_4_BIT)
         {
-            hc1r |= SDMMC_HC1R_E_MMC_DW_4_BIT;
+            hc1r |= SDMMC_HC1R_${EMMC_PREFIX}_DW_4_BIT;
         }
         else
         {
-            hc1r &= ~SDMMC_HC1R_E_MMC_DW_4_BIT;
+            hc1r &= ~SDMMC_HC1R_${EMMC_PREFIX}_DW_4_BIT;
         }
     }
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R = hc1r;
