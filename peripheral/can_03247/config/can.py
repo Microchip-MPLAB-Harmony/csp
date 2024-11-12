@@ -75,7 +75,7 @@ def canCreateFilter(component, menu, filterNumber):
     filterEnable.setDefaultValue(True if filterNumber < 1 else False)
 
     id = component.createHexSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
-    id.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_03247;register:CFDxFLTCON0)
+    id.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_03247;register:CFDxFLTCON0")
     id.setLabel("Filter ID")
     id.setMin(0)
     id.setMax(0x1FFFFFFF)

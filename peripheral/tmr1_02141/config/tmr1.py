@@ -639,7 +639,7 @@ def instantiateComponent(tmr1Component):
     tgate_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TGATE, tgate_names)
     tmr1SymField_T1CON_TGATE = tmr1Component.createKeyValueSetSymbol("TIMER1_TGATE", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1SymField_T1CON_TGATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON)
+    tmr1SymField_T1CON_TGATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tmr1_02141;register:T1CON")
     tmr1SymField_T1CON_TGATE.setLabel(tmr1BitField_T1CON_TGATE.getAttribute("caption"))
     tmr1SymField_T1CON_TGATE.setOutputMode( "Value" )
     tmr1SymField_T1CON_TGATE.setDisplayMode( "Description" )

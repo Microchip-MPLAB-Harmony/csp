@@ -288,7 +288,7 @@ def instantiateComponent(rtccComponent):
     clkPrescaler_names = []
     _get_bitfield_names(rtcValGrp_RTCCON2_PS, clkPrescaler_names)
     rtccSym_RTCCON2_PS = rtccComponent.createKeyValueSetSymbol("RTCC_CLOCK_PRESCALER", rtccClockMenu )
-    rtccSym_RTCCON2_PS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2)
+    rtccSym_RTCCON2_PS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtcc_02050;register:RTCCON2")
     rtccSym_RTCCON2_PS.setLabel(rtcBitField_RTCCON2_PS.getAttribute("caption"))
     rtccSym_RTCCON2_PS.setOutputMode("Value")
     rtccSym_RTCCON2_PS.setDisplayMode("Description")
