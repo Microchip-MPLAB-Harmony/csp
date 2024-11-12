@@ -155,7 +155,8 @@ const CustomLogic = (props: { cx: (...classNames: string[]) => string }) => {
       pbclockEnableSymbolHooks.length !== 0 &&
       refRoTrimSymbolHooks.length !== 0 &&
       refRodivSymbolHooks.length !== 0 &&
-      refClockEnableHooks.length !== 0
+      refClockEnableHooks.length !== 0 &&
+      refClockSourceHooks.length !== 0
     ) {
       let poscFreq = poscFreqHook.value;
       let soscFreq = soscFreqHook.value;

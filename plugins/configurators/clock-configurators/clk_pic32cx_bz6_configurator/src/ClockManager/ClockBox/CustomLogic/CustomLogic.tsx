@@ -33,6 +33,7 @@ const refClkEnableIds = getClockIds('CONFIG_SYS_CLK_REFCLK', '_ENABLE', nReferen
 export let refInputFreqs: number[] = [];
 const CustomLogic = (props: { cx: (...classNames: string[]) => string }) => {
   const { componentId = 'core' } = useContext(PluginConfigContext);
+
   const poscFreqHook = useIntegerSymbol({ componentId, symbolId: 'POSC_OUT_FREQ' });
   const soscFreqHook = useIntegerSymbol({ componentId, symbolId: 'SOSC_OUT_FREQ' });
   const frcDiv = useComboSymbol({ componentId, symbolId: 'OSCCON_FRCDIV_VALUE' });
@@ -164,7 +165,8 @@ const CustomLogic = (props: { cx: (...classNames: string[]) => string }) => {
       pbclockEnableSymbolHooks.length !== 0 &&
       refRoTrimSymbolHooks.length !== 0 &&
       refRodivSymbolHooks.length !== 0 &&
-      refClockEnableHooks.length !== 0
+      refClockEnableHooks.length !== 0 &&
+      refClockSourceHooks.length !== 0
     ) {
       let poscFreq = poscFreqHook.value;
       let soscFreq = soscFreqHook.value;

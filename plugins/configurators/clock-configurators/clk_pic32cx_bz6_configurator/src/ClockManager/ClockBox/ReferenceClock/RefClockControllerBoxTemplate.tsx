@@ -138,12 +138,12 @@ const RefClkControllerBoxTemplate = (props: {
         componentId={componentId}
         resetSymbolsArray={props.RefClkSettingsSymbolArray}
       />
-      {/* <GetButton
+      <GetButton
         buttonDisplayText={'Auto Calculate'}
         className={props.cx('autoCalculateRefClk')}
         toolTip={'Press this to Auto-Calculate Reference Clock Frequency'}
         buttonClick={refClkAutoCalculationButtonClicked}
-      /> */}
+      />
       <Dialog
         header={'Reference Clock Divider and Trim Auto-Calculator ' + props.index}
         visible={dialogStatus}

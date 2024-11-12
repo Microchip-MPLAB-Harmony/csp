@@ -24,22 +24,22 @@
     position: absolute;
     width: 60px;
     padding: 0;
-    left: 270px;
-    top: 944px
+    top: 944px;
+    left: 264px
     }
 .label_spll_div1Label {
     height: 20px;
     position: absolute;
     width: 30px;
-    left: 300px;
-    top: 904px
+    left: 297px;
+    top: 901px
     }
 .label_spll_div2Label {
     height: 20px;
     position: absolute;
     width: 25px;
-    top: 761px;
-    left: 300px
+    top: 758px;
+    left: 298px
     }
 .label_spll2Freq {
     height: 20px;
@@ -397,8 +397,8 @@
     height: 20px;
     position: absolute;
     width: 30px;
-    left: 215px;
-    top: 133px
+    top: 131px;
+    left: 214px
     }
 .ewpllfbdiv {
     height: 30px;
@@ -418,7 +418,7 @@
     height: 20px;
     position: absolute;
     width: 50px;
-    left: 345px;
+    left: 342px;
     top: 202px
     }
 .ewpllodiv2 {
@@ -523,8 +523,8 @@
     height: 20px;
     position: absolute;
     width: 50px;
-    left: 218px;
-    top: 431px
+    top: 429px;
+    left: 216px
     }
 .usbpllEnable {
     height: 20px;
@@ -559,7 +559,7 @@
     position: absolute;
     width: 30px;
     left: 342px;
-    top: 500px
+    top: 499px
     }
 .lbl_upllodiv {
     height: 20px;
@@ -1042,14 +1042,14 @@
     position: absolute;
     width: 40px;
     left: 792px;
-    top: 1584px
+    top: 1583px
     }
 .jlabel_lpclkdiv {
     height: 20px;
     position: absolute;
-    top: 1665px;
     width: 40px;
-    left: 795px
+    left: 795px;
+    top: 1663px
     }
 .label_rtcFreq {
     height: 20px;

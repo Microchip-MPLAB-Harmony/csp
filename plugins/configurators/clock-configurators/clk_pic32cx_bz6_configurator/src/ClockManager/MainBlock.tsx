@@ -70,58 +70,64 @@ const MainBlock = () => {
   function getBoxControlData(boxId: string) {
     return controlJsonData.filter((e) => e.box_id === boxId);
   }
-  return (
-    <>
-      <ConfirmDialog />
-      <PluginToolbar
-        menuItems={items}
-        title='Clock Configurator'
-      />
-      <div
-        className={cx('pannable-container')}
-        ref={pannableContainer.ref}
-        {...pannableContainer.props}>
+
+  try {
+    return (
+      <>
+        <ConfirmDialog />
+        <PluginToolbar
+          menuItems={items}
+          title='Clock Configurator'
+        />
         <div
-          className={cx('svg-container')}
-          ref={zoomableContainer.ref}
-          {...zoomableContainer.props}>
-          <img
-            src={ClockPIC32CXBX}
-            alt='icon'
-            className={cx('main-block-diagram')}
-          />
-          <EthernetController
-            controllerData={getBoxControlData('ewPllControllerBox')}
-            cx={cx}
-          />
-          <USBPLLController
-            controllerData={getBoxControlData('usbPllControllerBox')}
-            cx={cx}
-          />
-          <SystemPLLControllerBox
-            systemPLLControllerData={getBoxControlData('systemPllControllerBox')}
-            cx={cx}
-          />
-          <PrimaryAndScondaryControllerBox
-            controller={getBoxControlData('pscontrollerbox')}
-            cx={cx}
-          />
-          <RefClockControllerXBox
-            refClockData={getBoxControlData('refClk0Box')}
-            cx={cx}
-          />
-          <PeripheralClockControllerBox
-            clockController={getBoxControlData('peripheralClkBox')}
-            cx={cx}
-          />
-          <PeripheralBusClockController
-            controller={getBoxControlData('peripheralBusClockBox')}
-            cx={cx}
-          />
-          <CustomLogic cx={cx} />
+          className={cx('pannable-container')}
+          ref={pannableContainer.ref}
+          {...pannableContainer.props}>
+          <div
+            className={cx('svg-container')}
+            ref={zoomableContainer.ref}
+            {...zoomableContainer.props}>
+            <img
+              src={ClockPIC32CXBX}
+              alt='icon'
+              className={cx('main-block-diagram')}
+            />
+            <EthernetController
+              controllerData={getBoxControlData('ewPllControllerBox')}
+              cx={cx}
+            />
+            <USBPLLController
+              controllerData={getBoxControlData('usbPllControllerBox')}
+              cx={cx}
+            />
+            <SystemPLLControllerBox
+              systemPLLControllerData={getBoxControlData('systemPllControllerBox')}
+              cx={cx}
+            />
+            <PrimaryAndScondaryControllerBox
+              controller={getBoxControlData('pscontrollerbox')}
+              cx={cx}
+            />
+            <RefClockControllerXBox
+              refClockData={getBoxControlData('refClk0Box')}
+              cx={cx}
+            />
+            <PeripheralClockControllerBox
+              clockController={getBoxControlData('peripheralClkBox')}
+              cx={cx}
+            />
+            <PeripheralBusClockController
+              controller={getBoxControlData('peripheralBusClockBox')}
+              cx={cx}
+            />
+            <CustomLogic cx={cx} />
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } catch (error) {
+    console.log(error);
+    return <>Error Occurred! </>;
+  }
 };
 export default MainBlock;

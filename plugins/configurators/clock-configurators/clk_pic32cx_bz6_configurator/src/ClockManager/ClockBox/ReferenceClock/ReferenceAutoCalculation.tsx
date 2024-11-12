@@ -3,9 +3,8 @@ import { Button } from 'primereact/button';
 import { InputNumber } from 'primereact/inputnumber';
 import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
 import { useState } from 'react';
-import CustomLogic, { refInputFreqs } from '../CustomLogic/CustomLogic';
-import { useIntegerSymbol } from '@mplab_harmony/harmony-plugin-client-lib';
-import { cx } from '../../MainBlock';
+import { refInputFreqs } from '../CustomLogic/CustomLogic';
+import { configSymbolApi, useIntegerSymbol } from '@mplab_harmony/harmony-plugin-client-lib';
 const ReferenceAutoCalculation = (props: {
   index: number;
   componentId: string;
@@ -21,11 +20,13 @@ const ReferenceAutoCalculation = (props: {
     symbolId: 'CONFIG_SYS_CLK_ROTRIM' + props.index
   });
 
-  const [spnTargetFrequency, setSpnTargetFrequency] = useState(props.intialTargetFrequency);
+  let spnTargetFrequency = props.intialTargetFrequency;
   const [bestOutputFreq, setBestOutputFreq] = useState(props.intialTargetFrequency);
   const [error, SetError] = useState(0);
   const [buttonDisable, setButtonDisable] = useState(true);
-  const [inputFreq, setInputFreq] = useState(refInputFreqs[props.index - 1]);
+  const [rodiv, setroDiv] = useState(refDiv.value);
+  const [roTrim, setroTrim] = useState(refTrim.value);
+  let inputFreq = refInputFreqs[props.index - 1];
 
   let _closestFrequency = props.intialTargetFrequency;
   let _rodivEstimate = refDiv.value;
@@ -41,13 +42,12 @@ const ReferenceAutoCalculation = (props: {
     let closestFrequency = 0;
     let targetFrequency = spnTargetFrequency;
 
-    tempNumber = inputFreq / (targetFrequency * 2);
-    integerPart = tempNumber;
+    tempNumber = inputFreq / (targetFrequency * 2.0);
+    integerPart = Math.floor(tempNumber);
     refclkOutputDivider = integerPart;
     floatPart = tempNumber - integerPart;
-
     if (refclkOutputDivider > 0 && refclkOutputDivider <= 65535) {
-      tempNumber = floatPart * 512;
+      tempNumber = floatPart * 512.0;
       refclkTrimValue = tempNumber;
 
       if (refclkTrimValue > 511) {
@@ -59,7 +59,9 @@ const ReferenceAutoCalculation = (props: {
       _rodivEstimate = refclkOutputDivider;
       _rotrimEstimate = refclkTrimValue;
 
-      closestFrequency = inputFreq / (2.0 * (refclkOutputDivider + refclkTrimValue / 512));
+      closestFrequency =
+        Math.floor(inputFreq) /
+        (2.0 * (Math.floor(refclkOutputDivider) + Math.floor(refclkTrimValue) / 512.0));
 
       _closestFrequency = closestFrequency;
 
@@ -82,27 +84,28 @@ const ReferenceAutoCalculation = (props: {
       refclkOutputDivider = 0;
       refclkTrimValue = 0;
 
-      if (_closestFrequency !== targetFrequency) {
-        // lbl_bestOutputFreq.setForeground(Color.red);
-        // lbl_percentError.setForeground(Color.red);
-      } else {
-        closestFrequency = targetFrequency;
-      }
+      closestFrequency = targetFrequency;
 
       setButtonDisable(false);
     }
 
-    let percentError = (Math.abs(closestFrequency - targetFrequency) / targetFrequency) * 100;
+    let percentError = (Math.abs(closestFrequency - targetFrequency) / targetFrequency) * 100.0;
 
+    setroDiv(Math.floor(_rodivEstimate));
+    setroTrim(Math.floor(_rotrimEstimate));
     setBestOutputFreq(closestFrequency);
     SetError(percentError);
   };
-  const accept = () => {};
+  const accept = () => {
+    configSymbolApi.setValue(props.componentId, 'CONFIG_SYS_CLK_RODIV' + props.index, rodiv);
+    configSymbolApi.setValue(props.componentId, 'CONFIG_SYS_CLK_ROTRIM' + props.index, roTrim);
+    props.close();
+  };
   const cancel = () => {
     props.close();
   };
   const targetFreqChanged = (newValue: any) => {
-    setSpnTargetFrequency(newValue);
+    spnTargetFrequency = newValue;
     calcualteFrequency();
     setButtonDisable(false);
   };
@@ -190,7 +193,6 @@ const ReferenceAutoCalculation = (props: {
           </div>
         </div>
       </div>
-      {/* <CustomLogic cx={cx} /> */}
     </div>
   );
 };

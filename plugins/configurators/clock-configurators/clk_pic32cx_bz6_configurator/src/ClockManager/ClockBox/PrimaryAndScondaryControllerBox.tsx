@@ -6,6 +6,7 @@ import {
   PluginConfigContext,
   useComboSymbol,
   useIntegerSymbol,
+  useStringSymbol,
   useSymbol
 } from '@mplab_harmony/harmony-plugin-client-lib';
 import {
@@ -65,10 +66,10 @@ const PrimaryAndScondaryControllerBox = (props: {
   });
   const poscMod = useComboSymbol({ componentId, symbolId: 'CONFIG_POSCMOD' });
 
-  const productFamily = useSymbol({
+  const productFamily = useStringSymbol({
     componentId,
     symbolId: 'PRODUCT_FAMILY'
-  }) as ConfigSymbol<String>;
+  });
   let socenSymbolID = '';
   if (productFamily.value === 'PIC32CX_BZ2') {
     socenSymbolID = 'OSCCON_SOSCEN_VALUE';
