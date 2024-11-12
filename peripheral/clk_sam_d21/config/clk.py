@@ -523,7 +523,7 @@ dfllChillCycle.setDescription("Disable Chill Cycle")
 dfllChillCycle.setDefaultValue(False)
 
 dfllLLAW = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_LLAW", dfll_Menu)
-dfllLLAW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d21;register:DFLLCTRL)
+dfllLLAW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d21;register:DFLLCTRL")
 dfllLLAW.setLabel("Lose Lock After Wake")
 dfllLLAW.setDescription("Lose Lock After Wake")
 dfllLLAW.setDefaultValue(False)

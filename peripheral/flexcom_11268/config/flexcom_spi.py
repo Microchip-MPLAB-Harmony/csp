@@ -359,7 +359,7 @@ flexcomSym_SPI_InterruptMode.setDependencies(showSPIDependencies, ["FLEXCOM_MODE
 localComponent = flexcomSym_SPI_InterruptMode.getComponent()
 
 flecomSym_SPI_DMAEnable = flexcomComponent.createBooleanSymbol("USE_SPI_DMA", flexcomSym_OperatingMode)
-flecomSym_SPI_DMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_MR)
+flecomSym_SPI_DMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_MR")
 flecomSym_SPI_DMAEnable.setLabel("Enable DMA for Transmit and Receive")
 flecomSym_SPI_DMAEnable.setVisible(False)
 ptcr_register = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/register-group@[name=\"FLEXCOM\"]/register@[name=\"FLEX_PTCR\"]")
