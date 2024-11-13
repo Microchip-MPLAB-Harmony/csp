@@ -195,7 +195,7 @@ def instantiateComponent(sefcComponent):
     interruptVectorUpdate = sefcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     writeApiName = sefcInstanceName.getValue() + "_PageWrite"
-    eraseApiName = sefcInstanceName.getValue() + "_SectorErase"
+    eraseApiName = sefcInstanceName.getValue() + "_PageErase"
 
     sefcWriteApiName = sefcComponent.createStringSymbol("WRITE_API_NAME", sefcMenu)
     sefcWriteApiName.setVisible(False)

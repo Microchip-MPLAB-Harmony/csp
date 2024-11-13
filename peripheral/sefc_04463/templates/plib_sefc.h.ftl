@@ -73,6 +73,8 @@ bool ${SEFC_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t addre
 
 bool ${SEFC_INSTANCE_NAME}_SectorErase( uint32_t address );
 
+bool ${SEFC_INSTANCE_NAME}_PageErase( uint32_t address );
+
 bool ${SEFC_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
 
 bool ${SEFC_INSTANCE_NAME}_PageBufferCommit( const uint32_t address);

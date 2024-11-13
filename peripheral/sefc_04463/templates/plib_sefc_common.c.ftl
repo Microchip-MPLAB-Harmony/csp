@@ -82,6 +82,13 @@ bool SEFC_SectorErase( uint32_t address )
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_SectorErase(address) : SEFC1_SectorErase(address);
 }
 
+bool SEFC_PageErase( uint32_t address )
+{
+    SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
+
+    return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_PageErase(address) : SEFC1_PageErase(address);
+}
+
 bool SEFC_PageBufferWrite( uint32_t *data, const uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
