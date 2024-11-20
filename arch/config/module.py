@@ -38,7 +38,8 @@ def loadModule():
 
     print("Load Module: CSP System")
     coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
-    #coreComponent.setHelpKeyword("MH3_CSP_system")
+    if coreComponent is not None:
+        coreComponent.setHelpKeyword("MH3_CSP_system")
 
     # initiate stdio
     stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
