@@ -201,7 +201,7 @@ for module in range (0, len(modules)):
 
     periphScript = "/peripheral/" + periphName.lower() + "_" + periphID.lower() + \
                     "/config/" + periphName.lower() + ".py"
-    periphKeyword = "MH3_CSP_{0}_{1}".format(periphName.lower(), periphID.lower())
+    periphKeyword = "MH3_CSP_{0}".format(periphName.lower())
 
     # Don't load system services. They will be loaded by family specific script
     if any(x in periphName for x in system_components):

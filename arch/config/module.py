@@ -24,7 +24,7 @@
 def loadModule():
 
     coreArch = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
-    
+
     print("Load Module: Device Family Pack (DFP)")
     dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
     dfpComponent.setHelpKeyword("MH3_CSP_dfp")
@@ -38,7 +38,7 @@ def loadModule():
 
     print("Load Module: CSP System")
     coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
-    coreComponent.setHelpKeyword("MH3_CSP_system")
+    #coreComponent.setHelpKeyword("MH3_CSP_system")
 
     # initiate stdio
     stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
@@ -50,7 +50,7 @@ def loadModule():
         # initiate stdio
         stdioComponent = Module.CreateComponent("stdio_s", "Secure STDIO", "/Tools/", "../arch/stdio/config/stdio_secure.py")
         stdioComponent.addDependency("UART","UART",False,True)
-        stdioComponent.setHelpKeyword("MH3_CSP_stdio_secure")
+        stdioComponent.setHelpKeyword("MH3_CSP_stdio")
 
     # load device specific peripherals
     d = dict(locals(), **globals())
