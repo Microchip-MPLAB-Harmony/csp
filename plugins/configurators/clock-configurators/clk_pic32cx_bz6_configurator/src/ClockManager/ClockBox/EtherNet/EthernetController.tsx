@@ -15,9 +15,9 @@ import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import { Dropdown } from 'primereact/dropdown';
 import { GetButton } from 'clock-common/lib/Components/NodeType';
 import { Dialog } from 'primereact/dialog';
-import EthernetAutoCalculation from './EthernetAutoCalculation';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
 import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
+import EthernetAutoCalculation from './EthernetAutoCalculation';
 const settingsArray = [
   'EPLL_ENABLE',
   'EPLLCON_EPLLPOSTDIV1_VALUE',
@@ -56,6 +56,10 @@ const EthernetController = (props: {
     componentId,
     symbolId: 'ETHCLK1'
   });
+  const eth2ClockFreq = useStringSymbol({
+    componentId,
+    symbolId: 'ETHCLK2'
+  });
   useEffect(() => {
     if (ethClkOutEn.value === 'Enable') {
       setethclockoutEnFreq(GetClockDisplayFreqValue(Number(eth1ClockFreq.value)));
@@ -85,6 +89,10 @@ const EthernetController = (props: {
   const primaryOScilaltor = useComboSymbol({
     componentId,
     symbolId: 'CONFIG_POSCMOD'
+  });
+  const poscFreqHook = useIntegerSymbol({
+    componentId,
+    symbolId: 'POSC_OUT_FREQ'
   });
 
   const [dialogStatus, setdialogStatus] = useState(false);
@@ -220,8 +228,8 @@ const EthernetController = (props: {
         disPlayText={ethclokoutEnFreq}
         className={props.cx('ethclkOutENFreq')}
       />
-
-      {/* <GetButton
+      {/* 
+      <GetButton
         buttonDisplayText={'Auto Calculate'}
         className={props.cx('EWautoCalculate')}
         toolTip={'click here for Ethernet Auto Clalucation'}
@@ -242,15 +250,22 @@ const EthernetController = (props: {
         componentId={componentId}
         resetSymbolsArray={settingsArray}
       />
-      <Dialog
+      {/* <Dialog
         header='Auto Calculate EW PLL Dividers'
         visible={dialogStatus}
         maximizable={true}
+        style={{ width: '45rem', height: '32rem' }}
         onHide={() => {
           setdialogStatus(false);
         }}>
-        <EthernetAutoCalculation />
-      </Dialog>
+        <EthernetAutoCalculation
+          componentId={componentId}
+          ethclk1={Number(eth1ClockFreq.value)}
+          ethclk2={Number(eth2ClockFreq.value)}
+          ethclkPllInputFreq={poscFreqHook.value}
+          close={() => setdialogStatus(false)}
+        />
+      </Dialog> */}
     </div>
   );
 };
