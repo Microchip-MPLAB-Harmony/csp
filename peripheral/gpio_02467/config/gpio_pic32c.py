@@ -107,6 +107,11 @@ def setPinConfigurationValue(pinNumber, setting, value):
     global PPSPinCount
     global ppsSymbolsDictionary
 
+    # Handle exceptions
+    if "EIC_" in value:
+        value = value.replace("EIC_","")
+        value = value.replace(" (in)", "")
+    
     symbolValue = value
     
     if setting == 'function' and value != "GPIO":
