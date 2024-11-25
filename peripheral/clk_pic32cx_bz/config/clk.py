@@ -788,6 +788,219 @@ def CHECK_HIGH_PLL(Fvco):
 
 global CHECK_800_1600_FVCO
 
+"""
+Finds the best configuration of FREF, REFDIV, FBDIV, and POSTDIV for a given target Fout.
+
+Parameters:
+    fout_target (float): Target output frequency (MHz).
+    fref (int): Fixed reference frequency (default 16 MHz).
+    refdiv_range (tuple): Range of REFDIV values (default (1, 4)).
+    fbdiv_ranges (dict): Dictionary defining FBDIV ranges for each REFDIV.
+    postdiv_range (tuple): Range of POSTDIV values (default (1, 63)).
+
+Returns:
+    dict: Dictionary with the best configuration and error.
+"""
+global calculate_freq
+def calculate_freq(fout_target, fref=16e6, refdiv_range=(1, 4), fbdiv_ranges={
+    1: (50, 100),
+    2: (100, 200),
+    3: (150, 300),
+    4: (200, 400)
+}, postdiv_range=(1, 63)):
+
+    best_match = None
+    best_error = float('inf')
+    best_params = None
+    error_perc = 100
+
+    # Iterate over all valid combinations of REFDIV, POSTDIV, and FBDIV
+    for refdiv in range(refdiv_range[0], refdiv_range[1] + 1):
+        fbdiv_min, fbdiv_max = fbdiv_ranges[refdiv]
+        for postdiv in range(postdiv_range[0], postdiv_range[1] + 1):
+            # Calculate the required FBDIV for the target Fout
+            fbdiv = (fout_target * refdiv * postdiv) / fref
+            fbdiv = int(round(fbdiv)) # Ensure FBDIV is an integer
+
+            # Check if FBDIV is within the valid range for this REFDIV
+            if fbdiv_min <= fbdiv <= fbdiv_max:
+                #fout_actual = (fref / refdiv) * (fbdiv / postdiv)
+                fout_actual = (((float(fref) / refdiv) * fbdiv) / postdiv)
+                error = abs(fout_target - fout_actual)
+
+                # Update best match if this configuration is closer to target Fout
+                if error < best_error:
+                    best_error = error
+                    best_match = fout_actual
+                    error_perc = (float(error) / fout_target) * 100.0
+                    best_params = (fref, refdiv, fbdiv, postdiv)
+
+                # Exit early if exact match is found
+                if error == 0:
+                    return {
+                        "target_fout": fout_target,
+                        "best_fout": best_match,
+                        "error": best_error,
+                        "error_perc": error_perc,
+                        "parameters": best_params
+                    }
+
+    return {
+        "target_fout": fout_target,
+        "best_fout": best_match,
+        "error": best_error,
+        "error_perc": error_perc,
+        "parameters": best_params
+    }
+
+"""
+Finds the best configuration of FREF, REFDIV, FBDIV, and POSTDIV for a given target Fout.
+
+Parameters:
+    fout_target (float): Target output frequency (MHz).
+    fref (int): Fixed reference frequency (default 16 MHz).
+    refdiv_range (tuple): Range of REFDIV values (default (1, 4)).
+    fbdiv_ranges (dict): Dictionary defining FBDIV ranges for each REFDIV.
+    postdiv_range (tuple): Range of POSTDIV values (default (1, 63)).
+
+Returns:
+    dict: Dictionary with the best configuration and error.
+"""
+global calculate_freq2
+def calculate_freq2(fout1_target, fout2_target, fref=16e6, refdiv_range=(1, 4), fbdiv_ranges={
+    1: (50, 100),
+    2: (100, 200),
+    3: (150, 300),
+    4: (200, 400)
+}, postdiv_range=(1, 63)):
+
+    best_match = None
+    best_error = float('inf')
+    best_params = None
+    error1_perc = 100
+    error2_perc = 100
+
+    # Iterate over all valid combinations of REFDIV and FBDIV
+    for refdiv in range(refdiv_range[0], refdiv_range[1] + 1):
+        fbdiv_min, fbdiv_max = fbdiv_ranges[refdiv]
+        for fbdiv in range(fbdiv_min, fbdiv_max + 1):
+            for postdiv1 in range(postdiv_range[0], postdiv_range[1] + 1):
+                for postdiv2 in range(postdiv_range[0], postdiv_range[1] + 1):
+                    # Calculate actual Fouts
+                    fout1_actual = (((float(fref) / refdiv) * fbdiv) / postdiv1)
+                    fout2_actual = (((float(fref) / refdiv) * fbdiv) / postdiv2)
+
+                    # Calculate total error for both targets
+                    error = abs(fout1_target - fout1_actual) + abs(fout2_target - fout2_actual)
+
+                    # Update best match if this configuration is closer to target Fouts
+                    if error < best_error:
+                        best_error = error
+                        best_match = (fout1_actual, fout2_actual)
+                        error1_perc = (abs(fout1_actual - fout1_target)/fout1_target) * 100.0
+                        error2_perc = (abs(fout2_actual - fout2_target)/fout2_target) * 100.0
+                        best_params = (fref, refdiv, fbdiv, postdiv1, postdiv2)
+
+                    # Exit early if exact match is found
+                    if error == 0:
+                        return {
+                            "fout1_target": fout1_target,
+                            "fout2_target": fout2_target,
+                            "best_fout1": fout1_actual,
+                            "best_fout2": fout2_actual,
+                            "error": best_error,
+                            "error1_perc": error1_perc,
+                            "error2_perc": error2_perc,
+                            "parameters": best_params
+                        }
+
+    return {
+        "fout1_target": fout1_target,
+        "fout2_target": fout2_target,
+        "best_fout1": best_match[0] if best_match else None,
+        "best_fout2": best_match[1] if best_match else None,
+        "error": best_error,
+        "error1_perc": error1_perc,
+        "error2_perc": error2_perc,
+        "parameters": best_params
+    }
+
+global calculate_freq_epll_upll
+global calculate_eth_pll
+global calculate_usb_pll
+
+def calculate_freq_epll_upll(symbol, event):
+    localComponent = symbol.getComponent()
+
+    if('EPLL' in event['id']):
+        fout1 = Database.getSymbolValue("core", "EPLL1_REQUESTED_FOUT")
+        fout2 = Database.getSymbolValue("core", "EPLL2_REQUESTED_FOUT")
+        epllAutoCalcErrMsgSym = localComponent.getSymbolByID("EPLL_AUTO_CALC_ERROR_MSG")
+        calculate_eth_pll(fout1, fout2, epllAutoCalcErrMsgSym)
+    else:
+        fout = event["value"]
+        upllAutoCalcErrMsgSym = localComponent.getSymbolByID("UPLL_AUTO_CALC_ERROR_MSG")
+        calculate_usb_pll(fout, upllAutoCalcErrMsgSym)
+
+def calculate_eth_pll(fout1, fout2, epllAutoCalcErrMsgSym):
+
+    pll_values_dict = calculate_freq2(fout1, fout2)
+    pllSource = 16e6
+    bwsel = ""
+
+    pll_values = pll_values_dict["parameters"]
+
+    if pll_values != None:
+
+        Database.setSymbolValue("core","EPLLCON_EPLLREFDIV_VALUE", pll_values[1])
+        Database.setSymbolValue("core","EPLLCON_EPLLFBDIV_VALUE", pll_values[2])
+        Database.setSymbolValue("core","EPLLCON_EPLLPOSTDIV1_VALUE", pll_values[3])
+        Database.setSymbolValue("core","EPLLPOSTDIV2", pll_values[4])
+
+        if pll_values[1] == 1:
+            bwsel = "1MHz"
+        else:
+            bwsel = "400KHz"
+        Database.setSymbolValue("core", "EPLLCON_EPLLBSWSEL_VALUE", bwsel, 1)
+
+        # Update the calculated frequency
+        eth_clk_freq = round(((pllSource/pll_values[1]) * pll_values[2])/pll_values[3], 0)
+        Database.setSymbolValue("core", "ETHCLK1", str(eth_clk_freq), 1)
+        Database.setSymbolValue("core","EPLL1_ERROR_PERC", str(round(pll_values_dict["error1_perc"], 3)))
+
+        eth_clk_freq = round(((pllSource/pll_values[1]) * pll_values[2])/pll_values[4], 0)
+        Database.setSymbolValue("core", "ETHCLK2", str(eth_clk_freq), 1)
+        Database.setSymbolValue("core","EPLL2_ERROR_PERC", str(round(pll_values_dict["error2_perc"], 3)))
+
+    epllAutoCalcErrMsgSym.setVisible(pll_values == None)
+
+def calculate_usb_pll(fout, upllAutoCalcErrMsgSym):
+    pll_values_dict = calculate_freq(fout)
+    pllSource = 16e6
+    bwsel = ""
+
+    pll_values = pll_values_dict["parameters"]
+
+    if pll_values != None:
+
+        Database.setSymbolValue("core","UPLLCON_UPLLREFDIV_VALUE", pll_values[1])
+        Database.setSymbolValue("core","UPLLCON_UPLLFBDIV_VALUE", pll_values[2])
+        Database.setSymbolValue("core","UPLLCON_UPLLPOSTDIV1_VALUE", pll_values[3])
+
+        if pll_values[1] == 1:
+            bwsel = "1MHz"
+        else:
+            bwsel = "400KHz"
+        Database.setSymbolValue("core", "UPLLCON_UPLLBSWSEL_VALUE", bwsel, 1)
+
+        # Update the calculated frequency
+        usb_clk_freq = round(((pllSource/pll_values[1]) * pll_values[2])/pll_values[3], 0)
+        Database.setSymbolValue("core", "USBCLK", str(usb_clk_freq), 1)
+
+        Database.setSymbolValue("core","UPLL_ERROR_PERC", str(round(pll_values_dict["error_perc"], 3)))
+
+    upllAutoCalcErrMsgSym.setVisible(pll_values == None)
+
 def CHECK_800_1600_FVCO(Fvco):
     if( (Fvco >= _800_Mhz) and (Fvco <= _1600_Mhz)):
         return True
@@ -925,15 +1138,12 @@ def bwselCB(symbol, event):
             Database.setSymbolValue("core", pllBwSelSymbolID, bwsel_dict[bwselValue], 1)
             if 'EPLL' in event['id']:
                 eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
-                print ("eth_clk_freq1 = " + str(eth_clk_freq))
                 Database.setSymbolValue("core", "ETHCLK1", str(eth_clk_freq), 1)
 
                 eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv2
-                print ("eth_clk_freq2 = " + str(eth_clk_freq))
                 Database.setSymbolValue("core", "ETHCLK2", str(eth_clk_freq), 1)
             else:
                 usb_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
-                print ("usb_clk_freq = " + str(usb_clk_freq))
                 Database.setSymbolValue("core", "USBCLK", str(usb_clk_freq), 1)
 
             symId.setVisible(False)
@@ -1687,7 +1897,7 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
         ethpllpostdiv2.setMin(1)
         ethpllpostdiv2.setMax(63)
         ethpllpostdiv2.setLabel("Second Post Divide Value in between 1 and 63, value of 0 is unused")
-        ethpllpostdiv2.setVisible(False)
+        ethpllpostdiv2.setVisible(True)
         ethpllpostdiv2.setDefaultValue(int(node.getAttribute('initval'), 0))
         ethpllpostdiv2.setDependencies(enableMenu, [enableSymbolId])
         bwselDependencyList.append("EPLLPOSTDIV2")
@@ -1702,6 +1912,31 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
     Database.setSymbolValue("core", "EPLLCON_EPLLFBDIV_VALUE", 75)
     Database.setSymbolValue("core", "EPLLCON_EPLLRST_VALUE", "NO_ASSERT")
     Database.setSymbolValue("core", "EPLLCON_EPLL_BYP_VALUE", "NOT_BYPASS")
+
+    epll1ReqFout = component.createIntegerSymbol("EPLL1_REQUESTED_FOUT", parentMenu)
+    epll1ReqFout.setLabel("Desired EPLL1 Frequency")
+    epll1ReqFout.setDefaultValue(50000000)
+    epll1ReqFout.setDependencies(calculate_freq_epll_upll, ["EPLL1_REQUESTED_FOUT"])
+
+    epll1ErrorPerc = component.createStringSymbol("EPLL1_ERROR_PERC", parentMenu)
+    epll1ErrorPerc.setLabel("EPLL1 absolute error (%)")
+    epll1ErrorPerc.setDefaultValue("0")
+
+    epll2ReqFout = component.createIntegerSymbol("EPLL2_REQUESTED_FOUT", parentMenu)
+    epll2ReqFout.setLabel("Desired EPLL2 Frequency")
+    epll2ReqFout.setDefaultValue(50000000)
+    epll2ReqFout.setDependencies(calculate_freq_epll_upll, ["EPLL2_REQUESTED_FOUT"])
+
+    epll2ErrorPerc = component.createStringSymbol("EPLL2_ERROR_PERC", parentMenu)
+    epll2ErrorPerc.setLabel("EPLL2 absolute error (%)")
+    epll2ErrorPerc.setDefaultValue("0")
+
+    epllAutoCalcErrMsg = component.createCommentSymbol("EPLL_AUTO_CALC_ERROR_MSG", parentMenu)
+    epllAutoCalcErrMsg.setLabel("EPLL1 or EPLL2 desired frequency is out of the configurable range")
+    epllAutoCalcErrMsg.setVisible(False)
+
+    calculate_eth_pll(epll1ReqFout.getValue(), epll2ReqFout.getValue(), epllAutoCalcErrMsg)
+
 
 def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId):
     '''
@@ -1778,6 +2013,21 @@ def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId)
     Database.setSymbolValue("core", "UPLLCON_UPLLFBDIV_VALUE", 96)
     Database.setSymbolValue("core", "UPLLCON_UPLLRST_VALUE", "NO_ASSERT")
     Database.setSymbolValue("core", "UPLLCON_UPLL_BYP_VALUE", "NOT_BYPASS")
+
+    upllReqFout = component.createIntegerSymbol("UPLL_REQUESTED_FOUT", parentMenu)
+    upllReqFout.setLabel("Desired UPLL Frequency")
+    upllReqFout.setDefaultValue(96000000)
+    upllReqFout.setDependencies(calculate_freq_epll_upll, ["UPLL_REQUESTED_FOUT"])
+
+    upllErrorPerc = component.createStringSymbol("UPLL_ERROR_PERC", parentMenu)
+    upllErrorPerc.setLabel("UPLL absolute error (%)")
+    upllErrorPerc.setDefaultValue("0")
+
+    upllAutoCalcErrMsg = component.createCommentSymbol("UPLL_AUTO_CALC_ERROR_MSG", parentMenu)
+    upllAutoCalcErrMsg.setLabel("UPLL desired frequency is out of the configurable range")
+    upllAutoCalcErrMsg.setVisible(False)
+
+    calculate_usb_pll(upllReqFout.getValue(), upllAutoCalcErrMsg)
 
 if __name__ == "__main__":
 

@@ -125,20 +125,20 @@ void CLOCK_Initialize( void )
         #pragma GCC diagnostic ignored "-Wunknown-pragmas"
         </#if>
         #pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 11.1" "H3_MISRAC_2012_R_11_1_DR_1"
-        
+
         </#if>
         /* Configure Prefetch, Wait States by calling the ROM function whose address is available at address 0xF2D0 */
         typedef void (*FUNC_PCHE_SETUP)(uint32_t setup);
         (void)((FUNC_PCHE_SETUP)(*(uint32_t*)0xF2D0))((PCHE_REGS->PCHE_CHECON & (~(PCHE_CHECON_PFMWS_Msk | PCHE_CHECON_ADRWS_Msk | PCHE_CHECON_PREFEN_Msk)))
                                         | (PCHE_CHECON_PFMWS(${CONFIG_CHECON_PFMWS}) | PCHE_CHECON_PREFEN(${CONFIG_CHECON_PREFEN}) | PCHE_CHECON_ADRWS(${CONFIG_CHECON_ADRWS})));
         <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
-        
+
         #pragma coverity compliance end_block "MISRA C-2012 Rule 11.1"
         <#if COMPILER_CHOICE == "XC32">
         #pragma GCC diagnostic pop
         </#if>
         /* MISRA C-2012 Rule 11.1 deviation block end  */
-	</#if>
+    </#if>
     }
 </#if>
     //programming 4ms delay -  programming subsys_xtal_ready_delay
@@ -357,6 +357,9 @@ void CLOCK_Initialize( void )
         /* EPLLREFDIV   = ${EPLLCON_EPLLREFDIV_VALUE} */
         /* EPLL_BYP     = ${EPLLCON_EPLL_BYP_VALUE} */
         CRU_REGS->CRU_${EPLLCON_REG} = 0x${EPLLCON_VALUE}U;
+
+        /* EPLLPOSTDIV2 = ${EPLLPOSTDIV2} */
+        CRU_REGS->CRU_APLLCON = ${EPLLPOSTDIV2}U;
         CFG_REGS->CFG_CFGCON0SET = CFG_CFGCON0_EPLLHWMD_Msk;
 <#else>
         /* Power down the EPLL */
