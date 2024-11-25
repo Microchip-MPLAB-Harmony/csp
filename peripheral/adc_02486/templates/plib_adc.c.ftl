@@ -128,15 +128,17 @@ void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_IN
 
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs)
 {
-<#if core.PRODUCT_FAMILY == "PIC32MX1290">
-    AD1CSSL = (uint32_t)(scanInputs);
-    <#if AD1CSSL__CSSL_COUNT gt 31>
-    AD1CSSL2 = ((uint64_t)scanInputs >> 32);
-    </#if>
-<#else>
     AD1CSSL = (uint32_t)scanInputs;
+}
+
+<#if AD1CSSL__CSSL_COUNT gt 31>
+void ${ADC_INSTANCE_NAME}_InputScanSelect2(${ADC_INSTANCE_NAME}_INPUTS_SCAN2 scanInputs)
+{
+<#if core.PRODUCT_FAMILY == "PIC32MX1290">
+    AD1CSSL2 = (uint32_t)scanInputs;
 </#if>
 }
+</#if>
 
 /*Check if conversion result is available */
 bool ${ADC_INSTANCE_NAME}_ResultIsReady(void)

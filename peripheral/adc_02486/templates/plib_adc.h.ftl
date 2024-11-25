@@ -128,15 +128,27 @@ typedef enum
     <#assign ADC_SIGNAL = "AD1CSSL__CSSL_ENUM_NAME_"+ i >
     <#assign ADC_VALUE = "AD1CSSL__CSSL_ENUM_VALUE_"+ i >
     <#if .vars[ADC_SIGNAL]?? && .vars[ADC_VALUE]??>
-        <#if i gt 32>
-            <#lt>    ${ADC_INSTANCE_NAME}_INPUT_SCAN_${.vars[ADC_SIGNAL]} = 0x${.vars[ADC_VALUE]}00000000,
-        <#else>
+        <#if i < 32>
             <#lt>    ${ADC_INSTANCE_NAME}_INPUT_SCAN_${.vars[ADC_SIGNAL]} = 0x${.vars[ADC_VALUE]},
         </#if>
     </#if>
 </#list>
 }${ADC_INSTANCE_NAME}_INPUTS_SCAN;
 
+<#if AD1CSSL__CSSL_COUNT gt 31>
+typedef enum
+{
+<#list 0..((AD1CSSL__CSSL_COUNT) - 1) as i>
+    <#assign ADC_SIGNAL = "AD1CSSL__CSSL_ENUM_NAME_"+ i >
+    <#assign ADC_VALUE = "AD1CSSL__CSSL_ENUM_VALUE_"+ i >
+    <#if .vars[ADC_SIGNAL]?? && .vars[ADC_VALUE]??>
+        <#if i gt 31>
+            <#lt>    ${ADC_INSTANCE_NAME}_INPUT_SCAN_${.vars[ADC_SIGNAL]} = 0x${.vars[ADC_VALUE]},
+        </#if>
+    </#if>
+</#list>
+}${ADC_INSTANCE_NAME}_INPUTS_SCAN2;
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -157,6 +169,9 @@ void ${ADC_INSTANCE_NAME}_ConversionStart(void);
 
 void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_INSTANCE_NAME}_INPUT_POSITIVE positiveInput, ${ADC_INSTANCE_NAME}_INPUT_NEGATIVE negativeInput );
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs);
+<#if AD1CSSL__CSSL_COUNT gt 31>
+void ${ADC_INSTANCE_NAME}_InputScanSelect2(${ADC_INSTANCE_NAME}_INPUTS_SCAN2 scanInputs);
+</#if>
 
 bool ${ADC_INSTANCE_NAME}_ResultIsReady(void);
 uint32_t ${ADC_INSTANCE_NAME}_ResultGet(ADC_RESULT_BUFFER bufferNumber);
