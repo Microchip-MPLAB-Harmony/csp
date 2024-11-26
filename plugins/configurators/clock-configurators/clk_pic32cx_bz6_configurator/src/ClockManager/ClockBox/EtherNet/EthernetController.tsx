@@ -4,9 +4,11 @@ import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
 import { useContext, useEffect, useState } from 'react';
 import {
   CheckBoxDefault,
+  ComboBox,
   ComboBoxDefault,
   configSymbolApi,
   PluginConfigContext,
+  symbolUtilApi,
   useComboSymbol,
   useIntegerSymbol,
   useStringSymbol
@@ -16,7 +18,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { GetButton } from 'clock-common/lib/Components/NodeType';
 import { Dialog } from 'primereact/dialog';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
-import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
+import { GetClockDisplayFreqValue, getSymbolValue } from 'clock-common/lib/Tools/Tools';
 import EthernetAutoCalculation from './EthernetAutoCalculation';
 const settingsArray = [
   'EPLL_ENABLE',
@@ -41,6 +43,8 @@ function getDivOptions(startValue: number, endValue: number) {
   }
   return options;
 }
+let ethclk1Old = -1;
+let ethclk2Old = -1;
 
 const EthernetController = (props: {
   controllerData: ControlInterface[];
@@ -95,14 +99,43 @@ const EthernetController = (props: {
     symbolId: 'POSC_OUT_FREQ'
   });
 
+  const EPLLCON_EPLL_BYP_VALUE = useComboSymbol({
+    componentId,
+    symbolId: 'EPLLCON_EPLL_BYP_VALUE'
+  });
+  const EPLLCON_ECLKOUTEN_VALUE = useComboSymbol({
+    componentId,
+    symbolId: 'EPLLCON_ECLKOUTEN_VALUE'
+  });
+
   const [dialogStatus, setdialogStatus] = useState(false);
   const [ethclokoutEnFreq, setethclockoutEnFreq] = useState(
     GetClockDisplayFreqValue(Number(eth1ClockFreq.value))
   );
 
   function ethernetAutoCalculationButtonClicked() {
+    getSymbolValue(componentId, 'ETHCLK1').then((value) => {
+      ethclk1Old = value;
+    });
+    getSymbolValue(componentId, 'ETHCLK2').then((value) => {
+      ethclk2Old = value;
+    });
     setdialogStatus(true);
   }
+
+  const dialogClosed = (acceptStatus: boolean) => {
+    if (!acceptStatus) {
+      if (ethclk1Old !== Number(eth1ClockFreq.value)) {
+        configSymbolApi.setValue(componentId, 'EPLL1_REQUESTED_FOUT', Number(ethclk1Old));
+      }
+      if (ethclk2Old !== Number(eth2ClockFreq.value)) {
+        configSymbolApi.setValue(componentId, 'EPLL2_REQUESTED_FOUT', Number(ethclk2Old));
+      }
+    }
+    symbolUtilApi.clearUserValue(componentId, ['EPLL1_ERROR_PERC']);
+    symbolUtilApi.clearUserValue(componentId, ['EPLL2_ERROR_PERC']);
+    setdialogStatus(false);
+  };
 
   return (
     <div>
@@ -177,14 +210,16 @@ const EthernetController = (props: {
         className={props.cx('lbl_ewplloutputdiv2')}
       />
 
-      <ComboBoxDefault
-        componentId={componentId}
-        symbolId='EPLLCON_ECLKOUTEN_VALUE'
+      <ComboBox
+        comboSymbolHook={EPLLCON_ECLKOUTEN_VALUE}
+        hidden={false}
+        disabled={EPLLCON_ECLKOUTEN_VALUE.readOnly || !EPLLCON_ECLKOUTEN_VALUE.visible}
         className={props.cx('ethclkouten')}
       />
-      <ComboBoxDefault
-        componentId={componentId}
-        symbolId='EPLLCON_EPLL_BYP_VALUE'
+      <ComboBox
+        comboSymbolHook={EPLLCON_EPLL_BYP_VALUE}
+        hidden={false}
+        disabled={EPLLCON_EPLL_BYP_VALUE.readOnly || !EPLLCON_EPLL_BYP_VALUE.visible}
         className={props.cx('ewbypass')}
       />
       <ComboBoxDefault
@@ -228,13 +263,13 @@ const EthernetController = (props: {
         disPlayText={ethclokoutEnFreq}
         className={props.cx('ethclkOutENFreq')}
       />
-      {/* 
+
       <GetButton
         buttonDisplayText={'Auto Calculate'}
         className={props.cx('EWautoCalculate')}
         toolTip={'click here for Ethernet Auto Clalucation'}
         buttonClick={ethernetAutoCalculationButtonClicked}
-      /> */}
+      />
 
       <SettingsDialog
         tooltip='Clock Settings Configuration'
@@ -250,22 +285,24 @@ const EthernetController = (props: {
         componentId={componentId}
         resetSymbolsArray={settingsArray}
       />
-      {/* <Dialog
+      <Dialog
         header='Auto Calculate EW PLL Dividers'
         visible={dialogStatus}
         maximizable={true}
-        style={{ width: '45rem', height: '32rem' }}
+        style={{ width: '45rem', height: '34rem' }}
         onHide={() => {
-          setdialogStatus(false);
+          dialogClosed(false);
         }}>
         <EthernetAutoCalculation
           componentId={componentId}
           ethclk1={Number(eth1ClockFreq.value)}
           ethclk2={Number(eth2ClockFreq.value)}
           ethclkPllInputFreq={poscFreqHook.value}
-          close={() => setdialogStatus(false)}
+          close={(acceptStatus) => {
+            dialogClosed(acceptStatus);
+          }}
         />
-      </Dialog> */}
+      </Dialog>
     </div>
   );
 };

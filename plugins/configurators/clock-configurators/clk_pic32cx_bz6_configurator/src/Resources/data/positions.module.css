@@ -70,11 +70,11 @@
     left: 319px
     }
 .autoCalculateRefClk {
-    height: 50px;
     position: absolute;
-    width: 95px;
-    left: 669px;
-    top: 1002px
+    width: 120px;
+    height: 30px;
+    left: 678px;
+    top: 1003px
     }
 .refclkReset {
     height: 30px;
@@ -310,11 +310,11 @@
     top: 1001px
     }
 .periClockConfig {
-    height: 50px;
     position: absolute;
-    width: 100px;
-    left: 1144px;
-    top: 932px
+    width: 110px;
+    left: 1139px;
+    top: 932px;
+    height: 50px
     }
 .lbl_refClk2Freq {
     height: 20px;
@@ -410,9 +410,9 @@
 .ewpll_bwsel1 {
     height: 30px;
     position: absolute;
-    width: 80px;
-    left: 301px;
-    top: 89px
+    width: 90px;
+    left: 297px;
+    top: 90px
     }
 .lbl_ewpllfbdiv {
     height: 20px;
@@ -460,8 +460,8 @@
     height: 20px;
     position: absolute;
     width: 65px;
-    left: 385px;
-    top: 108px
+    top: 108px;
+    left: 389px
     }
 .lbl_ewoutMHz2 {
     height: 20px;
@@ -482,7 +482,7 @@
     height: 30px;
     width: 80px;
     left: 899px;
-    top: 95px
+    top: 92px
     }
 .lbl_cm_epllFreq1 {
     height: 20px;
@@ -499,10 +499,10 @@
     top: 65px
     }
 .EWautoCalculate {
-    height: 50px;
     position: absolute;
     width: 120px;
-    left: 159px;
+    height: 30px;
+    left: 162px;
     top: 259px
     }
 .upllidiv {
@@ -590,11 +590,11 @@
     top: 385px
     }
 .USBAutoCalculate {
-    height: 50px;
     position: absolute;
     width: 120px;
-    top: 549px;
-    left: 161px
+    height: 30px;
+    left: 161px;
+    top: 551px
     }
 .lbl_ufinFreq {
     height: 20px;
@@ -628,15 +628,15 @@
     height: 20px;
     position: absolute;
     width: 90px;
-    left: 172px;
-    top: 237px
+    top: 236px;
+    left: 174px
     }
 .lbl_err_posc_upll {
     height: 20px;
     position: absolute;
     width: 90px;
-    top: 526px;
-    left: 172px
+    left: 172px;
+    top: 530px
     }
 .usbPLLReset {
     height: 30px;

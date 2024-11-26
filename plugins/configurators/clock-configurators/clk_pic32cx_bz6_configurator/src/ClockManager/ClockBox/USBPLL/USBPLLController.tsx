@@ -1,19 +1,26 @@
 import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
-import { useContext } from 'react';
+import { useContext, useRef, useState } from 'react';
 import {
   CheckBoxDefault,
+  ComboBox,
   ComboBoxDefault,
+  ConfigSymbol,
   configSymbolApi,
   PluginConfigContext,
+  symbolUtilApi,
   useComboSymbol,
-  useIntegerSymbol
+  useIntegerSymbol,
+  useStringSymbol
 } from '@mplab_harmony/harmony-plugin-client-lib';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import { Dropdown } from 'primereact/dropdown';
 import { GetButton } from 'clock-common/lib/Components/NodeType';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
+import { Dialog } from 'primereact/dialog';
+import USBPLLAutoCalculation from './USBPLLAutoCalculation';
+import { getSymbolValue } from 'clock-common/lib/Tools/Tools';
 const settingsArray = [
   'USBPLL_ENABLE',
   'UPLLCON_UPLLPOSTDIV1_VALUE',
@@ -36,7 +43,7 @@ function getDivOptions(startValue: number, endValue: number) {
   }
   return options;
 }
-
+let usbOld = -1;
 const USBPLLController = (props: {
   controllerData: ControlInterface[];
   cx: (...classNames: string[]) => string;
@@ -61,10 +68,34 @@ const USBPLLController = (props: {
     componentId,
     symbolId: 'CONFIG_POSCMOD'
   });
+  const UPLLCON_UPLL_BYP_VALUE = useComboSymbol({
+    componentId,
+    symbolId: 'UPLLCON_UPLL_BYP_VALUE'
+  });
+  const usbClockFreq = useStringSymbol({ componentId, symbolId: 'USBCLK' });
+  const poscFreqHook = useIntegerSymbol({
+    componentId,
+    symbolId: 'POSC_OUT_FREQ'
+  });
+
+  const [dialogStatus, setdialogStatus] = useState(false);
 
   function usbAutoCalculationButtonClicked() {
-    // callPopUp(GenericPopUp, peripheralClockConfig_PopupHeadding, '40vw', '95vh');
+    getSymbolValue(componentId, 'USBCLK').then((value) => {
+      usbOld = value;
+    });
+    setdialogStatus(true);
   }
+
+  const dialogClosed = (acceptStatus: boolean) => {
+    if (!acceptStatus) {
+      if (usbOld !== Number(usbClockFreq.value)) {
+        configSymbolApi.setValue(componentId, 'UPLL_REQUESTED_FOUT', Number(usbOld));
+      }
+    }
+    symbolUtilApi.clearUserValue(componentId, ['UPLL_ERROR_PERC']);
+    setdialogStatus(false);
+  };
 
   return (
     <div>
@@ -120,9 +151,10 @@ const USBPLLController = (props: {
         booldStatus={true}
         className={props.cx('lbl_upllodiv')}
       />
-      <ComboBoxDefault
-        componentId={componentId}
-        symbolId='UPLLCON_UPLL_BYP_VALUE'
+      <ComboBox
+        comboSymbolHook={UPLLCON_UPLL_BYP_VALUE}
+        hidden={false}
+        disabled={UPLLCON_UPLL_BYP_VALUE.readOnly || !UPLLCON_UPLL_BYP_VALUE.visible}
         className={props.cx('uposcen')}
       />
       <ComboBoxDefault
@@ -157,12 +189,12 @@ const USBPLLController = (props: {
         />
       )}
 
-      {/* <GetButton
+      <GetButton
         buttonDisplayText={'Auto Calculate'}
         className={props.cx('USBAutoCalculate')}
         toolTip={'click here for USB Auto Clalucation'}
         buttonClick={usbAutoCalculationButtonClicked}
-      /> */}
+      />
 
       <SettingsDialog
         tooltip='Clock Settings Configuration'
@@ -178,6 +210,23 @@ const USBPLLController = (props: {
         componentId={componentId}
         resetSymbolsArray={settingsArray}
       />
+      <Dialog
+        header='Auto Calculate USB PLL Dividers'
+        visible={dialogStatus}
+        maximizable={true}
+        style={{ width: '45rem', height: '22rem' }}
+        onHide={() => {
+          dialogClosed(false);
+        }}>
+        <USBPLLAutoCalculation
+          componentId={componentId}
+          usbPLLClk={Number(usbClockFreq.value)}
+          usbclkPllInputFreq={poscFreqHook.value}
+          close={(acceptStatus) => {
+            dialogClosed(acceptStatus);
+          }}
+        />
+      </Dialog>
     </div>
   );
 };
