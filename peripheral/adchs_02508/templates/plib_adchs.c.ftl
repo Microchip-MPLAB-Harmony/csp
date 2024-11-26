@@ -551,16 +551,16 @@ void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callbac
 
 void __attribute__((used)) ADC_DF${i}_InterruptHandler(void)
 {
+    if (${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn != NULL)
+    {
+      ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn(${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context);
+    }
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${.vars[ADCHS_DFx_IFS_REG]}CLR = _${.vars[ADCHS_DFx_IFS_REG]}_ADCDF${i}IF_MASK;
 </#if>
 <#if core.PRODUCT_FAMILY?contains("PIC32MK")>
     ${.vars[ADCHS_DFx_IFS_REG]}CLR = _${.vars[ADCHS_DFx_IFS_REG]}_AD1DF${i}IF_MASK;
 </#if>
-    if (${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn != NULL)
-    {
-      ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn(${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context);
-    }
 }
 <#else>
 bool ${ADCHS_INSTANCE_NAME}_Filter${i}IsReady(void)
