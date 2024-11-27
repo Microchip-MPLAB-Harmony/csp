@@ -96,7 +96,7 @@
       <function name="PMU_TEST_SCK" />
       <function name="RPA7" />
       <function name="SERCOM1_PAD0" />
-      <function name="USBCORE_VBUSON" />
+      <function name="USB_VBUSON" />
     </pin>
     <pin name="NC">
        <number package="1" pin="17" />
@@ -160,7 +160,7 @@
       <number package="1" pin="26" />
       <function name="RPE2" />
       <function name="GMAC_GCRS_DV" />
-      <function name="USBCORE_TSTRCV" />
+      <function name="USB_TSTRCV" />
     </pin>
     <pin name="RC9">
        <modifiers>
@@ -191,7 +191,7 @@
       </modifiers>
       <number package="1" pin="30" />
       <function name="RPE3" />
-      <function name="USBCORE_TSTUOE" />
+      <function name="USB_TSTUOE" />
     </pin>
     <pin name="NC">
        <number package="1" pin="31" />
@@ -250,7 +250,7 @@
       <function name="RPA4" />
       <function name="RTC_OUT" />
       <function name="SERCOM0_PAD3" />
-      <function name="USBCORE_USBID" />
+      <function name="USB_USBID" />
     </pin>
     <pin name="RA13">
        <modifiers>
@@ -323,7 +323,7 @@
       <function name="AIN0" />
       <function name="DSU_MSA" />
       <function name="RPB10" />
-      <function name="USBCORE_USBOEN" />
+      <function name="USB_USBOEN" />
     </pin>
     <pin name="NC">
        <number package="1" pin="54" />
@@ -421,13 +421,13 @@
       <function name="CVDR14" />
       <function name="CVDT14" />
       <function name="RPE6" />
-      <function name="USBCORE_TSTVPI" />
+      <function name="USB_TSTVPI" />
     </pin>
     <pin name="RE5">
        <number package="1" pin="83" />
       <function name="ANB0" />
       <function name="RPE5" />
-      <function name="USBCORE_TSTVMO" />
+      <function name="USB_TSTVMO" />
     </pin>
     <pin name="RE4">
        <modifiers>
@@ -435,7 +435,7 @@
       </modifiers>
       <number package="1" pin="84" />
       <function name="RPE4" />
-      <function name="USBCORE_TSTVMI" />
+      <function name="USB_TSTVMI" />
     </pin>
     <pin name="RC11">
        <modifiers>
@@ -495,7 +495,7 @@
       <function name="CVDR11" />
       <function name="CVDT11" />
       <function name="RPD5" />
-      <function name="USBCORE_TSTVPO" />
+      <function name="USB_TSTVPO" />
     </pin>
     <pin name="RB3">
        <modifiers>
@@ -509,7 +509,7 @@
       <function name="CVDT7" />
       <function name="RPB3" />
     </pin>
-    <pin name="USBCORE_VBUS">
+    <pin name="USB_VBUS">
        <number package="1" pin="94" />
     </pin>
     <pin name="NC">
@@ -587,7 +587,7 @@
     <pin name="NC">
        <number package="1" pin="109" />
     </pin>
-    <pin name="USBCORE_DPLUS">
+    <pin name="USB_DPLUS">
        <number package="1" pin="110" />
     </pin>
     <pin name="RB1">
@@ -599,7 +599,7 @@
       <function name="CVDT5" />
       <function name="RPB1" />
     </pin>
-    <pin name="USBCORE_DMINS">
+    <pin name="USB_DMINS">
        <number package="1" pin="112" />
     </pin>
     <pin name="NC">

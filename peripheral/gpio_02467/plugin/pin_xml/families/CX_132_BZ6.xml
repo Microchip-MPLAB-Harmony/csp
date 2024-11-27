@@ -936,20 +936,20 @@
 			<function name="TCC2_WO0"/>
 			<function name="TCC2_WO1"/>
 		</module>
-		<module name="USBCORE">
-			<function name="USBCORE_Dmins"/>
-			<function name="USBCORE_Dplus"/>
-			<function name="USBCORE_TSTRCV"/>
-			<function name="USBCORE_TSTUOE"/>
-			<function name="USBCORE_TSTVMI"/>
-			<function name="USBCORE_TSTVMO"/>
-			<function name="USBCORE_TSTVPI"/>
-			<function name="USBCORE_TSTVPO"/>
-			<function name="USBCORE_USBID"/>
-			<function name="USBCORE_USBOEN"/>
-			<function name="USBCORE_VBUS"/>
-			<function name="USBCORE_VBUSON"/>
-			<function name="USBCORE_VUSB3V3"/>
+		<module name="USB">
+			<function name="USB_DMINS"/>
+			<function name="USB_DPLUS"/>
+			<function name="USB_TSTRCV"/>
+			<function name="USB_TSTUOE"/>
+			<function name="USB_TSTVMI"/>
+			<function name="USB_TSTVMO"/>
+			<function name="USB_TSTVPI"/>
+			<function name="USB_TSTVPO"/>
+			<function name="USB_USBID"/>
+			<function name="USB_USBOEN"/>
+			<function name="USB_VBUS"/>
+			<function name="USB_VBUSON"/>
+			<function name="USB_VUSB3V3"/>
 		</module>
 	</modules>
 </family>

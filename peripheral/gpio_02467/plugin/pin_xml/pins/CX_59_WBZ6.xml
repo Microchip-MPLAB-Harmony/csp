@@ -337,7 +337,7 @@
       <number package="1" pin="A27" />
       <function name="RPE2" />
       <function name="GMAC_GCRS_DV" />
-      <function name="USBCORE_TSTRCV" />
+      <function name="USB_TSTRCV" />
     </pin>
     <pin name="RC8">
        <modifiers>
