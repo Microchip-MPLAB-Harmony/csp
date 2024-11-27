@@ -3,6 +3,42 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.20.0
+
+### New Features
+
+- **New part support** - This release introduces support for
+  - PIC32CM-GC/SG family of devices
+  - PIC32CX-BZ6 and WBZ653 family of devices
+  - PIC32CZ-CA70 family of devices
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+- **New Features and Enhancements**
+  - Added MCC help for all the CSP modules. Right click on MCC configuration option of CSP component will open the relevant online datasheet page.
+  - SMBUS mode support in I2C Plib for PIC32M devices
+  - TSENS Plib support for SAMC21 and PIC32CM-MC devices
+  - Added LIN mode support in UART Plib for SAM SAM E7X/S7X/V7X devices
+  - ISO7816 Smart Card mode support in SERCOM Plib
+  - Updated SMC PLIB and NAND FLASH driver to support the SAMA5D2, SAMA7G54 and SAMA7D65 devices
+  - Bug fixes and enhancements
+
+### Known Issues
+
+-  Applications created for PIC32CZ-CA80/CA90 using csp v3.19.2 or older will require reconfiguration of pins due to change in device package type. 
+
+### Development Tools
+
+- [MPLAB® X IDE v6.20](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v4.45](https://www.microchip.com/mplab/compilers)
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.5.1 or higher
+
+### Notes
+
+-  None
+
 ## CSP Release v3.19.7
 
 ### New Features

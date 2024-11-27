@@ -11,7 +11,8 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_pic32cx_sg41](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cx_sg41) | Application examples for PIC32CX SG family |
 | [csp_apps_pic32cxbz2_wbz45](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz2_wbz45) | Application examples for PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules |
 | [csp_apps_pic32cxbz3_wbz3](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz3_wbz3) | Application examples for PIC32CX-BZ3 SoC Family of wireless microcontrollers (MCUs) and WBZ35x Modules |
-| [csp_apps_pic32cz_ca](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cz_ca) | Application examples for PIC32CZ-CA family |
+| [csp_apps_pic32cz_ca70](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cz_ca70) | Application examples for PIC32CZ-CA70 family |
+| [csp_apps_pic32cz_ca8x_ca9x](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cz_ca8x_ca9x) | Application examples for PIC32CZ-CA80/CA90 family |
 | [csp_apps_pic32mk](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mk) | Application examples for: <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GP/MC) family <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GPG/MCJ) WITH CAN FD family <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GPK/MCM) WITH CAN FD family |
 | [csp_apps_pic32mm](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mm) | Application examples for PIC32MM family |
 | [csp_apps_pic32mx](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mx) | Application examples for: <br> PIC32MX330/350/370/430/450/470 family <br> PIC32MX1XX/2XX/5XX 64/100-PIN family <br> PIC32MX1XX/2XX 28/36/44-PIN family <br> PIC32MX1XX/2XX 28/44-PIN XLP family <br> PIC32MX5XX/6XX/7XX  family |
@@ -36,4 +37,7 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_sam_l22](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_l22) | Application examples for SAM L22 family |
 | [csp_apps_sam_rh707](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_rh707) | Application examples for SAMRH707 family |
 | [csp_apps_sam_rh71](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_rh71) | Application examples for SAMRH71 family |
+| [csp_apps_pic32cxbz6_wbz6](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz6_wbz6) | Application examples for PIC32CX-BZ6 and WBZ653 family |
+| [csp_apps_pic32cm_sg_gc](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_sg_gc) | Application examples for PIC32CM-GC/SG family |
+| [csp_apps_pic32cz_ca70](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cz_ca70) | Application examples for PIC32CZ-CA70 family |
 

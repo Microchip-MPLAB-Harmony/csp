@@ -1,1 +1,0 @@
-define({"topics":[{"title":"<ph>1.27.18.1<\/ph>\nRXLP_Initialize Function","href":"GUID-1E270A0B-FBA7-4630-93E4-A5E1C19CE2BD.html","attributes":{"data-id":"GUID-1E270A0B-FBA7-4630-93E4-A5E1C19CE2BD"},"menu":{"hasChildren":false},"tocID":"GUID-1E270A0B-FBA7-4630-93E4-A5E1C19CE2BD-d67534e87326","topics":[]}]});

@@ -21,7 +21,7 @@ the following links for release notes, training materials, and interface
 reference information.
 
 - [Release Notes](./release_notes.md)
-- [MPLAB® Harmony License](mplab_harmony_license.md)
+- [Microchip SLA](Microchip_SLA001.md)
 - [MPLAB® Harmony 3 CSP Wiki](https://github.com/Microchip-MPLAB-Harmony/csp/wiki)
 - [MPLAB® Harmony 3 CSP API Help](https://microchip-mplab-harmony.github.io/csp)
 
@@ -31,9 +31,17 @@ reference information.
 | ---        | ---                                                       |
 | apps       | Example applications for CSP library components           |
 | arch       | Initialization and starter code templates and data        |
-| docs       | CSP library help documentation                            |
 | peripheral | Peripheral library templates and configuration data       |
 | plugins    | UI configurator plugins for different peripherals         |
+
+## Documentation
+
+Click [here](https://onlinedocs.microchip.com/v2/keyword-lookup?keyword=MH3_csp&redirect=true) to view the online documentation of csp repository.
+
+To view the documentation offline, follow these steps:
+ - Download the publication as a zip file from [here](https://onlinedocs.microchip.com/download/GUID-450989FA-38E4-4D68-AB61-15ADB29AD718?type=webhelp).
+ - Extract the zip file into a folder.
+ - Navigate to the folder and open **index.html** in a web browser of your choice.
 
 ____
 

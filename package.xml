@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="csp" required="true">
     <Dependencies>
-        <Dependency name="CMSIS_5" version="5.8.0"/>
+        <Dependency name="CMSIS_5" version="5.9.0"/>
         <Dependency name="harmony-services" version="v1.4.0"/>
     </Dependencies>
 </Package>

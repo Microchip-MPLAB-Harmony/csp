@@ -1,1 +1,0 @@
-define({"topics":[{"title":"<ph>1.22.8.1<\/ph>\nDDR_Initialize Function","href":"GUID-D40B7F4B-10EE-4B25-9759-1C1327E9D672.html","attributes":{"data-id":"GUID-D40B7F4B-10EE-4B25-9759-1C1327E9D672"},"menu":{"hasChildren":false},"tocID":"GUID-D40B7F4B-10EE-4B25-9759-1C1327E9D672-d67435e66581","topics":[]}]});
