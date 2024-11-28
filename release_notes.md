@@ -27,6 +27,7 @@
 ### Known Issues
 
 -  Applications created for PIC32CZ-CA80/CA90 using csp v3.19.2 or older will require reconfiguration of pins due to change in device package type. 
+-  Applications created for SAM9X75 device (used in SAM9X75 Evaluation Board) using csp v3.19.7 or older will require reconfiguration of pins due to addition of a new device package type (BGA256). 
 
 ### Development Tools
 
