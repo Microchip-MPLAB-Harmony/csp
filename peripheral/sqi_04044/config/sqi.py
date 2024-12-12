@@ -391,6 +391,7 @@ def instantiateComponent(sqiComponent):
             sqiCommonHeaderFile.setSecurity("SECURE")
             sqiHeaderFile.setSecurity("SECURE")
             sqiHeaderFile.setSecurity("SECURE")
+            sqiSourceFile.setSecurity("SECURE")
             sqiSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
             sqiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
 
