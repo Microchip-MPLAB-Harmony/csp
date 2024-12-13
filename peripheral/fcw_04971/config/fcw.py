@@ -197,6 +197,55 @@ def instantiateComponent(fcwComponent):
     fcwEraseApiName.setVisible(False)
     fcwEraseApiName.setReadOnly(True)
     fcwEraseApiName.setDefaultValue(eraseApiName)
+    
+    # NVM USER row Address    
+    fcwBootCFG1aNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FCR_CFM_BOOTCFG1A\"]")
+    if fcwBootCFG1aNode != None:
+        fcw_BootCFG1A_START_ADDRESS = fcwComponent.createStringSymbol("FLASH_USERROW_START_ADDRESS", None)
+        fcw_BootCFG1A_START_ADDRESS.setVisible(False)
+        fcw_BootCFG1A_START_ADDRESS.setDefaultValue(fcwBootCFG1aNode.getAttribute("start"))
+        
+        # NVM user row size
+        fcw_BootCFG1A_SIZE = fcwComponent.createStringSymbol("FLASH_USERROW_SIZE", None)
+        fcw_BootCFG1A_SIZE.setVisible(False)
+        fcw_BootCFG1A_SIZE.setDefaultValue(fcwBootCFG1aNode.getAttribute("size"))
+
+    fcwBootCFG1Node = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FCR_CFM_BOOTCFG1\"]")
+    if fcwBootCFG1Node != None:
+        fcw_BootCFG1_START_ADDRESS = fcwComponent.createStringSymbol("FLASH_USERROW_START_ADDRESS_1", None)
+        fcw_BootCFG1_START_ADDRESS.setVisible(False)
+        fcw_BootCFG1_START_ADDRESS.setDefaultValue(fcwBootCFG1Node.getAttribute("start"))
+        
+        # NVM user row size
+        fcw_BootCFG1_SIZE = fcwComponent.createStringSymbol("FLASH_USERROW_SIZE_1", None)
+        fcw_BootCFG1_SIZE.setVisible(False)
+        fcw_BootCFG1_SIZE.setDefaultValue(fcwBootCFG1Node.getAttribute("size"))
+        
+    if fcwBootCFG1Node != None or fcwBootCFG1aNode != None:
+        fcwUserRowUnlockApiName = fcwComponent.createStringSymbol("USER_ROW_UNLOCK_API_NAME", None)
+        fcwUserRowUnlockApiName.setVisible(False)
+        fcwUserRowUnlockApiName.setReadOnly(True)
+        fcwUserRowUnlockApiName.setDefaultValue(fcwComponent.getID().upper() + "_BootConfig_WriteProtectDisable")
+        
+        fcwUserRowLockRestoreApiName = fcwComponent.createStringSymbol("USER_ROW_LOCK_RESTORE_API_NAME", None)
+        fcwUserRowLockRestoreApiName.setVisible(False)
+        fcwUserRowLockRestoreApiName.setReadOnly(True)
+        fcwUserRowLockRestoreApiName.setDefaultValue(fcwComponent.getID().upper() + "_BootConfig_WriteProtectRestore")
+        
+    fcwPFMRowUnlockApiName = fcwComponent.createStringSymbol("PFM_ROW_UNLOCK_API_NAME", None)
+    fcwPFMRowUnlockApiName.setVisible(False)
+    fcwPFMRowUnlockApiName.setReadOnly(True)
+    fcwPFMRowUnlockApiName.setDefaultValue(fcwComponent.getID().upper() + "_PFM_PageWriteProtectDisable")
+    
+    fcwPFMRowLockRestoreApiName = fcwComponent.createStringSymbol("PFM_ROW_LOCK_RESTORE_API_NAME", None)
+    fcwPFMRowLockRestoreApiName.setVisible(False)
+    fcwPFMRowLockRestoreApiName.setReadOnly(True)
+    fcwPFMRowLockRestoreApiName.setDefaultValue(fcwComponent.getID().upper() + "_PFM_PageWriteProtectRestore")
+        
+    # NVM user row Page size
+    fcw_USERROW_PROGRAM_SIZE = fcwComponent.createStringSymbol("FLASH_USERROW_PROGRAM_SIZE", None)
+    fcw_USERROW_PROGRAM_SIZE.setVisible(False)
+    fcw_USERROW_PROGRAM_SIZE.setDefaultValue(str(rowSize))
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

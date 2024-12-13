@@ -65,6 +65,8 @@
 #define ${FCW_INSTANCE_NAME}_FLASH_START_ADDRESS    (${.vars["FLASH_START_ADDRESS"]}U)
 #define ${FCW_INSTANCE_NAME}_FLASH_ROWSIZE          (${FLASH_PROGRAM_SIZE}U)
 #define ${FCW_INSTANCE_NAME}_FLASH_PAGESIZE         (${FLASH_ERASE_SIZE}U)
+#define ${FCW_INSTANCE_NAME}_FLASH_PFM_SIZE         (${FLASH_SIZE}U)
+
 
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${FCW_INSTANCE_NAME}_START_ADDRESS              (0x${START_ADDRESS}U)
@@ -197,6 +199,16 @@ typedef struct
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*FCW_CALLBACK)( uintptr_t context );
 </#if>
+
+void ${FCW_INSTANCE_NAME}_PFM_PageWriteProtectRestore(uint32_t* pwp_region);
+
+bool ${FCW_INSTANCE_NAME}_PFM_PageWriteProtectDisable(uint32_t pageStartAddr, uint32_t* pwp_region);
+
+void ${FCW_INSTANCE_NAME}_BootConfig_WriteProtectEnable(void);
+
+uint32_t ${FCW_INSTANCE_NAME}_BootConfig_WriteProtectDisable(void);
+
+void ${FCW_INSTANCE_NAME}_BootConfig_WriteProtectRestore(uint32_t previous_val);
 
 void ${FCW_INSTANCE_NAME}_Initialize( void );
 
