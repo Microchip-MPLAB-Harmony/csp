@@ -143,6 +143,13 @@ def bsSizeCalculate(symbol, event):
     value = bfm_size.getValue() \
         - (Database.getSymbolValue("core", "IDAU_BNSC_SIZE") * int(memoryGranularity["IDAU_BNSC"]))
     symbol.setValue((value / int(memoryGranularity["IDAU_BS"])))
+
+def updateVtablePlacement(symbol, event):
+    if event["value"] == "FCR_BFM":
+        symbol.setValue("VECTOR_REGION=boot_rom")
+    else:
+        symbol.setValue("VECTOR_REGION=rom")
+
 ###################################################################################################
 ########################################## Configurations  #############################################
 ###################################################################################################
@@ -551,6 +558,8 @@ xc32LinkerMacro_VECTOR_REGION.setKey("preprocessor-macros")
 xc32LinkerMacro_VECTOR_REGION.setValue("VECTOR_REGION=boot_rom")
 xc32LinkerMacro_VECTOR_REGION.setAppend(True, ";=")
 xc32LinkerMacro_VECTOR_REGION.setSecurity("SECURE")
+xc32LinkerMacro_VECTOR_REGION.setDependencies(updateVtablePlacement, ["VTABLE_MEM_REGION"])
+
 
 # set Linker Macros required for BS (Boot Secure) Size
 for key in memoryFuseMaxValue.keys():
