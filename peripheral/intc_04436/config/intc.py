@@ -664,6 +664,40 @@ generalTrapAvailable = coreComponent.createBooleanSymbol(GENERAL_TRAP_AVAILABLE,
 generalTrapAvailable.setDefaultValue(True)
 generalTrapAvailable.setVisible(False)
 
+#Driver Symbols Start
+corePeripherals = {}
+
+# Components which are creating critical section
+corePeripherals = getCorePeripheralsInterruptDataStructure()
+
+for moduleInstance in corePeripherals:
+
+    dict = {}
+    dict = corePeripherals.get(moduleInstance)
+    vectName = dict.get("name")
+    vectIntSrc = dict.get("INT_SRC")
+
+    if len(vectName) > 1:
+        # Symbol to check peripheral contains multi vector
+        intcMultiVector = coreComponent.createBooleanSymbol(moduleInstance + "_MULTI_IRQn", None)
+        intcMultiVector.setDefaultValue(True)
+        intcMultiVector.setVisible(False)
+
+        for intSrc in range(len(vectIntSrc)):
+            name = "INT_SOURCE_" + vectName[intSrc].split("Interrupt")[0]
+            # Symbol to get individual interrupt vector of peripheral containing multi vector
+            intcVectorNumber = coreComponent.createStringSymbol(moduleInstance + "_" + vectIntSrc[intSrc] + "_INT_SRC", None)
+            intcVectorNumber.setDefaultValue(name)
+            intcVectorNumber.setVisible(False)
+    else:
+        if len(vectName) != 0:
+            name = "INT_SOURCE_" + vectName[0].split("Interrupt")[0]
+            # Symbol to get interrupt vector of peripheral containing single vector
+            intcVectorName = coreComponent.createStringSymbol(moduleInstance + "_SINGLE_IRQn", None)
+            intcVectorName.setDefaultValue(name)
+            intcVectorName.setVisible(False)
+#Driver Symbols End
+
 configName = Variables.get("__CONFIGURATION_NAME")
 
 icSourceFile = coreComponent.createFileSymbol(INTC_SOURCE, None)

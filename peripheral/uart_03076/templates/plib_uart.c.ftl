@@ -576,7 +576,7 @@ int ${moduleName}_ReadByte( void )
 
 bool ${moduleName}_ReceiverIsReady( void )
 {
-    return (bool)(U${instanceNumber}STATbits.URXBE == 0U);
+    return (bool)(U${instanceNumber}STATbits.RXBE == 0U);
 }
 
 void ${moduleName}_WriteByte( int data )
@@ -586,7 +586,7 @@ void ${moduleName}_WriteByte( int data )
         /* Do Nothing */
     }
 
-    U${instanceNumber}TXREG = (uint32_t)data;
+    U${instanceNumber}TXB = (uint32_t)data;
 }
 
 bool ${moduleName}_TransmitterIsReady( void )

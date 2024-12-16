@@ -79,7 +79,7 @@ def getCorePeripheralsInterruptDataStructure():
 
     dmacVectName = ["DMA0Interrupt", "DMA1Interrupt", "DMA2Interrupt", "DMA3Interrupt", "DMA4Interrupt", "DMA5Interrupt","DMA6Interrupt","DMA7Interrupt"]
     dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3","CHANNEL4", "CHANNEL5", "CHANNEL6", "CHANNEL7"]
-    uartIntSrc = ["UART_ERROR", "UART_RX", "UART_TX_COMPLETE"]
+    uartIntSrc = ["USART_ERROR", "USART_RX", "USART_TX_COMPLETE"]
     spiIntSrc = ["SPI_ERROR", "SPI_RX", "SPI_TX_COMPLETE"]
    # i2cIntSrc = ["I2C_0", "I2C_1"]
 
