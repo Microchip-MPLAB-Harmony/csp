@@ -271,6 +271,9 @@ static void GCLK${i}_Initialize(void)
     <#if (i==0)>
 
 <#if CONF_MCLK_CLKDIV0 != "0x01">
+    /* Clear Main Clock Ready bit */
+    MCLK_REGS->MCLK_INTFLAG = MCLK_INTFLAG_CKRDY_Msk;
+
     /* Selection of the Clock Domain Division Factor */
     MCLK_REGS->MCLK_CLKDIV[0] = MCLK_CLKDIV_DIV(${CONF_MCLK_CLKDIV0}U);
 
