@@ -103,7 +103,7 @@ static volatile SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 // *****************************************************************************
 // *****************************************************************************
 
-void static ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
+static void ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 {
     uint8_t  u8dummyData = 0U;
     USART_ERROR errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_USART_REG_NAME}.SERCOM_STATUS & (uint16_t)(SERCOM_${SERCOM_USART_REG_NAME}_STATUS_PERR_Msk | SERCOM_${SERCOM_USART_REG_NAME}_STATUS_FERR_Msk | SERCOM_${SERCOM_USART_REG_NAME}_STATUS_BUFOVF_Msk ));
@@ -865,7 +865,7 @@ int ${SERCOM_INSTANCE_NAME}_USART_ReadByte( void )
 <#if USART_INTERRUPT_MODE_ENABLE = true>
 
 <#if USART_INTENSET_ERROR = true>
-void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
+static void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
     USART_ERROR errorStatus;
 
@@ -896,7 +896,7 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler(
 </#if>
 
 <#if USART_RX_ENABLE = true>
-void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+static void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     uint16_t temp;
 
@@ -1001,7 +1001,7 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
 </#if>
 
 <#if USART_TX_ENABLE = true>
-void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+static void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     bool  dataRegisterEmpty;
     bool  dataAvailable;

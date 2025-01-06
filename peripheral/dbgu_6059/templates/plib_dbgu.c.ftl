@@ -53,7 +53,7 @@
 
 static volatile DBGU_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 
-void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
+static void __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
 {
     if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
@@ -93,7 +93,7 @@ void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
     return;
 }
 
-void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
+static void __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
 {
     if (${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
@@ -171,7 +171,7 @@ void __attribute__((used)) ${DBGU_INSTANCE_NAME}_InterruptHandler(void)
 
 </#if>
 
-void static ${DBGU_INSTANCE_NAME}_ErrorClear(void)
+static void ${DBGU_INSTANCE_NAME}_ErrorClear(void)
 {
     uint8_t dummyData = 0u;
 

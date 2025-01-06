@@ -172,7 +172,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE();
 }
 
-void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
+static void ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 {
     /* Clear the error flags */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
@@ -785,7 +785,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_RING_BUF
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext = context;
 }
 
-void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+static void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     uint16_t rdData = 0;
 
@@ -817,7 +817,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler(
 
 }
 
-void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+static void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     uint16_t wrByte;
 

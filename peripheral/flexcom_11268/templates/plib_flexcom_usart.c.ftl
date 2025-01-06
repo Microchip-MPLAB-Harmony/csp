@@ -75,7 +75,7 @@
 static volatile FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 </#if>
 
-void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
+static void ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 {
     if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk)) != 0U)
     {
@@ -100,7 +100,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 
 <#if !(USE_USART_RECEIVE_DMA??) || (USE_USART_RECEIVE_DMA == false)>
-void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+static void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
     uint32_t rxPending = 0;
@@ -168,7 +168,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler(
 
 </#if>
 <#if !(USE_USART_TRANSMIT_DMA??) || (USE_USART_TRANSMIT_DMA == false)>
-void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+static void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
     {

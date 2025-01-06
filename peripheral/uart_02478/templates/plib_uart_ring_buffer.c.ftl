@@ -69,7 +69,7 @@ static volatile uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_
 
 #define ${UART_INSTANCE_NAME}_IS_9BIT_MODE_ENABLED()    ( (U${UART_INSTANCE_NUM}MODE) & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK) ? true:false
 
-void static ${UART_INSTANCE_NAME}_ErrorClear( void )
+static void ${UART_INSTANCE_NAME}_ErrorClear( void )
 {
     UART_ERROR errors = UART_ERROR_NONE;
     uint8_t dummyData = 0u;

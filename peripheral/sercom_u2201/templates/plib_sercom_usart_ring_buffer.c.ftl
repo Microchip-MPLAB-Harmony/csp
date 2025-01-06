@@ -460,7 +460,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Disable( void )
     }
 }
 
-void static ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
+static void ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 {
     uint16_t  u16dummyData = 0;
 
@@ -957,7 +957,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
 </#if>
 
 <#if USART_INTENSET_ERROR = true>
-void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
+static void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
     USART_ERROR errorStatus = (USART_ERROR)(${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_USART_REG_NAME}.SERCOM_STATUS & (SERCOM_${SERCOM_USART_REG_NAME}_STATUS_PERR_Msk | SERCOM_${SERCOM_USART_REG_NAME}_STATUS_FERR_Msk | SERCOM_${SERCOM_USART_REG_NAME}_STATUS_BUFOVF_Msk <#if USART_FORM == "0x4" || USART_FORM ==     "0x5">| SERCOM_${SERCOM_USART_REG_NAME}_STATUS_ISF_Msk </#if>));
 
@@ -980,7 +980,7 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler(
 </#if>
 
 <#if USART_RX_ENABLE = true>
-void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+static void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     <#if USART_INTENSET_ERROR = false>
 
@@ -1084,7 +1084,7 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
 </#if>
 
 <#if USART_TX_ENABLE = true>
-void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+static void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     uint16_t wrByte;
 
