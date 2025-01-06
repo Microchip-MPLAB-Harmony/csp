@@ -60,7 +60,7 @@
 // *****************************************************************************
 
 <#if TWIHS_INTERRUPT_MODE = true>
-volatile static TWIHS_SLAVE_OBJ ${TWIHS_INSTANCE_NAME?lower_case}Obj;
+static volatile TWIHS_SLAVE_OBJ ${TWIHS_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************

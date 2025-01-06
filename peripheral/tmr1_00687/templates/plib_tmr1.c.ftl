@@ -55,7 +55,7 @@
 </#if>
 
 <#if TMR1_INTERRUPT_MODE == true>
-volatile static TMR1_TIMER_OBJECT ${TMR1_INSTANCE_NAME?lower_case}Obj;
+static volatile TMR1_TIMER_OBJECT ${TMR1_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${TMR1_INSTANCE_NAME}_Initialize(void)

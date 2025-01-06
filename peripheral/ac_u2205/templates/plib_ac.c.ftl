@@ -159,7 +159,7 @@
         </#if>
     </#if>
 </#if>
-volatile static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
+static volatile AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -214,7 +214,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }    
+    }
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
@@ -230,7 +230,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }    
+    }
 }
 
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
@@ -259,7 +259,7 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
     while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }    
+    }
 }
 
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
@@ -314,7 +314,7 @@ void __attribute__((used)) ${AC_INSTANCE_NAME}_InterruptHandler( void )
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
     uint8_t status;
-    context = ${AC_INSTANCE_NAME?lower_case}Obj.context;      
+    context = ${AC_INSTANCE_NAME?lower_case}Obj.context;
     /* Copy the status to use inside the callback */
     ${AC_INSTANCE_NAME?lower_case}Obj.int_flags = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
     status = ${AC_INSTANCE_NAME?lower_case}Obj.int_flags;

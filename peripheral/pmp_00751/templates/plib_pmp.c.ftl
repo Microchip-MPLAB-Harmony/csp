@@ -55,7 +55,7 @@
 #include "plib_${PMP_INSTANCE_NAME?lower_case}.h"
 
 <#if PMP_INTERRUPT_MODE == true>
-volatile static PMP_CALLBACK_OBJ ${PMP_INSTANCE_NAME?lower_case}CallbackObject;
+static volatile PMP_CALLBACK_OBJ ${PMP_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 // *****************************************************************************

@@ -55,7 +55,7 @@ typedef struct
     uintptr_t context;
 }${IPC_INSTANCE_NAME?lower_case}_callback_object_t;
 
-volatile static ${IPC_INSTANCE_NAME?lower_case}_callback_object_t ${IPC_INSTANCE_NAME?lower_case}_callback_obj[TOTAL_IPC_IRQS];
+static volatile ${IPC_INSTANCE_NAME?lower_case}_callback_object_t ${IPC_INSTANCE_NAME?lower_case}_callback_obj[TOTAL_IPC_IRQS];
 
 <#if IPC_INIT_REQUIRED>
 void  ${IPC_INSTANCE_NAME}_Initialize(void)

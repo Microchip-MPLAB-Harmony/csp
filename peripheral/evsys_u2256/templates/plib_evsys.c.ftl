@@ -55,7 +55,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_CHANNEL != 0>
-        <#lt>volatile static EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
+        <#lt>static volatile EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
     </#if>
 </#if>
 

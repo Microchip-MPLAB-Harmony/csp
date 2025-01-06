@@ -45,7 +45,7 @@
 </#if>
 
 <#if rtcEnableInterrupt == true>
-volatile static RTC_OBJECT rtc;
+static volatile RTC_OBJECT rtc;
 </#if>
 
 __STATIC_INLINE uint32_t decimaltobcd( uint32_t aDecValue )

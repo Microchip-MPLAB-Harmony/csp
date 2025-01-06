@@ -69,7 +69,7 @@
 </#if>
 
 <#if PAC_INTERRRUPT_MODE = true>
-volatile static PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
+static volatile PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 // *****************************************************************************

@@ -57,7 +57,7 @@
 #include "peripheral/ecia/plib_ecia.h"
 
 <#if LED_CLK_SRC == "0x1">
-volatile static LED_WDT_CALLBACK_OBJ ${LED_INSTANCE_NAME}_CallbackObject;
+static volatile LED_WDT_CALLBACK_OBJ ${LED_INSTANCE_NAME}_CallbackObject;
 </#if>
 </#if>
 

@@ -59,7 +59,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if WDT_ACTION == "Generate Interrupt">
-volatile static WDT_OBJECT wdt;
+static volatile WDT_OBJECT wdt;
 </#if>
 
 <#assign wdt_ctrl = "">
@@ -142,9 +142,9 @@ bool ${WDT_INSTANCE_NAME}_isPowerFailWDTEventSet(void)
     {
         check = true;
     }
-    
+
     return check;
-    
+
 }
 
 void ${WDT_INSTANCE_NAME}_PowerFailWDTEventClear(void)
@@ -193,7 +193,7 @@ void __attribute__((used)) ${WDT_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler( void
         if(wdt.callback != NULL)
         {
             uintptr_t context = wdt.context;
-            
+
             wdt.callback(context);
         }
     }

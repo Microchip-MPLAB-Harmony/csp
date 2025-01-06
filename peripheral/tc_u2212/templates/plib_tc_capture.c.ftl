@@ -152,7 +152,7 @@
 </#compress>
 
 <#if TC_INTSET_VAL != "">
-volatile static TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static volatile TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************

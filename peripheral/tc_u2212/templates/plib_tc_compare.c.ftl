@@ -137,7 +137,7 @@
 // *****************************************************************************
 
 <#if TC_COMPARE_INTERRUPT_MODE = true>
-volatile static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static volatile TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -237,7 +237,7 @@ void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -312,7 +312,7 @@ uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER;
 }
 </#if>

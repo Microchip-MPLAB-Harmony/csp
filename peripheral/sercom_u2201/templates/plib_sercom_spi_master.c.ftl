@@ -71,7 +71,7 @@
 
 <#if SPI_INTERRUPT_MODE = true>
 /*Global object to save SPI Exchange related data  */
-volatile static SPI_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPIObj;
+static volatile SPI_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPIObj;
 </#if>
 
 // *****************************************************************************

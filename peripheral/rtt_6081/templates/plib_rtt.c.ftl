@@ -47,7 +47,7 @@ Description:
 </#if>
 
 <#if rttINCIEN == true || rttALMIEN == true>
-    <#lt>volatile static RTT_OBJECT rtt;
+    <#lt>static volatile RTT_OBJECT rtt;
 
 </#if>
 <#assign RTT_MR_VAL = "RTT_MR_RTPRES(" + rttRTPRES + "U) | RTT_MR_RTTDIS_Msk">

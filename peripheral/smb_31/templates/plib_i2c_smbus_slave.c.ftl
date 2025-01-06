@@ -66,9 +66,9 @@
 #define ${I2C_INSTANCE_NAME}_STXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_SLV_TXB_REG_OFST)
 #define ${I2C_INSTANCE_NAME}_SRXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_SLV_RXB_REG_OFST)
 
-volatile static I2C_SMB_TARGET_OBJ ${I2C_INSTANCE_NAME?lower_case}TargetObj;
-volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer[255];
-volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer[255];
+static volatile I2C_SMB_TARGET_OBJ ${I2C_INSTANCE_NAME?lower_case}TargetObj;
+static volatile uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer[255];
+static volatile uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer[255];
 </#if>
 
 <#if I2C_OPERATING_MODE == "Slave">

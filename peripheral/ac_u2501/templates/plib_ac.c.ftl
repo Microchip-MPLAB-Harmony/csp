@@ -191,7 +191,7 @@ typedef struct
 
 } AC_OBJECT ;
 
-volatile static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
+static volatile AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************

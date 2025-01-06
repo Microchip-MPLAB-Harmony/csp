@@ -58,10 +58,10 @@
 
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save FLEXCOM SPI Exchange related data */
-volatile static FLEXCOM_SPI_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
+static volatile FLEXCOM_SPI_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
 
 <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
-volatile static uint8_t dummyDataBuffer[512];
+static volatile uint8_t dummyDataBuffer[512];
 
 static void setupDMA( volatile void* pTransmitData, volatile void* pReceiveData, size_t size )
 {

@@ -91,7 +91,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
 }
 <#if RSTC_MR_URSTEN == "INTERRUPT">
 
-volatile static RSTC_OBJECT rstcObj;
+static volatile RSTC_OBJECT rstcObj;
 
 void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t context )
 {

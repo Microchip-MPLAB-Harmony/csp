@@ -93,7 +93,7 @@ static uint8_t usart_state = USART_RCV;
 
 </#if>
 <#if USART_INTERRUPT_MODE_ENABLE = true>
-volatile static SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
+static volatile SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 </#if>
 
 

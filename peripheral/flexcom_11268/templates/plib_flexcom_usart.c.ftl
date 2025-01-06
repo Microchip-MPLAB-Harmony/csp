@@ -72,7 +72,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
-volatile static FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
+static volatile FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 </#if>
 
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )

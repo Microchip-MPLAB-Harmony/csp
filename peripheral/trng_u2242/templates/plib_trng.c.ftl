@@ -46,7 +46,7 @@
 </#if>
 
 <#if trngEnableInterrupt == true>
-    <#lt>volatile static TRNG_OBJECT trng;
+    <#lt>static volatile TRNG_OBJECT trng;
 </#if>
 
 void ${TRNG_INSTANCE_NAME}_Initialize( void )

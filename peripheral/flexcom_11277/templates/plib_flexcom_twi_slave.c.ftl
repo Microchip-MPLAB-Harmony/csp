@@ -61,9 +61,9 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if TWI_INTERRUPT_MODE == true>
-volatile static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
+static volatile FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
 </#if>
-volatile static twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
+static volatile twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
 
 // *****************************************************************************
 // *****************************************************************************

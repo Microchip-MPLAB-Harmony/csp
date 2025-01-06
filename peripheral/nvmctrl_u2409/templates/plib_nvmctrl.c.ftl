@@ -53,7 +53,7 @@
 #include "interrupts.h"
 </#if>
 
-volatile static uint16_t nvm_error;
+static volatile uint16_t nvm_error;
 
 <#assign NVMCTRL_CTRLA_VAL = "">
 <#assign NVMCTRL_SEECFG_VAL = "">
@@ -116,11 +116,11 @@ volatile static uint16_t nvm_error;
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true >
-    <#lt>volatile static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain;
+    <#lt>static volatile NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain;
 </#if>
 
 <#if NVM_INTERRUPT1_ENABLE == true >
-    <#lt>volatile static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE;
+    <#lt>static volatile NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE;
 </#if>
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)

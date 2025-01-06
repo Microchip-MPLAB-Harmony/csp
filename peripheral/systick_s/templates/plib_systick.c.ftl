@@ -45,7 +45,7 @@
 #include "plib_systick.h"
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
-    <#lt>volatile static SYSTICK_OBJECT systick;
+    <#lt>static volatile SYSTICK_OBJECT systick;
 </#if>
 
 void SYSTICK_TimerInitialize ( void )

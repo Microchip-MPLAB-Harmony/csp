@@ -45,7 +45,7 @@
 </#if>
 
 <#if rtcEnableInterrupt == true>
-volatile static RTC_OBJECT rtc;
+static volatile RTC_OBJECT rtc;
 </#if>
 <#compress>
 <#if RTC_TAMPER_CHANNELS??>

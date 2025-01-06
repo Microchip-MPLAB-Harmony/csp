@@ -53,7 +53,7 @@ typedef struct
 } OSCCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-volatile static OSCCTRL_OBJECT oscctrlObj;
+static volatile OSCCTRL_OBJECT oscctrlObj;
 
 </#if>
 
@@ -66,7 +66,7 @@ typedef struct
 } OSC32KCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-volatile static OSC32KCTRL_OBJECT osc32kctrlObj;
+static volatile OSC32KCTRL_OBJECT osc32kctrlObj;
 
 </#if>
 
@@ -79,7 +79,7 @@ typedef struct
 } MCLK_OBJECT;
 
 /* Reference Object created for the MCLK */
-volatile static MCLK_OBJECT mclkObj;
+static volatile MCLK_OBJECT mclkObj;
 
 </#if>
 

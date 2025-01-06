@@ -89,7 +89,7 @@ typedef struct
 
 <#if QMSPI_INTERRUPT_MODE == true || QMSPI_DMA_EN == true>
 /* Global object to save SPI Exchange related data */
-volatile static QMSPI_SPI_OBJECT ${QMSPI_INSTANCE_NAME?lower_case}Obj;
+static volatile QMSPI_SPI_OBJECT ${QMSPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************

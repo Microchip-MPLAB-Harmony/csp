@@ -51,7 +51,7 @@ typedef struct
     uintptr_t context;
 }${LCDC_INSTANCE_NAME}_IRQ_CALLBACK_OBJECT;
 
-volatile static ${LCDC_INSTANCE_NAME}_IRQ_CALLBACK_OBJECT ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj;
+static volatile ${LCDC_INSTANCE_NAME}_IRQ_CALLBACK_OBJECT ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj;
 
 void ${LCDC_INSTANCE_NAME}_SetPixelClockPolarity(${LCDC_INSTANCE_NAME}_SIGNAL_POLARITY polarity)
 {

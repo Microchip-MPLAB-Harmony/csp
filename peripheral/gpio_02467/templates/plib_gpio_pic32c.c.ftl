@@ -86,7 +86,7 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>volatile static GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>static volatile GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>

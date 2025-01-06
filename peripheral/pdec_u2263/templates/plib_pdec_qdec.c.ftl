@@ -73,7 +73,7 @@
 </#if>
 <#if PDEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-   volatile static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
+   static volatile <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -192,7 +192,7 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}AngleGet( void )
     while((${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET & PDEC_CTRLBSET_CMD_Msk) != PDEC_CTRLBSET_CMD_NONE)
     {
         /* Wait for CMD to become zero */
-    }    
+    }
     return (uint16_t)(${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT & 0x${PDEC_CTRLA_ANGULAR_MASK}U);
 }
 
@@ -237,7 +237,7 @@ void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
     PDEC_QDEC_STATUS status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;
     status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC0_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC0_Msk;
@@ -254,7 +254,7 @@ void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
     PDEC_QDEC_STATUS status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;
     status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC1_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC1_Msk;

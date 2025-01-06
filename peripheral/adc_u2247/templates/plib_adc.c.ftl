@@ -175,7 +175,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON = true)>
-volatile static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+static volatile ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_LOAD_CALIB? has_content>
@@ -364,7 +364,7 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_WINUT_Msk) == ADC_SYNCBUSY_WINUT_Msk)
     {
         /* Wait for Synchronization */
-    }    
+    }
 }
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)

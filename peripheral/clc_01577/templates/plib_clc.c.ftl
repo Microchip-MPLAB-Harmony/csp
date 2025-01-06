@@ -57,7 +57,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if CLC_INTERRUPT_TYPE != "Disabled">
-volatile static CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObject;
+static volatile CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 // *****************************************************************************

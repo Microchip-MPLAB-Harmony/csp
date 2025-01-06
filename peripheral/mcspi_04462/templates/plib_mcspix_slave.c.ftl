@@ -63,16 +63,16 @@
 #define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            (${MCSPIS_RX_BUFFER_SIZE}U)
 #define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           (${MCSPIS_TX_BUFFER_SIZE}U)
 
-volatile static uint8_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-volatile static uint8_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint8_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint8_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
 #define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            (${MCSPIS_RX_BUFFER_SIZE/2}U)
 #define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           (${MCSPIS_TX_BUFFER_SIZE/2}U)
 
-volatile static uint16_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-volatile static uint16_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint16_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint16_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 </#if>
 
 // *****************************************************************************
@@ -82,7 +82,7 @@ volatile static uint16_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAM
 // *****************************************************************************
 
 /* Global object to save MCSPI Exchange related data */
-volatile static MCSPI_SLAVE_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
+static volatile MCSPI_SLAVE_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
 
 void ${MCSPI_INSTANCE_NAME}_Initialize( void )
 {
@@ -174,7 +174,7 @@ size_t ${MCSPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
         wrOutIndex++;
 </#if>
     }
-    
+
     ${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = wrOutIndex;
 
     /* Restore interrupt enable state and also enable TDRE interrupt */
@@ -270,9 +270,9 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
          * is cleared on MCSPI_SR read. If statusFlags is not updated, there is a possibility of missing
          * NSSR event flag.
          */
-         
+
         uint32_t rdInIndex = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rdInIndex;
-        
+
         while (((statusFlags |= ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR) & MCSPI_SR_RDRF_Msk) != 0U)
         {
 <#if MCSPI_CSR0_BITS = "_8_BIT">
@@ -285,7 +285,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
 
             if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rdInIndex < ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
             {
-                
+
                 ${MCSPI_INSTANCE_NAME}_ReadBuffer[rdInIndex] = txRxData;
                 rdInIndex++;
             }
@@ -293,7 +293,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
             /* Only clear RDRF flag so as not to clear NSSR flag which may have been set */
             statusFlags &= ~MCSPI_SR_RDRF_Msk;
         }
-        
+
         ${MCSPI_INSTANCE_NAME?lower_case}Obj.rdInIndex = rdInIndex;
     }
 
@@ -301,7 +301,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
     {
         uint32_t wrOutIndex = ${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
         uint32_t nWrBytes = ${MCSPI_INSTANCE_NAME?lower_case}Obj.nWrBytes;
-        
+
         while ((((statusFlags |= ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR) & MCSPI_SR_TDRE_Msk) != 0U) && (wrOutIndex < nWrBytes))
         {
 <#if MCSPI_CSR0_BITS = "_8_BIT">
@@ -320,7 +320,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
             /* Disable TDRE interrupt. The last byte sent by the master will be shifted out automatically */
             ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IDR = MCSPI_IDR_TDRE_Msk;
         }
-        
+
         ${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = wrOutIndex;
     }
 

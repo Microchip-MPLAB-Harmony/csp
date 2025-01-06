@@ -86,7 +86,7 @@ static  dmac_descriptor_registers_t write_back_section[DMAC_CHANNELS_NUMBER]    
 static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(8);
 
 /* DMAC Channels object information structure */
-volatile static DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
+static volatile DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
 
 // *****************************************************************************
 // *****************************************************************************

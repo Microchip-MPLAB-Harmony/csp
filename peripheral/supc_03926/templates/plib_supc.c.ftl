@@ -193,7 +193,7 @@ typedef struct
     uintptr_t context;
 } SUPC_CALLBACK_OBJ;
 
-volatile static SUPC_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
+static volatile SUPC_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 void ${SUPC_INSTANCE_NAME}_Initialize( void )

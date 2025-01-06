@@ -92,11 +92,11 @@
 #define CAN_MSG_SRR_MASK            (0x20000000U)
 
 <#if CAN_INTERRUPT_MODE == true>
-volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
-volatile static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
-volatile static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_NUM_OF_FIFO];
-volatile static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj;
-volatile static uint32_t ${CAN_INSTANCE_NAME?lower_case}MsgIndex[CAN_NUM_OF_FIFO];
+static volatile CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+static volatile CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
+static volatile CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_NUM_OF_FIFO];
+static volatile CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj;
+static volatile uint32_t ${CAN_INSTANCE_NAME?lower_case}MsgIndex[CAN_NUM_OF_FIFO];
 </#if>
 static CAN_TX_RX_MSG_BUFFER __attribute__((coherent, aligned(32))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 

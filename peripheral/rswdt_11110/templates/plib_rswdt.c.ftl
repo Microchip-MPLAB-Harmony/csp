@@ -45,7 +45,7 @@
 </#if>
 
 <#if rswdtinterruptMode == true>
-    <#lt>volatile static RSWDT_OBJECT rswdt;
+    <#lt>static volatile RSWDT_OBJECT rswdt;
 </#if>
 
 void ${RSWDT_INSTANCE_NAME}_Initialize( void )

@@ -55,7 +55,7 @@
 #include "plib_${HTM_TMR_INSTANCE_NAME?lower_case}.h"
 #include "peripheral/ecia/plib_ecia.h"
 
-volatile static HTM_TMR_OBJECT ${HTM_TMR_INSTANCE_NAME?lower_case}Obj;
+static volatile HTM_TMR_OBJECT ${HTM_TMR_INSTANCE_NAME?lower_case}Obj;
 
 void ${HTM_TMR_INSTANCE_NAME}_Initialize(void)
 {

@@ -66,9 +66,9 @@
 #define ${I2C_INSTANCE_NAME}_MTXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_MTR_TXB_REG_OFST)
 #define ${I2C_INSTANCE_NAME}_MRXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_MTR_RXB_REG_OFST)
 
-volatile static I2C_SMB_HOST_OBJ ${I2C_INSTANCE_NAME?lower_case}HostObj;
+static volatile I2C_SMB_HOST_OBJ ${I2C_INSTANCE_NAME?lower_case}HostObj;
 static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer[255];
-volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[255];
+static volatile uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[255];
 </#if>
 
 <#if I2C_OPERATING_MODE == "Master">

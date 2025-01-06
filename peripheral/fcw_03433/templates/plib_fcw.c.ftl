@@ -91,7 +91,7 @@ typedef struct
     uintptr_t Context;
 }fcwCallbackObjType;
 
-volatile static fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
+static volatile fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 /* ************************************************************************** */

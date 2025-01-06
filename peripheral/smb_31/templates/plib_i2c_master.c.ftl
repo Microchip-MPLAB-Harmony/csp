@@ -73,7 +73,7 @@
 #define I2C${I2C_INSTANCE_NUM}_NAK  (SMB_WCTRL_ESO_Msk | SMB_WCTRL_ENI_Msk)
 
 
-volatile static I2C_OBJ i2c${I2C_INSTANCE_NUM}Obj;
+static volatile I2C_OBJ i2c${I2C_INSTANCE_NUM}Obj;
 
 void I2C${I2C_INSTANCE_NUM}_Initialize(void)
 {

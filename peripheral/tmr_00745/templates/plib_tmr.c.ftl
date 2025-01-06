@@ -61,7 +61,7 @@
 </#if>
 
 <#if  interrupt == true>
-volatile static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
+static volatile TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 

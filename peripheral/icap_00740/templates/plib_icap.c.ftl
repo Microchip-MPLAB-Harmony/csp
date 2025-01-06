@@ -45,14 +45,14 @@
 <#assign INDEX = ICAP_INSTANCE_NUM>
 <#if ICAP_NUM_INT_LINES == 1>
     <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true" || ICAP_INTERRUPT_ENABLE?c == "true">
-        <#lt>volatile static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+        <#lt>static volatile ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
     </#if>
 <#else>
     <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
-        <#lt>volatile static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
+        <#lt>static volatile ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
     </#if>
     <#if ICAP_INTERRUPT_ENABLE?c == "true">
-        <#lt>volatile static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+        <#lt>static volatile ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
     </#if>
 </#if>
 <#--Implementation-->
@@ -166,13 +166,13 @@ void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t co
 
 void __attribute__((used)) INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 {
-<#if ICAP_NUM_INT_LINES == 1>    
+<#if ICAP_NUM_INT_LINES == 1>
     uint32_t iec_reg_read = ${ICAPx_IEC_REG};
     <#if ERROR_IEC_REG??>
     uint32_t error_reg_read = ${ERROR_IEC_REG};
     </#if>
 </#if>
-    uintptr_t context = ${ICAP_INSTANCE_NAME?lower_case}Obj.context; 
+    uintptr_t context = ${ICAP_INSTANCE_NAME?lower_case}Obj.context;
     if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
         ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(context);

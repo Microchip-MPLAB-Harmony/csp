@@ -51,19 +51,19 @@
 // *****************************************************************************
 // *****************************************************************************
 
-volatile static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+static volatile UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE      ${UART_RX_RING_BUFFER_SIZE}
 #define ${UART_INSTANCE_NAME}_RX_INT_DISABLE()      UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN &= ~(UART_DATA_IEN_ERDAI_Msk | UART_DATA_IEN_ELSI_Msk)
 #define ${UART_INSTANCE_NAME}_RX_INT_ENABLE()       UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN |= (UART_DATA_IEN_ERDAI_Msk | UART_DATA_IEN_ELSI_Msk)
 
-volatile static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE     ${UART_TX_RING_BUFFER_SIZE}
 #define ${UART_INSTANCE_NAME}_TX_INT_DISABLE()      UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN &= ~(UART_DATA_IEN_ETHREI_Msk)
 #define ${UART_INSTANCE_NAME}_TX_INT_ENABLE()       UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN |= (UART_DATA_IEN_ETHREI_Msk)
 
-volatile static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 void ${UART_INSTANCE_NAME}_Initialize( void )
 {

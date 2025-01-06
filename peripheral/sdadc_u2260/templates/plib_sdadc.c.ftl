@@ -151,7 +151,7 @@
 // *****************************************************************************
 
 <#if SDADC_INTERRUPT_MODE == true>
-volatile static SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
+static volatile SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 // *****************************************************************************
 // *****************************************************************************

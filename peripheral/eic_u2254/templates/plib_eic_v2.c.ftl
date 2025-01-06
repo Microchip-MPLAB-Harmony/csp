@@ -66,12 +66,12 @@
 
 <#if EIC_INT != "0">
 /* EIC Channel Callback object */
-volatile static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
+static volatile EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 </#if>
 
 <#if NMI_CTRL == true>
 /* EIC NMI Callback object */
-volatile static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
+static volatile EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
 
 </#if>
 

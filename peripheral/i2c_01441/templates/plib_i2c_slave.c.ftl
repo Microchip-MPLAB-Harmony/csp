@@ -70,7 +70,7 @@
 #define ${I2C_INSTANCE_NAME}_SLAVE_DATA_SETUP_TIME_CORE_TIMER_CNTS          ${I2CS_SETUP_TIME_CORE_TIMER_CNTS}
 #define ${I2C_INSTANCE_NAME}_SLAVE_RISE_TIME_CORE_TIMER_CNTS                ${I2CS_RISE_TIME_CORE_TIMER_CNTS}
 
-volatile static I2C_SLAVE_OBJ ${I2C_INSTANCE_NAME?lower_case}SlaveObj;
+static volatile I2C_SLAVE_OBJ ${I2C_INSTANCE_NAME?lower_case}SlaveObj;
 
 void ${I2C_API_PREFIX}Initialize(void)
 {

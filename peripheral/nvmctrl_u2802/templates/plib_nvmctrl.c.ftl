@@ -70,7 +70,7 @@ typedef struct
 	uintptr_t Context;
 }nvmCallbackObjType;
 
-volatile static nvmCallbackObjType ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj;
+static volatile nvmCallbackObjType ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 <#if INTERRUPT_ENABLE == true>

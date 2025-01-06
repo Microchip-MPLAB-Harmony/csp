@@ -45,7 +45,7 @@
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == true>
-    <#lt>volatile static CORETIMER_OBJECT coreTmr;
+    <#lt>static volatile CORETIMER_OBJECT coreTmr;
     <#lt>
     <#lt>void CORETIMER_Initialize(void)
     <#lt>{
@@ -109,23 +109,23 @@
     <#lt>{
     <#lt>    return (CORE_TIMER_FREQUENCY);
     <#lt>}
-    
+
     <#lt>uint32_t CORETIMER_GetTickCounter(void)
     <#lt>{
     <#lt>    return coreTmr.tickCounter;
     <#lt>}
-    
+
     <#lt>void CORETIMER_StartTimeOut (CORETIMER_TIMEOUT* timeout, uint32_t delay_ms)
     <#lt>{
     <#lt>    timeout->start = CORETIMER_GetTickCounter();
     <#lt>    timeout->count = (delay_ms*1000U)/CORE_TIMER_INTERRUPT_PERIOD_IN_US;
     <#lt>}
-    
+
     <#lt>void CORETIMER_ResetTimeOut (CORETIMER_TIMEOUT* timeout)
     <#lt>{
     <#lt>    timeout->start = CORETIMER_GetTickCounter();
     <#lt>}
-    
+
     <#lt>bool CORETIMER_IsTimeoutReached (CORETIMER_TIMEOUT* timeout)
     <#lt>{
     <#lt>    bool valTimeout  = true;
@@ -137,7 +137,7 @@
     <#lt>    return valTimeout;
     <#lt>
     <#lt>}
-    
+
     <#lt>void __attribute__((used)) CORE_TIMER_InterruptHandler (void)
     <#lt>{
     <#lt>    uint32_t count, newCompare;
@@ -172,7 +172,7 @@
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == false>
-    <#lt>volatile static CORETIMER_OBJECT coreTmr;
+    <#lt>static volatile CORETIMER_OBJECT coreTmr;
     <#lt>
     <#lt>void CORETIMER_Initialize( void )
     <#lt>{

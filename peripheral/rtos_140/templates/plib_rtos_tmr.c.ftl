@@ -55,7 +55,7 @@
 #include "plib_${RTOS_TMR_INSTANCE_NAME?lower_case}_tmr.h"
 #include "peripheral/ecia/plib_ecia.h"
 
-volatile static RTOS_TMR_OBJECT ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj;
+static volatile RTOS_TMR_OBJECT ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj;
 
 void ${RTOS_TMR_INSTANCE_NAME}Timer_Initialize(void)
 {

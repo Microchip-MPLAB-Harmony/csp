@@ -57,7 +57,7 @@
     <#lt>    uintptr_t       context;
     <#lt>} WDT_CALLBACK_OBJECT;
 
-    <#lt>volatile static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+    <#lt>static volatile WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 
     <#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
     <#lt>{

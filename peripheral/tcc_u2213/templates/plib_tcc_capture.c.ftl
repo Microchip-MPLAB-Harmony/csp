@@ -146,7 +146,7 @@
 </#compress>
 
 <#if TCC_CAPTURE_INTERRUPT_MODE = true>
-volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
+static volatile TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -347,7 +347,7 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
     uint32_t status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;    
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* clear period interrupt */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;

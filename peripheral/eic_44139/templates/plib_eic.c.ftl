@@ -72,7 +72,7 @@
 #pragma coverity compliance block deviate:${EIC_NUM_INTERRUPTS} "MISRA C-2012 Rule 7.2" "H3_MISRAC_2012_R_7_2_DR_1"
 </#if>
 
-volatile static struct
+static volatile struct
 {
     volatile uint32_t* const pSCFGR;
     bool active;

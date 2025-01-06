@@ -53,11 +53,11 @@
 #define ADC_CALIB_FCCFG65           *((uint32_t*)${ADC_CALIB_ADDR})
 
 <#if ADC_CTLINTENSET != "0">
-volatile static ADC_GLOBAL_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_GlobalCallbackObj;
+static volatile ADC_GLOBAL_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_GlobalCallbackObj;
 </#if>
 
 <#if ADC_CORE_CORE_INT_ENABLED == true>
-volatile static ADC_CORE_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CoreCallbackObj[${ADC_NUM_SAR_CORES}];
+static volatile ADC_CORE_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CoreCallbackObj[${ADC_NUM_SAR_CORES}];
 </#if>
 
 void ${ADC_INSTANCE_NAME}_Initialize(void)

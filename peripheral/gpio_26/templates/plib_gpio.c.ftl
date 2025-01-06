@@ -66,7 +66,7 @@
 
 <#if TOTAL_NUM_OF_INT_USED gt 0 >
 <#lt>#define TOTAL_NUM_OF_INT_USED ${TOTAL_NUM_OF_INT_USED}U
-volatile static GPIO_PIN_CALLBACK_OBJ pinCallbackObj[TOTAL_NUM_OF_INT_USED];
+static volatile GPIO_PIN_CALLBACK_OBJ pinCallbackObj[TOTAL_NUM_OF_INT_USED];
 </#if>
 
 #define GET_PINCTRL_REG_ADDR(pin)   (&GPIO_REGS->GPIO_CTRL0[0] + (uint32_t)(pin))

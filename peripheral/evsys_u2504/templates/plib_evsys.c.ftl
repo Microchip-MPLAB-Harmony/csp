@@ -61,7 +61,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_SYNC_CHANNEL != 0>
-        <#lt>volatile static EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
+        <#lt>static volatile EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
     </#if>
 </#if>
 <#else>
@@ -76,7 +76,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_SYNC_CHANNEL != 0>
-        <#lt>volatile static EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
+        <#lt>static volatile EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
     </#if>
 </#if>
 </#if>

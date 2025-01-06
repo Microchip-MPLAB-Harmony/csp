@@ -187,7 +187,7 @@ typedef struct
     uintptr_t context;
 } SUPC_BOD33_CALLBACK_OBJ;
 
-volatile static SUPC_BOD33_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
+static volatile SUPC_BOD33_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 void ${SUPC_INSTANCE_NAME}_Initialize( void )
@@ -267,7 +267,7 @@ void ${SUPC_INSTANCE_NAME}_BOD33CallbackRegister( SUPC_BOD33_CALLBACK callback, 
 
 void __attribute__((used)) ${SUPC_INSTANCE_NAME}_BODDET_InterruptHandler( void )
 {
-    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context; 
+    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context;
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BOD33DET_Msk;
 
     if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)

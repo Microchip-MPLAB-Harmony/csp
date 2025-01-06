@@ -199,10 +199,10 @@
     <#assign numOfIntInABCDE = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS + PIO_C_NUM_INT_PINS + PIO_D_NUM_INT_PINS + PIO_E_NUM_INT_PINS>
 
    <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>volatile static PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_INT_PINS} + ${PIO_B_NUM_INT_PINS} + ${PIO_C_NUM_INT_PINS} + ${PIO_D_NUM_INT_PINS} + ${PIO_E_NUM_INT_PINS}];
+    <#lt>static volatile PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_INT_PINS} + ${PIO_B_NUM_INT_PINS} + ${PIO_C_NUM_INT_PINS} + ${PIO_D_NUM_INT_PINS} + ${PIO_E_NUM_INT_PINS}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
-    <#lt>volatile static uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0U, ${numOfIntInA}U, ${numOfIntInAB}U, ${numOfIntInABC}U, ${numOfIntInABCD}U, ${numOfIntInABCDE}U};
+    <#lt>static volatile uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0U, ${numOfIntInA}U, ${numOfIntInAB}U, ${numOfIntInABC}U, ${numOfIntInABCD}U, ${numOfIntInABCDE}U};
     <#lt> void PIO_Interrupt_Handler ( PIO_PORT port );
 </#if>
 

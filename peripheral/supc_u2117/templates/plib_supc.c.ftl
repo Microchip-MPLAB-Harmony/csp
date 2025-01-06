@@ -362,7 +362,7 @@ typedef struct
     uintptr_t context;
 } SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ;
 
-volatile static SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
+static volatile SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 <#if SUPC_INTERRUPT_ENABLE>
@@ -374,7 +374,7 @@ void ${SUPC_INSTANCE_NAME}_${SUPC_BOD_NAME}CallbackRegister( SUPC_${SUPC_BOD_NAM
 
 void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context; 
+    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context;
     if ((${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG & SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk) == SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk)
     {
         ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk;

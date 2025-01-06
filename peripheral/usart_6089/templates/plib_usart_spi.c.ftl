@@ -50,11 +50,11 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if USART_SPI_INTERRUPT_MODE == true >
-volatile static USART_SPI_OBJECT ${USART_INSTANCE_NAME?lower_case}SPIObj;
+static volatile USART_SPI_OBJECT ${USART_INSTANCE_NAME?lower_case}SPIObj;
 
 <#if USE_USART_SPI_DMA?? && USE_USART_SPI_DMA == true>
 
-volatile static uint8_t ${USART_INSTANCE_NAME}_SPI_DummyDataBuffer[512];
+static volatile uint8_t ${USART_INSTANCE_NAME}_SPI_DummyDataBuffer[512];
 
 static void ${USART_INSTANCE_NAME}_SPI_SetupDMA( void* pTransmitData, void* pReceiveData, size_t size )
 {

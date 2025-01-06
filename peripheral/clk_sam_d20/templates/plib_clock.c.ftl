@@ -45,7 +45,7 @@
 </#if>
 
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
-volatile static SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
+static volatile SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
 
 </#if>
 static void SYSCTRL_Initialize(void)
@@ -172,7 +172,7 @@ static void DFLL_Initialize(void)
         /* Waiting for DFLL to be ready */
     }
     </#if>
-    
+
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     SYSCTRL_REGS->SYSCTRL_DFLLCTRL |= SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>

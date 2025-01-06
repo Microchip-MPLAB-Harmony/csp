@@ -111,7 +111,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
 }
 
 <#if RSTC_MR_EXTERNAL_RESET_ACTION == "INTERRUPT">
-    <#lt>volatile static RSTC_OBJECT rstcObj;
+    <#lt>static volatile RSTC_OBJECT rstcObj;
 
     <#lt>void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t context )
     <#lt>{

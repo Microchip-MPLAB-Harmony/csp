@@ -47,7 +47,7 @@
 #include "interrupts.h"
 </#if>
 
-volatile static qspi_spi_obj qspiObj;
+static volatile qspi_spi_obj qspiObj;
 
 
 void ${QSPI_INSTANCE_NAME}_Initialize(void)

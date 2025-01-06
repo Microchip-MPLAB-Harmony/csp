@@ -49,7 +49,7 @@
 // *****************************************************************************
 
 <#if HECC_INTERRUPT_MODE == true>
-volatile static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
+static volatile HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************

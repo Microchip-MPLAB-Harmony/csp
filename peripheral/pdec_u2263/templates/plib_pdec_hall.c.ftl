@@ -73,7 +73,7 @@
 </#if>
 <#if PDEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-   volatile static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
+   static volatile <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -164,18 +164,18 @@ bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternSet( uint8_t pattern )
     {
         ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] =((uint32_t)pattern & 0x07U);
         status = true;
-    }    
+    }
     return status;
 }
 
 bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}TimeWindowSet(uint16_t low_window, uint16_t high_window)
 {
-    bool status = false;    
+    bool status = false;
     if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV0_Msk) == 0U)
-    {    
+    {
         ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] =(uint32_t)low_window << 16;
         if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV1_Msk) == 0U)
-        {    
+        {
             ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = (uint32_t)high_window << 16;
             status = true;
         }
@@ -207,7 +207,7 @@ void __attribute__((used)) ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;
     status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = 0xFF;
@@ -225,7 +225,7 @@ void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;
     status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC0_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC0_Msk;
@@ -242,7 +242,7 @@ void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;
     status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC1_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC1_Msk;

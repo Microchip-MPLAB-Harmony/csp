@@ -66,8 +66,8 @@
 #define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE}U
 #define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE}U
 
-volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
-volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint8_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 <#else>
 #define FLEXCOM_SPI_RDR_REG      (*(volatile uint16_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_RDR_REG_OFST)))
 #define FLEXCOM_SPI_TDR_REG      (*(volatile uint16_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_TDR_REG_OFST)))
@@ -75,8 +75,8 @@ volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_
 #define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE/2}U
 #define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE/2}U
 
-volatile static uint16_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
-volatile static uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint16_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 </#if>
 
 // *****************************************************************************
@@ -86,7 +86,7 @@ volatile static uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE
 // *****************************************************************************
 
 /* Global object to save FLEXCOM SPI Exchange related data */
-volatile static FLEXCOM_SPI_SLAVE_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
+static volatile FLEXCOM_SPI_SLAVE_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
 
 static void mem_copy(volatile void* pDst, volatile void* pSrc, uint32_t nBytes)
 {

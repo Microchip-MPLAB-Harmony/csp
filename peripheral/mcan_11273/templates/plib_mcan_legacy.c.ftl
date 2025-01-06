@@ -86,10 +86,10 @@
    <#assign NUM_OF_ELEMENTS = RX_BUFFER_ELEMENTS>
   </#if>
  </#if>
-volatile static MCAN_RX_MSG ${MCAN_INSTANCE_NAME?lower_case}RxMsg[${NUM_OF_FIFO}][${NUM_OF_ELEMENTS}];
-volatile static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[4];
+static volatile MCAN_RX_MSG ${MCAN_INSTANCE_NAME?lower_case}RxMsg[${NUM_OF_FIFO}][${NUM_OF_ELEMENTS}];
+static volatile MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[4];
 </#if>
-volatile static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
+static volatile MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 
@@ -384,7 +384,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
             status = false;
 			break;
     }
-     
+
 	if( status)
 	{
 		/* If the id is longer than 11 bits, it is considered as extended identifier */
@@ -402,7 +402,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
 		if (length > 64U)
 		{
 			length = 64U;
-			
+
 		}
 
 		MCANLengthToDlcGet(length, &dlc);
@@ -429,7 +429,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
 		if (length > 8U)
 		{
 			length = 8U;
-			
+
 		}
 		fifo->MCAN_TXBE_1 = MCAN_TXBE_1_DLC(length);
 </#if>
@@ -544,7 +544,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             }
             else
             {
-                rxgi = 0U; 
+                rxgi = 0U;
 				while(rxgi <= 0x1FU)
                 {
                     if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 & (1UL << rxgi)) == (uint32_t)(1UL << rxgi))
@@ -619,7 +619,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
                 }
 				else
 				{
-					
+
 				}
             }
             if(bufferIndex == ${RX_BUFFER_ELEMENTS}U)

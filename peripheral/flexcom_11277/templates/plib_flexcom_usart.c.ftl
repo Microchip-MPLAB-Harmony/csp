@@ -66,7 +66,7 @@
 #define FLEXCOM_USART_THR_9BIT_REG      (*(volatile uint16_t* const)((USART${FLEXCOM_INSTANCE_NUMBER}_BASE_ADDRESS + US_THR_REG_OFST)))
 
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
-volatile static FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
+static volatile FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 </#if>
 
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
@@ -92,7 +92,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler(
     {
         size_t rxProcessedSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize;
         size_t rxSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize;
-    
+
         while (((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_RXRDY_Msk) != 0U) && (rxSize > rxProcessedSize))
         {
             if ((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_MR & US_MR_MODE9_Msk) != 0U)
@@ -105,7 +105,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler(
             }
             rxProcessedSize++;
         }
-        
+
         ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize = rxProcessedSize;
 
         /* Check if the buffer is done */
@@ -119,7 +119,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler(
             if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback != NULL)
             {
                 uintptr_t rxContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxContext;
-                
+
                 ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback(rxContext);
             }
         }
@@ -138,7 +138,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler(
     {
         size_t txProcessedSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize;
         size_t txSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize;
-        
+
         while( ((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXRDY_Msk) != 0U) && (txSize > txProcessedSize) )
         {
             if ((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_MR & US_MR_MODE9_Msk) != 0U)
@@ -151,7 +151,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler(
             }
             txProcessedSize++;
         }
-        
+
         ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize = txProcessedSize;
 
         /* Check if the buffer is done */
@@ -164,7 +164,7 @@ void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler(
             if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback != NULL)
             {
                 uintptr_t txContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txContext;
-                
+
                 ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback(txContext);
             }
         }
@@ -197,7 +197,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
             if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback != NULL )
             {
                 uintptr_t rxContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxContext;
-                
+
                 ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback(rxContext);
             }
         }
@@ -224,7 +224,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback != NULL )
         {
             uintptr_t rxContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxContext;
-            
+
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback(rxContext);
         }
     }
@@ -248,7 +248,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
             if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback != NULL )
             {
                 uintptr_t txContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txContext;
-                
+
                 ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback(txContext);
             }
         }
@@ -369,7 +369,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
 
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
     bool rxBusyStatus = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus;
-    
+
     if((${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true) || (rxBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
@@ -556,7 +556,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *pBuffer, const size_t size )
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IER = US_IER_ENDTX_Msk;
 
             <#else>
-            
+
             size_t txProcessedSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize;
             size_t txSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize;
 
@@ -573,9 +573,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *pBuffer, const size_t size )
                 }
                 txProcessedSize++;
             }
-            
+
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize = txProcessedSize;
-            
+
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IER = US_IER_TXRDY_Msk;
             </#if>
         }

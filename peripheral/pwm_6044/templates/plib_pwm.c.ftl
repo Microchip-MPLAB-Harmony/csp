@@ -71,7 +71,7 @@
 
 <#if PWM_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>volatile static PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
+    <#lt>static volatile PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize enabled PWM channels */

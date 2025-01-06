@@ -74,7 +74,7 @@
 <#assign I2C_PLIB = "I2C_INSTANCE_NAME">
 <#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CLOCK_FREQUENCY">
 
-volatile static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}MasterObj;
+static volatile I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}MasterObj;
 
 <#if I2C_SMEN == true>
 /* <cmd> <blocklen n> <data 1> ... <data n> <pec>*/
@@ -985,7 +985,7 @@ bool ${I2C_API_PREFIX}TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFr
     {
         srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
     }
-    
+
 <#if (core.PRODUCT_FAMILY == "PIC32MZW")>
     fBaudValue = (((float)srcClkFreq / 2.0f) * ((1.0f / (float)i2cClkSpeed) - (0.000000200f * 2.0f))) - 3.0f;
 <#else>

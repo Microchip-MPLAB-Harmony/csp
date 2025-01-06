@@ -86,11 +86,11 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>volatile static PIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>static volatile PIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
-        <#lt>volatile static uint8_t portNumCb[${PORT_CHANNEL_TOTAL} + 1] = {
+        <#lt>static volatile uint8_t portNumCb[${PORT_CHANNEL_TOTAL} + 1] = {
                                                                 <#list portNumCbList as i>
                                                                     ${i},
                                                                 </#list>

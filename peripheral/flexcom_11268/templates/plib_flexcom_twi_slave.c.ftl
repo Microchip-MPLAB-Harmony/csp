@@ -62,7 +62,7 @@
 // *****************************************************************************
 
 <#if TWI_INTERRUPT_MODE == true>
-volatile static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj;
+static volatile FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj;
 </#if>
 
 // *****************************************************************************

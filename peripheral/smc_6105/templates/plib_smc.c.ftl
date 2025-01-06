@@ -254,7 +254,7 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
 
 // PMECC =======================================================================
 <#if PMECC_IER_ERRIE == true>
-    <#lt>volatile static PMECC_CALLBACK_OBJECT ${PMECC_INSTANCE_NAME?lower_case}CallbackObj;
+    <#lt>static volatile PMECC_CALLBACK_OBJECT ${PMECC_INSTANCE_NAME?lower_case}CallbackObj;
 
     <#lt>void ${PMECC_INSTANCE_NAME}_CallbackRegister( PMECC_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -267,7 +267,7 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
     <#lt>    uintptr_t context_var;
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR;
-	
+
     <#lt>    bool pmecc_callback = (${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL);
     <#lt>    if( (interruptStatus != 0U) && pmecc_callback )
     <#lt>    {

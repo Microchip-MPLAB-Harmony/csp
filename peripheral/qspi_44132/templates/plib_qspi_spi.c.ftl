@@ -47,7 +47,7 @@
 #include "interrupts.h"
 </#if>
 
-volatile static qspi_spi_obj qspiObj;
+static volatile qspi_spi_obj qspiObj;
 
 <#assign QSPI_SCR_VALUES = "">
 <#if QSPI_CPOL=="HIGH">

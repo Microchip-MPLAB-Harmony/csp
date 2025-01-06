@@ -125,18 +125,18 @@
 </#compress>
 
 <#if .vars["CCT_OVF_INTERRUPT_EN"] == true>
-volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_OVF_CallbackObject;
+static volatile CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_OVF_CallbackObject;
 </#if>
 
 <#list 0..(CCT_NUM_CAP_CH-1) as n>
 <#if .vars["CCT_ENABLE_CAPTURE_" + n] == true && .vars["CCT_CAP_INTERRUPT_EN_" + n] == true>
-volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject;
+static volatile CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject;
 </#if>
 </#list>
 
 <#list 0..(CCT_NUM_CMP_CH-1) as n>
 <#if .vars["CCT_ENABLE_COMPARE_" + n] == true && .vars["CCT_CMP_INTERRUPT_EN_" + n] == true>
-volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject;
+static volatile CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject;
 </#if>
 </#list>
 

@@ -114,7 +114,7 @@ static inline uint32_t ${SDMMC_INSTANCE_NAME}_MIN_U32 (uint32_t a, uint32_t b)
 
 static CACHE_ALIGN SDMMC_ADMA_DESCR ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[(${SDMMC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN/8)];
 
-volatile static SDMMC_OBJECT ${SDMMC_INSTANCE_NAME?lower_case}Obj;
+static volatile SDMMC_OBJECT ${SDMMC_INSTANCE_NAME?lower_case}Obj;
 
 static void ${SDMMC_INSTANCE_NAME}_InitVariables ( void )
 {

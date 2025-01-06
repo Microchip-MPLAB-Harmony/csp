@@ -71,7 +71,7 @@ typedef struct SYS_RTCC_OBJ_STRUCT
 
 } RTCC_OBJECT;
 
-volatile static RTCC_OBJECT rtcc;
+static volatile RTCC_OBJECT rtcc;
 
 </#if>
 
@@ -126,7 +126,7 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
 
     <#if RTC_TIMEANDDATE == true>
         <#lt>    RTCCONbits.ON = 0;   /* Disable clock to RTCC */
-        <#lt>    while((RTCCONbits.RTCCLKON) != 0U)  
+        <#lt>    while((RTCCONbits.RTCCLKON) != 0U)
         <#lt>    {
         <#lt>        /* Wait for clock to stop */
         <#lt>    }
@@ -145,7 +145,7 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
 
     <#if RTC_ALARM == true>
         <#lt>    RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable alarm */
-        <#lt>    while((RTCALRMbits.ALRMSYNC) != 0U)  
+        <#lt>    while((RTCALRMbits.ALRMSYNC) != 0U)
         <#lt>    {
         <#lt>        /* Wait for disable */
         <#lt>    }
@@ -270,7 +270,7 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
     </#if>
 
     RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable alarm */
-    while((RTCALRMbits.ALRMSYNC) != 0U) 
+    while((RTCALRMbits.ALRMSYNC) != 0U)
     {
         /* Wait for disable */
     }

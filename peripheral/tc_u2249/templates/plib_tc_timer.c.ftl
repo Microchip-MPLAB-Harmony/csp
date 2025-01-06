@@ -98,7 +98,7 @@
 // *****************************************************************************
 
 <#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
-volatile static TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static volatile TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************

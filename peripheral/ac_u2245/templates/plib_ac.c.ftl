@@ -168,7 +168,7 @@
         </#if>
     </#if>
 </#if>
-volatile static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
+static volatile AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -272,7 +272,7 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
-    }    
+    }
 }
 
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
@@ -327,10 +327,10 @@ void __attribute__((used)) ${AC_INSTANCE_NAME}_InterruptHandler( void )
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
     uint8_t status;
-    context = ${AC_INSTANCE_NAME?lower_case}Obj.context;    
+    context = ${AC_INSTANCE_NAME?lower_case}Obj.context;
     /* Copy the status to use inside the callback */
     ${AC_INSTANCE_NAME?lower_case}Obj.int_flags = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
-    status = ${AC_INSTANCE_NAME?lower_case}Obj.int_flags;    
+    status = ${AC_INSTANCE_NAME?lower_case}Obj.int_flags;
     /* Clear the interrupt flags*/
     ${AC_INSTANCE_NAME}_REGS->AC_INTFLAG = (uint8_t)AC_INTFLAG_Msk;
 

@@ -53,7 +53,7 @@
     <#lt>    uintptr_t               context;
     <#lt>} TRNG_OBJECT ;
 
-    <#lt>volatile static TRNG_OBJECT trng;
+    <#lt>static volatile TRNG_OBJECT trng;
 </#if>
 
 <#lt>void ${TRNG_INSTANCE_NAME}_Initialize( void )

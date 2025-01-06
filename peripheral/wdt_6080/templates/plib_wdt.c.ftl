@@ -49,7 +49,7 @@
 </#if>
 <#if wdtinterruptMode == true>
 
-  <#lt>volatile static WDT_OBJECT wdt;
+  <#lt>static volatile WDT_OBJECT wdt;
 </#if>
 
 void ${WDT_INSTANCE_NAME}_Initialize( void )

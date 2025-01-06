@@ -69,7 +69,7 @@
 #define ${I2C_INSTANCE_NAME}_SLAVE_DATA_SETUP_TIME_CORE_TIMER_CNTS          ${I2CS_SETUP_TIME_CORE_TIMER_CNTS}
 #define ${I2C_INSTANCE_NAME}_SLAVE_RISE_TIME_CORE_TIMER_CNTS                ${I2CS_RISE_TIME_CORE_TIMER_CNTS}
 
-volatile static I2C_SLAVE_OBJ ${I2C_INSTANCE_NAME?lower_case}SlaveObj;
+static volatile I2C_SLAVE_OBJ ${I2C_INSTANCE_NAME?lower_case}SlaveObj;
 
 void ${I2C_API_PREFIX}Initialize(void)
 {
@@ -394,7 +394,7 @@ I2C_SLAVE_ERROR ${I2C_API_PREFIX}ErrorGet(void)
 uint8_t ${I2C_API_PREFIX}CRCGet(void)
 {
     uint8_t pec = ${I2C_INSTANCE_NAME?lower_case}SlaveObj.pec;
-    
+
 <#if !I2CS_PCIE_SUPPORT??>
     /* Reset PEC calculation on devices where stop bit interrupt is not available. */
     ${I2C_INSTANCE_NAME?lower_case}SlaveObj.pec = 0;
@@ -407,7 +407,7 @@ uint8_t ${I2C_API_PREFIX}CRCGet(void)
 
 <#if I2C_OPERATING_MODE == "Master and Slave">
 void ${I2C_API_PREFIX}BUS_InterruptHandler(void)
-{    
+{
     ${I2C_INSTANCE_NAME?lower_case}SlaveObj.error = I2C_SLAVE_ERROR_BUS_COLLISION;
 
     if (${I2C_INSTANCE_NAME?lower_case}SlaveObj.callback != NULL)

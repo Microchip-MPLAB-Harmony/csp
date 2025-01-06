@@ -111,7 +111,7 @@
         <#else>
             <#assign TCC_WAVE_VAL = "TCC_WAVE_CICCEN"+i+"_Msk">
         </#if>
-    </#if> 
+    </#if>
 </#if> <#-- circular buffer End -->
 <#-- polarity -->
 <#if (TCC_WAVE_WAVEGEN == "DSBOTTOM") || (TCC_WAVE_WAVEGEN == "DSBOTH") || (TCC_WAVE_WAVEGEN == "DSTOP") >
@@ -129,7 +129,7 @@
     <#else>
         <#assign TCC_WAVE_VAL = "TCC_WAVE_POL"+i+"_Msk">
     </#if>
-   
+
 </#if>
 </#if>
 <#-- polarity end -->
@@ -191,13 +191,13 @@
 <#list 0..(TCC_NUM_OUTPUTS-1) as i>
 <#assign CH_NUM = i>
 <#assign TCC_INVEN = "TCC_DRVCTRL_INVEN" + i>
-<#if .vars[TCC_INVEN] == true> 
+<#if .vars[TCC_INVEN] == true>
     <#if TCC_DRVCTRL_INVEN != "">
         <#assign TCC_DRVCTRL_INVEN = TCC_DRVCTRL_INVEN + "\n\t\t | TCC_DRVCTRL_INVEN"+i+"_Msk">
     <#else>
         <#assign TCC_DRVCTRL_INVEN = "TCC_DRVCTRL_INVEN" + i + "_Msk">
     </#if>
-</#if>    
+</#if>
 </#list>
 
 <#-- Pattern Generation -->
@@ -286,7 +286,7 @@
 
 <#if TCC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObj;
+    <#lt>static volatile TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize TCC module */
@@ -300,10 +300,10 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     }
     /* Clock prescaler */
 <#if TCC_SLAVE_MODE == true>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_MSYNC_Msk | TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} 
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_MSYNC_Msk | TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER}
                             | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC} ${(TCC_CTRLA_RUNSTDBY == true)?then('| (TCC_CTRLA_RUNSTDBY_Msk)', '')};
 <#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} 
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER}
                             | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC} ${(TCC_CTRLA_RUNSTDBY == true)?then('| (TCC_CTRLA_RUNSTDBY_Msk)', '')};
 </#if>
 <#if TCC_CTRLB_DIR?has_content && TCC_SLAVE_MODE == false>
@@ -327,7 +327,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     </#if>
     <#if TCC_WAVE_RAMP == "RAMP2A">
     ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE |= TCC_WAVE_CICCEN0_Msk;
-    </#if>    
+    </#if>
 </#if>
 
     /* Configure duty cycle values */
@@ -345,7 +345,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 </#if>
 <#if TCC_DRVCTRL_INVEN?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = ${TCC_DRVCTRL_INVEN};
-</#if>    
+</#if>
 
 <#if TCC_EVCTRL_EVACT0 == "FAULT" || TCC_EVCTRL_EVACT1 == "FAULT">
     ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL |= TCC_DRVCTRL_FILTERVAL0(${TCC_DRVCTRL_FILTERVAL}UL)
@@ -395,7 +395,7 @@ bool ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period & 0xFFFFFFU;
         status = true;
-    }    
+    }
     return status;
 }
 
@@ -407,7 +407,7 @@ bool ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
         status = true;
-    }    
+    }
     return status;
 }
 <#elseif TCC_SIZE == 32>
@@ -418,7 +418,7 @@ bool ${TCC_INSTANCE_NAME}_PWM32bitPeriodSet (uint32_t period)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
         status = true;
-    }    
+    }
     return status;
 }
 </#if>
@@ -470,8 +470,8 @@ bool ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PATBUF_REG_NAME} = (uint16_t)(pattern_enable | ((uint32_t)pattern_output << 8U));
         status = true;
-    }   
-    return status; 
+    }
+    return status;
 }
 
 </#if>
@@ -607,7 +607,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
             <#lt>    uint32_t status;
             <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
             <#lt>    uintptr_t context;
-            <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;            
+            <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
@@ -629,7 +629,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
                 <#lt>    uint32_t status;
                 <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
                 <#lt>    uintptr_t context;
-                <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;                
+                <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
@@ -650,7 +650,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
         <#lt>    uint32_t status;
         <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
         <#lt>    uintptr_t context;
-        <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;        
+        <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;
         <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
         <#lt>    /* Clear interrupt flags */
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;

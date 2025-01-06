@@ -58,11 +58,11 @@
 <#if MCSPI_INTERRUPT_MODE == true>
 
 /* Global object to save MCSPI Exchange related data */
-volatile static MCSPI_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
+static volatile MCSPI_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
 <#if USE_MCSPI_DMA?? && USE_MCSPI_DMA == true>
 <#if MCSPI_FIFO_ENABLE == false>
 
-volatile static uint8_t dummyDataBuffer[512];
+static volatile uint8_t dummyDataBuffer[512];
 
 static void setupDMA( volatile void* pTransmitData, volatile void* pReceiveData, size_t size )
 {

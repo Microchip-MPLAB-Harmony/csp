@@ -139,7 +139,7 @@
 </#list>
 
 <#if ec_reg_bank_int_en == true>
-volatile static EC_REG_BANK_OBJECT ec_reg_bank[2] = {0};
+static volatile EC_REG_BANK_OBJECT ec_reg_bank[2] = {0};
 </#if>
 
 void ${ERB_INSTANCE_NAME}_Initialize( void )

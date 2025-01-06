@@ -57,16 +57,16 @@
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE}U
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE}U
 
-volatile static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-volatile static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/2}U
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/2}U
 
-volatile static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-volatile static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 </#if>
 
 #define NOP asm("nop")
@@ -88,7 +88,7 @@ volatile static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_W
 // *****************************************************************************
 
 /* Global object to save SPI Exchange related data */
-volatile static SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+static volatile SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 
 static void mem_copy(volatile void* pDst, volatile void* pSrc, uint32_t nBytes)
 {

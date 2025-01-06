@@ -61,7 +61,7 @@ typedef struct
 }rstcCallback_t;
 
 
-volatile static rstcCallback_t rstcCallbackObj;
+static volatile rstcCallback_t rstcCallbackObj;
 </#if>
 <#if CPU_CORE_ID?? && CPU_CORE_ID == 0>
 

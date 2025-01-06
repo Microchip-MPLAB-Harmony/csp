@@ -73,7 +73,7 @@
 <#assign I2C_PLIB = "I2C_INSTANCE_NAME">
 <#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CLOCK_FREQUENCY">
 
-volatile static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}MasterObj;
+static volatile I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}MasterObj;
 
 <#if I2C_SMEN == true>
 /* <cmd> <blocklen n> <data 1> ... <data n> <pec>*/

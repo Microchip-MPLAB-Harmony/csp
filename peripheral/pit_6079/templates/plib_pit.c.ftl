@@ -74,7 +74,7 @@ typedef struct
 // Section: File Scope or Global Constants
 // *****************************************************************************
 // *****************************************************************************
-volatile static PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
+static volatile PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
 </#if>
 
 

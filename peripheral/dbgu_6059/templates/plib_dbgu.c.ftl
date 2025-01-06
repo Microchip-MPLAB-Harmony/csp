@@ -51,7 +51,7 @@
 // *****************************************************************************
 <#if DBGU_INTERRUPT_MODE_ENABLE == true>
 
-volatile static DBGU_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
+static volatile DBGU_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 
 void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
 {

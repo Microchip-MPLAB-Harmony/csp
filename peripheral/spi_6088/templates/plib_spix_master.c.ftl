@@ -62,10 +62,10 @@
 <#if SPI_INTERRUPT_MODE == true>
 
 /* Global object to save SPI Exchange related data */
-volatile static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+static volatile SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
 
-volatile static uint8_t dummyDataBuffer[512];
+static volatile uint8_t dummyDataBuffer[512];
 
 static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
 {

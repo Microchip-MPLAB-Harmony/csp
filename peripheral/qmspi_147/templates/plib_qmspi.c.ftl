@@ -91,7 +91,7 @@
 #define QMSPI_MAX_DESCR              (${QMSPI_NUM_OF_DESC}U)
 #define SWAP32(x)                    ((((x) & 0xffU) << 24U) | (((x) & 0xff00U) << 8U) | (((x) & 0xff0000U) >> 8U) | (((x) & 0xff000000U) >> 24U))
 <#if QMSPI_INTERRUPT_MODE == true>
-volatile static QMSPI_OBJECT ${QMSPI_INSTANCE_NAME?lower_case}Obj;
+static volatile QMSPI_OBJECT ${QMSPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 static const uint8_t qmspiIoMode[7U][3U] = {{0U, 0U ,0U}, /* IO mode for Command, Address, Data */
                                             {0U, 0U, 1U},

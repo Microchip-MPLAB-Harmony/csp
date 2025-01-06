@@ -56,7 +56,7 @@
 
 <#if OCMP_INTERRUPT_ENABLE == true>
 
-volatile static OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
+static volatile OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${OCMP_INSTANCE_NAME}_Initialize (void)
@@ -77,10 +77,10 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
     /* unlock system for configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;  
+    SYSKEY = 0x556699AA;
     ${OCMP_CFG_REG_NAME} |= ${OCMP_CFGCON_OCACLK_MASK}U;
     /* Lock system since done with configuration */
-    SYSKEY = 0x33333333;    
+    SYSKEY = 0x33333333;
   </#if>
     OC${INDEX}R = ${OCMP_OCxR};
     <#if mode == 4 || mode == 5>
@@ -174,7 +174,7 @@ void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t co
 void __attribute__((used)) OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
 {
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
-    uintptr_t context = ${OCMP_INSTANCE_NAME?lower_case}Obj.context;      
+    uintptr_t context = ${OCMP_INSTANCE_NAME?lower_case}Obj.context;
     ${IFS_REG}CLR = _${IFS_REG}_OC${INDEX}IF_MASK;    //Clear IRQ flag
 
     if( (${OCMP_INSTANCE_NAME?lower_case}Obj.callback != NULL))

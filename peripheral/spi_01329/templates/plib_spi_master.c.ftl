@@ -52,7 +52,7 @@
 
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save SPI Exchange related data */
-volatile static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+static volatile SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 #define ${SPI_INSTANCE_NAME}_CON_MSTEN                      (${SPI_MSTR_MODE_EN}UL << _${SPI_INSTANCE_NAME}CON_MSTEN_POSITION)

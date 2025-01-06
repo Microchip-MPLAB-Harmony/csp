@@ -69,7 +69,7 @@ typedef unsigned long paddr_t; /* a physical address */
 
 static __attribute__((coherent, aligned(32))) SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES];
 
-volatile static SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
+static volatile SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
 
 static void ${SDHC_INSTANCE_NAME}_VariablesInit ( void )
 {

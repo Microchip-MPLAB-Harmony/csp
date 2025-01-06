@@ -60,7 +60,7 @@
 <#assign useUARTTxDMA = USE_UART_TRANSMIT_DMA>
 </#if>
 
-volatile static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+static volatile UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 <#if useUARTRxDMA == false>
 static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )

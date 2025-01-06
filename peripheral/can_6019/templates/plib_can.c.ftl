@@ -66,7 +66,7 @@
 <#assign CAN_SJW    = SJW - 1>
 #define BYTE_MASK  (0xFFU)
 <#if INTERRUPT_MODE == true>
-volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+static volatile CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 </#if>
 static const uint32_t can_mb_number = CAN_MB_NUMBER;
 <#if INTERRUPT_MODE == true>

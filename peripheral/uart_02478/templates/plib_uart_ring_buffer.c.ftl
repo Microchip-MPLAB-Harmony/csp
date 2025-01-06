@@ -51,21 +51,21 @@
 // *****************************************************************************
 // *****************************************************************************
 
-volatile static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+static volatile UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE      (${UART_RX_RING_BUFFER_SIZE}U)
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE_9BIT (${UART_RX_RING_BUFFER_SIZE}U >> 1)
 #define ${UART_INSTANCE_NAME}_RX_INT_DISABLE()      ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 #define ${UART_INSTANCE_NAME}_RX_INT_ENABLE()       ${UART_RX_IEC_REG}SET = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 
-volatile static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE      (${UART_TX_RING_BUFFER_SIZE}U)
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE_9BIT (${UART_TX_RING_BUFFER_SIZE}U >> 1)
 #define ${UART_INSTANCE_NAME}_TX_INT_DISABLE()       ${UART_TX_IEC_REG}CLR = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
 #define ${UART_INSTANCE_NAME}_TX_INT_ENABLE()        ${UART_TX_IEC_REG}SET = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
 
-volatile static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_IS_9BIT_MODE_ENABLED()    ( (U${UART_INSTANCE_NUM}MODE) & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK) ? true:false
 
@@ -264,7 +264,7 @@ static inline bool ${UART_INSTANCE_NAME}_RxPushByte(uint16_t rdByte)
 {
     uint32_t tempInIndex;
     bool isSuccess = false;
-<#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == false>    
+<#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == false>
     uint32_t rdInIdx;
 </#if>
 
@@ -361,10 +361,10 @@ size_t ${UART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
     size_t nBytesRead = 0;
     uint32_t rdOutIndex = 0;
     uint32_t rdInIndex = 0;
-<#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == false>    
+<#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == false>
     uint32_t rdOut16Idx;
     uint32_t nBytesRead16Idx;
-</#if>    
+</#if>
 
     /* Take a snapshot of indices to avoid creation of critical section */
     rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;

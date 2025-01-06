@@ -75,8 +75,8 @@
 // *****************************************************************************
 // *****************************************************************************
 
-volatile static FLEXCOM_TWI_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
-volatile static twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
+static volatile FLEXCOM_TWI_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
+static volatile twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
 
 // *****************************************************************************
 // *****************************************************************************

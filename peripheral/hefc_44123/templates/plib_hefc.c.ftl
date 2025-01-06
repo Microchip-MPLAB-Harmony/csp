@@ -50,7 +50,7 @@ It allows user to Program, Erase and lock the on-chip FLASH memory.
 static uint32_t hefcStatus = 0;
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>volatile static HEFC_OBJECT hefc;
+    <#lt>static volatile HEFC_OBJECT hefc;
 </#if>
 
 void ${HEFC_INSTANCE_NAME}_Initialize(void)

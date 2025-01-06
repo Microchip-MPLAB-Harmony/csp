@@ -74,8 +74,8 @@ void GIC_IRQHandler(uint32_t  iarRegVal);
 void GIC_FIQHandler(uint32_t  iarRegVal);
 
 
-volatile static PPI_SPI_HANDLER gicPIVectorTable[${GIC_INTERRUPT_MAX_INDEX - 15}U];
-volatile static SGI_HANDLER gicSGIHandler;
+static volatile PPI_SPI_HANDLER gicPIVectorTable[${GIC_INTERRUPT_MAX_INDEX - 15}U];
+static volatile SGI_HANDLER gicSGIHandler;
 <#if ACTIVE_INTERRUPTS>
 
 static const struct {

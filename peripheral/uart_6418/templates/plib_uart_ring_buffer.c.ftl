@@ -51,7 +51,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-volatile static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+static volatile UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE      ${UART_RX_RING_BUFFER_SIZE}U
 /* Disable Read, Overrun, Parity and Framing error interrupts */
@@ -59,13 +59,13 @@ volatile static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 /* Enable Read, Overrun, Parity and Framing error interrupts */
 #define ${UART_INSTANCE_NAME}_RX_INT_ENABLE()       ${UART_INSTANCE_NAME}_REGS->UART_IER = (UART_IER_RXRDY_Msk | UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
 
-volatile static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE     ${UART_TX_RING_BUFFER_SIZE}U
 #define ${UART_INSTANCE_NAME}_TX_INT_DISABLE()      ${UART_INSTANCE_NAME}_REGS->UART_IDR = UART_IDR_TXEMPTY_Msk;
 #define ${UART_INSTANCE_NAME}_TX_INT_ENABLE()       ${UART_INSTANCE_NAME}_REGS->UART_IER = UART_IER_TXEMPTY_Msk;
 
-volatile static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 void ${UART_INSTANCE_NAME}_Initialize( void )
 {

@@ -309,7 +309,7 @@ void ${SUPC_INSTANCE_NAME}_BackupModeEnter(void)
 }
 
 <#if SUPC_IER_VDD3V3SMEV || SUPC_IER_VBATSMEV || SUPC_IER_LPDBC0 || SUPC_IER_LPDBC1 || SUPC_IER_LPDBC2 || SUPC_IER_LPDBC3 || SUPC_IER_LPDBC4>
-volatile static SUPC_OBJECT supcObj;
+static volatile SUPC_OBJECT supcObj;
 
 void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t context)
 {

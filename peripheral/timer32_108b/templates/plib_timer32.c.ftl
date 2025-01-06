@@ -56,19 +56,19 @@
 #include "peripheral/ecia/plib_ecia.h"
 
 <#if TMR32_INTERRUPT_EN == true>
-volatile static TMR32_OBJECT ${TMR32_INSTANCE_NAME?lower_case}Obj;
+static volatile TMR32_OBJECT ${TMR32_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${TMR32_INSTANCE_NAME}_Initialize(void)
 {
     TIMER32_${TMR32_INSTANCE_NUMBER}_REGS->TIMER32_CTRL = TIMER32_CTRL_PRESCALE(${TMR32_PRESCALE_VALUE}) <#if TMR32_AUTO_RESTART_EN == true> | TIMER32_CTRL_AU_RESTRT_Msk </#if> <#if TMR32_COUNT_DIR == "Up"> | TIMER32_CTRL_CNT_UP_Msk </#if> | TIMER32_CTRL_EN_Msk;
-    
+
     <#if TMR32_AUTO_RESTART_EN == true>
     TIMER32_${TMR32_INSTANCE_NUMBER}_REGS->TIMER32_PRLD = ${TMR32_COUNT_INIT_VAL};
     </#if>
-    
+
     TIMER32_${TMR32_INSTANCE_NUMBER}_REGS->TIMER32_CNT = ${TMR32_COUNT_INIT_VAL};
-    
+
     <#if TMR32_INTERRUPT_EN == true>
     TIMER32_${TMR32_INSTANCE_NUMBER}_REGS->TIMER32_IEN = TIMER32_IEN_Msk;
     </#if>
@@ -152,10 +152,10 @@ void __attribute__((used)) ${TMR32_INSTANCE_NAME}_InterruptHandler(void)
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_TIMER32_${TMR32_INSTANCE_NUMBER});
 </#if>
         uint32_t status = TIMER32_${TMR32_INSTANCE_NUMBER}_REGS->TIMER32_STS;
-        
+
         /* Clear the interrupt status bit */
         TIMER32_${TMR32_INSTANCE_NUMBER}_REGS->TIMER32_STS = TIMER32_STS_EVT_INT_Msk;
-        
+
         if (${TMR32_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL)
         {
             uintptr_t context = ${TMR32_INSTANCE_NAME?lower_case}Obj.context;

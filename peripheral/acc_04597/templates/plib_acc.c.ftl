@@ -73,7 +73,7 @@ typedef struct
     uintptr_t context;
 }ACC_CALLBACK_OBJ;
 
-volatile static ACC_CALLBACK_OBJ accCallbackObj;
+static volatile ACC_CALLBACK_OBJ accCallbackObj;
 
 
 </#if>

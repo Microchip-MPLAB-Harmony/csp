@@ -49,7 +49,7 @@
     <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
     <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
         <#assign NumOfEnabledExtInt = NumOfEnabledExtInt + 1>
-        <#lt>volatile static EXT_INT_PIN_CALLBACK_OBJ extInt${i}CbObj;
+        <#lt>static volatile EXT_INT_PIN_CALLBACK_OBJ extInt${i}CbObj;
     </#if>
 </#list>
 // *****************************************************************************

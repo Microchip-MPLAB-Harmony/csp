@@ -54,10 +54,10 @@
 <#assign CCP_INSTANCE_NUM = CCP_INSTANCE_NUM>
 
 <#if CCP_TIMER_INTERRUPT == true>
-volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
+static volatile CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
 </#if>
 <#if CCP_COMP_INTERRUPT == true>
-volatile static CCP_COMPARE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CompareObj;
+static volatile CCP_COMPARE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CompareObj;
 </#if>
 void ${CCP_INSTANCE_NAME}_CompareInitialize (void)
 {

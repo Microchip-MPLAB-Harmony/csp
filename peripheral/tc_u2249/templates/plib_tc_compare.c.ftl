@@ -144,7 +144,7 @@
 // *****************************************************************************
 
 <#if TC_COMPARE_INTERRUPT_MODE = true>
-volatile static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static volatile TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************

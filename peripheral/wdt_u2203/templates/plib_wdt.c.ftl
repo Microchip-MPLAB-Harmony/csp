@@ -58,7 +58,7 @@
 // *****************************************************************************
 
 <#if WDT_EW_ENABLE = true>
-volatile static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+static volatile WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 // *****************************************************************************

@@ -127,7 +127,7 @@ typedef struct
 </#compress>
 <#if .vars["WDT" + i + "_INTERRUPT_ENABLE"]>
 
-volatile static dwdtCallback_t dwdt${i}CallbackObj;
+static volatile dwdtCallback_t dwdt${i}CallbackObj;
 </#if>
 
 

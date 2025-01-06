@@ -122,7 +122,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if TSENS_INTENSET_RESRDY = true || (TSENS_CTRLC_WINMODE != "0" && TSENS_INTENSET_WINMON = true)>
-volatile static TSENS_CALLBACK_OBJ ${TSENS_INSTANCE_NAME}_CallbackObject;
+static volatile TSENS_CALLBACK_OBJ ${TSENS_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 
@@ -149,10 +149,10 @@ void ${TSENS_INSTANCE_NAME}_Initialize( void )
 
     ${TSENS_INSTANCE_NAME}_REGS->TSENS_CAL = TSENS_CAL_TCAL(calib_low_word & FUSES_TEMP_LOG_WORD_0_TSENS_TCAL_Msk) |
         TSENS_CAL_FCAL((calib_low_word & FUSES_TEMP_LOG_WORD_0_TSENS_FCAL_Msk) >> FUSES_TEMP_LOG_WORD_0_TSENS_FCAL_Pos );
-    
+
     ${TSENS_INSTANCE_NAME}_REGS->TSENS_GAIN = ((calib_high_word & 0xFU) << 20U) | ((calib_low_word & FUSES_TEMP_LOG_WORD_0_TSENS_GAIN_0_Msk) >> FUSES_TEMP_LOG_WORD_0_TSENS_GAIN_0_Pos ) ;
     ${TSENS_INSTANCE_NAME}_REGS->TSENS_OFFSET = calib_high_word >> FUSES_TEMP_LOG_WORD_1_TSENS_OFFSET_Pos;
-    
+
     /* Resolution & Operation Mode */
     <@compress single_line=true>${TSENS_INSTANCE_NAME}_REGS->TSENS_CTRLC = TSENS_CTRLC_WINMODE(${TSENS_CTRLC_WINMODE}UL)
                                      <#if TSENS_CTRLC_VAL?has_content>| ${TSENS_CTRLC_VAL}</#if>;</@compress>

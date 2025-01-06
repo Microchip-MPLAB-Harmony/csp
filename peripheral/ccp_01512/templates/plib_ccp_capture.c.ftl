@@ -43,10 +43,10 @@
 </#if>
 
 <#if CCP_TIMER_INTERRUPT == true>
-volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
+static volatile CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
 </#if>
 <#if CCP_CAP_INTERRUPT == true>
-volatile static CCP_CAPTURE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CaptureObj;
+static volatile CCP_CAPTURE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CaptureObj;
 </#if>
 <#--Implementation-->
 // *****************************************************************************

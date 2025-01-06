@@ -108,7 +108,7 @@
 // *****************************************************************************
 
 <#if TCC_TIMER_INTENSET_OVF = true || TCC_TIMER_INTENSET_MC1 == true>
-volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
+static volatile TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -209,7 +209,7 @@ void ${TCC_INSTANCE_NAME}_TimerCommandSet(TCC_COMMAND command)
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TCC_SIZE = 16>
@@ -287,7 +287,7 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer24bitCounterGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    
+
     /* Read current count value */
     return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
 
@@ -363,7 +363,7 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer32bitCounterGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    
+
     /* Read current count value */
     return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
 }
@@ -428,7 +428,7 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_${TCC_OTHER_INT_HANDLER_NAME}_In
     uint32_t status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;    
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
     status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;

@@ -56,7 +56,7 @@
 </#if>
 
 <#if INTERRUPT_MODE == true>
-volatile static QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
+static volatile QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${QEI_INSTANCE_NAME}_Initialize (void)
@@ -112,7 +112,7 @@ void ${QEI_INSTANCE_NAME}_Initialize (void)
     ${QEI_INSTANCE_NAME}_REGS->QEI_QEIIOC = 0x${QEI_QEIIOC};
 
     ${QEI_INSTANCE_NAME}_REGS->QEI_QEIICC = ${.vars[QEIICC]}U;
-    ${QEI_INSTANCE_NAME}_REGS->QEI_QEICMPL = ${.vars[QEICMPL]}U;    
+    ${QEI_INSTANCE_NAME}_REGS->QEI_QEICMPL = ${.vars[QEICMPL]}U;
 
     /* QEI${QEI_INSTANCE_NUM}STAT register  */
     /*  IDXIEN    = ${.vars[IDXIEN]?then('true', 'false')} */

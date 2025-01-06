@@ -73,8 +73,8 @@
 #define ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE()      USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = US_IDR_TXRDY_Msk
 #define ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE()       USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IER = US_IER_TXRDY_Msk
 
-volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE];
-volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE];
+static volatile uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE];
+static volatile uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -82,7 +82,7 @@ volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteBuffer[${FLEXCOM_INS
 // *****************************************************************************
 // *****************************************************************************
 
-volatile static FLEXCOM_USART_RING_BUFFER_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
+static volatile FLEXCOM_USART_RING_BUFFER_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
 {

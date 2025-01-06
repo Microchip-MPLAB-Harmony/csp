@@ -84,13 +84,13 @@
 <#list 0..(TCC_NUM_OUTPUTS-1) as i>
 <#assign CH_NUM = i>
 <#assign TCC_INVEN = "TCC_COMPARE_DRVCTRL_INVEN" + i>
-<#if .vars[TCC_INVEN] == true> 
+<#if .vars[TCC_INVEN] == true>
     <#if TCC_DRVCTRL_VAL != "">
         <#assign TCC_DRVCTRL_VAL = TCC_DRVCTRL_VAL + "\n\t\t | TCC_DRVCTRL_INVEN"+i+"_Msk">
     <#else>
         <#assign TCC_DRVCTRL_VAL = "TCC_DRVCTRL_INVEN" + i + "_Msk">
     </#if>
-</#if>    
+</#if>
 </#list>
 
 <#if TCC_COMPARE_INTENSET_OVF == true>
@@ -152,7 +152,7 @@
 // *****************************************************************************
 
 <#if TCC_COMPARE_INTERRUPT_MODE = true>
-volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
+static volatile TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -187,7 +187,7 @@ void ${TCC_INSTANCE_NAME}_CompareInitialize( void )
 
     <#if TCC_IS_OTM == 1>
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL = TCC_WEXCTRL_OTMX(${TCC_COMPARE_WEXCTRL_OTMX}UL);
-    </#if>    
+    </#if>
 
     <#if TCC_CTRLBSET_VAL?has_content>
     /* Configure timer one shot mode & direction */
@@ -197,14 +197,14 @@ void ${TCC_INSTANCE_NAME}_CompareInitialize( void )
     <#if TCC_DRVCTRL_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = (${TCC_DRVCTRL_VAL});
     </#if>
-    
+
     ${TCC_INSTANCE_NAME}_REGS->TCC_PER = ${TCC_COMPARE_PERIOD}U;
-    
+
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
     <#assign TCC_CC = "TCC_COMPARE_CC"+i>
     <#assign CH_NUM = i>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CC[${i}] = ${.vars[TCC_CC]}U;
-</#list>    
+</#list>
 
     /* Clear all interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
@@ -263,7 +263,7 @@ void ${TCC_INSTANCE_NAME}_CompareCommandSet(TCC_COMMAND command)
     while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TCC_SIZE = 16>
@@ -315,7 +315,7 @@ bool ${TCC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period )
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -346,7 +346,7 @@ bool ${TCC_INSTANCE_NAME}_Compare16bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM 
     while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -402,7 +402,7 @@ bool ${TCC_INSTANCE_NAME}_Compare24bitPeriodSet( uint32_t period )
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -432,7 +432,7 @@ bool ${TCC_INSTANCE_NAME}_Compare24bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM 
     while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -487,7 +487,7 @@ bool ${TCC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -517,7 +517,7 @@ bool ${TCC_INSTANCE_NAME}_Compare32bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM 
     while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -541,7 +541,7 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
     uint32_t status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context;
-    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;    
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* clear period interrupt */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
@@ -561,13 +561,13 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
             <#lt>    uint32_t status;
             <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
             <#lt>    uintptr_t context;
-            <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;            
+            <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
             <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
             <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
-            <#lt>    { 
+            <#lt>    {
             <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
             <#lt>    }
 
@@ -583,7 +583,7 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
                 <#lt>    uint32_t status;
                 <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
                 <#lt>    uintptr_t context;
-                <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;                
+                <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;

@@ -41,7 +41,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "interrupts.h"
 </#if>
 
-volatile static NMIC_OBJECT nmic;
+static volatile NMIC_OBJECT nmic;
 
 void ${NMIC_INSTANCE_NAME}_Initialize( void )
 {

@@ -66,7 +66,7 @@ typedef struct
 } DMA_CH_OBJECT ;
 
 /* DMA Channels object information structure */
-volatile static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
+static volatile DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
 
 // *****************************************************************************
 // *****************************************************************************

@@ -51,10 +51,10 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if PTCON__SEIEN == true>
-volatile static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj;
+static volatile MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj;
 </#if>
 <#if STCON__SSEIEN == true>
-volatile static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
+static volatile MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
 </#if>
 <#assign interrupt_mode = false>
 <#list 1 .. MCPWM_NUM_CHANNELS as i>
@@ -64,7 +64,7 @@ volatile static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
 </#if>
 </#list>
 <#if  interrupt_mode == true>
-volatile static MCPWM_CH_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}Obj[${MCPWM_NUM_CHANNELS}];
+static volatile MCPWM_CH_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}Obj[${MCPWM_NUM_CHANNELS}];
 </#if>
 
 void ${MCPWM_INSTANCE_NAME}_Initialize (void)

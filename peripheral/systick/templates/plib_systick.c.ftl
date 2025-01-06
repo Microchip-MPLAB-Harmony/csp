@@ -48,7 +48,7 @@
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-    <#lt>volatile static SYSTICK_OBJECT systick;
+    <#lt>static volatile SYSTICK_OBJECT systick;
 </#if>
 
 void SYSTICK_TimerInitialize ( void )

@@ -77,10 +77,10 @@
 #define ${USART_INSTANCE_NAME}_LIN_LINBK_INT_DISABLE()      ${USART_INSTANCE_NAME}_REGS->US_IDR = US_IDR_LIN_LINBK_Msk;
 #define ${USART_INSTANCE_NAME}_LIN_LINBK_INT_ENABLE()       ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_LIN_LINBK_Msk;
 
-volatile static uint8_t ${USART_INSTANCE_NAME}_ReadBuffer[${USART_INSTANCE_NAME}_READ_BUFFER_SIZE];
-volatile static USART_RING_BUFFER_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
-volatile static uint8_t ${USART_INSTANCE_NAME}_WriteBuffer[${USART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
-volatile static USART_LIN_CALLBACK_OBJECT ${USART_INSTANCE_NAME?lower_case}LinObj;
+static volatile uint8_t ${USART_INSTANCE_NAME}_ReadBuffer[${USART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+static volatile USART_RING_BUFFER_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
+static volatile uint8_t ${USART_INSTANCE_NAME}_WriteBuffer[${USART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+static volatile USART_LIN_CALLBACK_OBJECT ${USART_INSTANCE_NAME?lower_case}LinObj;
 
 void ${USART_INSTANCE_NAME}_Initialize( void )
 {
@@ -104,7 +104,7 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
         ${USART_LIN_LINMR_FSDIS?then('US_LINMR_FSDIS_Msk |', '')}
         ${USART_LIN_LINMR_SYNCDIS?then('US_LINMR_SYNCDIS_Msk |', '')}
         US_LINMR_CHKTYP(${USART_LIN_LINMR_CHKTYP}U) | US_LINMR_DLM(${USART_LIN_LINMR_DLM}U) |
-        US_LINMR_DLC(${USART_LIN_LINMR_DLC}U) | US_LINMR_WKUPTYP(${USART_LIN_LINMR_WKUPTYP}U); </@compress>    
+        US_LINMR_DLC(${USART_LIN_LINMR_DLC}U) | US_LINMR_WKUPTYP(${USART_LIN_LINMR_WKUPTYP}U); </@compress>
     </#if>
 
     /* Configure ${USART_INSTANCE_NAME} Baud Rate */
@@ -138,18 +138,18 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
 
     /* Enable Read, Overrun, Parity and Framing error interrupts */
     ${USART_INSTANCE_NAME}_RX_INT_ENABLE();
-	
+
 <#if USART_LIN_OPERATING_MODE == "RING_BUFFER">
 	<#if USART_LIN_LINID_INTERRUPT_ENABLE == true>
 	/* Enable LIN ID interrupt */
 	${USART_INSTANCE_NAME}_LIN_LINID_INT_ENABLE();
     </#if>
-	
+
 	<#if USART_LIN_LINTC_INTERRUPT_ENABLE == true>
 	/* Enable LIN Transfer Complete interrupt */
     ${USART_INSTANCE_NAME}_LIN_LINTC_INT_ENABLE();
     </#if>
-	
+
 	<#if USART_LIN_LINBK_INTERRUPT_ENABLE == true>
 	/* Enable LIN Break interrupt */
     ${USART_INSTANCE_NAME}_LIN_LINBK_INT_ENABLE();
@@ -749,7 +749,7 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
     if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINBK_Msk) != 0U)
     {
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
-       
+
         if( ${USART_INSTANCE_NAME?lower_case}LinObj.breakCallback != NULL)
         {
             uintptr_t breakContext = ${USART_INSTANCE_NAME?lower_case}LinObj.breakContext;
@@ -757,13 +757,13 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
         }
     }
 	</#if>
-    
+
 	<#if USART_LIN_LINID_INTERRUPT_ENABLE == true>
     /* LIN ID Receive */
     if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINID_Msk) != 0U)
     {
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
-       
+
         if( ${USART_INSTANCE_NAME?lower_case}LinObj.idCallback != NULL)
         {
             uintptr_t idContext = ${USART_INSTANCE_NAME?lower_case}LinObj.idContext;
@@ -771,13 +771,13 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
         }
     }
     </#if>
-	
+
 	<#if USART_LIN_LINTC_INTERRUPT_ENABLE == true>
     /* LIN Transfer Complete */
     if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINTC_Msk) != 0U)
     {
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
-       
+
         if( ${USART_INSTANCE_NAME?lower_case}LinObj.tranferCallback != NULL)
         {
             uintptr_t transferContext = ${USART_INSTANCE_NAME?lower_case}LinObj.tranferContext;
@@ -799,15 +799,15 @@ void ${USART_INSTANCE_NAME}_LIN_NodeActionSet( USART_LIN_NACT action )
 
 bool ${USART_INSTANCE_NAME}_LIN_IdentifierWrite( uint8_t id)
 {
-	bool status = false; 
+	bool status = false;
 	${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
-    
+
     if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk) != 0U)
     {
         ${USART_INSTANCE_NAME}_REGS->US_LINIR = id;
 		status = true;
     }
-	
+
 	return status;
 }
 
@@ -863,7 +863,7 @@ void ${USART_INSTANCE_NAME}_LIN_FrameSlotEnable(bool frameSlotEnable)
 void ${USART_INSTANCE_NAME}_LIN_DataLenModeSet(USART_LIN_DATA_LEN dataLenMode)
 {
     ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_DLM_Msk;
-    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= (uint32_t)dataLenMode;    
+    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= (uint32_t)dataLenMode;
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ResponseDataLenSet(uint8_t len)

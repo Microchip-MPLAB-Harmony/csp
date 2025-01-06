@@ -49,7 +49,7 @@
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
-    <#lt>volatile static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
+    <#lt>static volatile RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 
 </#if>
 

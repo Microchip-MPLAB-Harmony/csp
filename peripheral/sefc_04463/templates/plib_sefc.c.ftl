@@ -51,7 +51,7 @@ static uint32_t sefc_status = 0;
 static uint32_t ${SEFC_INSTANCE_NAME}_PanelBaseAddr = 0;
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>volatile static SEFC_OBJECT sefc;
+    <#lt>static volatile SEFC_OBJECT sefc;
 </#if>
 
 // *****************************************************************************

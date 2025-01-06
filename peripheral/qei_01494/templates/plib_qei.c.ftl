@@ -56,7 +56,7 @@
 </#if>
 
 <#if INTERRUPT_MODE == true>
-volatile static QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
+static volatile QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${QEI_INSTANCE_NAME}_Initialize (void)

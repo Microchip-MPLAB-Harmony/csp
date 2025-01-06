@@ -87,10 +87,10 @@
  </#if>
 #define NUM_RX_FIFOS ${NUM_OF_FIFO}U
 #define NUM_RX_BUFFER_ELEMENTS ${NUM_OF_ELEMENTS}U
-volatile static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[NUM_RX_FIFOS][NUM_RX_BUFFER_ELEMENTS];
-volatile static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[4];
+static volatile CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[NUM_RX_FIFOS][NUM_RX_BUFFER_ELEMENTS];
+static volatile CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[4];
 </#if>
-volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+static volatile CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 

@@ -244,7 +244,7 @@
 // *****************************************************************************
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>volatile static AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
+    <#lt>static volatile AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize AFEC peripheral */

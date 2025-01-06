@@ -81,7 +81,7 @@ static void ${USART_INSTANCE_NAME}_ErrorClear( void )
 <#assign useUSARTTxDMA = USE_USART_TRANSMIT_DMA>
 </#if>
 
-volatile static USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
+static volatile USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
 
 <#if useUSARTRxDMA == false>
 static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
@@ -290,7 +290,7 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
     <#else>
     ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE}U);
     </#if>
-    
+
 <#if USART_INTERRUPT_MODE_ENABLE == true>
 
     /* Initialize instance object */
@@ -415,7 +415,7 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
         <#else>
         ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(brgVal) |  US_BRGR_FP(brgFpVal);
         </#if>
-        
+
         status = true;
     }
 

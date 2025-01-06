@@ -146,11 +146,11 @@
 #define CANFD_MSG_FLT_EXT_EID_MASK    (0x0003FFFFU)
 
 <#if CAN_INTERRUPT_MODE == true>
-volatile static CANFD_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
-volatile static CANFD_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CANFD_NUM_OF_FIFO][CANFD_FIFO_MESSAGE_BUFFER_MAX];
-volatile static CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CANFD_NUM_OF_FIFO + 1];
-volatile static CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj;
-volatile static uint32_t ${CAN_INSTANCE_NAME?lower_case}MsgIndex[CANFD_NUM_OF_FIFO];
+static volatile CANFD_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+static volatile CANFD_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CANFD_NUM_OF_FIFO][CANFD_FIFO_MESSAGE_BUFFER_MAX];
+static volatile CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CANFD_NUM_OF_FIFO + 1];
+static volatile CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj;
+static volatile uint32_t ${CAN_INSTANCE_NAME?lower_case}MsgIndex[CANFD_NUM_OF_FIFO];
 </#if>
 static uint8_t __attribute__((coherent, aligned(16))) can_message_buffer[CANFD_MESSAGE_RAM_CONFIG_SIZE];
 static const uint8_t dlcToLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};

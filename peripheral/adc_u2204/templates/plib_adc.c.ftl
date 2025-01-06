@@ -133,7 +133,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_WINCTRL_WINMODE != "DISABLE" && ADC_INTENSET_WINMON = true)>
-volatile static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+static volatile ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_CALIB??>

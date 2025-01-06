@@ -114,25 +114,25 @@
 #define MCAN_STD_ID_Msk        0x7FFU
 
 <#if TX_USE>
-volatile static MCAN_TX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
+static volatile MCAN_TX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
 </#if>
 <#if TXBUF_USE>
-volatile static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
+static volatile MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
 </#if>
 <#if TX_USE || TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_FIFO_ELEMENTS>
 <#if TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_BUFFER_ELEMENTS + TX_FIFO_ELEMENTS>
 </#if>
-volatile static MCAN_TX_EVENT_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
+static volatile MCAN_TX_EVENT_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
 </#if>
 <#if RXBUF_USE>
-volatile static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
+static volatile MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
 </#if>
 <#if RXF0_USE || RXF1_USE>
-volatile static MCAN_RX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
+static volatile MCAN_RX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
 </#if>
-volatile static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj;
+static volatile MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj;
 static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>

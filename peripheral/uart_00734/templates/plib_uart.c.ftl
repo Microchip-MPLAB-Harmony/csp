@@ -52,7 +52,7 @@
 // *****************************************************************************
 
 <#if UART_INTERRUPT_MODE_ENABLE == true>
-volatile static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+static volatile UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void static ${UART_INSTANCE_NAME}_ErrorClear( void )

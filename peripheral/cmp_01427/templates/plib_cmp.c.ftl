@@ -52,7 +52,7 @@
 <#list 1..CMP_NUM_OF_INSTANCES as i>
     <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
     <#if .vars[CMP_CMxCON_EVPOL] != "0">
-        <#lt>volatile static CMP_OBJECT cmp${i}Obj;
+        <#lt>static volatile CMP_OBJECT cmp${i}Obj;
     </#if>
 </#list>
 // *****************************************************************************

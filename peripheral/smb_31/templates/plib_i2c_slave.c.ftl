@@ -65,7 +65,7 @@
 // *****************************************************************************
 #define NOP()    asm("NOP")
 
-volatile static I2C_SLAVE_OBJ i2c${I2C_INSTANCE_NUM}Obj;
+static volatile I2C_SLAVE_OBJ i2c${I2C_INSTANCE_NUM}Obj;
 
 void I2C${I2C_INSTANCE_NUM}_Initialize(void)
 {

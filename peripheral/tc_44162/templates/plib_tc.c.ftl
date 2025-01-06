@@ -91,7 +91,7 @@
     </#compress>
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
 /* Callback object for channel 0 */
-volatile static TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
+static volatile TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize channel in quadrature mode */
@@ -283,7 +283,7 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
-volatile static TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static volatile TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in timer mode */
@@ -430,7 +430,7 @@ bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 
 /* Callback object for channel ${CH_NUM} */
-volatile static TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static volatile TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in capture mode */
@@ -573,7 +573,7 @@ TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 
 /* Callback object for channel ${CH_NUM} */
-volatile static TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static volatile TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in compare mode */

@@ -56,7 +56,7 @@
 </#if>
 
 <#if CCP_TIMER_INTERRUPT == true>
-volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
+static volatile CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 

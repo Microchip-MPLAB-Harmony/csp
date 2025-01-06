@@ -55,13 +55,13 @@
 #define GENERIC_TIMER_FREQUENCY ${SYSTEM_COUNTER_FREQUENCY}U
 
 <#if GENERIC_TIMER_INTERRUPT>
-volatile static uint64_t compareDelta = ${GENERIC_TIMER_COMPARE_DELTA}UL;
+static volatile uint64_t compareDelta = ${GENERIC_TIMER_COMPARE_DELTA}UL;
 
 <#if RTOS_INTERRUPT_HANDLER == "">
 
 #define GENERIC_TIMER_INTERRUPT_PERIOD_IN_US  (${(GENERIC_TIMER_PERIOD_US != 0)?then(GENERIC_TIMER_PERIOD_US, "1")}U)
 
-volatile static struct callbackObject
+static volatile struct callbackObject
 {
     GENERIC_TIMER_CALLBACK  pCallback;
     uintptr_t               context;

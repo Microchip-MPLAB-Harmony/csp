@@ -91,7 +91,7 @@ typedef struct
     uintptr_t Context;
 }fcwCallbackObjType;
 
-volatile static fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
+static volatile fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 /* ************************************************************************** */
@@ -197,7 +197,7 @@ bool ${FCW_INSTANCE_NAME}_SingleWordWrite( uint32_t *data, uint32_t address )
     }
 
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[0] = *data;
-    data++;    
+    data++;
 
     ${FCW_INSTANCE_NAME}_StartOperationAtAddress( address,  SINGLE_WORD_PROGRAM_OPERATION);
 
@@ -218,7 +218,7 @@ bool ${FCW_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[2] = *data;
     data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[3] = *data;
-    data++;    
+    data++;
 
     ${FCW_INSTANCE_NAME}_StartOperationAtAddress( address,  QUAD_WORD_PROGRAM_OPERATION);
 

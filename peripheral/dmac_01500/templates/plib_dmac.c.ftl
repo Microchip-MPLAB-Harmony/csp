@@ -63,7 +63,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-volatile static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
+static volatile DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
 static DMAC_CRC_SETUP gCRCSetup;
 
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))

@@ -28,7 +28,7 @@
 </#if>
 
 <#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
-volatile static PMC_CALLBACK_OBJECT PMC_CallbackObj;
+static volatile PMC_CALLBACK_OBJECT PMC_CallbackObj;
 
 </#if>
 

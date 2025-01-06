@@ -183,7 +183,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_CTRLB_WINMODE != "0" && ADC_INTENSET_WINMON = true)>
-volatile static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+static volatile ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_INSTANCE_NAME = "ADC0">
@@ -242,7 +242,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN - 1}U) | ADC_SAMPCTRL_OFFCOMP_Msk;
     <#else>
     ${ADC_INSTANCE_NAME}_REGS->ADC_SAMPCTRL = (uint8_t)ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN - 1}UL);
-    </#if>    
+    </#if>
 
     /* reference */
     ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL} | ADC_REFCTRL_REFCOMP_Msk;
@@ -350,7 +350,7 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_WINUT_Msk) == ADC_SYNCBUSY_WINUT_Msk)
     {
         /* Wait for Synchronization */
-    } 
+    }
 }
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)

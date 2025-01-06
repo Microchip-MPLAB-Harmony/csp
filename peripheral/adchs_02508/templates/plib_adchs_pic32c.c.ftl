@@ -55,12 +55,12 @@
 
 <#if ADCHS_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>volatile static ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
+    <#lt>static volatile ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
 
 <#if ADCCON2__EOSIEN == true>
     <#lt>/* Object to hold callback function and context for end of scan interrupt*/
-    <#lt>volatile static ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
+    <#lt>static volatile ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
 
 <#compress> <#-- To remove unwanted new lines -->
@@ -75,7 +75,7 @@
 </#list>
 
 <#if ADCHS_MAX_FILTER_NUM gt 0>
-volatile static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
+static volatile ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
 </#if>
 
 <#assign ADCHS_MAX_COMPARATOR_NUM = 0>
@@ -89,7 +89,7 @@ volatile static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${
 </#list>
 
 <#if ADCHS_MAX_COMPARATOR_NUM gt 0>
-volatile static ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
+static volatile ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
 </#if>
 </#compress>
 
@@ -386,7 +386,7 @@ void __attribute__((used)) ADCHS_InterruptHandler( void )
     <#if ADCHS_MAX_COMPARATOR_NUM gt 0>
     ADCHS_CHANNEL_NUM channelId;
     </#if>
-    
+
     uintptr_t context;
 
     <#if ADCCON2__EOSIEN == true>

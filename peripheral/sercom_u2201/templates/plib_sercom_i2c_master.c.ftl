@@ -72,7 +72,7 @@
 #define RIGHT_ALIGNED (8U)
 </#if>
 
-volatile static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
+static volatile SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 
 // *****************************************************************************
 // *****************************************************************************

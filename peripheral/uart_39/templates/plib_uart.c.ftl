@@ -52,7 +52,7 @@
 // *****************************************************************************
 
 <#if UART_OPERATING_MODE == "NON_BLOCKING">
-volatile static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+static volatile UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 <#else>
 static UART_ERROR errorStatus = 0;
 </#if>

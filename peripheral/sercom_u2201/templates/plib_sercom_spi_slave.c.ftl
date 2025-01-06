@@ -80,12 +80,12 @@
 #define ${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE           ${((SPIS_TX_BUFFER_SIZE/2)?ceiling)}U
 </#if>
 
-volatile static ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE];
-volatile static ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE];
+static volatile ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE];
+static volatile ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE];
 
 
 /* Global object to save SPI Exchange related data  */
-volatile static SPI_SLAVE_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPISObj;
+static volatile SPI_SLAVE_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPISObj;
 
 // *****************************************************************************
 // *****************************************************************************
