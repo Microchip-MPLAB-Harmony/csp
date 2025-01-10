@@ -213,4 +213,4 @@ package:
       version: "1.0.26"
     - name: "PIC32CX-BZ6_DFP"
       type: "dfp"
-      version: "1.0.2"
+      version: "1.2.16"

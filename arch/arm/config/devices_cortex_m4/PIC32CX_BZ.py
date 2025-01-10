@@ -252,7 +252,7 @@ global productFamily
 if "BZ3" in Variables.get("__PROCESSOR"):
     productFamily.setDefaultValue("PIC32CX_BZ3")
 elif "BZ6" in Variables.get("__PROCESSOR"):
-    productFamily.setDefaultValue("PIC32CX_BZ6")    
+    productFamily.setDefaultValue("PIC32CX_BZ6")
 else:
     productFamily.setDefaultValue("PIC32CX_BZ2")
 
