@@ -104,21 +104,29 @@ def instantiateComponent(sefcComponent):
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
     #Flash Details
-    sefcFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"" + sefcMemSegName.getValue() + "\"]")
-    if sefcFlashNode is not None:
+    sefc0FlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"IFLASH0\"]")
+    sefc1FlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"IFLASH1\"]")
+    
+    if sefc0FlashNode is not None:
         sefcFlashStartAddress = sefcComponent.createStringSymbol("FLASH_START_ADDRESS", sefcMenu)
-        sefcFlashStartAddress.setVisible(False)
-        sefcFlashStartAddress.setDefaultValue(sefcFlashNode.getAttribute("start"))
+        sefcFlashStartAddress.setVisible(True)
+        sefcFlashStartAddress.setDefaultValue(sefc0FlashNode.getAttribute("start"))
 
         #Flash size
         sefcFlashSize = sefcComponent.createStringSymbol("FLASH_SIZE", sefcMenu)
-        sefcFlashSize.setVisible(False)
-        sefcFlashSize.setDefaultValue(sefcFlashNode.getAttribute("size"))
+        sefcFlashSize.setVisible(True)
+        if sefc1FlashNode is not None:
+            sefc0_size = int(sefc0FlashNode.getAttribute("size"), 0)
+            sefc1_size = int(sefc1FlashNode.getAttribute("size"), 0)
+            sefc_size = str(hex(sefc0_size + sefc1_size))
+            sefcFlashSize.setDefaultValue(sefc_size)
+        else:
+            sefcFlashSize.setDefaultValue(sefc0FlashNode.getAttribute("size"))
 
         #Flash Page size
         sefcFlashProgramSize = sefcComponent.createStringSymbol("FLASH_PROGRAM_SIZE", sefcMenu)
         sefcFlashProgramSize.setVisible(False)
-        sefcFlashProgramSize.setDefaultValue(sefcFlashNode.getAttribute("pagesize"))
+        sefcFlashProgramSize.setDefaultValue(sefc0FlashNode.getAttribute("pagesize"))
 
     #Flash Erase size
     sefcFlashEraseSize = sefcComponent.createStringSymbol("FLASH_ERASE_SIZE", sefcMenu)
@@ -194,8 +202,10 @@ def instantiateComponent(sefcComponent):
     interruptHandlerLock = sefcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = sefcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
-    writeApiName = sefcInstanceName.getValue() + "_PageWrite"
-    eraseApiName = sefcInstanceName.getValue() + "_PageErase"
+    writeApiName = "SEFC_PageWrite"
+    eraseApiName = "SEFC_PageErase"
+    isbusyApiName = "SEFC_IsBusy"
+    panelSwapApiName = "SEFC_BankSwap"
 
     sefcWriteApiName = sefcComponent.createStringSymbol("WRITE_API_NAME", sefcMenu)
     sefcWriteApiName.setVisible(False)
@@ -206,6 +216,21 @@ def instantiateComponent(sefcComponent):
     sefcEraseApiName.setVisible(False)
     sefcEraseApiName.setReadOnly(True)
     sefcEraseApiName.setDefaultValue(eraseApiName)
+    
+    sefcIsBusyApiName = sefcComponent.createStringSymbol("ISBUSY_API_NAME", sefcMenu)
+    sefcIsBusyApiName.setVisible(False)
+    sefcIsBusyApiName.setReadOnly(True)
+    sefcIsBusyApiName.setDefaultValue(isbusyApiName)
+    
+    sefcPanelSwapApiName = sefcComponent.createStringSymbol("PANEL_SWAP_API_NAME", sefcMenu)
+    sefcPanelSwapApiName.setVisible(False)
+    sefcPanelSwapApiName.setReadOnly(True)
+    sefcPanelSwapApiName.setDefaultValue(panelSwapApiName)
+    
+    sefcPanelSwapApiResets = sefcComponent.createBooleanSymbol("PANEL_SWAP_API_RESETS", sefcMenu)
+    sefcPanelSwapApiResets.setVisible(False)
+    sefcPanelSwapApiResets.setReadOnly(True)
+    sefcPanelSwapApiResets.setDefaultValue(False)
 
     # NVIC Dynamic settings
     sefcinterruptControl = sefcComponent.createBooleanSymbol("NVIC_SEFC_ENABLE", None)

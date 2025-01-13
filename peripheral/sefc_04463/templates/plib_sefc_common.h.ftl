@@ -124,6 +124,7 @@ typedef enum
 __longramfunc__ uint32_t SEFC_GpnvmBitRead(void);
 __longramfunc__ void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber);
 __longramfunc__ void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber);
+void SEFC_BankSwap(void);
 SEFC_FLASH_PANEL SEFC_FlashPanelGet(uint32_t address);
 bool SEFC_SectorErase( uint32_t address );
 bool SEFC_PageErase( uint32_t address );
