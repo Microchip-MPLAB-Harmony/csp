@@ -1,0 +1,762 @@
+.internalOSC48 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 29px;
+    left: 375px
+    }
+.main-block-diagram {
+    position: absolute;
+    width: 1600px;
+    height: 950px;
+    top: 0;
+    left: -1px
+    }
+.Internal8Mhz_oscillators_settings {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 61px;
+    left: 370px
+    }
+.internalOSC48DivLabel {
+    position: absolute;
+    height: 20px;
+    font-size: 16px;
+    width: 40px;
+    left: 453px;
+    top: 49px
+    }
+.internalOSC48Div {
+    position: absolute;
+    height: 30px;
+    font-size: 14px;
+    width: 100px;
+    left: 406px;
+    top: 97px
+    }
+.xosc48MFreq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 586px;
+    top: 66px
+    }
+.xoscFreq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    top: 194px;
+    left: 586px
+    }
+.xoscFrequency {
+    position: absolute;
+    height: 30px;
+    width: 120px;
+    left: 104px;
+    top: 200px
+    }
+.crystalOSC {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 412px;
+    top: 187px
+    }
+.dfllMultiplier {
+    position: absolute;
+    height: 30px;
+    width: 70px;
+    left: 400px;
+    top: 517px
+    }
+.dfll_settings {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 509px;
+    top: 533px
+    }
+.osc32HighEnable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 277px;
+    top: 652px
+    }
+.osc32CrystalEnable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 277px;
+    top: 836px
+    }
+.osc32Crystal32KHzEnable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 873px;
+    left: 419px
+    }
+.crystal_oscillatoor_Settings {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 409px;
+    top: 221px
+    }
+.xosc32K_settings {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 272px;
+    top: 868px
+    }
+.xosc32KFrequency {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 247px;
+    top: 868px
+    }
+.osc32KFreq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 590px;
+    top: 690px
+    }
+.osculp32KFreq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 590px;
+    top: 771px
+    }
+.xosc32KFreq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 590px;
+    top: 862px
+    }
+.gclkGen0Enable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 10px;
+    left: 938px
+    }
+.gclkGen0_settings {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 902px;
+    top: 233px
+    }
+.gclkGen0DivLabel {
+    position: absolute;
+    height: 20px;
+    color: black;
+    width: 40px;
+    left: 898px;
+    top: 119px
+    }
+.gclkGen0Div {
+    position: absolute;
+    height: 30px;
+    width: 70px;
+    left: 869px;
+    top: 168px
+    }
+.gclkGen0Freq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 979px;
+    top: 137px
+    }
+.gclkGen1Enable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 311px;
+    left: 940px
+    }
+.gclkGen1_settings {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 901px;
+    top: 535px
+    }
+.gclkGen1DivLabel {
+    position: absolute;
+    height: 20px;
+    color: black;
+    width: 40px;
+    left: 903px;
+    top: 420px
+    }
+.gclkGen1Freq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 978px;
+    top: 439px
+    }
+.gclkGen1Div {
+    position: absolute;
+    height: 30px;
+    width: 70px;
+    left: 877px;
+    top: 469px
+    }
+.gclkGen0RadioName0 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 720px;
+    top: 18px
+    }
+.gclkGen0RadioName1 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    top: 44px;
+    left: 720px
+    }
+.gclkGen0RadioName2 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 720px;
+    top: 71px
+    }
+.gclkGen0RadioName3 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    top: 95px;
+    left: 720px
+    }
+.gclkGen0RadioName4 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    top: 123px;
+    left: 720px
+    }
+.gclkGen0RadioName5 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    top: 151px;
+    left: 720px
+    }
+.gclkGen0RadioName6 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    top: 178px;
+    left: 720px
+    }
+.gclkGen0RadioName7 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    top: 206px;
+    left: 720px
+    }
+.gclkGen1RadioName0 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 724px;
+    top: 336px
+    }
+.gclkGen1RadioName1 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 723px;
+    top: 365px
+    }
+.gclkGen1RadioName2 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 723px;
+    top: 391px
+    }
+.gclkGen1RadioName3 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 723px;
+    top: 417px
+    }
+.gclkGen1RadioName4 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 723px;
+    top: 442px
+    }
+.gclkGen1RadioName5 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 723px;
+    top: 472px
+    }
+.gclkGen1RadioName6 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 724px;
+    top: 497px
+    }
+.gclkGenXRadioName0 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 721px;
+    top: 645px
+    }
+.gclkGenXRadioName1 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 723px;
+    top: 671px
+    }
+.gclkGenXRadioName2 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 721px;
+    top: 698px
+    }
+.gclkGenXRadioName3 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 722px;
+    top: 723px
+    }
+.gclkGenXRadioName4 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 723px;
+    top: 748px
+    }
+.gclkGenXRadioName5 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 722px;
+    top: 778px
+    }
+.gclkGenXRadioName6 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 721px;
+    top: 804px
+    }
+.gclkGenXRadioName7 {
+    position: absolute;
+    height: 20px;
+    width: 65px;
+    left: 720px;
+    top: 833px
+    }
+.gclkGenXEnable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 937px;
+    top: 611px
+    }
+.gclkGenX_settings {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 875px;
+    left: 901px
+    }
+.gclkGenXDivLabel {
+    position: absolute;
+    height: 20px;
+    color: black;
+    width: 40px;
+    top: 777px;
+    left: 902px
+    }
+.gclkGen0Radio0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 800px;
+    top: 28px
+    }
+.gclkGen0Radio1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 800px;
+    top: 55px
+    }
+.gclkGen0Radio2 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 800px;
+    top: 82px
+    }
+.gclkGen0Radio3 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 800px;
+    top: 108px
+    }
+.gclkGen0Radio4 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 800px;
+    top: 136px
+    }
+.gclkGen0Radio5 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 800px;
+    top: 163px
+    }
+.gclkGen0Radio6 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 799px;
+    top: 187px
+    }
+.gclkGen0Radio7 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 800px;
+    top: 213px
+    }
+.externalOSCModeR0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 154px;
+    left: 462px
+    }
+.externalOSCModeR1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 208px;
+    left: 462px
+    }
+.gclkGen1Radio0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 804px;
+    top: 347px
+    }
+.gclkGen1Radio1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 805px;
+    top: 374px
+    }
+.gclkGen1Radio2 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 805px;
+    top: 400px
+    }
+.gclkGen1Radio3 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 805px;
+    top: 426px
+    }
+.gclkGen1Radio4 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 453px;
+    left: 804px
+    }
+.gclkGen1Radio5 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 804px;
+    top: 481px
+    }
+.gclkGen1Radio6 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 507px;
+    left: 804px
+    }
+.gclkGenXRadio0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 652px;
+    left: 803px
+    }
+.gclkGenXRadio1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 678px;
+    left: 803px
+    }
+.gclkGenXRadio2 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 706px;
+    left: 803px
+    }
+.gclkGenXRadio3 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 732px;
+    left: 803px
+    }
+.gclkGenXRadio4 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 759px;
+    left: 804px
+    }
+.gclkGenXRadio5 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 786px;
+    left: 803px
+    }
+.gclkGenXRadio6 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 813px;
+    left: 803px
+    }
+.gclkGenXRadio7 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 840px;
+    left: 803px
+    }
+.oscillators32KhzContrlRadio0 {
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    top: 809px;
+    left: 463px
+    }
+.oscillators32KhzContrlRadio1 {
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    top: 869px;
+    left: 463px
+    }
+.oscillators_reset {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 539px;
+    top: 235px
+    }
+.oscillatorsController32KhzReset {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 542px;
+    top: 903px
+    }
+.gclkGen0Reset {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 932px;
+    top: 233px
+    }
+.gclkGen1Reset {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 534px;
+    left: 933px
+    }
+.gclkGenXReset {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 875px;
+    left: 934px
+    }
+.mainClockReset {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 174px;
+    left: 1278px
+    }
+.gclkGenXDiv {
+    position: absolute;
+    height: 30px;
+    width: 70px;
+    left: 875px;
+    top: 824px
+    }
+.gclkGenXFreq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 979px;
+    top: 810px
+    }
+.cpuDivLabel {
+    position: absolute;
+    color: black;
+    height: 20px;
+    width: 30px;
+    left: 1216px;
+    top: 118px
+    }
+.cpuDiv {
+    position: absolute;
+    height: 30px;
+    width: 80px;
+    left: 1187px;
+    top: 164px
+    }
+.mainFreq {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 1325px;
+    top: 137px
+    }
+.gclkXgenTab {
+    position: absolute;
+    height: 150px;
+    top: 605px;
+    left: 966px;
+    width: 60px
+    }
+.periClockConfig {
+    position: absolute;
+    height: 40px;
+    top: 460px;
+    width: 120px;
+    left: 1183px
+    }
+.gclkIOConfiguration {
+    position: absolute;
+    width: 160px;
+    height: 40px;
+    left: 1139px;
+    top: 738px
+    }
+.osc32High32KHzEnable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 417px;
+    top: 653px
+    }
+.dfllRefClockRadio0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 364px;
+    top: 388px
+    }
+.dfllRefClockRadio1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 364px;
+    top: 419px
+    }
+.dfllChannelEnable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 401px;
+    left: 177px
+    }
+.dflllChannelSource {
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    top: 371px;
+    left: 74px
+    }
+.dfll_reset {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 539px;
+    top: 532px
+    }
+.dfllEnable {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 346px;
+    left: 548px
+    }
+.dfllFreq {
+    position: absolute;
+    height: 20px;
+    width: 110px;
+    left: 584px;
+    top: 416px
+    }
+.dfllDivLabel {
+    position: absolute;
+    height: 20px;
+    width: 35px;
+    left: 425px;
+    top: 475px
+    }
+.highAccuracyInternalOscillatorSettings {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 272px;
+    top: 686px
+    }
+.dfll_AutoCalculate {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 284px;
+    top: 514px
+    }

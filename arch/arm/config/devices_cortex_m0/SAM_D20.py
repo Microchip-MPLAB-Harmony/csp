@@ -299,7 +299,7 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_d20/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_sam_d20/plugin/clk_sam_d20.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_MANAGER_D20", {"plugin_name": "Clock Configuration", "main_html_path": "csp/plugins/configurators/clock-configurators/clk_sam_d20_configurator/build/index.html"})
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
