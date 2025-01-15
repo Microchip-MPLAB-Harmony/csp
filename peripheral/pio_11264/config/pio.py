@@ -184,8 +184,6 @@ global getPinConfigurationValue
 global clearPinConfigurationValue
 
 def setPinConfigurationValue(pinNumber, setting, value):
-    global pin_map
-    
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
         symbol.setReadOnly(False)
@@ -200,7 +198,7 @@ def setPinConfigurationValue(pinNumber, setting, value):
             if periphFnValue != "GPIO":
                 instance = value.split("_")[0]
                 module = "".join(filter(lambda x: x.isalpha(), instance))
-                pad = pin_map[pinNumber]
+                pad = availablePinDictionary[str(pinNumber)]
                 query = '/avr-tools-device-file/devices/device/peripherals/module@[name=\"{}\"]/instance@[name=\"{}\"]/signals/signal@[pad=\"{}\"]'.format(module, instance, pad)
                 node = ATDF.getNode(query)
                 if node is not None:
