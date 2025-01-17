@@ -135,7 +135,7 @@ void ${dmaModuleName}_Initialize( void )
 </#list>
 
 <#if dmaIntEnabled == true>
-/* Enable ${dmaModuleName} channel interrupts */
+<#lt>    /* Enable ${dmaModuleName} channel interrupts */
 <#list 0..MAX_CHANNEL_COUNT as i>
     <#assign DMA_CH_INT_ENABLE = "DMA" + i + "_CH__DONEEN">
     <#if .vars[DMA_CH_INT_ENABLE]?has_content && .vars[DMA_CH_INT_ENABLE] == true>
@@ -157,7 +157,7 @@ void ${dmaModuleName}_Deinitialize( void )
     <#if .vars[DMA_CH_INT_ENABLE]?has_content && .vars[DMA_CH_INT_ENABLE] == true>
         <#lt>    // Clearing Channel ${i} Interrupt Flag;
         <#lt>    _DMA${i}IF = 0U;  
-        <#lt>    // Enabling Channel ${i} Interrupt
+        <#lt>    // disabling Channel ${i} Interrupt
         <#lt>    _DMA${i}IE = 0U;
     </#if>
 </#list>
@@ -175,6 +175,7 @@ void ${dmaModuleName}_Deinitialize( void )
 ${dmaRegPorSet}
 }
 
+<#if anyChannelEnabled == true>
 bool ${dmaModuleName}_ChannelTransfer(${dmaModuleName}_CHANNEL channel, const void *srcAddr, const void *destAddr, uint32_t blockSize)
 {
     bool returnStatus = false;
@@ -478,4 +479,5 @@ ${dmaModuleName}_TRANSFER_EVENT ${dmaModuleName}_ChannelTransferStatusGet(${dmaM
     return dmaEvent;
 }
 
+</#if>
 </#if>

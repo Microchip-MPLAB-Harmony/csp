@@ -192,6 +192,7 @@ void ${dmaModuleName}_Initialize( void );
 </#if>
 void ${dmaModuleName}_Deinitialize( void );
 
+<#if anyChannelEnabled == true>
 <#if generateDoxygen>
 /**
  * @brief   Schedules a DMA transfer on the specified DMA channel.
@@ -492,6 +493,7 @@ void ${dmaModuleName}_ChannelCallbackRegister(${dmaModuleName}_CHANNEL channel, 
 ${dmaModuleName}_TRANSFER_EVENT ${dmaModuleName}_ChannelTransferStatusGet(${dmaModuleName}_CHANNEL channel);
 </#if>
 
+</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
