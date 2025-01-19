@@ -65,22 +65,22 @@ void ${txIsrHandlerName} (void);
 
 //SPI SPIxCON1 MODE options
 <#list modeOptions as options>
-#define ${SPI_INSTANCE_NAME}CON1_MSTEN_${options}          ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_MSTEN_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_MSTEN_POSITION))) 
+#define ${SPI_INSTANCE_NAME}CON1_MSTEN_${options}          ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_MSTEN_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_MSTEN_POSITION)))
 </#list>
 
 //SPI SPIxCON1 Clock Polarity options
 <#list clkPolarityOptions as options>
-#define ${SPI_INSTANCE_NAME}CON1_CKP_${options}           ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_CKP_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_CKP_POSITION))) 
+#define ${SPI_INSTANCE_NAME}CON1_CKP_${options}           ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_CKP_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_CKP_POSITION)))
 </#list>
 
 //SPI SPIxCON1 Clock Edge options
 <#list clkEdgeOptions as options>
-#define ${SPI_INSTANCE_NAME}CON1_CKE_${options}           ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_CKE_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_CKE_POSITION))) 
+#define ${SPI_INSTANCE_NAME}CON1_CKE_${options}           ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_CKE_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_CKE_POSITION)))
 </#list>
 
 //SPI SPIxCON1 Clock select options
 <#list hostClkselOptions as options>
-#define ${SPI_INSTANCE_NAME}CON1_MCLKEN_${options}           ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_MCLKEN_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_MCLKEN_POSITION))) 
+#define ${SPI_INSTANCE_NAME}CON1_MCLKEN_${options}           ((uint32_t)(_${SPI_INSTANCE_NAME}CON1_MCLKEN_MASK & ((uint32_t)(${options_index}) << _${SPI_INSTANCE_NAME}CON1_MCLKEN_POSITION)))
 </#list>
 
 /**
@@ -198,12 +198,12 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spi
     ${SPI_INSTANCE_NAME}CON1bits.ON = 0U;
 
     ${SPI_INSTANCE_NAME}BRG = t_brg;
-    
+
     ${SPI_INSTANCE_NAME}CON1 = (${SPI_INSTANCE_NAME}CON1 & (~(_${SPI_INSTANCE_NAME}CON1_MODE16_MASK | _${SPI_INSTANCE_NAME}CON1_MODE32_MASK | _${SPI_INSTANCE_NAME}CON1_CKP_MASK | _${SPI_INSTANCE_NAME}CON1_CKE_MASK))) |
                             ((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits);
 
     ${SPI_INSTANCE_NAME}CON1bits.ON = 1U;
-    
+
     return true;
 }
 
@@ -266,7 +266,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
             }
             else if (dummySize > 0U && ${SPI_INSTANCE_NAME}STATbits.SPITBF == 0U)
             {
-                ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_DUMMY_DATA; 
+                ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_DUMMY_DATA;
                 dummySize--;
             }
             else
@@ -274,7 +274,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                  /* Nothing to process */
             }
 
-            if (rxSize == 0U) 
+            if (rxSize == 0U)
             {
                 /* Read until the receive buffer is not empty */
                 if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
@@ -319,7 +319,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 }
             }
         }
-        
+
         /* Make sure no data is pending in the shift register */
         while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0U)
         {
@@ -328,7 +328,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         isSuccess = true;
     }
     return isSuccess;
-} 
+}
 <#else>
 
 bool ${SPI_INSTANCE_NAME}_IsBusy (void)
@@ -347,7 +347,7 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t con
 static void SPI_FIFO_Fill(void)
 {
     uint8_t nDataCopiedToFIFO = 0U;
-    
+
     while ((nDataCopiedToFIFO < ${SPI_INSTANCE_NAME}_FIFO_SIZE) && (${SPI_INSTANCE_NAME}STATbits.SPITBF == 0U))
     {
         if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
@@ -420,7 +420,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         /* Configure SPI to generate receive interrupt when receive buffer is empty */
         ${SPI_INSTANCE_NAME}IMSKbits.RXMSK = 1U;
         ${SPI_INSTANCE_NAME}IMSKbits.RXWIEN = 1U;
-        
+
         /* Configure SPI to generate transmit interrupt when the transmit buffer is empty*/
         ${SPI_INSTANCE_NAME}IMSKbits.SPITBEN = 1U;
 
@@ -429,7 +429,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
         /* Disable the transmit interrupt */
         ${txInterruptEnableBit} = 0U;
-        
+
         /* Disable the error interrupt */
         ${errorInterruptEnableBit} = 0U;
 
@@ -438,13 +438,13 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
         /* Clear the transmit interrupt flag */
         ${txInterruptFlagBit} = 0U;
-        
+
         /* Clear the error interrupt flag */
         ${errorInterruptFlagBit} = 0U;
-        
+
         /* Start the first write here itself, rest will happen in ISR context */
         SPI_FIFO_Fill();
-        
+
         if (rxSize > 0U)
         {
             if(rxSize < ${SPI_INSTANCE_NAME}_FIFO_SIZE)
@@ -467,13 +467,13 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             {
                 /* Configure SPI to generate interrupt when transmit buffer is completely empty */
                 ${SPI_INSTANCE_NAME}IMSKbits.SPITBEN = 1U;
-                
+
                 /* ignore receive overflow for transmit only operation*/
                 ${SPI_INSTANCE_NAME}CON1bits.IGNROV = 1U;
-                
+
                 /* Enable transmit interrupt to complete the transfer in ISR context */
                 ${txInterruptEnableBit} = 1U;
-                
+
             }
             else
             {
@@ -481,7 +481,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
                 ${SPI_INSTANCE_NAME}IMSKbits.SRMTEN = 1U;
                 ${errorInterruptEnableBit} = 1U;
             }
-            
+
         }
     }
 
@@ -493,7 +493,7 @@ void __attribute__((used)) ${rxIsrHandlerName} (void)
     uint32_t nRxPending = 0U;
 
     /* Check Receive Buffer Element Count for watermark interrupt */
-    if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_RXELM_MASK) != 0U)  
+    if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_RXELM_MASK) != 0U)
     {
         size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
         size_t rxCount = ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount;
@@ -520,7 +520,7 @@ void __attribute__((used)) ${rxIsrHandlerName} (void)
 
                         /* Generate TX interrupt when buffer is completely empty */
                         ${SPI_INSTANCE_NAME}IMSKbits.SPITBEN = 1U;
-                        
+
                         /* Enable the transmit interrupt. Callback will be given from the
                          * transmit interrupt, when all bytes are shifted out. */
                         ${txInterruptEnableBit} = 1U;
@@ -528,13 +528,13 @@ void __attribute__((used)) ${rxIsrHandlerName} (void)
                 }
             }
         }
-        if (rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize) 
+        if (rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             /* More bytes pending to be received .. */
             SPI_FIFO_Fill();
-            
+
             nRxPending = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - rxCount;
-            
+
             if(nRxPending <= ${SPI_INSTANCE_NAME}_FIFO_SIZE)
             {
                 ${SPI_INSTANCE_NAME}IMSKbits.RXMSK = nRxPending;
@@ -579,7 +579,7 @@ void __attribute__((used)) ${errorIsrHandlerName}(void)
     size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
     if (txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
     {
-        if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) != 0U) 
+        if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) != 0U)
         {
             /* Clear receiver overflow error if any */
             ${SPI_INSTANCE_NAME}STATbits.SPIROV = 0U;
@@ -597,7 +597,7 @@ void __attribute__((used)) ${errorIsrHandlerName}(void)
             }
         }
     }
-    
+
     ${errorInterruptFlagBit} = 0U;
 }
 
@@ -607,12 +607,12 @@ void __attribute__((used)) ${txIsrHandlerName} (void)
     if((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK)
     {
         size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
-    
+
         while ((txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (!${SPI_INSTANCE_NAME}STATbits.SPITBF))
         {
             ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
             txCount++;
-            
+
             ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
             if (txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
@@ -620,12 +620,12 @@ void __attribute__((used)) ${txIsrHandlerName} (void)
                  * interrupt for the shift register to empty  */
                 ${SPI_INSTANCE_NAME}IMSKbits.SPITBEN = 0U;
                 ${SPI_INSTANCE_NAME}IMSKbits.SRMTEN = 1U;
-                
+
                 /* Enable the error interrupt and disable the transmit interrupt*/
                 ${errorInterruptEnableBit} = 1U;
                 ${txInterruptEnableBit} = 0U;
             }
-            
+
         }
     }
     /* Clear the transmit interrupt flag */

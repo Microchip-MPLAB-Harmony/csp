@@ -110,8 +110,9 @@ peripherals = {
                 "CAN_01152"     : ["CAN"],
                 "CAN_03247"     : ["CAN"],
                 "CAN_6019"      : ["CAN"],
+                "SEFC_04463"    : ["MEMORY"],
                 "CAN_05010"     : ["CAN"],
-                "SEFC_04463"    : ["MEMORY"]
+                "SPI_01482"     : ["SPI"]
 }
 
 # a dictionary to translate the new id mentioned in ATDF to old id used in csp

@@ -57,7 +57,6 @@ MSTEN = "MSTEN"
 CKP = "CKP"
 CKE = "CKE"
 SMP = "SMP"
-MSSEN = "MSSEN"
 MCLKEN = "MCLKEN"
 HOST = "Host"
 CLIENT = "Client"
@@ -124,7 +123,6 @@ SPI_SPICON_MSTEN_LABEL = "Operating Mode"
 SPI_SPICON_CLKPOL_LABEL = "Clock Polarity"
 SPI_SPICON_CLKPH_LABEL = "Clock Edge"
 SPI_SPICON_SMP_LABEL = "Data Input Sample Phase"
-SPI_SPICON_MSSEN_LABEL = "Host Mode Client Select Enable"
 SPI_SPICON_DATA_WIDTH_LABEL = "Data Width"
 CLOCK_SOURCE_LABEL = "Clock Source"
 SPI_REQUESTED_SPEED_LABEL = "Requested Bus Speed (Hz)"
@@ -338,6 +336,55 @@ def createKeyValueSetSymbol(
 
 # ATDF Helper Functions end
 
+def handleMessage(messageID, args):
+    global operatingMode
+    global spisSym_RXBuffer_Size
+    global spisSym_TXBuffer_Size
+    global spiInterruptMode
+    result_dict = {}
+
+    if (messageID == "SPI_MASTER_MODE"):
+        if args.get("isReadOnly") != None and args["isReadOnly"] == True:
+            operatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            operatingMode.setSelectedKey(HOST)
+
+    elif (messageID == "SPI_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            operatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            operatingMode.setSelectedKey(CLIENT)
+
+    elif (messageID == "SPI_SLAVE_RX_BUFFER_SIZE"):
+        if args.get("isReadOnly") != None:
+            spisSym_RXBuffer_Size.setReadOnly(args["isReadOnly"])
+        if args.get("size") != None:
+            spisSym_RXBuffer_Size.setValue(args["size"], 2)
+
+    elif (messageID == "SPI_SLAVE_TX_BUFFER_SIZE"):
+        if args.get("isReadOnly") != None:
+            spisSym_TXBuffer_Size.setReadOnly(args["isReadOnly"])
+        if args.get("size") != None:
+            spisSym_TXBuffer_Size.setValue(args["size"], 2)
+
+    elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            spiInterruptMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            spiInterruptMode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            spiInterruptMode.setVisible(args["isVisible"])
+
+    return result_dict
+
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
 # CallBack functions start
 
@@ -423,7 +470,7 @@ def updateIntReadOnlyAttr(symbol, event):
     )
 
 
-def get_brg_value(clock_source_freq, spi_req_freq, max_brg_value): 
+def get_brg_value(clock_source_freq, spi_req_freq, max_brg_value):
     if clock_source_freq <= 0 or spi_req_freq <= 0:
          return 0
     brg_val = round(clock_source_freq / (2 * spi_req_freq) - 1)
@@ -526,7 +573,7 @@ def updateOperatingMode(symbol, event):
         interruptModeSym.setValue(True)
 
 
-def baudRateTrigger(symbol, event):  
+def baudRateTrigger(symbol, event):
     clock_source_freq = symbol.getComponent().getSymbolValue(CLOCK_FREQ_KEY)
     reqSpeed = int(symbol.getComponent().getSymbolValue(REQUESTED_SPEED))
     maxBrgVal = symbol.getComponent().getSymbolValue(SPI_MAX_BRG)
@@ -573,15 +620,15 @@ SPI_CON1_MCLKEN_KEY = getValueGroupName(SPI,SPI,CON1,MCLKEN)
 CLOCK_GENERATOR = setClockGeneratorData(SPI_CON1_MCLKEN_KEY)
 
 def clockCommentCb(symbol, event):
-    updateClockComment(symbol)            
+    updateClockComment(symbol)
 
 def updateClockComment(symbol):
     clockSelSym = symbol.getComponent().getSymbolByID(SPI_CON1_MCLKEN_KEY)
     clockGenFreq = symbol.getComponent().getSymbolValue(CLOCK_FREQ_KEY)
-    if clockSelSym.getSelectedKey() == CLOCK_GENERATOR  and clockGenFreq == 0: 
+    if clockSelSym.getSelectedKey() == CLOCK_GENERATOR  and clockGenFreq == 0:
         symbol.setVisible(True)
     else:
-        symbol.setVisible(False)  
+        symbol.setVisible(False)
 
 
 # Define the mapping of channels to IFS registers dynamically
@@ -609,6 +656,7 @@ def instantiateComponent(spiComponent):
     instanceNumber.setVisible(False)
 
     # OperatingMode
+    global operatingMode
     operatingMode = createKeyValueSetSymbol(spiComponent, SPI, SPI, CON1, MSTEN)
     operatingMode.setLabel(SPI_SPICON_MSTEN_LABEL)
     operatingMode.setSelectedKey(HOST)
@@ -617,6 +665,7 @@ def instantiateComponent(spiComponent):
 
 
     # Interrupt Mode
+    global spiInterruptMode
     spiInterruptMode = spiComponent.createBooleanSymbol(INTERRUPT_MODE, None)
     spiInterruptMode.setLabel(SPI_INTERRUPT_MODE_LABEL)
     spiInterruptMode.setDefaultValue(True)
@@ -760,6 +809,7 @@ def instantiateComponent(spiComponent):
     ### CLIENT ####
 
     # TX_BUFFER_SIZE
+    global spisSym_TXBuffer_Size
     spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol(TX_BUFFER_SIZE, None)
     spisSym_TXBuffer_Size.setLabel(SPIS_TX_BUFFER_SIZE_LABEL)
     spisSym_TXBuffer_Size.setMin(1)
@@ -769,6 +819,7 @@ def instantiateComponent(spiComponent):
     spisSym_TXBuffer_Size.setDependencies(showClientDependencies, [SPI_CON1__MSTEN])
 
     # RX_BUFFER_SIZE
+    global spisSym_RXBuffer_Size
     spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol(RX_BUFFER_SIZE, None)
     spisSym_RXBuffer_Size.setLabel(SPIS_RX_BUFFER_SIZE_LABEL)
     spisSym_RXBuffer_Size.setMin(1)
@@ -838,7 +889,7 @@ def instantiateComponent(spiComponent):
 
     for pad in sort_alphanumeric(availablePinDictionary.values()):
         # key = pad
-        # value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)] This is in efficient way 
+        # value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)] This is in efficient way
         key, value = next((key, value) for key, value in availablePinDictionary.items() if value == pad)
         description = pad
         spisSymBusyPin.addKey(key, value, description)
@@ -862,7 +913,7 @@ def instantiateComponent(spiComponent):
 
     ##Interrupt Handling
     compPrefix = "SPI"
-    compInstance = spiComponent.getID().upper().replace(SPI,"") 
+    compInstance = spiComponent.getID().upper().replace(SPI,"")
     intSymbolMap= getInterruptSymbolMapForCodeGen(compPrefix,compInstance,interruptList)
     intSymbolMap["errorInterruptEnableBit"] = intSymbolMap["eInterruptEnableBit"]
     intSymbolMap["errorIsrHandlerName"] = intSymbolMap["eIsrHandlerName"]
@@ -888,9 +939,9 @@ def instantiateComponent(spiComponent):
     # Code Generation synbols
 
     # SPI_CON1__MODE_32_MODE_16
-    # Note: For the current dsPIC33A device, we are supporting only 8-bit data width. 
+    # Note: For the current dsPIC33A device, we are supporting only 8-bit data width.
     # The `updateDataWidth` callback is intended to handle future cases where 16-bit and 32-bit
-    # data widths may be supported. Since these widths are not currently relevant, we are 
+    # data widths may be supported. Since these widths are not currently relevant, we are
     # commenting out the dependency for now.
     con1_mode32_mode16 = spiComponent.createStringSymbol(SPI_CON1__MODE_32_MODE_16,None)
     con1_mode32_mode16.setVisible(False)
@@ -915,7 +966,7 @@ def instantiateComponent(spiComponent):
     clkSrcGenNumber.setVisible(False)
 
     # String symbol for the POR (Power-On Reset) values of registers
-    registers_spi = ["CON1","CON2","BRG","IMSK","STAT"] 
+    registers_spi = ["CON1","CON2","BRG","IMSK","STAT"]
     reg_por_set  = create_reg_por_set_string(SPI, SPI, registers_spi )
     regPorSet = spiComponent.createStringSymbol("regPorSet", None)
     regPorSet.setDefaultValue(reg_por_set)
@@ -926,6 +977,48 @@ def instantiateComponent(spiComponent):
     clkComment.setVisible(False)
     clkComment.setLabel("Warning!!! Enable and configure " +  CLOCK_GENERATOR + " in Clock Section of System Module")
     clkComment.setDependencies(clockCommentCb, [CLOCK_FREQ_KEY , SPI_CON1_MCLKEN_KEY])
+
+    # Driver Symbols Start
+    #SPI 8-bit Character size Mask
+    spiSym_CON1_8BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", None)
+    spiSym_CON1_8BIT.setDefaultValue("0x00000000")
+    spiSym_CON1_8BIT.setVisible(False)
+
+    #SPI Clock Phase Leading Edge Mask
+    spiSym_CON1_LE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", None)
+    spiSym_CON1_LE_Mask.setDefaultValue("0x00000100")
+    spiSym_CON1_LE_Mask.setVisible(False)
+
+    #SPI Clock Phase Trailing Edge Mask
+    spiSym_CON1_TE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", None)
+    spiSym_CON1_TE_Mask.setDefaultValue("0x00000000")
+    spiSym_CON1_TE_Mask.setVisible(False)
+
+    #SPI Clock Polarity Idle Low Mask
+    spiSym_CON1_IL_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", None)
+    spiSym_CON1_IL_Mask.setDefaultValue("0x00000000")
+    spiSym_CON1_IL_Mask.setVisible(False)
+
+    #SPI Clock Polarity Idle High Mask
+    spiSym_CON1_IH_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", None)
+    spiSym_CON1_IH_Mask.setDefaultValue("0x00000040")
+    spiSym_CON1_IH_Mask.setVisible(False)
+
+    #SPI API Prefix
+    spiSym_API_Prefix = spiComponent.createStringSymbol("SPI_PLIB_API_PREFIX", None)
+    spiSym_API_Prefix.setDefaultValue(spiInstanceName.getValue())
+    spiSym_API_Prefix.setVisible(False)
+
+    #SPI Transmit data register
+    transmitRegister = spiComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    transmitRegister.setDefaultValue("&(" + spiInstanceName.getValue() + "BUF)")
+    transmitRegister.setVisible(False)
+
+    #SPI Receive data register
+    receiveRegister = spiComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    receiveRegister.setDefaultValue("&(" + spiInstanceName.getValue() + "BUF)")
+    receiveRegister.setVisible(False)
+    # Driver Symbols End
 
     ###### Code Generation File Handling #########
 
@@ -1074,7 +1167,7 @@ def getChipSelectPinList(ss_pin):
 
 # Updates 'SPI_CON1__MODE_32_MODE_16' and 'SPI_CLIENT_MODE' symbols based on the selected 'SPI_SPICON_DATA_WIDTH' value.
 def updateDataWidth(symbol, event):
-    
+
     dataWidthSym = symbol.getComponent().getSymbolValue(SPI_SPICON_DATA_WIDTH)
     mode32_mode16_Sym = symbol.getComponent().getSymbolByID(SPI_CON1__MODE_32_MODE_16)
     spi_con_mode = symbol.getComponent().getSymbolByID("SPI_SPICON_MODE")
@@ -1091,12 +1184,12 @@ def updateDataWidth(symbol, event):
         spi_con_mode.setValue(mode_mapping[dataWidthSym]["client_data_width_mode"])
         Log.writeInfoMessage("SPI_SPICON_DATA_WIDTH updated: '{}', SPI_CON1__MODE_32_MODE_16 set to '{}' , SPI_SPICON_MODE:'{}'."
                             .format(dataWidthSym, mode_mapping[dataWidthSym]["mode_value"], mode_mapping[dataWidthSym]["client_data_width_mode"]))
-    
+
     else:
         Log.writeWarningMessage("Invalid SPI_SPICON_DATA_WIDTH: '{}'.".format(dataWidthSym))
 
 
-       
+
 
 def spiHostModeFileGeneration(symbol, event):
     symbol.setEnabled(event["source"].getSymbolByID(SPI_CON1__MSTEN).getSelectedKey() == HOST)
@@ -1108,7 +1201,7 @@ def spiClientModeFileGeneration(symbol, event):
 
 def getInterruptSymbolMapForCodeGen(compPrefix,compInstance,interruptList):
     intSymbolMap= {}
-    intEntryCount = len(interruptList)   
+    intEntryCount = len(interruptList)
     intFlagList = [compPrefix+compInstance+interrupt+"IF" for interrupt in interruptList]
     flagRegisterGroup = getModuleRegisterGroup("intc","IFS")
     isflagDataAdded = False
@@ -1123,8 +1216,8 @@ def getInterruptSymbolMapForCodeGen(compPrefix,compInstance,interruptList):
                         isflagDataAdded = True
                         break
             if isflagDataAdded:
-                break        
-                    
+                break
+
     intEntryCount = 2*intEntryCount
     isEnableDataAdded = False
     intEnableList = [compPrefix+compInstance+interrupt+"IE" for interrupt in interruptList]
@@ -1140,12 +1233,12 @@ def getInterruptSymbolMapForCodeGen(compPrefix,compInstance,interruptList):
                         isEnableDataAdded = True
                         break
             if isEnableDataAdded:
-                break                          
-    
+                break
+
     for interrupt in interruptList:
         intSymbolName = interrupt.lower() + "IsrHandlerName"
         intSymbolMap[intSymbolName] = compPrefix + compInstance +interrupt+"_InterruptHandler"
-    
+
     return intSymbolMap
 
 def createInterruptSymbols(component,intSymbolMap):
@@ -1187,7 +1280,7 @@ def getRegisterDefaultValue(module, register_group, register):
     )
     # Retrieve the register node
     register_node = ATDF.getNode(reg_path)
-    
+
     # If the register node is found, fetch and return the initval as hex; otherwise, return "0x0UL"
     if register_node is not None:
         reg_default_val = register_node.getAttribute("initval")
