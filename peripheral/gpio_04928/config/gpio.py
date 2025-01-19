@@ -1012,3 +1012,9 @@ for bitfield in bitfieldData:
     if bitfield.getAttribute("name") == "IOLOCK":
         ppsPinsLockBit.setDefaultValue("RPCONbits.IOLOCK")
         break
+
+sysPortIncludeFile = coreComponent.createFileSymbol("GPIO_SYSPORT_H", None)
+sysPortIncludeFile.setType("STRING")
+sysPortIncludeFile.setOutputName("core.LIST_SYS_PORT_INCLUDES")
+sysPortIncludeFile.setSourcePath("../peripheral/gpio_04928/templates/plib_gpio_sysport.h.ftl")
+sysPortIncludeFile.setMarkup(True)
