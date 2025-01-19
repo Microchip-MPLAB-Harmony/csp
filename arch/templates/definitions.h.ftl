@@ -86,6 +86,9 @@ extern "C" {
 <#if CPU_CLOCK_FREQUENCY??>
 /* CPU clock frequency */
 #define CPU_CLOCK_FREQUENCY ${CPU_CLOCK_FREQUENCY}U
+<#elseif clkGen1OutFrequency??>
+/* CPU clock frequency */
+#define CPU_CLOCK_FREQUENCY ${clkGen1OutFrequency}
 </#if>
 
 // *****************************************************************************
