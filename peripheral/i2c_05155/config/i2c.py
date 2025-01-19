@@ -10,7 +10,7 @@ I2C_INSTANCE_NAME = "moduleName"
 OPERATING_MODE = "I2C_OPERATING_MODE"
 CLOCK_FREQUENCY = "I2C_CLOCK_FREQUENCY"
 BAUD_RATE = "I2C_BAUD_RATE"
-REQUESTED_SPEED = "I2C_REQUESTED_SPEED"
+REQUESTED_SPEED = "I2C_CLOCK_SPEED"
 ENABLE_10BIT_ADDRESS = "ENABLE_10BIT_ADDRESS"
 CORE_COMPONENT = "core"
 STANDARD_SPEED_CLOCK_FREQ = "stdSpeedClkFreq"
@@ -18,6 +18,34 @@ FSCL_SPEEDS = [100000,400000,1000000]
 MODULE_NAME = "I2C"
 
 intVectorDataDictionary = {}
+
+def handleMessage(messageID, args):
+    global operatingMode
+
+    result_dict = {}
+
+    if (messageID == "I2C_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            operatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            operatingMode.setValue(HOST)
+
+    elif (messageID == "I2C_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            operatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            operatingMode.setValue(CLIENT)
+
+    return result_dict
+
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
 def hostModeVisibility(symbol, event):
     symbol.setVisible(symbol.getComponent().getSymbolValue(OPERATING_MODE) == HOST)
@@ -57,9 +85,9 @@ def getBRGValue(clk, baud, i2cInstanceName):
     # BRG = (((1/(2 * baud))-Delay) * clk) - 3
     if baud == 0:
         return MIN_BRG
-    
+
     delay = int(ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="I2C"]/instance@[name="' + i2cInstanceName+ '"]/parameters/param@[name="pulseGobblerDelay"]').getAttribute("value")) * NANO_SECONDS
-    
+
     brgValue = (((1.0 / (2.0 * baud)) - delay) * clk) - 3.0
     return max(MIN_BRG,int(brgValue))
 
@@ -121,7 +149,7 @@ def getDefaultVal(initVal, mask):
     while (mask % 2) == 0:
         mask = mask >> 1
         value = value >> 1
-    return value 
+    return value
 
 def getSettingBitDefaultValue(moduleName,registerGroup,register,bitfield):
      regPath = '/avr-tools-device-file/modules/module@[name="' + moduleName + '"]/register-group@[name="'+ registerGroup + '"]/register@[name="'+ register + '"]'
@@ -181,7 +209,7 @@ def getBitfieldOptionList(node):
 
             dict["value"] = str(tempint)
             optionList.append(dict)
-    return optionList 
+    return optionList
 
 def getKeyValuePairBasedonValue(value,keyValueOptionList):
     index = 0
@@ -191,18 +219,18 @@ def getKeyValuePairBasedonValue(value,keyValueOptionList):
         index += 1
 
     print("find_key: could not find value in dictionary") # should never get here
-    return "" 
+    return ""
 
 def addKeystoKeyValueSymbol(bitSymbol,bitfieldOptionList):
     for ii in bitfieldOptionList:
-        bitSymbol.addKey( ii['key'],ii['value'], ii['desc'] )  
+        bitSymbol.addKey( ii['key'],ii['value'], ii['desc'] )
 
-def createKeyValueSetSymbol(component,moduleName,registerGroup,register,bitfield): 
+def createKeyValueSetSymbol(component,moduleName,registerGroup,register,bitfield):
         valueGroupEntry = getValueGroupName(moduleName,registerGroup,register,bitfield)
         valGroup = getValueGroup(moduleName,valueGroupEntry)
         if(valGroup != None):
-            symbolKey = valueGroupEntry       
-            optionList = getBitfieldOptionList(valGroup)   
+            symbolKey = valueGroupEntry
+            optionList = getBitfieldOptionList(valGroup)
             valueGroupEntryComp = component.createKeyValueSetSymbol(symbolKey, None )
             valueGroupEntryComp.setLabel(symbolKey)
             defaultValue =getSettingBitDefaultValue(moduleName,registerGroup,register,bitfield)
@@ -210,8 +238,8 @@ def createKeyValueSetSymbol(component,moduleName,registerGroup,register,bitfield
             valueGroupEntryComp.setOutputMode("Value")
             valueGroupEntryComp.setDisplayMode("Description")
             addKeystoKeyValueSymbol(valueGroupEntryComp,optionList)
-            return  valueGroupEntryComp  
-        
+            return  valueGroupEntryComp
+
 def hostFilesGeneration(symbol, event):
     symbol.setEnabled(symbol.getComponent().getSymbolValue(OPERATING_MODE) == HOST)
 
@@ -219,7 +247,7 @@ def clientFilesGeneration(symbol, event):
     symbol.setEnabled(symbol.getComponent().getSymbolValue(OPERATING_MODE) == CLIENT)
 
 def instantiateComponent(i2cComponent):
-    
+
     i2cInstanceName = i2cComponent.createStringSymbol(I2C_INSTANCE_NAME, None)
     i2cInstanceName.setVisible(False)
     i2cInstanceName.setDefaultValue(i2cComponent.getID().upper())
@@ -235,6 +263,7 @@ def instantiateComponent(i2cComponent):
     i2cInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:intc_04436;register:IFS2")
 
     # Operating Mode
+    global operatingMode
     operatingMode = i2cComponent.createComboSymbol(OPERATING_MODE, None, [HOST,CLIENT])
     operatingMode.setLabel("Operating Mode")
     operatingMode.setDefaultValue(HOST)
@@ -315,17 +344,17 @@ def instantiateComponent(i2cComponent):
     clientMask.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_05155;register:I2CxMSK")
 
     # Slew Rate Control
-    slewRateControl = createKeyValueSetSymbol(i2cComponent, MODULE_NAME, "I2C","CON1","DISSLW")  
+    slewRateControl = createKeyValueSetSymbol(i2cComponent, MODULE_NAME, "I2C","CON1","DISSLW")
     slewRateControl.setLabel("Disable Slew Rate Control")
     slewRateControl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_05155;register:I2CxCON1")
 
     # SMBus Input Levels bit
-    smBusInputLevels = createKeyValueSetSymbol(i2cComponent, MODULE_NAME, "I2C","CON1","SMBEN")  
+    smBusInputLevels = createKeyValueSetSymbol(i2cComponent, MODULE_NAME, "I2C","CON1","SMBEN")
     smBusInputLevels.setLabel("SMBus Input Levels")
     smBusInputLevels.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_05155;register:I2CxCON1")
 
     # Stop in Idle Mode bit
-    sdaHoldTime = createKeyValueSetSymbol(i2cComponent, MODULE_NAME, "I2C","CON1","SDAHT")  
+    sdaHoldTime = createKeyValueSetSymbol(i2cComponent, MODULE_NAME, "I2C","CON1","SDAHT")
     sdaHoldTime.setLabel("SDA Hold Time")
     sdaHoldTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_05155;register:I2CxCON1")
 
@@ -361,7 +390,7 @@ def instantiateComponent(i2cComponent):
         enableDataHold.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_05155;register:I2CxCON1")
 
     # Setup and Rise Time
-    setupAndRiseTime = i2cComponent.createKeyValueSetSymbol("SETUP_RISE_TIME", None) 
+    setupAndRiseTime = i2cComponent.createKeyValueSetSymbol("SETUP_RISE_TIME", None)
     setupAndRiseTime.setLabel("Setup and Rise Time")
     setupAndRiseTime.addKey("0", "0" , "100 kHz - Setup time 250ns, Rise time 1000ns")
     setupAndRiseTime.addKey("1", "1" , "400 kHz - Setup time 100ns, Rise time 300ns")
@@ -387,6 +416,13 @@ def instantiateComponent(i2cComponent):
     intComment.setVisible(all(not bool(Database.getSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(intIndex))) for intIndex in intVectorDataDictionary.values()))
     intComment.setLabel("Warning!!! Enable " + i2cInstanceName.getValue() + " General and Error Interrupt in Interrupts Section of System module")
     intComment.setDependencies(interruptStatusWarning, ["core." + "INTC_" + str(intIndex) + "_ENABLE" for intIndex in intVectorDataDictionary.values()])
+
+    #Driver Symbol Start
+    #I2C API Prefix
+    i2cSym_API_Prefix = i2cComponent.createStringSymbol("I2C_PLIB_API_PREFIX", None)
+    i2cSym_API_Prefix.setDefaultValue(i2cInstanceName.getValue())
+    i2cSym_API_Prefix.setVisible(False)
+    #Driver Symbol End
 
     ######################## Code Generation ##################################
 

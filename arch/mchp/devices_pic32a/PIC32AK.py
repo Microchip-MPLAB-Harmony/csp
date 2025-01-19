@@ -79,9 +79,9 @@ def getCorePeripheralsInterruptDataStructure():
 
     dmacVectName = ["DMA0Interrupt", "DMA1Interrupt", "DMA2Interrupt", "DMA3Interrupt", "DMA4Interrupt", "DMA5Interrupt","DMA6Interrupt","DMA7Interrupt"]
     dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3","CHANNEL4", "CHANNEL5", "CHANNEL6", "CHANNEL7"]
-    uartIntSrc = ["UART_ERROR", "UART_RX", "UART_TX_COMPLETE"]
+    uartIntSrc = ["USART_ERROR", "USART_RX", "USART_TX_COMPLETE"]
     spiIntSrc = ["SPI_ERROR", "SPI_RX", "SPI_TX_COMPLETE"]
-   # i2cIntSrc = ["I2C_0", "I2C_1"]
+    i2cIntSrc = ["I2C_0", "I2C_1"]
 
     corePeripherals = {
 
@@ -90,18 +90,15 @@ def getCorePeripheralsInterruptDataStructure():
             "UART1" : {"name":["U1EInterrupt", "U1RXInterrupt", "U1TXInterrupt"], "INT_SRC":uartIntSrc},
             "UART2" : {"name":["U2EInterrupt", "U2RXInterrupt", "U2TXInterrupt"], "INT_SRC":uartIntSrc},
             "UART3" : {"name":["U3EInterrupt", "U3RXInterrupt", "U3TXInterrupt"], "INT_SRC":uartIntSrc},
-            
+
 
             "SPI1" : {"name":["SPI1EInterrupt", "SPI1RXInterrupt", "SPI1TXInterrupt"], "INT_SRC":spiIntSrc},
             "SPI2" : {"name":["SPI2EInterrupt", "SPI2RXInterrupt", "SPI2TXInterrupt"], "INT_SRC":spiIntSrc},
             "SPI3" : {"name":["SPI3EInterrupt", "SPI3RXInterrupt", "SPI3TXInterrupt"], "INT_SRC":spiIntSrc},
             "SPI4" : {"name":["SPI4EInterrupt", "SPI4RXInterrupt", "SPI4TXInterrupt"], "INT_SRC":spiIntSrc},
 
-          #  "I2C1" : {"name":["I2C1EInterrupt", "I2C1Interrupt"], "INT_SRC":i2cIntSrc},
-          ##  "I2C3" : {"name":["I2C2EInterrupt", "I2C2Interrupt"], "INT_SRC":i2cIntSrc},
-          #  "I2C4" : {"name":["I2C3EInterrupt", "I2C3Interrupt"], "INT_SRC":i2cIntSrc},
-          #  "I2C5" : {"name":["I2C4EInterrupt", "I2C4Interrupt"], "INT_SRC":i2cIntSrc}
-
+            "I2C1" : {"name":["I2C1EInterrupt", "I2C1Interrupt"], "INT_SRC":i2cIntSrc},
+            "I2C2" : {"name":["I2C2EInterrupt", "I2C2Interrupt"], "INT_SRC":i2cIntSrc}
     }
 
     return corePeripherals
@@ -109,16 +106,16 @@ def getCorePeripheralsInterruptDataStructure():
 global calcWaitStates
 global getWaitStates
 
-    
+
 def getWaitStates():
     return 0
 
 def calcWaitStates(symbol, event):
 
     symbol.setValue(getWaitStates(), 2)
-    
 
-    
+
+
 
 processor = Variables.get("__PROCESSOR")
 
@@ -136,12 +133,12 @@ fuseCodeGenVal = ""
 
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
 
-# load device specific configurations (fuses), 
+# load device specific configurations (fuses),
 # loaded from atdf file
 # Most fields are key/value pairs, but a handful of them are integer.  Need to know which ones those are.
 # This line to be reviewed and updated
 global bitfieldHexSymbols
-bitfieldHexSymbols = [] 
+bitfieldHexSymbols = []
 
 global hexConfigBitPattern
 hexConfigBitPattern = "FPR\d+ST_START|FPR\d+END_END|FPR\d+STBKUP_START|FPR\d+ENDBKUP_END|FEPUCB_EPUCB|FWPUCB_WPUCB"
@@ -160,9 +157,9 @@ def getConfigBitCaptionValue(configBitValueGroup,configBitVal):
             if( valGrpEntry.getAttribute("name") == configBitVal):
                 captionStr = valGrpEntry.getAttribute("caption")
                 break
-    return captionStr 
-     
-global fuseConfigCb 
+    return captionStr
+
+global fuseConfigCb
 def fuseConfigCb(symbol, event):
     import re
     fuseCodeGenValue = ""
@@ -175,20 +172,20 @@ def fuseConfigCb(symbol, event):
         bitfieldNode = register[reg_index].getChildren()
         for bitfield_index in range(len(bitfieldNode)):
              bitfieldName = bitfieldNode[bitfield_index].getAttribute('values')
-             bitfieldValue = symbol.getComponent().getSymbolValue("CONFIG_"+bitfieldName)   
+             bitfieldValue = symbol.getComponent().getSymbolValue("CONFIG_"+bitfieldName)
              if bitfieldValue is None:
-                print("my bit is sad ", bitfieldName)         
+                print("my bit is sad ", bitfieldName)
              if re.match(hexConfigBitPattern, bitfieldName):
                 desc = bitfieldNode[bitfield_index].getAttribute('caption')
                 fuseCodeGenValue += "#pragma config {} = {}            // {}\n".format(bitfieldName, hex(int(bitfieldValue)).rstrip('L'),desc)
              else:
-                desc = "" 
-                if re.match(invalidConfigBitCaptionPattern, bitfieldName): 
+                desc = ""
+                if re.match(invalidConfigBitCaptionPattern, bitfieldName):
                    desc = bitfieldNode[bitfield_index].getAttribute('caption')
                 else:
-                   desc = getConfigBitCaptionValue(bitfieldName, bitfieldValue)      
+                   desc = getConfigBitCaptionValue(bitfieldName, bitfieldValue)
                 fuseCodeGenValue += "#pragma config {} = {}            // {}\n".format(bitfieldName, bitfieldValue,desc)
-    symbol.getComponent().setSymbolValue("FUSE_CONFIG_CODE_GEN",fuseCodeGenValue)            
+    symbol.getComponent().setSymbolValue("FUSE_CONFIG_CODE_GEN",fuseCodeGenValue)
 
 
 node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]/register-group")
@@ -203,9 +200,9 @@ for reg_index in range(len(register)):
     menuitem.setVisible(True)
     menuitem.setLabel(symbolName)
     bitfields = register[reg_index].getChildren()
-    
-    fuseCodeGenVal += "\n// "+symbolName + "\n" 
-    
+
+    fuseCodeGenVal += "\n// "+symbolName + "\n"
+
     for bitfield_index in range(len(bitfields)):
         #bitfieldName = bitfields[bitfield_index].getAttribute('name')
         bitfieldName = bitfields[bitfield_index].getAttribute('values')
@@ -237,29 +234,29 @@ for reg_index in range(len(register)):
                         bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[bitfield_index], porValue), keyVals))
             else:
                 bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[bitfield_index], porValue), keyVals))
-        
+
 
         bitfielditem.setVisible(True)
         label = bitfields[bitfield_index].getAttribute('caption')+' ('+bitfields[bitfield_index].getAttribute('name')+')'
         bitfielditem.setLabel(label)
         description = bitfields[bitfield_index].getAttribute('caption')
         bitfielditem.setDescription(bitfields[bitfield_index].getAttribute('caption'))
-        
-        
+
+
         if re.match(hexConfigBitPattern, bitfieldName):
             fuseCodeGenVal += "#pragma config {} = {}            // {}\n".format(bitfieldName, hex(int(bitfielditem.getValue())).rstrip('L'),description)
         else:
             if re.match(invalidConfigBitCaptionPattern, bitfieldName) is None:
                 description = getConfigBitCaptionValue(bitfieldName, bitfielditem.getValue())
             fuseCodeGenVal += "#pragma config {} = {}            // {}\n".format(bitfieldName, bitfielditem.getValue(),description)
-        bitfielditem.setDependencies(fuseConfigCb,[bitfielditem.getID()])    
-          
-        
+        bitfielditem.setDependencies(fuseConfigCb,[bitfielditem.getID()])
+
+
 
 fuseCodeGenSymbol = coreComponent.createStringSymbol("FUSE_CONFIG_CODE_GEN", devCfgMenu)
-fuseCodeGenSymbol.setVisible(False)       
+fuseCodeGenSymbol.setVisible(False)
 fuseCodeGenSymbol.setDefaultValue(fuseCodeGenVal)
-   
+
 # End of scanning atdf file for parameters in fuse area
 
 # The following symbols are created for the clock manager.
@@ -285,7 +282,7 @@ coreFPU.setVisible(False)
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_04449/config/clk.py")
 #coreComponent.addPlugin("../peripheral/clk_04449/plugin/clockmanager.jar")
 
-# load pin manager 
+# load pin manager
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_04928/config/gpio.py")
 coreComponent.addPlugin("../peripheral/gpio_04928/plugin/gpio_02922.jar")
 
