@@ -67,7 +67,7 @@ static void OSCCTRL_Initialize(void)
         /* Waiting for the XOSC Ready state */
     }
     </#if>
-    
+
     <#if CONFIG_CLOCK_XOSC_GRES == true>
     /* Use internal XOSC shunt Gain resistor */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_XOSCCTRLB |= 0x04U;</@compress>
@@ -123,6 +123,8 @@ static void PLL0_Initialize(void)
     /****************** PLL0 Initialization  *********************************/
 
     /* Configure PLL0 */
+    /* Disable PLL0 and clear PLL0 control register */
+    OSCCTRL_REGS->OSCCTRL_PLL0CTRL = 0U;
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_PLL0REFDIV = OSCCTRL_PLL0REFDIV_REFDIV(${CONFIG_CLOCK_PLL0_PLLREFDIV_REFDIV}U);</@compress>
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_PLL0FBDIV = OSCCTRL_PLL0FBDIV_FBDIV(${CONFIG_CLOCK_PLL0_PLLFBDIV_FBDIV}U);</@compress>
 
@@ -184,6 +186,8 @@ static void PLL1_Initialize(void)
     /****************** PLL1 Initialization  *********************************/
 
     /* Configure PLL1 */
+    /* Disable PLL1 and clear PLL1 control register */
+    OSCCTRL_REGS->OSCCTRL_PLL1CTRL = 0U;
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_PLL1REFDIV = OSCCTRL_PLL1REFDIV_REFDIV(${CONFIG_CLOCK_PLL1_PLLREFDIV_REFDIV}U);</@compress>
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_PLL1FBDIV = OSCCTRL_PLL1FBDIV_FBDIV(${CONFIG_CLOCK_PLL1_PLLFBDIV_FBDIV}U);</@compress>
 
