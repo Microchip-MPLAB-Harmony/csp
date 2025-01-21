@@ -1,4 +1,4 @@
-<#if PRODUCT_FAMILY?contains("PIC32CX_BZ3")>
+<#if PRODUCT_FAMILY?contains("PIC32CX_BZ3") && !((CoreSeries?contains("PIC32WM_BZ36")) || (CoreSeries?contains("PIC32CXBZ36"))) >
     /* MISRAC 2012 deviation block start */
     /* MISRA C-2012 Rule 11.1 deviated 1 time. Deviation record ID -  H3_MISRAC_2012_R_11_1_DR_1 */
     <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
