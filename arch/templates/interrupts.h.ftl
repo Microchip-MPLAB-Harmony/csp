@@ -56,7 +56,10 @@
 // Section: Handler Routines
 // *****************************************************************************
 // *****************************************************************************
-
+<#if CoreArchitecture?matches("dsPIC33A")> 
 ${LIST_SYSTEM_INTERRUPT_HANDLER_DECLS}
+<#else>
+${LIST_SYSTEM_INTERRUPT_HANDLER_DECLS}
+</#if>
 
 #endif // INTERRUPTS_H
