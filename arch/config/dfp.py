@@ -72,7 +72,7 @@ def instantiateComponent(dfpComponent):
     deviceHeaderFile.setOverwrite(True)
 
     coreArch = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
-    if("MIPS" not in coreArch):
+    if(("MIPS" not in coreArch) and ("33Axxx" not in coreArch)):
         #add pack files to a project
         headerFileNames = listdir(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component")
 
@@ -132,7 +132,7 @@ def instantiateComponent(dfpComponent):
         secDeviceHeaderFile.setType("HEADER")
         secDeviceHeaderFile.setOverwrite(True)
         secDeviceHeaderFile.setSecurity("SECURE")
-        if( "MIPS" not in coreArch):
+        if(("MIPS" not in coreArch) and ("33Axxx" not in coreArch)):
             #add pack files to a project
             secHeaderFileNames = listdir(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component")
 

@@ -24,8 +24,14 @@ global ECIA_EN_SET_RegUpdate
 global dmaConfiguration
 global BootFlashDict
 global isBFMPresent
+global CORE_DSPIC33A
+global CORE_PIC32A
 global getAppPlacementParams
 
+CORE_DSPIC33A  = "dsPIC33A"
+CORE_PIC32A    = "PIC32A"
+
+FlashNames          = ["FLASH", "IFLASH", "FCR_PFM"]
 coreSymListOfSupportedMethods = [ "setValue", "setReadOnly", "setEnabled", "setVisible", "clearValue"]
 
 FlashNames          = ["FLASH", "IFLASH", "IFLASH0", "FCR_PFM", "FLASH_PFM"]
@@ -140,7 +146,7 @@ def handleMessage(messageID, args):
         pinName = args.get('pinName')
         fnList = getFunctionListByPinName(pinName) # this API must be defined as global in every port plibs (MIPS arch)
         symbolDict.setdefault('pinName', fnList)
-        
+
     elif messageID == "PIN_SET_CONFIG_VALUE":
         pinNumber = args.get('pinNumber')
         setting = args.get('setting')
@@ -154,7 +160,7 @@ def handleMessage(messageID, args):
         if pinNumber != None and setting != None:
             value = getPinConfigurationValue(pinNumber, setting)
             symbolDict = {"value": value}
-        
+
     elif messageID == "PIN_CLEAR_CONFIG_VALUE":
         pinNumber = args.get('pinNumber')
         setting = args.get('setting')
@@ -173,10 +179,10 @@ def handleMessage(messageID, args):
             symbolDict = {"Result": "Success"}
         else:
             symbolDict = {"Result": "Fail"}
-        
+
     elif messageID == "AIC_CONFIG_HW_IO": # only for MPUs (aic.py)
         symbolDict = aicConfigHwIO(messageID, args)
-        
+
     elif messageID == "INT_CONFIG_HW_IO": # only for MIPS
         extIntNum, enable = args['config']
         if enable == True:
@@ -188,7 +194,7 @@ def handleMessage(messageID, args):
             symbolDict = {"Result": "Success"}
         else:
             symbolDict = {"Result": "Fail"}
-            
+
     elif messageID == "WAIT_STATES":
         symbolDict = nvmWaitStates
 
@@ -352,6 +358,8 @@ def genSysSourceFile(symbol, event):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysIntFile")
     elif(event["id"] == "CoreSysExceptionFile"):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
+    elif event["id"] == "CoreSysTrapsFile":
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysTrapsFile")
     elif(event["id"] == "CoreSysStartupFile"):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysStartupFile")
     elif(event["id"] == "CoreSysCallsFile"):
@@ -536,16 +544,28 @@ def instantiateComponent( coreComponent ):
     xc32AllStacks =  False
     iarVisiblity =  False
     xc32Visibility = False
+    xcDSCVisibility = False
+    xcDSCAvailable = False
     multiCompilerSupport = False
 
     # core architecture symbol
     coreArch = coreComponent.createStringSymbol( "CoreArchitecture", None )
-    coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
-    coreArch.setReadOnly( True )
-    coreArch.setVisible( False )
 
     #family series symbol
     coreSeries = coreComponent.createStringSymbol( "CoreSeries", None )
+    archName = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
+    seriesName = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" )
+    if "33Axxx" in archName:
+        if CORE_PIC32A in seriesName:
+            coreArch.setDefaultValue(CORE_PIC32A)
+        else: #"dsPIC33A"
+            coreArch.setDefaultValue(CORE_DSPIC33A)
+    else:
+        coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
+
+    coreArch.setReadOnly( True )
+    coreArch.setVisible( True )
+
     coreSeries.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" ) )
     coreSeries.setReadOnly( True )
     coreSeries.setVisible( False )
@@ -592,6 +612,20 @@ def instantiateComponent( coreComponent ):
         xc32AllStacks = True
         multiCompilerSupport = True
         deviceCacheHeaderName = "cache_arm9.h.ftl"
+    elif CORE_DSPIC33A in coreArch.getValue(): # "dspic33a"
+        #isMips = True
+        baseArchDir = "mchp"
+        compilers = ["XCDSC"]
+        #deviceCacheHeaderName = "cache_dspic33a.h.ftl"
+        xcDSCAvailable = True
+        xcDSCVisibility = True
+    elif CORE_PIC32A in coreArch.getValue(): # "PIC32A"
+        #isMips = True
+        baseArchDir = "mchp"
+        compilers = ["XC32"]
+        #deviceCacheHeaderName = "cache_dspic33a.h.ftl"
+        xc32Available = True
+        xc32Visibility = True
     else: # "mips"
         isMips = True
         baseArchDir = "mips"
@@ -609,14 +643,15 @@ def instantiateComponent( coreComponent ):
     devCfgMenu = coreComponent.createMenuSymbol("CoreCfgMenu", devMenu)
     devCfgMenu.setLabel( Variables.get( "__PROCESSOR" ) + " Device Configuration" )
     devCfgMenu.setDescription("Hardware Configuration Bits")
+    devCfgMenu.setVisible( True )
 
     projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
     projMenu.setLabel("Project Configuration")
-
-    cplusplusProject = coreComponent.createBooleanSymbol("CPLUSPLUS_PROJECT", projMenu)
-    cplusplusProject.setLabel("Generate C++ Project")
-    cplusplusProject.setDescription("Generate Main Source File (main) and Application Source File (app) with .cpp file extension")
-    cplusplusProject.setDefaultValue(False)
+    if (("dsPIC33A" not in coreArch.getValue()) and ("PIC32A" not in coreArch.getValue())):
+       cplusplusProject = coreComponent.createBooleanSymbol("CPLUSPLUS_PROJECT", projMenu)
+       cplusplusProject.setLabel("Generate C++ Project")
+       cplusplusProject.setDescription("Generate Main Source File (main) and Application Source File (app) with .cpp file extension")
+       cplusplusProject.setDefaultValue(False)
 
     genMainFile = coreComponent.createBooleanSymbol("CoreMainFile", projMenu)
     genMainFile.setLabel("Generate Main Source File")
@@ -647,47 +682,53 @@ def instantiateComponent( coreComponent ):
     genSysIntFile.setDefaultValue(True)
     genSysIntFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
-    genSysCallsFile = coreComponent.createBooleanSymbol("CoreSysCallsFile", genSysFiles)
-    genSysCallsFile.setLabel("Generate LIBC Syscalls")
-    genSysCallsFile.setDefaultValue(True)
-    genSysCallsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+    genSysTrapsFile = coreComponent.createBooleanSymbol("CoreSysTrapsFile", genSysFiles)
+    genSysTrapsFile.setLabel("Generate System Traps")
+    genSysTrapsFile.setDefaultValue(True)
+    genSysTrapsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
-    genSysStartupFile = coreComponent.createBooleanSymbol("CoreSysStartupFile", genSysFiles)
-    genSysStartupFile.setLabel("Generate System Startup")
-    genSysStartupFile.setDefaultValue(True)
-    genSysStartupFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+    if ((CORE_DSPIC33A not in coreArch.getValue()) and (CORE_PIC32A not in coreArch.getValue())):
+        genSysCallsFile = coreComponent.createBooleanSymbol("CoreSysCallsFile", genSysFiles)
+        genSysCallsFile.setLabel("Generate LIBC Syscalls")
+        genSysCallsFile.setDefaultValue(True)
+        genSysCallsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
-    genSysDebugConsoleFile = coreComponent.createBooleanSymbol("CoreSysStdioSyscallsFile", genSysFiles)
-    genSysDebugConsoleFile.setLabel("Generate STDIO Syscalls")
-    genSysDebugConsoleFile.setDefaultValue(True)
-    genSysDebugConsoleFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+        genSysStartupFile = coreComponent.createBooleanSymbol("CoreSysStartupFile", genSysFiles)
+        genSysStartupFile.setLabel("Generate System Startup")
+        genSysStartupFile.setDefaultValue(True)
+        genSysStartupFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
-    genSysExceptionFile = coreComponent.createBooleanSymbol("CoreSysExceptionFile", genSysFiles)
-    genSysExceptionFile.setLabel("Generate System Exception")
-    genSysExceptionFile.setDefaultValue(True)
-    genSysExceptionFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+        genSysDebugConsoleFile = coreComponent.createBooleanSymbol("CoreSysStdioSyscallsFile", genSysFiles)
+        genSysDebugConsoleFile.setLabel("Generate STDIO Syscalls")
+        genSysDebugConsoleFile.setDefaultValue(True)
+        genSysDebugConsoleFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
-    exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", genSysExceptionFile)
-    exceptionHandling.setLabel("Use Advanced Exception Handling")
-    exceptionHandling.setDefaultValue(False)
-    exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
+        genSysExceptionFile = coreComponent.createBooleanSymbol("CoreSysExceptionFile", genSysFiles)
+        genSysExceptionFile.setLabel("Generate System Exception")
+        genSysExceptionFile.setDefaultValue(True)
+        genSysExceptionFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
-    filteringExceptionHandling = coreComponent.createBooleanSymbol("FILTERING_EXCEPTION", exceptionHandling)
-    filteringExceptionHandling.setLabel("Use Advanced Exception Handling With Filtering Support")
-    filteringExceptionHandling.setDefaultValue(False)
-    filteringExceptionHandling.setVisible(False)
-    if isMips:
-        filteringExceptionHandling.setDependencies(setFileVisibility, ["ADVANCED_EXCEPTION"])
+        exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", genSysExceptionFile)
+        exceptionHandling.setLabel("Use Advanced Exception Handling")
+        exceptionHandling.setDefaultValue(False)
+        exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
 
-    ## cache macros
-    deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
-    deviceCacheHeaderFile.setSourcePath( "/templates/" + deviceCacheHeaderName )
-    deviceCacheHeaderFile.setOutputName("device_cache.h")
-    deviceCacheHeaderFile.setMarkup(True)
-    deviceCacheHeaderFile.setOverwrite(True)
-    deviceCacheHeaderFile.setDestPath("")
-    deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
-    deviceCacheHeaderFile.setType("HEADER")
+        filteringExceptionHandling = coreComponent.createBooleanSymbol("FILTERING_EXCEPTION", exceptionHandling)
+        filteringExceptionHandling.setLabel("Use Advanced Exception Handling With Filtering Support")
+        filteringExceptionHandling.setDefaultValue(False)
+        filteringExceptionHandling.setVisible(False)
+        if isMips:
+            filteringExceptionHandling.setDependencies(setFileVisibility, ["ADVANCED_EXCEPTION"])
+
+        ## cache macros
+        deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
+        deviceCacheHeaderFile.setSourcePath( "/templates/" + deviceCacheHeaderName )
+        deviceCacheHeaderFile.setOutputName("device_cache.h")
+        deviceCacheHeaderFile.setMarkup(True)
+        deviceCacheHeaderFile.setOverwrite(True)
+        deviceCacheHeaderFile.setDestPath("")
+        deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
+        deviceCacheHeaderFile.setType("HEADER")
     if isMips:
         deviceCacheHeaderFile.setEnabled(False)
         deviceCacheHeaderFile.setDependencies(deviceCacheEnable, ["USE_CACHE_MAINTENANCE"])
@@ -723,202 +764,204 @@ def instantiateComponent( coreComponent ):
 
     compilerChoice.setReadOnly(not multiCompilerSupport)
 
-    addLinkerFile = coreComponent.createBooleanSymbol("ADD_LINKER_FILE", toolChainMenu)
-    addLinkerFile.setLabel("Add linker file to project")
-    addLinkerFile.setDescription("Copies linker file into the project "
-    "configuration folder and uses it for linking the project. Uncheck this "
-    "option, if a custom linker script is used.")
-    addLinkerFile.setDefaultValue(True)
+    if ((CORE_DSPIC33A not in coreArch.getValue()) and (CORE_PIC32A not in coreArch.getValue())):
+        #Linker Settings
+        addLinkerFile = coreComponent.createBooleanSymbol("ADD_LINKER_FILE", toolChainMenu)
+        addLinkerFile.setLabel("Add linker file to project")
+        addLinkerFile.setDescription("Copies linker file into the project "
+        "configuration folder and uses it for linking the project. Uncheck this "
+        "option, if a custom linker script is used.")
+        addLinkerFile.setDefaultValue(True)
 
-    #We only allow disabling custom linker script when using XC32 compiler with non-MPU masks
-    addLinkerFile.setReadOnly( not((compilerChoice.getSelectedKey() == "XC32") and
-                                     ("CORTEX-M" in coreArch.getValue() or "MIPS" in coreArch.getValue())))
+        #We only allow disabling custom linker script when using XC32 compiler with non-MPU masks
+        addLinkerFile.setReadOnly( not((compilerChoice.getSelectedKey() == "XC32") and
+                                         ("CORTEX-M" in coreArch.getValue() or "MIPS" in coreArch.getValue())))
 
-    addLinkerFile.setDependencies(AddLinkerFileToProject, ["COMPILER_CHOICE"])
+        addLinkerFile.setDependencies(AddLinkerFileToProject, ["COMPILER_CHOICE"])
 
-    ## Dummy Symbol to trigger compilerUpdate callback on compiler choice change
-    compilerUpdateSym = coreComponent.createBooleanSymbol("COMPILER_UPDATE", toolChainMenu)
-    compilerUpdateSym.setVisible(False)
-    compilerUpdateSym.setDependencies( compilerUpdate, [ "COMPILER_CHOICE" ] )
+        ## Dummy Symbol to trigger compilerUpdate callback on compiler choice change
+        compilerUpdateSym = coreComponent.createBooleanSymbol("COMPILER_UPDATE", toolChainMenu)
+        compilerUpdateSym.setVisible(False)
+        compilerUpdateSym.setDependencies( compilerUpdate, [ "COMPILER_CHOICE" ] )
 
-    ## xc32 Tool Config
-    xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
-    xc32Menu.setLabel("XC32 Global Options")
-    xc32Menu.setVisible( xc32Available & xc32Visibility )
-
-
-    xc32LdMenu = coreComponent.createMenuSymbol("CoreXC32_LD", xc32Menu)
-    xc32LdMenu.setLabel("Linker")
-
-    xc32LdGeneralMenu = coreComponent.createMenuSymbol("CoreXC32_LD_General", xc32LdMenu)
-    xc32LdGeneralMenu.setLabel("General")
-
-    xc32HeapSize = coreComponent.createIntegerSymbol("XC32_HEAP_SIZE", xc32LdGeneralMenu)
-    xc32HeapSize.setLabel("Heap Size (bytes)")
-    xc32HeapSize.setDefaultValue( 512 )
-
-    xc32DataInit = coreComponent.createBooleanSymbol("XC32_DATA_INIT", xc32LdGeneralMenu)
-    xc32DataInit.setLabel("Initialize Data")
-    xc32DataInit.setDefaultValue(True)
-    xc32DataInit.setReadOnly(True)
-
-    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-        xc32SecureHeapSize = coreComponent.createIntegerSymbol("XC32_SECURE_HEAP_SIZE", xc32LdGeneralMenu)
-        xc32SecureHeapSize.setLabel("Secure Heap Size (bytes)")
-        xc32SecureHeapSize.setDefaultValue( 512 )
-
-    if isCortexA == True or isArm926 == True:
-        xc32UsrStackSize = coreComponent.createIntegerSymbol("XC32_USR_STACK_SIZE", xc32LdGeneralMenu)
-        xc32UsrStackSize.setLabel( "User/System Stack Size (bytes)" )
-        xc32UsrStackSize.setDefaultValue( 4096 )
-        xc32UsrStackSize.setVisible( xc32Available )
-
-        xc32FiqStackSize = coreComponent.createIntegerSymbol("XC32_FIQ_STACK_SIZE", xc32LdGeneralMenu)
-        xc32FiqStackSize.setLabel("FIQ Stack Size (bytes)")
-        xc32FiqStackSize.setDefaultValue(96)
-        xc32FiqStackSize.setVisible( xc32AllStacks )
-
-        xc32IrqStackSize = coreComponent.createIntegerSymbol("XC32_IRQ_STACK_SIZE", xc32LdGeneralMenu)
-        xc32IrqStackSize.setLabel("IRQ Stack Size (bytes)")
-        xc32IrqStackSize.setDefaultValue(96)
-        xc32IrqStackSize.setVisible( xc32AllStacks )
-
-        xc32SvcStackSize = coreComponent.createIntegerSymbol("XC32_SVC_STACK_SIZE", xc32LdGeneralMenu)
-        xc32SvcStackSize.setLabel("Supervisor Stack Size (bytes)")
-        xc32SvcStackSize.setDefaultValue(4096)
-        xc32SvcStackSize.setVisible( xc32AllStacks )
-
-        xc32AbtStackSize = coreComponent.createIntegerSymbol("XC32_ABT_STACK_SIZE", xc32LdGeneralMenu)
-        xc32AbtStackSize.setLabel("Abort Stack Size (bytes)")
-        xc32AbtStackSize.setDefaultValue(64)
-        xc32AbtStackSize.setVisible( xc32AllStacks )
-
-        xc32UndStackSize = coreComponent.createIntegerSymbol("XC32_UND_STACK_SIZE", xc32LdGeneralMenu)
-        xc32UndStackSize.setLabel("Undefined Stack Size (bytes)")
-        xc32UndStackSize.setDefaultValue(64)
-        xc32UndStackSize.setVisible( xc32AllStacks )
-    elif isMips == True:
-        xc32ISAMode = coreComponent.createBooleanSymbol("XC32_ISA_MODE", xc32Menu)
-        if "PIC32MX" in processor: #MIPS16 mode
-            xc32ISAMode.setLabel("Generate MIPS16 16-bit Code")
-        else: #microMIPS mode
-            xc32ISAMode.setLabel("Generate microMIPS Compressed Code")
-        xc32ISAMode.setDefaultValue(False)
+        ## xc32 Tool Config
+        xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
+        xc32Menu.setLabel("XC32 Global Options")
+        xc32Menu.setVisible( xc32Available & xc32Visibility )
 
 
+        xc32LdMenu = coreComponent.createMenuSymbol("CoreXC32_LD", xc32Menu)
+        xc32LdMenu.setLabel("Linker")
 
-    xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
-    xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
-    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-        xc32LdSymbolsMacrosMenu.setVisible(False)
+        xc32LdGeneralMenu = coreComponent.createMenuSymbol("CoreXC32_LD_General", xc32LdMenu)
+        xc32LdGeneralMenu.setLabel("General")
 
-    xc32LdAppStartAddress = coreComponent.createStringSymbol("APP_START_ADDRESS", xc32LdSymbolsMacrosMenu)
-    xc32LdAppStartAddress.setLabel("Application Start Address (Hex)")
-    xc32LdAppStartAddress.setDefaultValue(str(hex(flash_start))[2:])
+        xc32HeapSize = coreComponent.createIntegerSymbol("XC32_HEAP_SIZE", xc32LdGeneralMenu)
+        xc32HeapSize.setLabel("Heap Size (bytes)")
+        xc32HeapSize.setDefaultValue( 512 )
 
-    isBFMPresent, bfm_region = isBootFlashPresent()
+        xc32DataInit = coreComponent.createBooleanSymbol("XC32_DATA_INIT", xc32LdGeneralMenu)
+        xc32DataInit.setLabel("Initialize Data")
+        xc32DataInit.setDefaultValue(True)
+        xc32DataInit.setReadOnly(True)
 
-    #Exception for BZ3/BZ6 series. For WBZ35 device, the VTABLE must be in PFM although it has Boot Flash Memory.
-    if any(ele in  Database.getSymbolValue("core", "CoreSeries") for ele in ["BZ3", "BZ6"]):
-        isBFMPresent = False
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            xc32SecureHeapSize = coreComponent.createIntegerSymbol("XC32_SECURE_HEAP_SIZE", xc32LdGeneralMenu)
+            xc32SecureHeapSize.setLabel("Secure Heap Size (bytes)")
+            xc32SecureHeapSize.setDefaultValue( 512 )
 
-    if isBFMPresent == True:
-        populateVtableMemRegionsList(bfm_region)
-        xc32LdAppVtableMemRegion = coreComponent.createComboSymbol("VTABLE_MEM_REGION", xc32LdSymbolsMacrosMenu, vtableRegionList)
-        xc32LdAppVtableMemRegion.setLabel("Place Vector Table in ")
-        xc32LdAppVtableMemRegion.setDefaultValue(vtableRegionList[0])
+        if isCortexA == True or isArm926 == True:
+            xc32UsrStackSize = coreComponent.createIntegerSymbol("XC32_USR_STACK_SIZE", xc32LdGeneralMenu)
+            xc32UsrStackSize.setLabel( "User/System Stack Size (bytes)" )
+            xc32UsrStackSize.setDefaultValue( 4096 )
+            xc32UsrStackSize.setVisible( xc32Available )
 
-    # set XC32-LD option to Modify ROM Start address and length
-    xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
-    xc32LdPreprocessroMacroSym.setCategory("C32-LD")
-    xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
-    xc32LdMacorVal = ""
-    if isBFMPresent == True:
-        xc32LdMacorVal = getVtablePlacementParams(xc32LdAppVtableMemRegion.getValue())
-    xc32LdPreprocessroMacroSym.setValue(xc32LdMacorVal)
-    xc32LdPreprocessroMacroSym.setAppend(True, ";=")
-    xc32LdPreprocessroMacroSym.setDependencies(updateAppPlacementParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
+            xc32FiqStackSize = coreComponent.createIntegerSymbol("XC32_FIQ_STACK_SIZE", xc32LdGeneralMenu)
+            xc32FiqStackSize.setLabel("FIQ Stack Size (bytes)")
+            xc32FiqStackSize.setDefaultValue(96)
+            xc32FiqStackSize.setVisible( xc32AllStacks )
 
-    ## iar Tool Config
-    iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
-    iarMenu.setLabel("IAR Global Options")
-    iarMenu.setVisible( iarAvailable & iarVisiblity )
+            xc32IrqStackSize = coreComponent.createIntegerSymbol("XC32_IRQ_STACK_SIZE", xc32LdGeneralMenu)
+            xc32IrqStackSize.setLabel("IRQ Stack Size (bytes)")
+            xc32IrqStackSize.setDefaultValue(96)
+            xc32IrqStackSize.setVisible( xc32AllStacks )
 
-    iarLdMenu = coreComponent.createMenuSymbol("CoreIAR_LD", iarMenu)
-    iarLdMenu.setLabel( "Linker" )
+            xc32SvcStackSize = coreComponent.createIntegerSymbol("XC32_SVC_STACK_SIZE", xc32LdGeneralMenu)
+            xc32SvcStackSize.setLabel("Supervisor Stack Size (bytes)")
+            xc32SvcStackSize.setDefaultValue(4096)
+            xc32SvcStackSize.setVisible( xc32AllStacks )
 
-    iarLdGeneralMenu = coreComponent.createMenuSymbol("CoreIAR_LD_General", iarLdMenu)
-    iarLdGeneralMenu.setLabel( "General" )
+            xc32AbtStackSize = coreComponent.createIntegerSymbol("XC32_ABT_STACK_SIZE", xc32LdGeneralMenu)
+            xc32AbtStackSize.setLabel("Abort Stack Size (bytes)")
+            xc32AbtStackSize.setDefaultValue(64)
+            xc32AbtStackSize.setVisible( xc32AllStacks )
 
-    iarHeapSize = coreComponent.createIntegerSymbol("IAR_HEAP_SIZE", iarLdGeneralMenu)
-    iarHeapSize.setLabel( "Heap Size (bytes)" )
-    iarHeapSize.setDefaultValue( 512 )
-    iarHeapSize.setVisible( iarAvailable )
+            xc32UndStackSize = coreComponent.createIntegerSymbol("XC32_UND_STACK_SIZE", xc32LdGeneralMenu)
+            xc32UndStackSize.setLabel("Undefined Stack Size (bytes)")
+            xc32UndStackSize.setDefaultValue(64)
+            xc32UndStackSize.setVisible( xc32AllStacks )
+        elif isMips == True:
+            xc32ISAMode = coreComponent.createBooleanSymbol("XC32_ISA_MODE", xc32Menu)
+            if "PIC32MX" in processor: #MIPS16 mode
+                xc32ISAMode.setLabel("Generate MIPS16 16-bit Code")
+            else: #microMIPS mode
+                xc32ISAMode.setLabel("Generate microMIPS Compressed Code")
+            xc32ISAMode.setDefaultValue(False)
 
-    iarUsrStackSize = coreComponent.createIntegerSymbol("IAR_USR_STACK_SIZE", iarLdGeneralMenu)
-    iarUsrStackSize.setLabel( "User{} Stack Size (bytes)".format("/System" if iarAllStacks else "") )
-    iarUsrStackSize.setDefaultValue( 4096 )
-    iarUsrStackSize.setVisible( iarAvailable )
 
-    ## iarAllStacks
-    iarFiqStackSize = coreComponent.createIntegerSymbol("IAR_FIQ_STACK_SIZE", iarLdGeneralMenu)
-    iarFiqStackSize.setLabel("FIQ Stack Size (bytes)")
-    iarFiqStackSize.setDefaultValue(96)
-    iarFiqStackSize.setVisible( iarAllStacks )
 
-    iarIrqStackSize = coreComponent.createIntegerSymbol("IAR_IRQ_STACK_SIZE", iarLdGeneralMenu)
-    iarIrqStackSize.setLabel("IRQ Stack Size (bytes)")
-    iarIrqStackSize.setDefaultValue(96)
-    iarIrqStackSize.setVisible( iarAllStacks )
+        xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
+        xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            xc32LdSymbolsMacrosMenu.setVisible(False)
 
-    iarSvcStackSize = coreComponent.createIntegerSymbol("IAR_SVC_STACK_SIZE", iarLdGeneralMenu)
-    iarSvcStackSize.setLabel("Supervisor Stack Size (bytes)")
-    iarSvcStackSize.setDefaultValue(4096)
-    iarSvcStackSize.setVisible( iarAllStacks )
+        xc32LdAppStartAddress = coreComponent.createStringSymbol("APP_START_ADDRESS", xc32LdSymbolsMacrosMenu)
+        xc32LdAppStartAddress.setLabel("Application Start Address (Hex)")
+        xc32LdAppStartAddress.setDefaultValue(str(hex(flash_start))[2:])
 
-    iarAbtStackSize = coreComponent.createIntegerSymbol("IAR_ABT_STACK_SIZE", iarLdGeneralMenu)
-    iarAbtStackSize.setLabel("Abort Stack Size (bytes)")
-    iarAbtStackSize.setDefaultValue(64)
-    iarAbtStackSize.setVisible( iarAllStacks )
+        isBFMPresent, bfm_region = isBootFlashPresent()
 
-    iarUndStackSize = coreComponent.createIntegerSymbol("IAR_UND_STACK_SIZE", iarLdGeneralMenu)
-    iarUndStackSize.setLabel("Undefined Stack Size (bytes)")
-    iarUndStackSize.setDefaultValue(64)
-    iarUndStackSize.setVisible( iarAllStacks )
+        #Exception for BZ3/BZ6 series. For WBZ35 device, the VTABLE must be in PFM although it has Boot Flash Memory.
+        if any(ele in  Database.getSymbolValue("core", "CoreSeries") for ele in ["BZ3", "BZ6"]):
+            isBFMPresent = False
 
-    ## keil Tool Config
-    keilMenu = coreComponent.createMenuSymbol("CoreKEILMenu", toolChainMenu)
-    keilMenu.setLabel("KEIL Global Options")
-    keilMenu.setVisible( keilAvailable == True)
+        if isBFMPresent == True:
+            populateVtableMemRegionsList(bfm_region)
+            xc32LdAppVtableMemRegion = coreComponent.createComboSymbol("VTABLE_MEM_REGION", xc32LdSymbolsMacrosMenu, vtableRegionList)
+            xc32LdAppVtableMemRegion.setLabel("Place Vector Table in ")
+            xc32LdAppVtableMemRegion.setDefaultValue(vtableRegionList[0])
 
-    keilLdMenu = coreComponent.createMenuSymbol("CoreKEIL_LD", keilMenu)
-    keilLdMenu.setLabel( "Linker" )
+        # set XC32-LD option to Modify ROM Start address and length
+        xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
+        xc32LdPreprocessroMacroSym.setCategory("C32-LD")
+        xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
+        xc32LdMacorVal = ""
+        if isBFMPresent == True:
+            xc32LdMacorVal = getVtablePlacementParams(xc32LdAppVtableMemRegion.getValue())
 
-    keilLdGeneralMenu = coreComponent.createMenuSymbol("CoreKEIL_LD_General", keilLdMenu)
-    keilLdGeneralMenu.setLabel( "General" )
+        xc32LdPreprocessroMacroSym.setAppend(True, ";=")
+        xc32LdPreprocessroMacroSym.setDependencies(updateAppPlacementParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
 
-    keilStackSize = coreComponent.createIntegerSymbol("KEIL_STACK_SIZE", keilLdGeneralMenu)
-    keilStackSize.setLabel( "Stack Size (bytes)" )
-    keilStackSize.setDefaultValue( 4096 )
+        ## iar Tool Config
+        iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
+        iarMenu.setLabel("IAR Global Options")
+        iarMenu.setVisible( iarAvailable & iarVisiblity )
 
-    keilStackWarning = coreComponent.createMenuSymbol("KEIL_STACK_WARNING", keilLdGeneralMenu)
-    keilStackWarning.setLabel("******** Main stack size needs to be integer multiple of 8 *******")
-    keilStackWarning.setVisible( False )
-    keilStackWarning.setDependencies(alignmentWarning, ["KEIL_STACK_SIZE"])
+        iarLdMenu = coreComponent.createMenuSymbol("CoreIAR_LD", iarMenu)
+        iarLdMenu.setLabel( "Linker" )
 
-    keilHeapSize = coreComponent.createIntegerSymbol("KEIL_HEAP_SIZE", keilLdGeneralMenu)
-    keilHeapSize.setLabel( "Heap Size (bytes)" )
-    keilHeapSize.setDefaultValue( 512 )
+        iarLdGeneralMenu = coreComponent.createMenuSymbol("CoreIAR_LD_General", iarLdMenu)
+        iarLdGeneralMenu.setLabel( "General" )
 
-    keilHeapWarning = coreComponent.createMenuSymbol("KEIL_HEAP_WARNING", keilLdGeneralMenu)
-    keilHeapWarning.setLabel("******** Heap size needs to be an integer multiple of 8 *******")
-    keilHeapWarning.setVisible( False )
-    keilHeapWarning.setDependencies(alignmentWarning, ["KEIL_HEAP_SIZE"])
+        iarHeapSize = coreComponent.createIntegerSymbol("IAR_HEAP_SIZE", iarLdGeneralMenu)
+        iarHeapSize.setLabel( "Heap Size (bytes)" )
+        iarHeapSize.setDefaultValue( 512 )
+        iarHeapSize.setVisible( iarAvailable )
 
-    keilHeapStackSize = coreComponent.createStringSymbol("KEIL_STACK_HEAP_SIZE", keilLdGeneralMenu)
-    keilHeapStackSize.setVisible(False)
-    keilHeapStackSize.setValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
-    keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
+        iarUsrStackSize = coreComponent.createIntegerSymbol("IAR_USR_STACK_SIZE", iarLdGeneralMenu)
+        iarUsrStackSize.setLabel( "User{} Stack Size (bytes)".format("/System" if iarAllStacks else "") )
+        iarUsrStackSize.setDefaultValue( 4096 )
+        iarUsrStackSize.setVisible( iarAvailable )
+
+        ## iarAllStacks
+        iarFiqStackSize = coreComponent.createIntegerSymbol("IAR_FIQ_STACK_SIZE", iarLdGeneralMenu)
+        iarFiqStackSize.setLabel("FIQ Stack Size (bytes)")
+        iarFiqStackSize.setDefaultValue(96)
+        iarFiqStackSize.setVisible( iarAllStacks )
+
+        iarIrqStackSize = coreComponent.createIntegerSymbol("IAR_IRQ_STACK_SIZE", iarLdGeneralMenu)
+        iarIrqStackSize.setLabel("IRQ Stack Size (bytes)")
+        iarIrqStackSize.setDefaultValue(96)
+        iarIrqStackSize.setVisible( iarAllStacks )
+
+        iarSvcStackSize = coreComponent.createIntegerSymbol("IAR_SVC_STACK_SIZE", iarLdGeneralMenu)
+        iarSvcStackSize.setLabel("Supervisor Stack Size (bytes)")
+        iarSvcStackSize.setDefaultValue(4096)
+        iarSvcStackSize.setVisible( iarAllStacks )
+
+        iarAbtStackSize = coreComponent.createIntegerSymbol("IAR_ABT_STACK_SIZE", iarLdGeneralMenu)
+        iarAbtStackSize.setLabel("Abort Stack Size (bytes)")
+        iarAbtStackSize.setDefaultValue(64)
+        iarAbtStackSize.setVisible( iarAllStacks )
+
+        iarUndStackSize = coreComponent.createIntegerSymbol("IAR_UND_STACK_SIZE", iarLdGeneralMenu)
+        iarUndStackSize.setLabel("Undefined Stack Size (bytes)")
+        iarUndStackSize.setDefaultValue(64)
+        iarUndStackSize.setVisible( iarAllStacks )
+
+        ## keil Tool Config
+        keilMenu = coreComponent.createMenuSymbol("CoreKEILMenu", toolChainMenu)
+        keilMenu.setLabel("KEIL Global Options")
+        keilMenu.setVisible( keilAvailable == True)
+
+        keilLdMenu = coreComponent.createMenuSymbol("CoreKEIL_LD", keilMenu)
+        keilLdMenu.setLabel( "Linker" )
+
+        keilLdGeneralMenu = coreComponent.createMenuSymbol("CoreKEIL_LD_General", keilLdMenu)
+        keilLdGeneralMenu.setLabel( "General" )
+
+        keilStackSize = coreComponent.createIntegerSymbol("KEIL_STACK_SIZE", keilLdGeneralMenu)
+        keilStackSize.setLabel( "Stack Size (bytes)" )
+        keilStackSize.setDefaultValue( 4096 )
+
+        keilStackWarning = coreComponent.createMenuSymbol("KEIL_STACK_WARNING", keilLdGeneralMenu)
+        keilStackWarning.setLabel("******** Main stack size needs to be integer multiple of 8 *******")
+        keilStackWarning.setVisible( False )
+        keilStackWarning.setDependencies(alignmentWarning, ["KEIL_STACK_SIZE"])
+
+        keilHeapSize = coreComponent.createIntegerSymbol("KEIL_HEAP_SIZE", keilLdGeneralMenu)
+        keilHeapSize.setLabel( "Heap Size (bytes)" )
+        keilHeapSize.setDefaultValue( 512 )
+
+        keilHeapWarning = coreComponent.createMenuSymbol("KEIL_HEAP_WARNING", keilLdGeneralMenu)
+        keilHeapWarning.setLabel("******** Heap size needs to be an integer multiple of 8 *******")
+        keilHeapWarning.setVisible( False )
+        keilHeapWarning.setDependencies(alignmentWarning, ["KEIL_HEAP_SIZE"])
+
+        keilHeapStackSize = coreComponent.createStringSymbol("KEIL_STACK_HEAP_SIZE", keilLdGeneralMenu)
+        keilHeapStackSize.setVisible(False)
+        keilHeapStackSize.setValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
+        keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
 
     # Device name symbol
     deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
@@ -1192,13 +1235,43 @@ def instantiateComponent( coreComponent ):
         xc32cppISAModeSettingSym.setValue("false")
         xc32cppISAModeSettingSym.setDependencies(ISA_modeCallBack, ["XC32_ISA_MODE"])
 
+    if ((CORE_DSPIC33A in coreArch.getValue()) or (CORE_PIC32A in coreArch.getValue())):
+        # generate traps.c file
+        trapsSourceFile = coreComponent.createFileSymbol("TRAPS_33A_C", None)
+        trapsSourceFile.setSourcePath("templates/traps_33a.c.ftl")
+        trapsSourceFile.setOutputName("traps.c")
+        trapsSourceFile.setMarkup(True)
+        trapsSourceFile.setOverwrite(True)
+        trapsSourceFile.setDestPath("")
+        trapsSourceFile.setProjectPath("config/" + configName + "/")
+        trapsSourceFile.setType("SOURCE")
+        trapsSourceFile.setDependencies(
+            genSysSourceFile,
+            ["CoreSysTrapsFile", "CoreSysFiles"],
+        )
 
-    # set XC32 heap size
-    xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
-    xc32HeapSizeSym.setCategory("C32-LD")
-    xc32HeapSizeSym.setKey("heap-size")
-    xc32HeapSizeSym.setValue(str(xc32HeapSize.getValue()))
-    xc32HeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_HEAP_SIZE"])
+        # generate traps.h file
+        trapsHeaderFile = coreComponent.createFileSymbol("TRAPS_33A_H", None)
+        trapsHeaderFile.setSourcePath("templates/traps_33a.h.ftl")
+        trapsHeaderFile.setOutputName("traps.h")
+        trapsHeaderFile.setMarkup(True)
+        trapsHeaderFile.setOverwrite(True)
+        trapsHeaderFile.setDestPath("")
+        trapsHeaderFile.setProjectPath("config/" + configName + "/")
+        trapsHeaderFile.setType("HEADER")
+        trapsHeaderFile.setDependencies(
+            genSysSourceFile,
+            ["CoreSysTrapsFile", "CoreSysFiles"],
+        )
+
+
+    if ((CORE_DSPIC33A not in coreArch.getValue()) and (CORE_PIC32A not in coreArch.getValue())):
+        # set XC32 heap size
+        xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
+        xc32HeapSizeSym.setCategory("C32-LD")
+        xc32HeapSizeSym.setKey("heap-size")
+        xc32HeapSizeSym.setValue(str(xc32HeapSize.getValue()))
+        xc32HeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_HEAP_SIZE"])
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         xc32SecureHeapSizeSym = coreComponent.createSettingSymbol("XC32_SECURE_HEAP", None)
@@ -1216,38 +1289,54 @@ def instantiateComponent( coreComponent ):
         packsPath = "../src/packs/" + processor + "_DFP;../src/packs/CMSIS/CMSIS/Core/Include" + ";../src/packs/CMSIS/"
     elif "ARM9" in Database.getSymbolValue("core","CoreArchitecture"):
         packsPath = "../src/packs/" + processor + "_DFP;"
-    else: #mips
+    else: #mips and 33Axxx
         packsPath = ""
 
-    defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
-    defSym.setCategory("C32")
-    defSym.setKey("extra-include-directories")
-    defSym.setValue( "../src;../src/config/" + configName + ";" + packsPath)
-    defSym.setAppend(True, ";")
+    if  CORE_DSPIC33A in coreArch.getValue():
+        defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
+        defSym.setCategory("C30")
+        defSym.setKey("extra-include-directories")
+        defSym.setValue( "../src;../src/config/" + configName + ";" + packsPath)
+        defSym.setAppend(True, ";")
+    elif CORE_PIC32A in coreArch.getValue():
+        defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
+        defSym.setCategory("C32")
+        defSym.setKey("extra-include-directories")
+        defSym.setValue( "../src;../src/config/" + configName + ";" + packsPath)
+        defSym.setAppend(True, ";")
+    else:
+        defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
+        defSym.setCategory("C32")
+        defSym.setKey("extra-include-directories")
+        defSym.setValue( "../src;../src/config/" + configName + ";" + packsPath)
+        defSym.setAppend(True, ";")
 
-    defXc32cppSym = coreComponent.createSettingSymbol("XC32CPP_INCLUDE_DIRS", None)
-    defXc32cppSym.setCategory("C32CPP")
-    defXc32cppSym.setKey("extra-include-directories")
-    defXc32cppSym.setValue(defSym.getValue())
-    defXc32cppSym.setAppend(True, ";")
+        defXc32cppSym = coreComponent.createSettingSymbol("XC32CPP_INCLUDE_DIRS", None)
+        defXc32cppSym.setCategory("C32CPP")
+        defXc32cppSym.setKey("extra-include-directories")
+        defXc32cppSym.setValue(defSym.getValue())
+        defXc32cppSym.setAppend(True, ";")
 
-    # set XC32 option to not use the device startup code
-    xc32NoDeviceStartupCodeSym = coreComponent.createSettingSymbol("XC32_NO_DEVICE_STARTUP_CODE", None)
-    xc32NoDeviceStartupCodeSym.setCategory("C32-LD")
-    xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
-    xc32NoDeviceStartupCodeSym.setValue("true")
+        # set XC32 option to not use the device startup code
+        xc32NoDeviceStartupCodeSym = coreComponent.createSettingSymbol("XC32_NO_DEVICE_STARTUP_CODE", None)
+        xc32NoDeviceStartupCodeSym.setCategory("C32-LD")
+        xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
+        xc32NoDeviceStartupCodeSym.setValue("true")
+
+
 
     global compilerSelected
     compilerSelected = compilerChoice.getSelectedKey().replace( naQualifier, "" ).lower()
-    debugSourceFile = coreComponent.createFileSymbol( "DEBUG_CONSOLE_C", None )
-    debugSourceFile.setMarkup( True )
-    debugSourceFile.setOverwrite( True )
-    debugSourceFile.setDestPath( "/stdio/" )
-    debugSourceFile.setProjectPath( "config/" + configName + "/stdio/" )
-    debugSourceFile.setType( "SOURCE" )
-    debugSourceFile.setDependencies( genSysSourceFile, [ "CoreSysStdioSyscallsFile", "CoreSysFiles" ] )
-    debugSourceFile.setSourcePath( "../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
-    debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
+    if ((CORE_DSPIC33A not in coreArch.getValue()) and (CORE_PIC32A not in coreArch.getValue())):
+        debugSourceFile = coreComponent.createFileSymbol( "DEBUG_CONSOLE_C", None )
+        debugSourceFile.setMarkup( True )
+        debugSourceFile.setOverwrite( True )
+        debugSourceFile.setDestPath( "/stdio/" )
+        debugSourceFile.setProjectPath( "config/" + configName + "/stdio/" )
+        debugSourceFile.setType( "SOURCE" )
+        debugSourceFile.setDependencies( genSysSourceFile, [ "CoreSysStdioSyscallsFile", "CoreSysFiles" ] )
+        debugSourceFile.setSourcePath( "../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
+        debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
 
     # load device specific information, clock and pin manager
     execfile( Variables.get( "__ARCH_DIR") + "/" + processor + ".py" )
@@ -1323,6 +1412,11 @@ def compilerUpdate( symbol, event ):
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             if secarmLibCSourceFile != None:
                 secarmLibCSourceFile.setEnabled( True )
+    elif compilerSelected == "XCDSC":
+        iarMenu.setVisible(False)
+        keilMenu.setVisible(False)
+        if devconSystemInitFile != None:
+            devconSystemInitFile.setEnabled( True )
     elif compilerSelected == "KEIL":
         xc32Menu.setVisible(False)
         iarMenu.setVisible(False)

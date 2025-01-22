@@ -37,6 +37,8 @@ def loadModule():
         cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
 
     print("Load Module: CSP System")
+
+    coreSeries = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" )
     coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
     if coreComponent is not None:
         coreComponent.setHelpKeyword("MH3_CSP_system")

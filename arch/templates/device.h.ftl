@@ -47,6 +47,10 @@
 <#if core.PRODUCT_FAMILY?contains("PIC32M") == true>
 #include <xc.h>
 #include <sys/attribs.h>
+<#elseif core.PRODUCT_FAMILY?contains("dsPIC33A") == true>
+#include <xc.h>
+<#elseif core.PRODUCT_FAMILY?contains("PIC32A") == true>
+#include <xc.h>
 <#else>
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic push

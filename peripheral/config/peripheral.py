@@ -39,12 +39,14 @@ peripherals = {
                 "TWIHS_11210"   : ["I2C"],
                 "I2C_01441"     : ["I2C"],
                 "I2C_00774"     : ["I2C"],
+                "I2C_05155"     : ["I2C"],
                 "SMB_31"        : ["I2C"],
                 "UART_02478"    : ["UART"],
                 "UART_6418"     : ["UART"],
                 "USART_6089"    : ["UART", "SPI"],
                 "USART_11278"   : ["UART"],
                 "UART_39"       : ["UART"],
+                "UART_03076"    : ["UART"],
                 "QSPI_U2008"    : ["SQI","SPI"],
                 "QSPI_44132"    : ["SQI","SPI"],
                 "QMSPI_147"     : ["SQI", "SPI"],
@@ -60,6 +62,7 @@ peripherals = {
                 "RTC_U2202"     : ["TMR"],
                 "TMR_02815"     : ["TMR"],
                 "TMR_00745"     : ["TMR"],
+                "TIMER_02673"   : ["TMR"],
                 "TIMER32_108b"  : ["TMR"],
                 "RTOS_140"      : ["TMR"],
                 "CCT_12"        : ["TMR"],
@@ -147,7 +150,7 @@ peripheral_ID_map = {
     "TRNG_03597"   : "TRNG_U2242"
 }
 
-system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA", "EC_REG_BANK"]
+system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA", "EC_REG_BANK","wdt","clk","intc"]
 
 #RSTC, SUPC is loaded as a system component for PIC32CXMT devices
 if ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("family") == "PIC32CXMT":
