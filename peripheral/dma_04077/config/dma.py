@@ -323,9 +323,11 @@ def dmaChEnable(component,dmaChSymbol,dmaCh):
 global dmaChEnableIntCb
 def dmaChEnableIntCb(symbol,event):
     dmaChannel = symbol.getID()[3]
-    if symbol.getValue() :
+    isChannelInUse = symbol.getComponent().getSymbolValue(ENABLE_CH.format(dmaChannel))
+    isIntEnabled = symbol.getComponent().getSymbolValue(CH_ENABLE_INT.format(dmaChannel))
+    if isChannelInUse and isIntEnabled:
         symbol.getComponent().getSymbolByID(DMA_INTERRUPT_ENABLE).setValue(True)
-    updateInterruptState(dmaChannel,symbol.getValue())
+    updateInterruptState(dmaChannel,isChannelInUse and isIntEnabled)
 
 global updateInterruptState
 def updateInterruptState(dmaChInt,value):
@@ -399,6 +401,15 @@ global dmaFileGeneration
 def dmaFileGeneration(symbol, event):
     symbol.setEnabled(event["value"])
 
+def anyChannelInUse(symbol,event):
+    anyChannelInUse = False
+    for i in range(0, MAX_NUM_CHANNEL):
+        if symbol.getComponent().getSymbolValue(ENABLE_CH.format(i)) == True:
+            anyChannelInUse = True
+            break
+    
+    symbol.setValue(anyChannelInUse)
+
 ################## Symbol Creation for DMA Component ###############################################
 MAX_NUM_CHANNEL = int(getParameterValue(DMA, DMA, NUM_CHANNEL))
 LOW_ADDR_VALUE = long(int(getParameterValue(DMA, DMA, DMALOW),16))
@@ -444,7 +455,7 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaChannelEnableInt = coreComponent.createBooleanSymbol(CH_ENABLE_INT.format(channelID), dmaChannelEnable)
     dmaChannelEnableInt.setLabel("Enable Interrupt")
     dmaChannelEnableInt.setVisible(False)
-    dmaChannelEnableInt.setDependencies(dmaChEnableIntCb,[CH_ENABLE_INT.format(channelID)])
+    dmaChannelEnableInt.setDependencies(dmaChEnableIntCb,[CH_ENABLE_INT.format(channelID),ENABLE_CH.format(channelID)])
     dmaChannelEnableInt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:intc_04436;register:IFS2")
     
     #Interrupt Warning Comment
@@ -517,6 +528,11 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaChannelEnableTrap.setLabel("Enable Read Error Trap")
     dmaChannelEnableTrap.setVisible(False)
     dmaChannelEnableTrap.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
+
+channelInUse = coreComponent.createBooleanSymbol("anyChannelEnabled", None)
+channelInUse.setVisible(False)
+channelList = [ENABLE_CH.format(channelID) for channelID in range(0, MAX_NUM_CHANNEL)]
+channelInUse.setDependencies(anyChannelInUse,channelList)
          
 moduleName = coreComponent.createStringSymbol(MODULE_NAME, None)
 moduleName.setDefaultValue(DMA)
