@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" device="dsPIC33AK512MPS210" families="AK_MPS_100" pins="AK_MPS_100" xsi:noNamespaceSchemaLocation="./xml-resources/jaxb/HarmonyPinManager/Components/components_schema.xsd"/>

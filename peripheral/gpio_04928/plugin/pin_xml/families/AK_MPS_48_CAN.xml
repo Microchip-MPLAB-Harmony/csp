@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<family xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./xml-resources/jaxb/HarmonyPinManager/Family/families_schema.xsd">
+    <groups>
+        <group id="1">
+            <pin name="RPA0" value="1"/>
+            <pin name="RPA1" value="2"/>
+            <pin name="RPA2" value="3"/>
+            <pin name="RPA3" value="4"/>
+            <pin name="RPA4" value="5"/>
+            <pin name="RPA5" value="6"/>
+            <pin name="RPA6" value="7"/>
+            <pin name="RPA7" value="8"/>
+            <pin name="RPA8" value="9"/>
+            <pin name="RPA9" value="10"/>
+            <pin name="RPB0" value="17"/>
+            <pin name="RPB1" value="18"/>
+            <pin name="RPB2" value="19"/>
+            <pin name="RPB3" value="20"/>
+            <pin name="RPB4" value="21"/>
+            <pin name="RPB5" value="22"/>
+            <pin name="RPB6" value="23"/>
+            <pin name="RPB7" value="24"/>
+            <pin name="RPC0" value="33"/>
+            <pin name="RPC1" value="34"/>
+            <pin name="RPC2" value="35"/>
+            <pin name="RPC3" value="36"/>
+            <pin name="RPC4" value="37"/>
+            <pin name="RPC5" value="38"/>
+            <pin name="RPC6" value="39"/>
+            <pin name="RPC7" value="40"/>
+            <pin name="RPD0" value="49"/>
+            <pin name="RPD1" value="50"/>
+            <pin name="RPD2" value="51"/>
+            <pin name="RPD3" value="52"/>
+            <pin name="RPD6" value="55"/>
+            <function name="ADTRG31" direction="in" register-name="RPINR23"/>
+            <function name="BISS1GS" direction="in" register-name="RPINR24"/>
+            <function name="BISS1SL" direction="in" register-name="RPINR24"/>
+            <function name="CAN1RX" direction="in" register-name="RPINR17"/>
+            <function name="CAN2RX" direction="in" register-name="RPINR17"/>
+            <function name="CLCINA" direction="in" register-name="RPINR20"/>
+            <function name="CLCINB" direction="in" register-name="RPINR21"/>
+            <function name="CLCINC" direction="in" register-name="RPINR21"/>
+            <function name="CLCIND" direction="in" register-name="RPINR21"/>
+            <function name="CLCINE" direction="in" register-name="RPINR21"/>
+            <function name="CLCINF" direction="in" register-name="RPINR22"/>
+            <function name="CLCING" direction="in" register-name="RPINR22"/>
+            <function name="CLCINH" direction="in" register-name="RPINR22"/>
+            <function name="CLCINI" direction="in" register-name="RPINR22"/>
+            <function name="CLCINJ" direction="in" register-name="RPINR23"/>
+            <function name="ICM1" direction="in" register-name="RPINR2"/>
+            <function name="ICM2" direction="in" register-name="RPINR2"/>
+            <function name="ICM3" direction="in" register-name="RPINR3"/>
+            <function name="ICM4" direction="in" register-name="RPINR3"/>
+            <function name="ICM5" direction="in" register-name="RPINR4"/>
+            <function name="ICM6" direction="in" register-name="RPINR4"/>
+            <function name="ICM7" direction="in" register-name="RPINR5"/>
+            <function name="ICM8" direction="in" register-name="RPINR5"/>
+            <function name="ICM9" direction="in" register-name="RPINR6"/>
+            <function name="INDX2" direction="in"/>
+            <function name="INDX3" direction="in"/>
+            <function name="INDX4" direction="in"/>
+            <function name="INT1" direction="in" register-name="RPINR0"/>
+            <function name="INT2" direction="in" register-name="RPINR0"/>
+            <function name="INT3" direction="in" register-name="RPINR0"/>
+            <function name="INT4" direction="in" register-name="RPINR1"/>
+            <function name="IOMON12" direction="in"/>
+            <function name="IOMON13" direction="in"/>
+            <function name="IOMON14" direction="in"/>
+            <function name="IOMON15" direction="in"/>
+            <function name="OCFA" direction="in" register-name="RPINR7"/>
+            <function name="OCFB" direction="in" register-name="RPINR7"/>
+            <function name="OCFC" direction="in" register-name="RPINR7"/>
+            <function name="OCFD" direction="in" register-name="RPINR7"/>
+            <function name="PCI10" direction="in" register-name="RPINR8"/>
+            <function name="PCI11" direction="in" register-name="RPINR8"/>
+            <function name="PCI12" direction="in" register-name="RPINR19"/>
+            <function name="PCI13" direction="in" register-name="RPINR19"/>
+            <function name="PCI14" direction="in" register-name="RPINR19"/>
+            <function name="PCI15" direction="in" register-name="RPINR19"/>
+            <function name="PCI16" direction="in" register-name="RPINR20"/>
+            <function name="PCI17" direction="in" register-name="RPINR20"/>
+            <function name="PCI18" direction="in" register-name="RPINR20"/>
+            <function name="PCI19" direction="in" register-name="RPINR26"/>
+            <function name="PCI20" direction="in" register-name="RPINR27"/>
+            <function name="PCI21" direction="in" register-name="RPINR27"/>
+            <function name="PCI22" direction="in" register-name="RPINR27"/>
+            <function name="PCI8" direction="in" register-name="RPINR8"/>
+            <function name="PCI9" direction="in" register-name="RPINR8"/>
+            <function name="PWMTRIG1" direction="in"/>
+            <function name="PWMTRIG2" direction="in"/>
+            <function name="PWMTRIG3" direction="in"/>
+            <function name="PWMTRIG4" direction="in"/>
+            <function name="PWMTRIG5" direction="in"/>
+            <function name="PWMTRIG6" direction="in"/>
+            <function name="PWMTRIG7" direction="in"/>
+            <function name="PWMTRIG8" direction="in"/>
+            <function name="QEIA1" direction="in" register-name="RPINR9"/>
+            <function name="QEIA2" direction="in" register-name="RPINR10"/>
+            <function name="QEIA3" direction="in" register-name="RPINR11"/>
+            <function name="QEIA4" direction="in" register-name="RPINR12"/>
+            <function name="QEIB1" direction="in" register-name="RPINR9"/>
+            <function name="QEIB2" direction="in" register-name="RPINR10"/>
+            <function name="QEIB3" direction="in" register-name="RPINR11"/>
+            <function name="QEIB4" direction="in" register-name="RPINR12"/>
+            <function name="QEIHOM1" direction="in" register-name="RPINR9"/>
+            <function name="QEIHOM2" direction="in" register-name="RPINR10"/>
+            <function name="QEIHOM3" direction="in" register-name="RPINR11"/>
+            <function name="QEIHOM4" direction="in" register-name="RPINR12"/>
+            <function name="QEIINDX1" direction="in"/>
+            <function name="REFI1" direction="in" register-name="RPINR18"/>
+            <function name="REFI2" direction="in" register-name="RPINR18"/>
+            <function name="RPV0IN" direction="in"/>
+            <function name="RPV10IN" direction="in"/>
+            <function name="RPV11IN" direction="in"/>
+            <function name="RPV12IN" direction="in"/>
+            <function name="RPV13IN" direction="in"/>
+            <function name="RPV14IN" direction="in"/>
+            <function name="RPV15IN" direction="in"/>
+            <function name="RPV1IN" direction="in"/>
+            <function name="RPV2IN" direction="in"/>
+            <function name="RPV3IN" direction="in"/>
+            <function name="RPV4IN" direction="in"/>
+            <function name="RPV5IN" direction="in"/>
+            <function name="RPV6IN" direction="in"/>
+            <function name="RPV7IN" direction="in"/>
+            <function name="RPV8IN" direction="in"/>
+            <function name="RPV9IN" direction="in"/>
+            <function name="SCK1" direction="in" register-name="RPINR14"/>
+            <function name="SCK2" direction="in" register-name="RPINR15"/>
+            <function name="SCK3" direction="in" register-name="RPINR16"/>
+            <function name="SCK4" direction="in" register-name="RPINR17"/>
+            <function name="SDI1" direction="in" register-name="RPINR14"/>
+            <function name="SDI2" direction="in" register-name="RPINR15"/>
+            <function name="SDI3" direction="in" register-name="RPINR16"/>
+            <function name="SDI4" direction="in" register-name="RPINR16"/>
+            <function name="SENT1" direction="in" register-name="RPINR18"/>
+            <function name="SENT2" direction="in" register-name="RPINR18"/>
+            <function name="SS1" direction="in" register-name="RPINR15"/>
+            <function name="SS2" direction="in" register-name="RPINR15"/>
+            <function name="SS3" direction="in" register-name="RPINR16"/>
+            <function name="SS4" direction="in" register-name="RPINR17"/>
+            <function name="T1CK" direction="in" register-name="RPINR1"/>
+            <function name="T2CK" direction="in" register-name="RPINR1"/>
+            <function name="T3CK" direction="in" register-name="RPINR1"/>
+            <function name="TCKI1" direction="in" register-name="RPINR2"/>
+            <function name="TCKI2" direction="in" register-name="RPINR2"/>
+            <function name="TCKI3" direction="in" register-name="RPINR3"/>
+            <function name="TCKI4" direction="in" register-name="RPINR3"/>
+            <function name="TCKI5" direction="in" register-name="RPINR4"/>
+            <function name="TCKI6" direction="in" register-name="RPINR4"/>
+            <function name="TCKI7" direction="in" register-name="RPINR5"/>
+            <function name="TCKI8" direction="in" register-name="RPINR5"/>
+            <function name="TCKI9" direction="in" register-name="RPINR6"/>
+            <function name="TOUCH10" direction="in"/>
+            <function name="TOUCH11" direction="in"/>
+            <function name="TOUCH12" direction="in"/>
+            <function name="TOUCH13" direction="in"/>
+            <function name="TOUCH14" direction="in"/>
+            <function name="TOUCH15" direction="in"/>
+            <function name="TOUCH8" direction="in"/>
+            <function name="TOUCH9" direction="in"/>
+            <function name="U1CTS" direction="in" register-name="RPINR23"/>
+            <function name="U1DCD" direction="in"/>
+            <function name="U1DSR" direction="in" register-name="RPINR13"/>
+            <function name="U1RX" direction="in" register-name="RPINR13"/>
+            <function name="U2CTS" direction="in" register-name="RPINR23"/>
+            <function name="U2DCD" direction="in"/>
+            <function name="U2DSR" direction="in" register-name="RPINR13"/>
+            <function name="U2RX" direction="in" register-name="RPINR13"/>
+            <function name="U3CTS" direction="in" register-name="RPINR24"/>
+            <function name="U3DCD" direction="in"/>
+            <function name="U3DSR" direction="in" register-name="RPINR14"/>
+            <function name="U3RX" direction="in" register-name="RPINR14"/>
+        </group>
+        <group id="2">
+            <pin name="RPA0" register-name="RPOR0bits.RP1R"/>
+            <pin name="RPA1" register-name="RPOR0bits.RP2R"/>
+            <pin name="RPA2" register-name="RPOR0bits.RP3R"/>
+            <pin name="RPA3" register-name="RPOR0bits.RP4R"/>
+            <pin name="RPA4" register-name="RPOR1bits.RP5R"/>
+            <pin name="RPA5" register-name="RPOR1bits.RP6R"/>
+            <pin name="RPA6" register-name="RPOR1bits.RP7R"/>
+            <pin name="RPA7" register-name="RPOR1bits.RP8R"/>
+            <pin name="RPA8" register-name="RPOR2bits.RP9R"/>
+            <pin name="RPA9" register-name="RPOR2bits.RP10R"/>
+            <pin name="RPB0" register-name="RPOR4bits.RP17R"/>
+            <pin name="RPB1" register-name="RPOR4bits.RP18R"/>
+            <pin name="RPB2" register-name="RPOR4bits.RP19R"/>
+            <pin name="RPB3" register-name="RPOR4bits.RP20R"/>
+            <pin name="RPB4" register-name="RPOR5bits.RP21R"/>
+            <pin name="RPB5" register-name="RPOR5bits.RP22R"/>
+            <pin name="RPB6" register-name="RPOR5bits.RP23R"/>
+            <pin name="RPB7" register-name="RPOR5bits.RP24R"/>
+            <pin name="RPC0" register-name="RPOR8bits.RP33R"/>
+            <pin name="RPC1" register-name="RPOR8bits.RP34R"/>
+            <pin name="RPC2" register-name="RPOR8bits.RP35R"/>
+            <pin name="RPC3" register-name="RPOR8bits.RP36R"/>
+            <pin name="RPC4" register-name="RPOR9bits.RP37R"/>
+            <pin name="RPC5" register-name="RPOR9bits.RP38R"/>
+            <pin name="RPC6" register-name="RPOR9bits.RP39R"/>
+            <pin name="RPC7" register-name="RPOR9bits.RP40R"/>
+            <pin name="RPD0" register-name="RPOR12bits.RP49R"/>
+            <pin name="RPD1" register-name="RPOR12bits.RP50R"/>
+            <pin name="RPD2" register-name="RPOR12bits.RP51R"/>
+            <pin name="RPD3" register-name="RPOR12bits.RP52R"/>
+            <pin name="RPD6" register-name="RPOR13bits.RP55R"/>
+            <function name="APWM1H" direction="out" value="88"/>
+            <function name="APWM1L" direction="out" value="89"/>
+            <function name="APWM2H" direction="out" value="90"/>
+            <function name="APWM2L" direction="out" value="91"/>
+            <function name="APWM3H" direction="out" value="92"/>
+            <function name="APWM3L" direction="out" value="93"/>
+            <function name="APWM4H" direction="out" value="94"/>
+            <function name="APWM4L" direction="out" value="95"/>
+            <function name="APWME1" direction="out" value="96"/>
+            <function name="APWME2" direction="out" value="97"/>
+            <function name="BISS1MA" direction="out" value="84"/>
+            <function name="BISS1MO" direction="out" value="83"/>
+            <function name="CAN1TX" direction="out" value="17"/>
+            <function name="CAN2TX" direction="out" value="18"/>
+            <function name="CLC10OUT" direction="out" value="78"/>
+            <function name="CLC1OUT" direction="out" value="69"/>
+            <function name="CLC2OUT" direction="out" value="70"/>
+            <function name="CLC3OUT" direction="out" value="71"/>
+            <function name="CLC4OUT" direction="out" value="72"/>
+            <function name="CLC5OUT" direction="out" value="73"/>
+            <function name="CLC6OUT" direction="out" value="74"/>
+            <function name="CLC7OUT" direction="out" value="75"/>
+            <function name="CLC8OUT" direction="out" value="76"/>
+            <function name="CLC9OUT" direction="out" value="77"/>
+            <function name="CMP1" direction="out" value="53"/>
+            <function name="CMP2" direction="out" value="54"/>
+            <function name="CMP3" direction="out" value="55"/>
+            <function name="CMP4" direction="out" value="56"/>
+            <function name="CMP5" direction="out" value="57"/>
+            <function name="CMP6" direction="out" value="58"/>
+            <function name="CMP7" direction="out" value="59"/>
+            <function name="CMP8" direction="out" value="60"/>
+            <function name="MCCP9A" direction="out" value="47"/>
+            <function name="MCCP9B" direction="out" value="48"/>
+            <function name="MCCP9C" direction="out" value="49"/>
+            <function name="MCCP9D" direction="out" value="50"/>
+            <function name="MCCP9E" direction="out" value="51"/>
+            <function name="MCCP9F" direction="out" value="52"/>
+            <function name="OCM1" direction="out" value="39"/>
+            <function name="OCM2" direction="out" value="40"/>
+            <function name="OCM3" direction="out" value="41"/>
+            <function name="OCM4" direction="out" value="42"/>
+            <function name="OCM5" direction="out" value="43"/>
+            <function name="OCM6" direction="out" value="44"/>
+            <function name="OCM7" direction="out" value="45"/>
+            <function name="OCM8" direction="out" value="46"/>
+            <function name="PTGTRG24" direction="out" value="79"/>
+            <function name="PTGTRG25" direction="out" value="80"/>
+            <function name="PWM1H" direction="out" value="1"/>
+            <function name="PWM1L" direction="out" value="2"/>
+            <function name="PWM2H" direction="out" value="3"/>
+            <function name="PWM2L" direction="out" value="4"/>
+            <function name="PWM3H" direction="out" value="5"/>
+            <function name="PWM3L" direction="out" value="6"/>
+            <function name="PWM4H" direction="out" value="7"/>
+            <function name="PWM4L" direction="out" value="8"/>
+            <function name="PWM5H" direction="out" value="9"/>
+            <function name="PWM5L" direction="out" value="10"/>
+            <function name="PWM6H" direction="out" value="11"/>
+            <function name="PWM6L" direction="out" value="12"/>
+            <function name="PWM7H" direction="out" value="13"/>
+            <function name="PWM7L" direction="out" value="14"/>
+            <function name="PWM8H" direction="out" value="15"/>
+            <function name="PWM8L" direction="out" value="16"/>
+            <function name="PWME1" direction="out" value="61"/>
+            <function name="PWME2" direction="out" value="62"/>
+            <function name="PWME3" direction="out" value="63"/>
+            <function name="PWME4" direction="out" value="64"/>
+            <function name="QEICMP1" direction="out" value="65"/>
+            <function name="QEICMP2" direction="out" value="66"/>
+            <function name="QEICMP3" direction="out" value="67"/>
+            <function name="QEICMP4" direction="out" value="68"/>
+            <function name="REFO1" direction="out" value="37"/>
+            <function name="REFO2" direction="out" value="38"/>
+            <function name="SCK1" direction="out" value="26"/>
+            <function name="SCK2" direction="out" value="29"/>
+            <function name="SCK3" direction="out" value="32"/>
+            <function name="SCK4" direction="out" value="35"/>
+            <function name="SDO1" direction="out" value="25"/>
+            <function name="SDO2" direction="out" value="28"/>
+            <function name="SDO3" direction="out" value="31"/>
+            <function name="SDO4" direction="out" value="34"/>
+            <function name="SENT1OUT" direction="out" value="81"/>
+            <function name="SENT2OUT" direction="out" value="82"/>
+            <function name="SS1" direction="out" value="27"/>
+            <function name="SS2" direction="out" value="30"/>
+            <function name="SS3" direction="out" value="33"/>
+            <function name="SS4" direction="out" value="36"/>
+            <function name="U1DTR" direction="out" value="85"/>
+            <function name="U1RTS" direction="out" value="20"/>
+            <function name="U1TX" direction="out" value="19"/>
+            <function name="U2DTR" direction="out" value="86"/>
+            <function name="U2RTS" direction="out" value="22"/>
+            <function name="U2TX" direction="out" value="21"/>
+            <function name="U3DTR" direction="out" value="87"/>
+            <function name="U3RTS" direction="out" value="24"/>
+            <function name="U3TX" direction="out" value="23"/>
+        </group>
+    </groups>
+    <modules>
+        <module name="ADC" desc="ADC">
+            <function name="ADTRG31"/>
+        </module>
+        <module name="ADC1" desc="ADC 1" analog="true">
+            <function name="AD1AN0"/>
+            <function name="AD1AN1"/>
+            <function name="AD1AN2"/>
+            <function name="AD1AN3"/>
+        </module>
+        <module name="ADC2" desc="ADC 2" analog="true">
+            <function name="AD2AN0"/>
+            <function name="AD2AN1"/>
+            <function name="AD2AN2"/>
+        </module>
+        <module name="ADC3" desc="ADC 3" analog="true">
+            <function name="AD3AN0"/>
+            <function name="AD3AN1"/>
+            <function name="AD3AN2"/>
+            <function name="AD3AN5"/>
+        </module>
+        <module name="ADC4" desc="ADC 4" analog="true">
+            <function name="AD4AN0"/>
+            <function name="AD4AN1"/>
+            <function name="AD4AN2"/>
+            <function name="AD4AN3"/>
+            <function name="AD4AN5"/>
+        </module>
+        <module name="ADC5" desc="ADC 5" analog="true">
+            <function name="AD5AN0"/>
+            <function name="AD5AN1"/>
+            <function name="AD5AN3"/>
+            <function name="AD5AN4"/>
+        </module>
+        <module name="BISS" desc="BISS">
+            <function name="BISS1GS"/>
+            <function name="BISS1MA"/>
+            <function name="BISS1MO"/>
+            <function name="BISS1SL"/>
+        </module>
+        <module name="CAN1" desc="CAN 1">
+            <function name="CAN1RX"/>
+            <function name="CAN1TX"/>
+        </module>
+        <module name="CAN2" desc="CAN 2">
+            <function name="CAN2RX"/>
+            <function name="CAN2TX"/>
+        </module>
+        <module name="CBG" desc="CBG">
+            <function name="IBIAS0" analog="true"/>
+            <function name="IBIAS1" analog="true"/>
+            <function name="IBIAS2" analog="true"/>
+            <function name="IBIAS3" analog="true"/>
+            <function name="ISRC0" analog="true"/>
+            <function name="ISRC1" analog="true"/>
+            <function name="ISRC2" analog="true"/>
+            <function name="ISRC3" analog="true"/>
+            <function name="LX"/>
+        </module>
+        <module name="CLC" desc="CLC">
+            <function name="CLCINA"/>
+            <function name="CLCINB"/>
+            <function name="CLCINC"/>
+            <function name="CLCIND"/>
+            <function name="CLCINE"/>
+            <function name="CLCINF"/>
+            <function name="CLCING"/>
+            <function name="CLCINH"/>
+            <function name="CLCINI"/>
+            <function name="CLCINJ"/>
+        </module>
+        <module name="CLC1" desc="CLC 1">
+            <function name="CLC1OUT"/>
+        </module>
+        <module name="CLC10" desc="CLC 10">
+            <function name="CLC10OUT"/>
+        </module>
+        <module name="CLC2" desc="CLC 2">
+            <function name="CLC2OUT"/>
+        </module>
+        <module name="CLC3" desc="CLC 3">
+            <function name="CLC3OUT"/>
+        </module>
+        <module name="CLC4" desc="CLC 4">
+            <function name="CLC4OUT"/>
+        </module>
+        <module name="CLC5" desc="CLC 5">
+            <function name="CLC5OUT"/>
+        </module>
+        <module name="CLC6" desc="CLC 6">
+            <function name="CLC6OUT"/>
+        </module>
+        <module name="CLC7" desc="CLC 7">
+            <function name="CLC7OUT"/>
+        </module>
+        <module name="CLC8" desc="CLC 8">
+            <function name="CLC8OUT"/>
+        </module>
+        <module name="CLC9" desc="CLC 9">
+            <function name="CLC9OUT"/>
+        </module>
+        <module name="CLOCK" desc="CLOCK">
+            <function name="CLKO"/>
+            <function name="MCLR"/>
+            <function name="OSCI"/>
+            <function name="OSCO"/>
+            <function name="REFI1"/>
+            <function name="REFI2"/>
+            <function name="REFO1"/>
+            <function name="REFO2"/>
+        </module>
+        <module name="CMP" desc="CMP" analog="true">
+            <function name="ALLCMP"/>
+            <function name="ALLCMPNC"/>
+            <function name="ALLCMPND"/>
+            <function name="DACOUT1"/>
+            <function name="DACOUT2"/>
+        </module>
+        <module name="CMP1" desc="CMP 1">
+            <function name="CMP1"/>
+            <function name="CMP1A" analog="true"/>
+            <function name="CMP1B" analog="true"/>
+            <function name="CMP1C" analog="true"/>
+        </module>
+        <module name="CMP2" desc="CMP 2">
+            <function name="CMP2"/>
+            <function name="CMP2A" analog="true"/>
+            <function name="CMP2B" analog="true"/>
+            <function name="CMP2C" analog="true"/>
+        </module>
+        <module name="CMP3" desc="CMP 3">
+            <function name="CMP3"/>
+            <function name="CMP3A" analog="true"/>
+            <function name="CMP3B" analog="true"/>
+            <function name="CMP3C" analog="true"/>
+        </module>
+        <module name="CMP4" desc="CMP 4">
+            <function name="CMP4"/>
+            <function name="CMP4A" analog="true"/>
+            <function name="CMP4B" analog="true"/>
+            <function name="CMP4C" analog="true"/>
+            <function name="CMP4D" analog="true"/>
+        </module>
+        <module name="CMP5" desc="CMP 5">
+            <function name="CMP5"/>
+            <function name="CMP5A" analog="true"/>
+            <function name="CMP5B" analog="true"/>
+        </module>
+        <module name="CMP6" desc="CMP 6">
+            <function name="CMP6"/>
+            <function name="CMP6A" analog="true"/>
+            <function name="CMP6B" analog="true"/>
+        </module>
+        <module name="CMP7" desc="CMP 7">
+            <function name="CMP7"/>
+            <function name="CMP7A" analog="true"/>
+            <function name="CMP7D" analog="true"/>
+        </module>
+        <module name="CMP8" desc="CMP 8">
+            <function name="CMP8"/>
+        </module>
+        <module name="EXT_INT" desc="EXT_INT">
+            <function name="INT0" analog="true"/>
+            <function name="INT1"/>
+            <function name="INT2"/>
+            <function name="INT3"/>
+            <function name="INT4"/>
+        </module>
+        <module name="I2C1" desc="I2C 1" analog="true">
+            <function name="SCL1"/>
+            <function name="SDA1"/>
+        </module>
+        <module name="I2C2" desc="I2C 2" analog="true">
+            <function name="SCL2"/>
+            <function name="SDA2"/>
+        </module>
+        <module name="I2C3" desc="I2C 3">
+            <function name="SCL3"/>
+            <function name="SDA3"/>
+        </module>
+        <module name="MCCP9" desc="MCCP 9">
+            <function name="ICM9"/>
+            <function name="MCCP9A"/>
+            <function name="MCCP9B"/>
+            <function name="MCCP9C"/>
+            <function name="MCCP9D"/>
+            <function name="MCCP9E"/>
+            <function name="MCCP9F"/>
+            <function name="TCKI9"/>
+        </module>
+        <module name="OPA" desc="OPA" analog="true">
+            <function name="OA1IN+"/>
+            <function name="OA1IN-"/>
+            <function name="OA1OUT"/>
+            <function name="OA2IN+"/>
+            <function name="OA2IN-"/>
+            <function name="OA2OUT"/>
+            <function name="OA3IN+"/>
+            <function name="OA3IN-"/>
+            <function name="OA3OUT"/>
+        </module>
+        <module name="PTG" desc="PTG">
+            <function name="PTGTRG24"/>
+            <function name="PTGTRG25"/>
+        </module>
+        <module name="PWM" desc="PWM">
+            <function name="APWM1H"/>
+            <function name="APWM1L"/>
+            <function name="APWM2H"/>
+            <function name="APWM2L"/>
+            <function name="APWM3H"/>
+            <function name="APWM3L"/>
+            <function name="APWM4H"/>
+            <function name="APWM4L"/>
+            <function name="PCI10"/>
+            <function name="PCI11"/>
+            <function name="PCI12"/>
+            <function name="PCI13"/>
+            <function name="PCI14"/>
+            <function name="PCI15"/>
+            <function name="PCI16"/>
+            <function name="PCI17"/>
+            <function name="PCI18"/>
+            <function name="PCI19"/>
+            <function name="PCI20"/>
+            <function name="PCI21"/>
+            <function name="PCI22"/>
+            <function name="PCI8"/>
+            <function name="PCI9"/>
+            <function name="PWM1-H"/>
+            <function name="PWM1-L"/>
+            <function name="PWM1H"/>
+            <function name="PWM1L"/>
+            <function name="PWM2-H"/>
+            <function name="PWM2-L"/>
+            <function name="PWM2H"/>
+            <function name="PWM2L"/>
+            <function name="PWM3-H"/>
+            <function name="PWM3-L"/>
+            <function name="PWM3H"/>
+            <function name="PWM3L"/>
+            <function name="PWM4-H"/>
+            <function name="PWM4-L"/>
+            <function name="PWM4H"/>
+            <function name="PWM4L"/>
+            <function name="PWM5-L"/>
+            <function name="PWM5H"/>
+            <function name="PWM5L"/>
+            <function name="PWM6H"/>
+            <function name="PWM6L"/>
+            <function name="PWM7H"/>
+            <function name="PWM7L"/>
+            <function name="PWM8H"/>
+            <function name="PWM8L"/>
+        </module>
+        <module name="QEI1" desc="QEI 1">
+            <function name="QEIA1"/>
+            <function name="QEIB1"/>
+            <function name="QEICMP1"/>
+            <function name="QEIHOM1"/>
+            <function name="QEIINDX1"/>
+        </module>
+        <module name="QEI2" desc="QEI 2">
+            <function name="INDX2"/>
+            <function name="QEIA2"/>
+            <function name="QEIB2"/>
+            <function name="QEICMP2"/>
+            <function name="QEIHOM2"/>
+        </module>
+        <module name="QEI3" desc="QEI 3">
+            <function name="INDX3"/>
+            <function name="QEIA3"/>
+            <function name="QEIB3"/>
+            <function name="QEICMP3"/>
+            <function name="QEIHOM3"/>
+        </module>
+        <module name="QEI4" desc="QEI 4">
+            <function name="INDX4"/>
+            <function name="QEIA4"/>
+            <function name="QEIB4"/>
+            <function name="QEICMP4"/>
+            <function name="QEIHOM4"/>
+        </module>
+        <module name="SCCP" desc="SCCP">
+            <function name="OCFA"/>
+            <function name="OCFB"/>
+            <function name="OCFC"/>
+            <function name="OCFD"/>
+        </module>
+        <module name="SCCP1" desc="SCCP 1">
+            <function name="ICM1"/>
+            <function name="OCM1"/>
+            <function name="TCKI1"/>
+        </module>
+        <module name="SCCP2" desc="SCCP 2">
+            <function name="ICM2"/>
+            <function name="OCM2"/>
+            <function name="TCKI2"/>
+        </module>
+        <module name="SCCP3" desc="SCCP 3">
+            <function name="ICM3"/>
+            <function name="OCM3"/>
+            <function name="TCKI3"/>
+        </module>
+        <module name="SCCP4" desc="SCCP 4">
+            <function name="ICM4"/>
+            <function name="OCM4"/>
+            <function name="TCKI4"/>
+        </module>
+        <module name="SCCP5" desc="SCCP 5">
+            <function name="ICM5"/>
+            <function name="OCM5"/>
+            <function name="TCKI5"/>
+        </module>
+        <module name="SCCP6" desc="SCCP 6">
+            <function name="ICM6"/>
+            <function name="OCM6"/>
+            <function name="TCKI6"/>
+        </module>
+        <module name="SCCP7" desc="SCCP 7">
+            <function name="ICM7"/>
+            <function name="OCM7"/>
+            <function name="TCKI7"/>
+        </module>
+        <module name="SCCP8" desc="SCCP 8">
+            <function name="ICM8"/>
+            <function name="OCM8"/>
+            <function name="TCKI8"/>
+        </module>
+        <module name="SENT1" desc="SENT 1">
+            <function name="SENT1"/>
+            <function name="SENT1OUT"/>
+        </module>
+        <module name="SENT2" desc="SENT 2">
+            <function name="SENT2"/>
+            <function name="SENT2OUT"/>
+        </module>
+        <module name="SPI1" desc="SPI 1">
+            <function name="SCK1"/>
+            <function name="SDI1"/>
+            <function name="SDO1"/>
+            <function name="SS1"/>
+        </module>
+        <module name="SPI2" desc="SPI 2">
+            <function name="SCK2"/>
+            <function name="SDI2"/>
+            <function name="SDO2"/>
+            <function name="SS2"/>
+        </module>
+        <module name="SPI3" desc="SPI 3">
+            <function name="SCK3"/>
+            <function name="SDI3"/>
+            <function name="SDO3"/>
+            <function name="SS3"/>
+        </module>
+        <module name="SPI4" desc="SPI 4">
+            <function name="SCK4"/>
+            <function name="SDI4"/>
+            <function name="SDO4"/>
+            <function name="SS4"/>
+        </module>
+        <module name="TMR1" desc="TMR 1">
+            <function name="T1CK"/>
+        </module>
+        <module name="TMR2" desc="TMR 2">
+            <function name="T2CK"/>
+        </module>
+        <module name="TMR3" desc="TMR 3">
+            <function name="T3CK"/>
+        </module>
+        <module name="UART1" desc="UART 1">
+            <function name="U1CTS"/>
+            <function name="U1DCD"/>
+            <function name="U1DSR"/>
+            <function name="U1DTR"/>
+            <function name="U1RTS"/>
+            <function name="U1RX"/>
+            <function name="U1TX"/>
+        </module>
+        <module name="UART2" desc="UART 2">
+            <function name="U2CTS"/>
+            <function name="U2DCD"/>
+            <function name="U2DSR"/>
+            <function name="U2DTR"/>
+            <function name="U2RTS"/>
+            <function name="U2RX"/>
+            <function name="U2TX"/>
+        </module>
+        <module name="UART3" desc="UART 3">
+            <function name="U3CTS"/>
+            <function name="U3DCD"/>
+            <function name="U3DSR"/>
+            <function name="U3DTR"/>
+            <function name="U3RTS"/>
+            <function name="U3RX"/>
+            <function name="U3TX"/>
+        </module>
+        <module name="UNKNOWN" desc="UNKNOWN">
+            <function name="APWME1"/>
+            <function name="APWME2"/>
+            <function name="IOMON12"/>
+            <function name="IOMON13"/>
+            <function name="IOMON14"/>
+            <function name="IOMON15"/>
+            <function name="PWME1"/>
+            <function name="PWME2"/>
+            <function name="PWME3"/>
+            <function name="PWME4"/>
+            <function name="PWMTRIG1"/>
+            <function name="PWMTRIG2"/>
+            <function name="PWMTRIG3"/>
+            <function name="PWMTRIG4"/>
+            <function name="PWMTRIG5"/>
+            <function name="PWMTRIG6"/>
+            <function name="PWMTRIG7"/>
+            <function name="PWMTRIG8"/>
+            <function name="RPV0IN"/>
+            <function name="RPV10IN"/>
+            <function name="RPV11IN"/>
+            <function name="RPV12IN"/>
+            <function name="RPV13IN"/>
+            <function name="RPV14IN"/>
+            <function name="RPV15IN"/>
+            <function name="RPV1IN"/>
+            <function name="RPV2IN"/>
+            <function name="RPV3IN"/>
+            <function name="RPV4IN"/>
+            <function name="RPV5IN"/>
+            <function name="RPV6IN"/>
+            <function name="RPV7IN"/>
+            <function name="RPV8IN"/>
+            <function name="RPV9IN"/>
+            <function name="TOUCH10"/>
+            <function name="TOUCH11"/>
+            <function name="TOUCH12"/>
+            <function name="TOUCH13"/>
+            <function name="TOUCH14"/>
+            <function name="TOUCH15"/>
+            <function name="TOUCH8"/>
+            <function name="TOUCH9"/>
+        </module>
+        <module name="UREF" desc="UREF" analog="true">
+            <function name="UREF"/>
+        </module>
+    </modules>
+</family>

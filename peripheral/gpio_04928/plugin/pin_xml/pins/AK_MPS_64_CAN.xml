@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pinfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" family="AK_MPS_64_CAN" xsi:noNamespaceSchemaLocation="./xml-resources/jaxb/HarmonyPinManager/Pins/pins_schema.xsd">
+    <packages>
+        <package diagram="AK_64" id="1" name="QFN"/>
+    </packages>
+    <pins>
+        <pin name="RA0">
+            <number package="1" pin="1"/>
+            <function name="AD3AN5"/>
+            <function name="CMP6A"/>
+            <function name="SCL2"/>
+            <function name="RPA0"/>
+        </pin>
+        <pin name="RA7">
+            <number package="1" pin="2"/>
+            <function name="AD5AN0"/>
+            <function name="CMP6B"/>
+            <function name="SDA2"/>
+            <function name="RPA7"/>
+        </pin>
+        <pin name="RA1">
+            <number package="1" pin="3"/>
+            <function name="DACOUT1"/>
+            <function name="AD5AN1"/>
+            <function name="CMP4D"/>
+            <function name="RPA1"/>
+        </pin>
+        <pin name="VSS6A">
+            <number package="1" pin="4"/>
+        </pin>
+        <pin name="VDD6A">
+            <number package="1" pin="5"/>
+        </pin>
+        <pin name="RA11">
+            <number package="1" pin="6"/>
+            <function name="AD5AN2"/>
+            <function name="ALLCMPNF"/>
+            <function name="CMP6C"/>
+            <function name="RPA11"/>
+        </pin>
+        <pin name="RA8">
+            <number package="1" pin="7"/>
+            <function name="DACOUT2"/>
+            <function name="AD5AN3"/>
+            <function name="CMP5A"/>
+            <function name="IBIAS3"/>
+            <function name="ISRC3"/>
+            <function name="RPA8"/>
+        </pin>
+        <pin name="RA9">
+            <number package="1" pin="8"/>
+            <function name="UREF"/>
+            <function name="AD1AN3"/>
+            <function name="CMP5B"/>
+            <function name="CMP7A"/>
+            <function name="IBIAS2"/>
+            <function name="ISRC2"/>
+            <function name="RPA9"/>
+        </pin>
+        <pin name="RA10">
+            <number package="1" pin="9"/>
+            <function name="AD1AN4"/>
+            <function name="ALLCMPNE"/>
+            <function name="CMP5C"/>
+            <function name="RPA10"/>
+        </pin>
+        <pin name="AVSS1A">
+            <number package="1" pin="10"/>
+        </pin>
+        <pin name="AVDD1A">
+            <number package="1" pin="11"/>
+        </pin>
+        <pin name="RA2">
+            <number package="1" pin="12"/>
+            <function name="OA1OUT"/>
+            <function name="AD1AN0"/>
+            <function name="CMP1A"/>
+            <function name="RPA2"/>
+        </pin>
+        <pin name="RA3">
+            <number package="1" pin="13"/>
+            <function name="OA1IN-"/>
+            <function name="AD1AN2"/>
+            <function name="ALLCMPNC"/>
+            <function name="CMP1C"/>
+            <function name="RPA3"/>
+        </pin>
+        <pin name="RA4">
+            <number package="1" pin="14"/>
+            <function name="OA1IN+"/>
+            <function name="AD1AN1"/>
+            <function name="AD5AN4"/>
+            <function name="CMP1B"/>
+            <function name="RPA4"/>
+        </pin>
+        <pin name="RA5">
+            <number package="1" pin="15"/>
+            <function name="OA3OUT"/>
+            <function name="AD3AN0"/>
+            <function name="CMP3A"/>
+            <function name="INT0"/>
+            <function name="RPA5"/>
+        </pin>
+        <pin name="RA6">
+            <number package="1" pin="16"/>
+            <function name="OA3IN-"/>
+            <function name="AD3AN2"/>
+            <function name="ALLCMPND"/>
+            <function name="CMP3C"/>
+            <function name="RPA6"/>
+        </pin>
+        <pin name="RB5">
+            <number package="1" pin="17"/>
+            <function name="OA3IN+"/>
+            <function name="AD3AN1"/>
+            <function name="AD4AN5"/>
+            <function name="CMP3B"/>
+            <function name="RPB5"/>
+        </pin>
+        <pin name="VSS2A">
+            <number package="1" pin="18"/>
+        </pin>
+        <pin name="VDD2A">
+            <number package="1" pin="19"/>
+        </pin>
+        <pin name="RB0">
+            <number package="1" pin="20"/>
+            <function name="OA2OUT"/>
+            <function name="AD2AN0"/>
+            <function name="CMP2A"/>
+            <function name="RPB0"/>
+        </pin>
+        <pin name="RB1">
+            <number package="1" pin="21"/>
+            <function name="OA2IN-"/>
+            <function name="AD2AN2"/>
+            <function name="CMP2C"/>
+            <function name="RPB1"/>
+        </pin>
+        <pin name="RB2">
+            <number package="1" pin="22"/>
+            <function name="OA2IN+"/>
+            <function name="AD2AN1"/>
+            <function name="CMP2B"/>
+            <function name="RPB2"/>
+        </pin>
+        <pin name="RB8">
+            <number package="1" pin="23"/>
+            <function name="AD2AN4"/>
+            <function name="CMP2D"/>
+            <function name="RPB8"/>
+        </pin>
+        <pin name="RB9">
+            <number package="1" pin="24"/>
+            <function name="AD2AN3"/>
+            <function name="CMP8D"/>
+            <function name="RPB9"/>
+        </pin>
+        <pin name="VSS5A">
+            <number package="1" pin="25"/>
+        </pin>
+        <pin name="VDD5A">
+            <number package="1" pin="26"/>
+        </pin>
+        <pin name="RB3">
+            <number package="1" pin="27"/>
+            <function name="AD4AN3"/>
+            <function name="CMP4A"/>
+            <function name="SDA1"/>
+            <function name="RPB3"/>
+        </pin>
+        <pin name="RB4">
+            <number package="1" pin="28"/>
+            <function name="AD4AN0"/>
+            <function name="CMP4B"/>
+            <function name="SCL1"/>
+            <function name="RPB4"/>
+        </pin>
+        <pin name="RB6">
+            <number package="1" pin="29"/>
+            <function name="AD4AN1"/>
+            <function name="ALLCMP"/>
+            <function name="CMP7D"/>
+            <function name="IBIAS0"/>
+            <function name="ISRC0"/>
+            <function name="RPB6"/>
+        </pin>
+        <pin name="RB7">
+            <number package="1" pin="30"/>
+            <function name="AD4AN2"/>
+            <function name="CMP4C"/>
+            <function name="IBIAS1"/>
+            <function name="ISRC1"/>
+            <function name="RPB7"/>
+        </pin>
+        <pin name="RB10">
+            <number package="1" pin="31"/>
+            <function name="AD4AN4"/>
+            <function name="CMP8A"/>
+            <function name="SCK-2"/>
+            <function name="RPB10"/>
+        </pin>
+        <pin name="RB11">
+            <number package="1" pin="32"/>
+            <function name="CMP7B"/>
+            <function name="SDI-2"/>
+            <function name="RPB11"/>
+        </pin>
+        <pin name="RC8">
+            <number package="1" pin="33"/>
+            <function name="APWM1-L"/>
+            <function name="RPC8"/>
+        </pin>
+        <pin name="RC9">
+            <number package="1" pin="34"/>
+            <function name="SDO-2"/>
+            <function name="RPC9"/>
+        </pin>
+        <pin name="RC6">
+            <number package="1" pin="35"/>
+            <function name="SCL3"/>
+            <function name="RPC6"/>
+        </pin>
+        <pin name="RC7">
+            <number package="1" pin="36"/>
+            <function name="SDA3"/>
+            <function name="RPC7"/>
+        </pin>
+        <pin name="VSS1A">
+            <number package="1" pin="37"/>
+        </pin>
+        <pin name="VDD1A">
+            <number package="1" pin="38"/>
+        </pin>
+        <pin name="RC0">
+            <number package="1" pin="39"/>
+            <function name="OSCO"/>
+            <function name="CLKO"/>
+            <function name="RPC0"/>
+        </pin>
+        <pin name="RC1">
+            <number package="1" pin="40"/>
+            <function name="OSCI"/>
+            <function name="RPC1"/>
+        </pin>
+        <pin name="RC2">
+            <number package="1" pin="41"/>
+            <function name="PWM4-H"/>
+            <function name="SS-2"/>
+            <function name="FSYNC2"/>
+            <function name="RPC2"/>
+        </pin>
+        <pin name="RC5">
+            <number package="1" pin="42"/>
+            <function name="PWM4-L"/>
+            <function name="RPC5"/>
+        </pin>
+        <pin name="RC3">
+            <number package="1" pin="43"/>
+            <function name="PWM3-H"/>
+            <function name="RPC3"/>
+        </pin>
+        <pin name="RC4">
+            <number package="1" pin="44"/>
+            <function name="PWM3-L"/>
+            <function name="RPC4"/>
+        </pin>
+        <pin name="RC10">
+            <number package="1" pin="45"/>
+            <function name="PWM7-H"/>
+            <function name="RPC10"/>
+        </pin>
+        <pin name="RC11">
+            <number package="1" pin="46"/>
+            <function name="PWM7-L"/>
+            <function name="RPC11"/>
+        </pin>
+        <pin name="VSS4A">
+            <number package="1" pin="47"/>
+        </pin>
+        <pin name="VDD4A">
+            <number package="1" pin="48"/>
+        </pin>
+        <pin name="RD0">
+            <number package="1" pin="49"/>
+            <function name="PWM2-H"/>
+            <function name="RPD0"/>
+        </pin>
+        <pin name="RD1">
+            <number package="1" pin="50"/>
+            <function name="PWM2-L"/>
+            <function name="RPD1"/>
+        </pin>
+        <pin name="RD2">
+            <number package="1" pin="51"/>
+            <function name="PWM1-H"/>
+            <function name="RPD2"/>
+        </pin>
+        <pin name="RD3">
+            <number package="1" pin="52"/>
+            <function name="PWM1-L"/>
+            <function name="RPD3"/>
+        </pin>
+        <pin name="SWVDDA">
+            <number package="1" pin="53"/>
+        </pin>
+        <pin name="LXA">
+            <number package="1" pin="54"/>
+            <function name="LX"/>
+        </pin>
+        <pin name="SWVSSA">
+            <number package="1" pin="55"/>
+        </pin>
+        <pin name="VDDCOREA">
+            <number package="1" pin="56"/>
+        </pin>
+        <pin name="VSS3A">
+            <number package="1" pin="57"/>
+        </pin>
+        <pin name="VDD3A">
+            <number package="1" pin="58"/>
+        </pin>
+        <pin name="RD5">
+            <number package="1" pin="59"/>
+            <function name="PWM5-H"/>
+            <function name="ASCL1"/>
+            <function name="RPD5"/>
+        </pin>
+        <pin name="RD6">
+            <number package="1" pin="60"/>
+            <function name="PWM5-L"/>
+            <function name="ASDA1"/>
+            <function name="RPD6"/>
+        </pin>
+        <pin name="RD4">
+            <number package="1" pin="61"/>
+            <function name="RPD4"/>
+        </pin>
+        <pin name="RD7">
+            <number package="1" pin="62"/>
+            <function name="ASCL2"/>
+            <function name="RPD7"/>
+        </pin>
+        <pin name="RD8">
+            <number package="1" pin="63"/>
+            <function name="ASDA2"/>
+            <function name="RPD8"/>
+        </pin>
+        <pin name="NMCLR">
+            <number package="1" pin="64"/>
+            <function name="MCLR"/>
+        </pin>
+    </pins>
+</pinfile>
