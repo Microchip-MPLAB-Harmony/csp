@@ -979,6 +979,28 @@ reg_por_set_ad = ""
 analogPinsResult = []
 additional_analog_inputs = []
 
+def handleMessage(messageID, args):
+    retDict = {}
+    if (messageID == "ADC_CONFIG_HW_IO"):
+        component = adcInstanceName.getValue().lower()
+        channel, enable = args['config']
+
+        symbolName = "ch{}channelUsed".format(channel)
+
+        if enable == False:
+            res = Database.clearSymbolValue(component, symbolName)
+        else:
+            res = Database.setSymbolValue(component, symbolName, enable)
+        
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "ADC UnImplemented Command"}
+    
+    return retDict
 
 def instantiateComponent(adcComponent):
     global interruptCmpEnableList,interruptHandlerLockList,interruptEnableList,adcInstanceName, num_channels,SEC_ACCUMULATOR_CONST,instanceNumber, channelStatusList,channelInterruptList,cmpInterruptList,modeSelectionList, secAccList,enabled_channels,reg_por_set_ad

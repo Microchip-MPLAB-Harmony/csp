@@ -52,6 +52,38 @@ caption_value_dict = {
 }
 sorted_caption_value_dict = OrderedDict(sorted(caption_value_dict.items()))
 
+def handleMessage(messageID, args):
+    retDict = {}
+    if (messageID == "CBG_CONFIG_HW_IO"):
+        component = "cbg"
+        setting, enable = args['config']
+
+        channel = "".join(filter(lambda x: x.isdigit(), setting))
+
+        symbolName = "USE_ISCR{}".format(channel)
+        symbolTypeName = "SOURCE_TYPE{}".format(channel)
+
+        if enable == False:
+            res = Database.clearSymbolValue(component, symbolName)
+            res = Database.clearSymbolValue(component, symbolTypeName)
+        else:
+            res = Database.setSymbolValue(component, symbolName, enable)
+            if "ibias" in setting.lower():
+                srcValue = "IBIAS{}".format(channel)
+            else:
+                srcValue = "ISRC{}".format(channel)
+            res = Database.setSymbolValue(component, symbolTypeName, srcValue)
+        
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "ADC UnImplemented Command"}
+    
+    return retDict
+
 def instantiateComponent(cbgComponent):
 
     current_quantity = cbgComponent.createIntegerSymbol("CURRENT_QUANTITY", None)

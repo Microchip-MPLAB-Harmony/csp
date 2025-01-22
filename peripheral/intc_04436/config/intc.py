@@ -107,6 +107,46 @@ vectorIndexList = []
 # Function names
 global isExternalInterrupt, generateDefineMacros, generateExternalInterruptEnum, findMinAndMaxVectorNum, generateInterruptHandlerNames, getExtIntEnabledList, getRegisterChildren, getRegisterList, externalInterruptControl, getIPCRegName, getInterruptPriorityData, getInterruptPriorityDataCallback, getExtInterruptPositiveEdge, getExtInterruptPositiveEdgeCallback, delFullStopAddInterrupt, findRegNameByBit, trapsHelperFunc
 
+# SHD configurations
+global setExternalInterrupt
+global clearExternalInterrupt
+
+def setExternalInterrupt(extIntNum):
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+    extIntName = "INT{}Interrupt".format(extIntNum)
+
+    symbolId = ""
+    res = False
+    for interrupt in range (len(interruptsChildrenList)):
+        vecName = str(interruptsChildrenList[interrupt].getAttribute("name"))
+        if vecName == extIntName:
+            index = str(interruptsChildrenList[interrupt].getAttribute("index"))
+            symbolId = "INTC_{}_ENABLE".format(index)
+            break
+
+    if symbolId != "":
+        res = Database.setSymbolValue("core", symbolId, True)
+
+    return res
+
+def clearExternalInterrupt(extIntNum):
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+    extIntName = "INT{}Interrupt".format(extIntNum)
+
+    symbolId = ""
+    res = False
+    for interrupt in range (len(interruptsChildrenList)):
+        vecName = str(interruptsChildrenList[interrupt].getAttribute("name"))
+        if vecName == extIntName:
+            index = str(interruptsChildrenList[interrupt].getAttribute("index"))
+            symbolId = "INTC_{}_ENABLE".format(index)
+            break
+
+    if symbolId != "":
+        res = Database.clearSymbolValue("core", symbolId)
+
+    return res
+
 
 def trapsHelperFunc(bitfieldName):
 

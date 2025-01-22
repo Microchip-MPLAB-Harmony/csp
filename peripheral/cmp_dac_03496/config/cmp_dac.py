@@ -14,6 +14,7 @@ REQ_TMODTIME = "REQ_TMODTIME"
 DACCTRL_CTRL2__SSTIME = "DACCTRL_CTRL2__SSTIME"
 DACCTRL_CTRL2__TMODTIME = "DACCTRL_CTRL2__TMODTIME"
 CMP_DAC_INST_NUM = "instance"
+CMP_DAC_INST_NAME = "CMP_DAC_INST_NAME"
 
 DAC_SLPCON__HCFSEL = "DAC_SLPCON__HCFSEL"
 DAC_SLPCON__PSE = "DAC_SLPCON__PSE"
@@ -372,8 +373,34 @@ def setDacModeDependency(symbol, event):
     elif event["value"] == "Slope-Mode" and symbolID == DAC_SLPCON__SLOPEN:
         symbol.setValue(True)
 
+def handleMessage(messageID, args):
+    retDict = {}
+    if (messageID == "CMPDAC_CONFIG_HW_IO"):
+        component = cmpInstanceName.getValue().lower()
+        setting, enable = args['config']
+
+        if setting[-1].isalpha():
+            if enable == False:
+                res = cmpPosInpConfig.setValue(0)
+            else:
+                res = cmpPosInpConfig.setSelectedKey(setting.upper())
+            
+            if res == True:
+                retDict = {"Result": "Success"}
+            else:
+                retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "CMP_DAC UnImplemented Command"}
+    
+    return retDict
 
 def instantiateComponent(cmpdacComponent):
+    global cmpInstanceName
+    cmpInstanceName = cmpdacComponent.createStringSymbol(CMP_DAC_INST_NAME, None)  
+    cmpInstanceName.setVisible(False)
+    cmpInstanceName.setDefaultValue(cmpdacComponent.getID().upper())
+    Log.writeInfoMessage("Running " + cmpInstanceName.getValue())
 
     cmpDacInstNum = cmpdacComponent.createStringSymbol(CMP_DAC_INST_NUM, None)
     cmpDacInstNum.setDefaultValue(
@@ -386,6 +413,7 @@ def instantiateComponent(cmpdacComponent):
     cmpMenu = cmpdacComponent.createMenuSymbol(CMP_MENU, None)
     cmpMenu.setLabel("Comparator")
 
+    global cmpPosInpConfig
     cmpPosInpConfig = cmpdacComponent.createKeyValueSetSymbol("DAC_CON__INSEL", cmpMenu)
     cmpPosInpConfig.setLabel("Comparator Positive Input Configuration")
     cmpPosInpConfig.addKey(

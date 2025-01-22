@@ -993,7 +993,61 @@ MASTER_CLK_FREQ = MASTER_CLK_FREQ
 DEF_OPERATING_MODE = getDefaultValue(MODULE_NAME,"PG","CON","MODSEL")
 DEF_OUTPUT_MODE = getDefaultValue(MODULE_NAME,"PG","IOCON","PMOD")
 
+# SHD: Store symbol instances for Pin Configuration
+pwmPinConfigSymbols = dict()
+
+def handleMessage(messageID, args):
+    global lastPwmChU
+    global lastPwmChV
+    global lastPwmChW
+    component = str(pwmInstanceName.getValue()).lower()
+    dict = {}
+
+    if (messageID == "PWM_CONFIG_HW_IO"):
+        channel, polarity, enable = args['config']
+
+        symbolNameEN = "PG{}_ENABLE".format(channel)
+        symbolNamePen = "PG{}_PG_IOCON__PEN{}".format(channel, polarity.upper())
+
+        if enable == True:
+            # Enable PG{}_ENABLE
+            res = Database.setSymbolValue(component, symbolNameEN, enable)
+            # Enable PG{}_PG_IOCON__PEN{}
+            symbolPen = pwmPinConfigSymbols.get(symbolNamePen)
+            if symbolPen is not None:
+                res = symbolPen.setSelectedKey("enabled")
+        else:
+            # Disable PG{}_PG_IOCON__PEN{}
+            symbolPen = pwmPinConfigSymbols.get(symbolNamePen)
+            if symbolPen is not None:
+                res = symbolPen.setSelectedKey("disabled")
+
+            # Disable PG{}_ENABLE if all IOCON__PEN{} are disabled
+            if polarity.upper() == "H":
+                symbolName = symbolNamePen.replace("H", "L")
+            else:
+                symbolName = symbolNamePen.replace("L", "H")
+
+            symbolPen = pwmPinConfigSymbols.get(symbolName)
+            if symbolPen is not None:
+                symbolPenkeyValue = symbolPen.getSelectedKey()
+                if symbolPenkeyValue == "disabled":
+                    res = Database.clearSymbolValue(component, symbolNameEN)
+
+        if res == True:
+            dict = {"Result": "Success"}
+        else:
+            dict = {"Result": "Fail"}
+            
+    return dict
+
 def instantiateComponent(pwmComponent):
+    global pwmInstanceName
+    pwmInstanceName = pwmComponent.createStringSymbol("PWM_INSTANCE_NAME", None)
+    pwmInstanceName.setVisible(False)
+    pwmInstanceName.setDefaultValue(pwmComponent.getID().upper())
+    Log.writeInfoMessage("Running " + pwmInstanceName.getValue())
+
     pwmInterrupts = pwmComponent.createBooleanSymbol(ENABLE_INTERRUPT,None)
     pwmInterrupts.setLabel("Enable Interrupts")
     pgList = [PG_ENABLE.format("PG" + str(i)) for i in range(1, NUMBER_OF_GENERATORS+1)]
@@ -1310,10 +1364,12 @@ def instantiateComponent(pwmComponent):
         pgPPSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_04302;register:PGIOxIOCON")
 
         pgPENL = createKeyValueSetSymbol(pwmComponent, MODULE_NAME, "PG","IOCON","PENL",pgPinConfiguration,gen,False)  
+        pwmPinConfigSymbols.setdefault("PG{}_PG_IOCON__PENL".format(gen), pgPENL)
         pgPENL.setLabel("Enable Low Pin (PENL)")
         pgPENL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_04302;register:PGxIOCON")
 
         pgPENH = createKeyValueSetSymbol(pwmComponent, MODULE_NAME, "PG","IOCON","PENH",pgPinConfiguration,gen,False)  
+        pwmPinConfigSymbols.setdefault("PG{}_PG_IOCON__PENH".format(gen), pgPENH)
         pgPENH.setLabel("Enable High Pin (PENH)")
         pgPENH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_04302;register:PGxIOCON")
 
