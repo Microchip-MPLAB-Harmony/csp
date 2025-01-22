@@ -1,0 +1,1 @@
+#include "peripheral/${moduleNameLowerCase}/plib_${moduleNameLowerCase}.h"

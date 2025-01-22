@@ -1,0 +1,1 @@
+${moduleNameUpperCase}_Initialize();
