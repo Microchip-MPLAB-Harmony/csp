@@ -1,0 +1,1 @@
+    ${dmaModuleName}_Initialize();
