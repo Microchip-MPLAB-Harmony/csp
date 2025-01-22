@@ -1,0 +1,1 @@
+#include "peripheral/${PAC_INSTANCE_NAME?lower_case}/plib_${PAC_INSTANCE_NAME?lower_case}.h"
