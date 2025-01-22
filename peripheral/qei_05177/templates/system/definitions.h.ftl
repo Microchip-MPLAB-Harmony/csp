@@ -1,0 +1,1 @@
+#include "peripheral/qei/plib_${moduleName?lower_case}.h"
