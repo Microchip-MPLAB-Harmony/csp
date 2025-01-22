@@ -256,6 +256,9 @@ def instantiateComponent(i2cComponent):
     i2cInstanceNum.setVisible(False)
     i2cInstanceNum.setDefaultValue(str(i2cComponent.getID()[-1]))
 
+    i2cAlternatePinsComment = i2cComponent.createCommentSymbol("alternatePinsComment",None)
+    i2cAlternatePinsComment.setLabel("Note: To use alternate pins, enable ALTI2C config bits in System/Device_Configuration/FDEVOPT and set the ALTI2C pins.")
+
     i2cInterruptMode = i2cComponent.createBooleanSymbol("I2CInterruptMode",None)
     i2cInterruptMode.setLabel("Interrupt Mode")
     i2cInterruptMode.setReadOnly(True)
