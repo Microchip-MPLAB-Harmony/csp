@@ -1,0 +1,2 @@
+    ${moduleName}_Initialize();
+
