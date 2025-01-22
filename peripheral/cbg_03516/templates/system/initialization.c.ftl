@@ -1,0 +1,1 @@
+${CBG_INSTANCE}_Initialize();

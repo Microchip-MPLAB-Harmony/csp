@@ -1,0 +1,1 @@
+#include "peripheral/cbg/plib_${CBG_INSTANCE?lower_case}.h" 
