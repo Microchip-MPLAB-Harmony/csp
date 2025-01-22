@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 const PlainLabel = (props: {
   disPlayText: string;
-  className: string;
+  className?: string;
   booldStatus?: boolean;
   redColorStatus?: boolean;
   toolTip?: string;

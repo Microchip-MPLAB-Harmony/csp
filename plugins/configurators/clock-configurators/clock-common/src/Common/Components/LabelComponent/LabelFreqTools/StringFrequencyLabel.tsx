@@ -14,7 +14,7 @@ const StringFrequencyLabel = (props: SymbolProps & LabelProps) => {
           props.minMaxOutofRangeRedColorStatus === true
         }
         booldStatus={props.boldLabelStatus}
-        toolTip={props.tooltip}
+        toolTip={props.tooltip ? props.tooltip : clockFreq.value + ' Hz'}
         className={props.className}
       />
     </div>

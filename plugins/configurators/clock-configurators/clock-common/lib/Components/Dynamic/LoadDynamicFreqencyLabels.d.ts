@@ -6,9 +6,5 @@ declare const LoadDynamicFreqencyLabels: (props: {
     boldLabelStatus?: boolean | undefined;
     toolTip?: string | undefined;
     redColorForZeroFrequency?: boolean | undefined;
-<<<<<<< HEAD
 }) => import("react/jsx-runtime").JSX.Element;
-=======
-}) => JSX.Element;
->>>>>>> 0d345d5887 (Added HTML clock manager PIC32CM_GC_SG supported devices)
 export default LoadDynamicFreqencyLabels;

@@ -10,6 +10,6 @@ const Tools_1 = require("../../../Tools/Tools");
 const StringFrequencyLabel = (props) => {
     const clockFreq = (0, harmony_plugin_client_lib_1.useStringSymbol)(props);
     return ((0, jsx_runtime_1.jsx)("div", { children: (0, jsx_runtime_1.jsx)(PlainLabel_1.default, { disPlayText: (0, Tools_1.GetClockDisplayFreqValue)(Number(clockFreq.value)), redColorStatus: (props.redColorForZeroFrequency === true && Number(clockFreq.value) === 0) ||
-                props.minMaxOutofRangeRedColorStatus === true, booldStatus: props.boldLabelStatus, toolTip: props.tooltip, className: props.className }) }));
+                props.minMaxOutofRangeRedColorStatus === true, booldStatus: props.boldLabelStatus, toolTip: props.tooltip ? props.tooltip : clockFreq.value + ' Hz', className: props.className }) }));
 };
 exports.default = StringFrequencyLabel;

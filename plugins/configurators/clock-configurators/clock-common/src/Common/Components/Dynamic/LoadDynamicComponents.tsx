@@ -7,25 +7,30 @@ const LoadDynamicComponents = (props: {
   dynamicSymbolsInfo: ControlInterface[];
   cx: (...classNames: string[]) => string;
 }) => {
-  const [symbols, setSymbols] = useState<ISymbol[]>([]);
-  useEffect(() => {
-    const symbolIDs = props.dynamicSymbolsInfo.map((e) => e.symbol_id) as string[];
-    symbolUtilApi.getSymbolTypes(props.componentId, symbolIDs).then((e: ISymbol[]) => {
-      setSymbols(e);
-    });
-  }, []);
-  return (
-    <div>
-      {symbols.length !== 0 &&
-        props.dynamicSymbolsInfo.map((id, index) => (
-          <DefaultControl
-            key={id.id}
-            symbol={symbols[index]}
-            className={props.cx(id.class[0])}
-          />
-        ))}
-    </div>
-  );
+  try {
+    const [symbols, setSymbols] = useState<ISymbol[]>([]);
+    useEffect(() => {
+      const symbolIDs = props.dynamicSymbolsInfo.map((e) => e.symbol_id) as string[];
+      symbolUtilApi.getSymbolTypes(props.componentId, symbolIDs).then((e: ISymbol[]) => {
+        setSymbols(e);
+      });
+    }, []);
+    return (
+      <div>
+        {symbols.length !== 0 &&
+          props.dynamicSymbolsInfo.map((id, index) => (
+            <DefaultControl
+              key={id.id}
+              symbol={symbols[index]}
+              className={props.cx(id.class[0])}
+            />
+          ))}
+      </div>
+    );
+  } catch (error) {
+    console.log(error);
+    return <>Error occurred! </>;
+  }
 };
 
 export default LoadDynamicComponents;

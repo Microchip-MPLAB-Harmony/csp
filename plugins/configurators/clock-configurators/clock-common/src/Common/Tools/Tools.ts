@@ -1,6 +1,7 @@
+import { ConfigSymbol, symbolUtilApi } from '@mplab_harmony/harmony-plugin-client-lib';
+
 const removeDuplicates = (symbolsArray: string[]) => {
-  // return symbolsArray.filter((item, index) => symbolsArray.indexOf(item) === index);
-  return symbolsArray;
+  return symbolsArray.filter((item, index) => symbolsArray.indexOf(item) === index);
 };
 
 const GetDivValue = (text: any) => {
@@ -22,7 +23,11 @@ const GetClockDisplayFreqValue = (value: number) => {
   if (!Number.isInteger(freqValue)) {
     if (freqValue < 1) {
       freqValue = value / 1000;
-      newfreqValue = freqValue.toFixed(3) + ' KHz';
+      if (freqValue < 1) {
+        newfreqValue = value.toFixed(3) + ' Hz';
+      } else {
+        newfreqValue = freqValue.toFixed(3) + ' KHz';
+      }
     } else {
       newfreqValue = freqValue.toFixed(3) + ' MHz';
     }
@@ -31,4 +36,11 @@ const GetClockDisplayFreqValue = (value: number) => {
   }
   return newfreqValue;
 };
-export { removeDuplicates, GetDivValue, GetClockDisplayFreqValue };
+
+const getSymbolValue = async (componentId: string, symbolId: string) => {
+  const symbols = (await symbolUtilApi.getSymbols(componentId, [symbolId])) as ConfigSymbol<any>[];
+  for (const symbol of symbols) {
+    return symbol.value;
+  }
+};
+export { removeDuplicates, GetDivValue, GetClockDisplayFreqValue, getSymbolValue };
