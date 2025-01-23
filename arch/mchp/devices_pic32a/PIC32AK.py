@@ -290,13 +290,27 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_04928/config/gpio.py
 coreComponent.addPlugin("../peripheral/gpio_04928/plugin/gpio_02922.jar")
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/intc_04436/config/intc.py")
-#coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_EVIC_02907_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/evic_02907_interrupt_configuration/build/index.html"})
+coreComponent.addPlugin(
+    "../../harmony-services/plugins/generic_plugin.jar",
+    "INTC_04436_MANAGER",
+    {
+        "plugin_name": "Interrupt Configuration",
+        "main_html_path": "../plugins/configurators/interrupt_configurators/intc_04436_interrupt_configuration/build/index.html",
+        "componentId": coreComponent.getID()
+    },
+)
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_04650/config/wdt.py")
 
 #load dma
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_04077/config/dma.py")
+
+#load dmt
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_04735/config/dmt.py")
+
+#load pac
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_04649/config/pac.py")
 
 # load dma manager information
 # To be updated
