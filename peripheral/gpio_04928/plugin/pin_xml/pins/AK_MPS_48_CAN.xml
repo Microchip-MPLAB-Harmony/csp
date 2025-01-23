@@ -162,11 +162,17 @@
             <function name="RPB7"/>
         </pin>
         <pin name="RC6">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="25"/>
             <function name="SCL3"/>
             <function name="RPC6"/>
         </pin>
         <pin name="RC7">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="26"/>
             <function name="SDA3"/>
             <function name="RPC7"/>
@@ -254,11 +260,17 @@
             <number package="1" pin="46"/>
         </pin>
         <pin name="RD6">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="47"/>
             <function name="PWM5-L"/>
             <function name="RPD6"/>
         </pin>
         <pin name="NMCLR">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="48"/>
             <function name="MCLR"/>
         </pin>

@@ -217,11 +217,17 @@
             <function name="RPC9"/>
         </pin>
         <pin name="RC6">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="35"/>
             <function name="SCL3"/>
             <function name="RPC6"/>
         </pin>
         <pin name="RC7">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="36"/>
             <function name="SDA3"/>
             <function name="RPC7"/>
@@ -321,32 +327,50 @@
             <number package="1" pin="58"/>
         </pin>
         <pin name="RD5">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="59"/>
             <function name="PWM5-H"/>
             <function name="ASCL1"/>
             <function name="RPD5"/>
         </pin>
         <pin name="RD6">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="60"/>
             <function name="PWM5-L"/>
             <function name="ASDA1"/>
             <function name="RPD6"/>
         </pin>
         <pin name="RD4">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="61"/>
             <function name="RPD4"/>
         </pin>
         <pin name="RD7">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="62"/>
             <function name="ASCL2"/>
             <function name="RPD7"/>
         </pin>
         <pin name="RD8">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="63"/>
             <function name="ASDA2"/>
             <function name="RPD8"/>
         </pin>
         <pin name="NMCLR">
+            <modifiers>
+                <modifier value="5V"/>
+            </modifiers>
             <number package="1" pin="64"/>
             <function name="MCLR"/>
         </pin>
