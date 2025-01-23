@@ -26,6 +26,65 @@ timeUnitsToSeconds = {
     "nanosecond": 1e9,
 }
 
+def calcAchievableFreq():
+    global periodReg
+    global tmrClkFreq
+    tickRateDict = {"tick_rate_hz": 0}
+    dummy_dict = dict()
+
+    if sysTimeComponentId.getValue() != "":
+        #Read the input clock frequency of the timer instance
+        source_clk_freq = tmrClkFreq.getValue()
+        #Read the calculated timer count to achieve the set Time Period and Calculate the actual tick rate
+        achievableTickRateHz = float(1.0/source_clk_freq) * periodReg.getValue()
+        achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+        tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+        dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+
+def handleMessage(messageID, args):
+    global sysTimeComponentId
+    global timePeriodMs
+
+    dummy_dict = dict()
+    sysTimePLIBConfig = dict()
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        modeDict = {"plib_mode": "PERIOD_MODE"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            timePeriodMs.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        if sysTimeComponentId.getValue() != "":
+            #Set the Time Period (millisecond)
+            timePeriodMs.setValue(args["sys_time_tick_ms"])
+
+    return dummy_dict
+
+def onAttachmentConnected(source, target):
+    global timerUnit
+
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    if remoteID == "sys_time":
+        timerUnit.setReadOnly(True)
+        timerUnit.setValue("millisecond")
+
+def onAttachmentDisconnected(source, target):
+    global sysTimeComponentId
+    global timePeriodMs
+    global timerUnit
+
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+    if remoteID == "sys_time":
+        #Reset the remote component ID to NULL
+        sysTimeComponentId.setValue("")
+        timePeriodMs.clearValue()
+        timerUnit.setReadOnly(False)
+        timerUnit.clearValue()
 
 def getBitfieldData(node):
 
@@ -154,8 +213,7 @@ def periodRegCalc(symbol, event):
     else:
         symbol.setValue(0)
 
-    # Calculation to be done for drivers, DVRT and such
-    # calcAchievableFreq()
+    calcAchievableFreq()
 
 
 def mapToEventValueCallback(symbol, event):
@@ -513,6 +571,7 @@ def instantiateComponent(tmrComponent):
         [TCON_SRC_SEL, TCON_TSYNC],
     )
 
+    global tmrClkFreq
     tmrClkFreq = tmrComponent.createIntegerSymbol(TIMER_CLOCK_FREQ, None)
     tmrClkFreq.setLabel("Timer Clock Frequency(In Hz)")
     tmrClkFreq.setVisible(True)
@@ -531,6 +590,7 @@ def instantiateComponent(tmrComponent):
     timeMenu = tmrComponent.createMenuSymbol("TIME_MENU", None)
     timeMenu.setLabel("Requested Timer Period")
 
+    global timerUnit
     timerUnit = tmrComponent.createComboSymbol(
         TIMER_UNIT, timeMenu, ["millisecond", "microsecond", "nanosecond"]
     )
@@ -545,6 +605,7 @@ def instantiateComponent(tmrComponent):
     )
     maxTmrPeriod = (2**32) * resolution if clkFreq else 0
 
+    global timePeriodMs
     timePeriodMs = tmrComponent.createFloatSymbol(TIME_PERIOD_MS, timeMenu)
     timePeriodMs.setLabel("Time in millisecond")
     timePeriodMs.setDefaultValue(1.0)
@@ -559,6 +620,7 @@ def instantiateComponent(tmrComponent):
         ],
     )
 
+    global periodReg
     periodReg = tmrComponent.createHexSymbol(TIMER_PERIOD, timePeriodMs)
     periodReg.setLabel("Period Register")
     periodReg.setDefaultValue(
@@ -641,6 +703,55 @@ def instantiateComponent(tmrComponent):
     prRegPor = tmrComponent.createStringSymbol("PR_REG_POR", None)
     prRegPor.setDefaultValue(getRegisterDefaultValue("Timer", "PR", "PR"))
     prRegPor.setVisible(False)
+
+    irqEnumName_Sym = tmrComponent.createStringSymbol("IRQ_ENUM_NAME", None)
+    irqEnumName_Sym.setVisible(False)
+    irqEnumName_Sym.setDefaultValue(str(getVectorIndex("T{}Interrupt".format(tmrInstNum.getValue()))))
+
+    global sysTimeComponentId
+    sysTimeComponentId = tmrComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
+
+    timerStartApiName = "TMR" + tmrInstNum.getValue() +  "_Start"
+    timerStopApiName = "TMR" + tmrInstNum.getValue() + "_Stop "
+    counterGetApiName = "TMR" + tmrInstNum.getValue() +  "_CounterGet"
+    frequencyGetApiName = "TMR" + tmrInstNum.getValue() + "_FrequencyGet"
+    callbackApiName = "TMR" + tmrInstNum.getValue() + "_CallbackRegister"
+    periodSetApiName = "TMR" + tmrInstNum.getValue() + "_PeriodSet"
+
+    timerWidth_Sym = tmrComponent.createIntegerSymbol("TIMER_WIDTH", None)
+    timerWidth_Sym.setVisible(False)
+    timerWidth_Sym.setDefaultValue(32)
+
+    timerPeriodMax_Sym = tmrComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
+    timerPeriodMax_Sym.setVisible(False)
+    timerPeriodMax_Sym.setDefaultValue("0xFFFFFFFF")
+
+    timerStartApiName_Sym = tmrComponent.createStringSymbol("TIMER_START_API_NAME", None)
+    timerStartApiName_Sym.setVisible(False)
+    timerStartApiName_Sym.setDefaultValue(timerStartApiName)
+
+    timeStopApiName_Sym = tmrComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
+    timeStopApiName_Sym.setVisible(False)
+    timeStopApiName_Sym.setDefaultValue(timerStopApiName)
+
+    counterApiName_Sym = tmrComponent.createStringSymbol("COUNTER_GET_API_NAME", None)
+    counterApiName_Sym.setVisible(False)
+    counterApiName_Sym.setDefaultValue(counterGetApiName)
+
+    frequencyGetApiName_Sym = tmrComponent.createStringSymbol("FREQUENCY_GET_API_NAME", None)
+    frequencyGetApiName_Sym.setVisible(False)
+    frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
+
+    callbackApiName_Sym = tmrComponent.createStringSymbol("CALLBACK_API_NAME", None)
+    callbackApiName_Sym.setVisible(False)
+    callbackApiName_Sym.setDefaultValue(callbackApiName)
+
+    periodSetApiName_Sym = tmrComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
+    periodSetApiName_Sym.setVisible(False)
+    periodSetApiName_Sym.setDefaultValue(periodSetApiName);
 
     # Code Generation
 
