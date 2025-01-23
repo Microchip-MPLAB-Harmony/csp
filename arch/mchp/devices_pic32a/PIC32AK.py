@@ -295,7 +295,7 @@ coreComponent.addPlugin(
     "INTC_04436_MANAGER",
     {
         "plugin_name": "Interrupt Configuration",
-        "main_html_path": "../plugins/configurators/interrupt_configurators/intc_04436_interrupt_configuration/build/index.html",
+        "main_html_path": "csp/plugins/configurators/interrupt_configurators/intc_04436_interrupt_configuration/build/index.html",
         "componentId": coreComponent.getID()
     },
 )
