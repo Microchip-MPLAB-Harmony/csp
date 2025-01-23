@@ -1328,16 +1328,18 @@ def instantiateComponent( coreComponent ):
 
     global compilerSelected
     compilerSelected = compilerChoice.getSelectedKey().replace( naQualifier, "" ).lower()
-    if ((CORE_DSPIC33A not in coreArch.getValue()) and (CORE_PIC32A not in coreArch.getValue())):
-        debugSourceFile = coreComponent.createFileSymbol( "DEBUG_CONSOLE_C", None )
-        debugSourceFile.setMarkup( True )
-        debugSourceFile.setOverwrite( True )
-        debugSourceFile.setDestPath( "/stdio/" )
-        debugSourceFile.setProjectPath( "config/" + configName + "/stdio/" )
-        debugSourceFile.setType( "SOURCE" )
-        debugSourceFile.setDependencies( genSysSourceFile, [ "CoreSysStdioSyscallsFile", "CoreSysFiles" ] )
+    debugSourceFile = coreComponent.createFileSymbol( "DEBUG_CONSOLE_C", None )
+    debugSourceFile.setMarkup( True )
+    debugSourceFile.setOverwrite( True )
+    debugSourceFile.setDestPath( "/stdio/" )
+    debugSourceFile.setProjectPath( "config/" + configName + "/stdio/" )
+    debugSourceFile.setType( "SOURCE" )
+    debugSourceFile.setDependencies( genSysSourceFile, [ "CoreSysStdioSyscallsFile", "CoreSysFiles" ] )
+    if compilerSelected.upper() == "XCDSC":
+        debugSourceFile.setSourcePath( "../arch/mchp/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
+    else:
         debugSourceFile.setSourcePath( "../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
-        debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
+    debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
 
     # load device specific information, clock and pin manager
     execfile( Variables.get( "__ARCH_DIR") + "/" + processor + ".py" )
