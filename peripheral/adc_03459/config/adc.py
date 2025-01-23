@@ -1065,7 +1065,7 @@ def instantiateComponent(adcComponent):
     clkComment.setLabel("Warning!!! Enable and configure Clock Generator 6 in Clock Section of System Module")
     clockValue = Database.getSymbolValue(CORE_COMPONENT, CLK_GEN6_KEY)
     clkComment.setVisible(clockValue == 0)
-    clkComment.setDependencies(getIFSRegister, [ADC_CLOCK_FREQUENCY,  CORE_COMPONENT + "." + CLK_GEN6_KEY])
+    clkComment.setDependencies(updateClockComment, [ADC_CLOCK_FREQUENCY,  CORE_COMPONENT + "." + CLK_GEN6_KEY])
 
     # Channel Configuration
     adcChannelConfiguration = adcComponent.createMenuSymbol(ADC_CHANNEL_CONFIGURATION, adcMenu)
