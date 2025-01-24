@@ -389,6 +389,15 @@ def getInterruptSymbolMapForCodeGen(compPrefix,compInstance,interruptList):
 
     return intSymbolMap
 
+def getIFSRegName(compPrefix,compInstance):
+    ifsRegisterGroup = getModuleRegisterGroup("intc","IFS")
+    for registerNode in ifsRegisterGroup:
+        for bitfieldNode in registerNode.getChildren():
+            bitName = bitfieldNode.getAttribute("name")
+            if(bitName.startswith(compPrefix+compInstance)):
+                return registerNode.getAttribute("name")
+    return ""
+
 def createInterruptSymbols(component,intSymbolMap):
     for key in intSymbolMap:
         interruptSymbol = component.createStringSymbol(key, None)
@@ -461,7 +470,9 @@ def instantiateComponent(uartComponent):
     uartInterruptEnable.setLabel("Interrupt Enable")
     uartInterruptEnable.setReadOnly(True)
     uartInterruptEnable.setDependencies(interruptEnableChange, [INTERRUPT_MODE_KEY])
-
+    ifsRegName = getIFSRegName("U",uartComponent.getID().upper().replace(UART,""))
+    uartInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:intc_04436;register:"+ifsRegName)
+    
     #Enable Ring buffer
     uartSym_RingBufferMode_Enable = uartComponent.createBooleanSymbol(RING_BUFFER_MODE_ENABLE_KEY, None)
     uartSym_RingBufferMode_Enable.setLabel("Enable Ring Buffer ?")
@@ -494,6 +505,7 @@ def instantiateComponent(uartComponent):
     # STOP Selection Bit
     uartSym_UxMODE_STSEL = createKeyValueSetSymbol(uartComponent, UART, "U","CON","STP")
     uartSym_UxMODE_STSEL.setLabel("Stop Selection Bit")
+    uartSym_UxMODE_STSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_03076;register:UxCON")
 
     # Parity and Data Selection
     uartSym_ParityDataMode = uartComponent.createKeyValueSetSymbol(PARITY_DATA_MODE_KEY, None)
@@ -505,12 +517,13 @@ def instantiateComponent(uartComponent):
     uartSym_ParityDataMode.setDefaultValue(0)
     uartSym_ParityDataMode.setDisplayMode("Description")
     uartSym_ParityDataMode.setOutputMode("Value")
-
+    uartSym_ParityDataMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_03076;register:UxCON")
 
     # Clock Selection
     uartSym_ClockSel = createKeyValueSetSymbol(uartComponent, UART, "U","CON","CLKSEL")
     uartSym_ClockSel.setLabel("Clock Selection")
-
+    uartSym_ClockSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_03076;register:UxCON")
+    
     # UART Clock Frequency
     uartClkValue = uartComponent.createIntegerSymbol(CLK_FREQ_KEY, None)
     uartClkValue.setLabel("Clock Frequency(In Hz)")
@@ -523,7 +536,8 @@ def instantiateComponent(uartComponent):
     uartBaud.setLabel("Baud Rate")
     uartBaud.setDefaultValue(115200)
     uartBaud.setDependencies(baudRateTrigger,[BAUD_RATE_KEY,CLK_FREQ_KEY])
-
+    uartBaud.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_03076;register:UxBRG")
+    
     # Error Rate
     uartError = uartComponent.createCommentSymbol(BAUD_ERROR_COMMENT_KEY, None)
     uartError.setLabel("*** Error Rate ***")
