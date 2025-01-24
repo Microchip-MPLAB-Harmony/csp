@@ -31,7 +31,9 @@ def handleMessage(messageID, args):
     global flexcomSym_SPI_InterruptMode
     global flexcomSym_OperatingMode
     global flexcomSym_SPI_MR_PCS
+    global flexcomSym_SPI_MR_MSTR
     global flexcomSym_Twi_OpMode
+    global flexcomSym_Twi_Interrupt
     result_dict = {}
 
     if (messageID == "I2C_MASTER_MODE"):

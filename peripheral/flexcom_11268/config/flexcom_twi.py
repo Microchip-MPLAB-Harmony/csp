@@ -26,6 +26,7 @@
 ################################################################################
 global getFlexcomTwiClockDividerValue
 global flexcomSym_Twi_OpMode
+global flexcomSym_Twi_Interrupt
 
 def getFlexcomTwiClockDividerValue(flexcomTwiClkSpeed):
     global flexcomSym_TWI_CWGR_BRSRCCLK
