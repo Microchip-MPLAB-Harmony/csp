@@ -24,7 +24,7 @@
     position: absolute;
     width: 60px;
     top: 142px;
-    left: 248px
+    left: 227px
     }
 .lbl_Slclk_md_slck {
     height: 20px;
@@ -134,9 +134,9 @@
 .pllControlTab {
     position: absolute;
     width: 65px;
-    left: 565px;
     height: 218px;
-    top: 581px
+    left: 564px;
+    top: 582px
     }
 .tab_PLLA_spinner_mul {
     position: absolute;
@@ -296,36 +296,36 @@
     height: 20px;
     position: absolute;
     width: 75px;
-    left: 456px;
-    top: 32px
+    top: 32px;
+    left: 459px
     }
 .processClkRName1 {
     height: 20px;
     position: absolute;
     width: 75px;
-    left: 455px;
-    top: 75px
+    top: 75px;
+    left: 459px
     }
 .processClkRName2 {
     height: 20px;
     position: absolute;
     width: 75px;
     top: 118px;
-    left: 454px
+    left: 459px
     }
 .processClkRName3 {
     height: 20px;
     position: absolute;
     width: 75px;
-    left: 454px;
-    top: 158px
+    top: 158px;
+    left: 459px
     }
 .lbl_Pclk_pres {
     height: 20px;
     position: absolute;
     width: 30px;
     top: 94px;
-    left: 657px
+    left: 659px
     }
 .lbl_Pclk_ratio {
     height: 20px;
@@ -360,7 +360,7 @@
     position: absolute;
     width: 80px;
     top: 107px;
-    left: 688px
+    left: 690px
     }
 .spn_pclk_ratio {
     position: absolute;
@@ -374,7 +374,7 @@
     position: absolute;
     width: 65px;
     top: 107px;
-    left: 575px
+    left: 577px
     }
 .cmb_Pclk_mdiv {
     position: absolute;
@@ -394,29 +394,29 @@
     height: 20px;
     position: absolute;
     width: 75px;
-    left: 457px;
-    top: 55px
+    top: 55px;
+    left: 459px
     }
 .lbl_Pclk_mainck {
     height: 20px;
     position: absolute;
     width: 75px;
     top: 96px;
-    left: 455px
+    left: 459px
     }
 .lbl_Pclk_cpupllck {
     height: 20px;
     position: absolute;
     width: 75px;
-    left: 454px;
-    top: 137px
+    top: 137px;
+    left: 459px
     }
 .lbl_Pclk_syspllck {
     height: 20px;
     position: absolute;
     width: 75px;
     top: 178px;
-    left: 455px
+    left: 459px
     }
 .pckclkReset {
     height: 30px;
@@ -450,50 +450,15 @@
     position: absolute;
     height: 220px;
     width: 60px;
-    left: 732px;
-    top: 230px
+    top: 230px;
+    left: 730px
     }
 .cmb_mckx_css {
     height: 30px;
     position: absolute;
-    width: 140px;
-    left: 583px;
-    top: 473px
-    }
-.lbl_mckx_mainck {
-    height: 20px;
-    position: absolute;
-    width: 90.48px;
-    left: 450px;
-    top: 392px
-    }
-.lbl_mckx_tdclock {
-    height: 20px;
-    position: absolute;
-    top: 346px;
-    width: 90.48px;
-    left: 450px
-    }
-.lbl_mckx_syspllck {
-    height: 20px;
-    position: absolute;
-    top: 477px;
-    width: 90.48px;
-    left: 450px
-    }
-.lbl_mckx_mck0 {
-    height: 20px;
-    position: absolute;
-    width: 100px;
-    top: 434px;
-    left: 450px
-    }
-.lbl_mckx_md_sclk {
-    height: 20px;
-    position: absolute;
-    top: 296px;
-    width: 90.48px;
-    left: 453px
+    top: 474px;
+    left: 602px;
+    width: 125px
     }
 .mckCount {
     height: 20px;
@@ -521,7 +486,7 @@
     position: absolute;
     width: 20px;
     left: 1076px;
-    top: 557px
+    top: 552px
     }
 .spn_pckx_pres {
     height: 30px;
@@ -535,7 +500,7 @@
     position: absolute;
     width: 100px;
     left: 1121px;
-    top: 542px
+    top: 538px
     }
 .lbl_pckx_pres {
     height: 20px;
@@ -548,15 +513,15 @@
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 924px;
-    top: 266px
+    top: 266px;
+    left: 925px
     }
 .pckClkRadio1 {
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 925px;
-    top: 302px
+    top: 303px;
+    left: 925px
     }
 .pckClkRadio2 {
     height: 20px;
@@ -577,14 +542,14 @@
     position: absolute;
     width: 20px;
     top: 433px;
-    left: 926px
+    left: 925px
     }
 .pckClkRadio5 {
     height: 20px;
     position: absolute;
     width: 20px;
     top: 471px;
-    left: 926px
+    left: 925px
     }
 .pckClkRadio6 {
     height: 20px;
@@ -611,64 +576,64 @@
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 836px;
-    top: 258px
+    left: 827px;
+    top: 257px
     }
 .pckClkRadioName1 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 838px;
-    top: 297px
+    left: 827px;
+    top: 296px
     }
 .pckClkRadioName2 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 839px;
-    top: 342px
+    top: 341px;
+    left: 828px
     }
 .pckClkRadioName3 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 838px;
-    top: 382px
+    top: 380px;
+    left: 828px
     }
 .pckClkRadioName4 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 839px;
-    top: 425px
+    top: 423px;
+    left: 831px
     }
 .pckClkRadioName5 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 839px;
-    top: 462px
+    top: 462px;
+    left: 830px
     }
 .pckClkRadioName6 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 838px;
-    top: 506px
+    top: 503px;
+    left: 827px
     }
 .pckClkRadioName7 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 837px;
-    top: 556px
+    top: 555px;
+    left: 829px
     }
 .pckClkRadioName8 {
     height: 20px;
     position: absolute;
     width: 82.21px;
-    left: 838px;
-    top: 601px
+    top: 600px;
+    left: 828px
     }
 .pcksettings {
     height: 30px;
@@ -687,86 +652,86 @@
 .lbl_pckx_audiopllck {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 839px;
-    top: 577px
+    top: 575px;
+    left: 828px;
+    width: 95px
     }
 .lbl_pckx_mainck {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 838px;
-    top: 362px
+    top: 360px;
+    left: 828px;
+    width: 95px
     }
 .lbl_pckx_baudpllck {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 838px;
-    top: 528px
+    left: 828px;
+    top: 524px;
+    width: 95px
     }
 .lbl_pckx_td_sclk {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 838px;
-    top: 320px
+    top: 317px;
+    left: 826px;
+    width: 95px
     }
 .lbl_pckx_syspllck {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 838px;
-    top: 445px
+    top: 444px;
+    left: 830px;
+    width: 95px
     }
 .lbl_pckx_mck0 {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 839px;
-    top: 403px
+    left: 827px;
+    top: 399px;
+    width: 95px
     }
 .label_gpuPLLFreq {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 839px;
-    top: 484px
+    left: 830px;
+    top: 482px;
+    width: 95px
     }
 .lbl_pckx_md_sclk {
     height: 20px;
     position: absolute;
-    width: 82.21px;
-    left: 835px;
-    top: 279px
+    top: 279px;
+    left: 827px;
+    width: 95px
     }
 .pckClkRadioName9 {
     height: 20px;
     position: absolute;
     width: 80px;
-    left: 839px;
-    top: 647px
+    top: 647px;
+    left: 830px
     }
 .lbl_pckx_ethpllck {
     height: 20px;
     position: absolute;
-    width: 91.35px;
-    left: 838px;
-    top: 624px
+    top: 622px;
+    left: 828px;
+    width: 95px
     }
 .labelUSBPll {
     height: 20px;
     position: absolute;
-    top: 671px;
-    width: 80px;
-    left: 838px
+    top: 670px;
+    left: 831px;
+    width: 95px
     }
 .pckClkTab {
     position: absolute;
     width: 55px;
     top: 222px;
-    left: 1112px;
-    height: 210px
+    height: 210px;
+    left: 1110px
     }
 .pckClkRadio9 {
     height: 20px;
@@ -808,7 +773,7 @@
     position: absolute;
     width: 20px;
     left: 798px;
-    top: 1214px
+    top: 1210px
     }
 .lbl_tmpgn_freq {
     height: 20px;
@@ -908,19 +873,12 @@
     left: 523px;
     top: 1043px
     }
-.mckCSS {
-    height: 30px;
-    position: absolute;
-    width: 150px;
-    left: 488px;
-    top: 521px
-    }
 .lbl_mckx_css_freq {
     height: 20px;
     position: absolute;
     width: 110px;
-    left: 586px;
-    top: 361px
+    top: 363px;
+    left: 601px
     }
 .pllDivPICLabel {
     height: 20px;
@@ -928,4 +886,88 @@
     top: 827px;
     width: 60px;
     left: 418px
+    }
+.mckRadio0 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 292px;
+    left: 550px
+    }
+.mckRadio1 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    left: 550px;
+    top: 341px
+    }
+.mckRadio2 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 390px;
+    left: 550px
+    }
+.mckRadio3 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 432px;
+    left: 550px
+    }
+.mckRadio4 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 474px;
+    left: 550px
+    }
+.mckRadio5 {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    top: 514px;
+    left: 550px
+    }
+.mckRadioName0 {
+    height: 20px;
+    position: absolute;
+    top: 279px;
+    left: 455px;
+    width: 90px
+    }
+.mckRadioName1 {
+    height: 20px;
+    position: absolute;
+    top: 331px;
+    left: 455px;
+    width: 90px
+    }
+.mckRadioName2 {
+    height: 20px;
+    position: absolute;
+    left: 455px;
+    top: 379px;
+    width: 90px
+    }
+.mckRadioName3 {
+    height: 20px;
+    position: absolute;
+    top: 420px;
+    left: 455px;
+    width: 90px
+    }
+.mckRadioName4 {
+    height: 20px;
+    position: absolute;
+    top: 462px;
+    left: 455px;
+    width: 90px
+    }
+.mckRadioName5 {
+    height: 20px;
+    position: absolute;
+    top: 501px;
+    left: 455px;
+    width: 90px
     }

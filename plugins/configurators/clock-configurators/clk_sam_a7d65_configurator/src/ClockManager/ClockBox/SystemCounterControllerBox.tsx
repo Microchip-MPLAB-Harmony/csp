@@ -21,19 +21,19 @@ const SystemCounterControllerBox = (props: {
       <FrequencyLabelComponent
         componentId={componentId}
         symbolId={'SYSTEM_COUNTER_FREQUENCY'}
-        class={props.cx('lbl_tmpgn_freq')}
+        className={props.cx('lbl_tmpgn_freq')}
       />
       <SettingsDialog
         tooltip='System Counter Settings Configuration'
         componentId={componentId}
-        className={props.cx('systemCounterReset')}
+        className={props.cx('systemCounterSettings')}
         symbolArray={['SYSTEM_COUNTER_ENABLE', 'SYSTEM_COUNTER_FREQUENCY']}
         dialogWidth='40rem'
         dialogHeight='20rem'
       />
       <ResetSymbolsIcon
         tooltip='System Counter symbols to default value'
-        className={props.cx('systemCounterSettings')}
+        className={props.cx('systemCounterReset')}
         componentId={componentId}
         resetSymbolsArray={['SYSTEM_COUNTER_ENABLE', 'SYSTEM_COUNTER_FREQUENCY']}
       />

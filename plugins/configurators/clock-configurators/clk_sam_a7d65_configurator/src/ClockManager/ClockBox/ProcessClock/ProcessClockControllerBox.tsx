@@ -1,7 +1,6 @@
 import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
-import LoadDynamicComponents from 'clock-common/lib/Components/LoadDynamicComponents';
 import { useContext, useState } from 'react';
 import {
   KeyValueSetRadio,
@@ -15,9 +14,10 @@ import {
   getDynamicSymbolsFromJSON
 } from 'clock-common/lib/Tools/ClockJSONTools';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
-import FreqencyLabels from 'clock-common/lib/Components/LabelComponent/FreqencyLabels';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
 import { getFreqSymbolId } from '../../MainBlock';
+import LoadDynamicComponents from 'clock-common/lib/Components/Dynamic/LoadDynamicComponents';
+import LoadDynamicFreqencyLabels from 'clock-common/lib/Components/Dynamic/LoadDynamicFreqencyLabels';
 
 const ProcessClockControllerBox = (props: {
   controller: ControlInterface[];
@@ -51,18 +51,18 @@ const ProcessClockControllerBox = (props: {
     <div>
       <LoadDynamicComponents
         componentId={componentId}
-        boxInfo={dynamicSymbolInfo}
+        dynamicSymbolsInfo={dynamicSymbolInfo}
         cx={props.cx}
       />
-      <FreqencyLabels
+      <LoadDynamicFreqencyLabels
         componentId={componentId}
-        boxInfo={dynamicLabelSymbolInfo}
+        dynamicLabelSymbolsInfo={dynamicLabelSymbolInfo}
         cx={props.cx}
       />
       <FrequencyLabelComponent
         componentId={componentId}
         symbolId={getFreqSymbolId(pclkCSS.selectedOptionPair?.key)}
-        class={props.cx('lbl_Pclk_css_sel')}
+        className={props.cx('lbl_Pclk_css_sel')}
         redColorForZeroFrequency={true}
       />
       <PlainLabel

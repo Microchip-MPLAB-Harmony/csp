@@ -85,7 +85,7 @@ const GenericClockConfigurationSummary = () => {
         <FrequencyLabelComponent
           componentId={componentId}
           symbolId={channelPeripipheralMap[rowData.id] + '_GCLK_FREQUENCY'}
-          class={''}
+          className={''}
         />
       </div>
     );

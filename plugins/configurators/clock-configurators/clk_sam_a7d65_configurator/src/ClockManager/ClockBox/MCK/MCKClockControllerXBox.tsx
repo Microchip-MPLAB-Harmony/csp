@@ -5,8 +5,6 @@ import { ListBox } from 'primereact/listbox';
 import MCKClkControllerBoxTemplate from './MCKClockControllerBoxTemplate';
 import { PluginConfigContext } from '@mplab_harmony/harmony-plugin-client-lib';
 import { getMckClkSettingsSymbol } from './MCKClockSettingsSymbol';
-import FreqencyLabels from 'clock-common/lib/Components/LabelComponent/FreqencyLabels';
-import { getDynamicLabelsFromJSON } from 'clock-common/lib/Tools/ClockJSONTools';
 
 interface Tab {
   name: string;
@@ -38,7 +36,7 @@ const MCKClockControllerXBox = (props: {
 
     return <div style={{ fontSize: '10px' }}>{option.name}</div>;
   };
-  const [dynamicLabelSymbolInfo] = useState(() => getDynamicLabelsFromJSON(props.controller));
+  // const [dynamicLabelSymbolInfo] = useState(() => getDynamicLabelsFromJSON(props.controller));
   return (
     <div>
       <div>
@@ -58,11 +56,11 @@ const MCKClockControllerXBox = (props: {
         componentId={componentId}
         cx={props.cx}
       />
-      <FreqencyLabels
+      {/* <LoadDynamicFreqencyLabels
         componentId={componentId}
-        boxInfo={dynamicLabelSymbolInfo}
+        dynamicLabelSymbolsInfo={dynamicLabelSymbolInfo}
         cx={props.cx}
-      />
+      /> */}
     </div>
   );
 };

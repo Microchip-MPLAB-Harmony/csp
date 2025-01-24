@@ -1,7 +1,6 @@
 import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
-import LoadDynamicComponents from 'clock-common/lib/Components/LoadDynamicComponents';
 import { useContext, useState } from 'react';
 import {
   KeyValueSetRadio,
@@ -13,7 +12,8 @@ import {
   getDynamicLabelsFromJSON,
   getDynamicSymbolsFromJSON
 } from 'clock-common/lib/Tools/ClockJSONTools';
-import FreqencyLabels from 'clock-common/lib/Components/LabelComponent/FreqencyLabels';
+import LoadDynamicComponents from 'clock-common/lib/Components/Dynamic/LoadDynamicComponents';
+import LoadDynamicFreqencyLabels from 'clock-common/lib/Components/Dynamic/LoadDynamicFreqencyLabels';
 
 const MainClockControllerBox = (props: {
   controller: ControlInterface[];
@@ -34,12 +34,12 @@ const MainClockControllerBox = (props: {
     <div>
       <LoadDynamicComponents
         componentId={componentId}
-        boxInfo={dynamicSymbolInfo}
+        dynamicSymbolsInfo={dynamicSymbolInfo}
         cx={props.cx}
       />
-      <FreqencyLabels
+      <LoadDynamicFreqencyLabels
         componentId={componentId}
-        boxInfo={dynamicLabelSymbolInfo}
+        dynamicLabelSymbolsInfo={dynamicLabelSymbolInfo}
         cx={props.cx}
       />
       <KeyValueSetRadio

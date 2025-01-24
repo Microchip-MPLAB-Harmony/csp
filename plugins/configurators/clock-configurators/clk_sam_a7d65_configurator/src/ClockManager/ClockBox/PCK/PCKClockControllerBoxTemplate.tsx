@@ -61,12 +61,12 @@ const PCKClockControllerBoxTemplate = (props: {
       <FrequencyLabelComponent
         componentId={props.componentId}
         symbolId={'CLK_PCK' + props.tabTitle + '_FREQUENCY'}
-        class={props.cx('lbl_pckx_pres_freq')}
+        className={props.cx('lbl_pckx_pres_freq')}
       />
       <FrequencyLabelComponent
         componentId={props.componentId}
         symbolId={getFreqSymbolId(pckCss.selectedOptionPair?.key)}
-        class={props.cx('lbl_pckx_css_freq')}
+        className={props.cx('lbl_pckx_css_freq')}
         redColorForZeroFrequency={true}
       />
       <SettingsDialog

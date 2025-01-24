@@ -1,6 +1,7 @@
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import {
   DropDownDefault,
+  KeyValueSetRadio,
   PluginConfigContext,
   useKeyValueSetSymbol
 } from '@mplab_harmony/harmony-plugin-client-lib';
@@ -44,22 +45,22 @@ const MCKClockControllerBoxTemplate = (props: {
         symbolId={'CLK_MCR_MCK' + props.tabTitle + '_DIV'}
         className={props.cx('cmb_mckx_css')}
       />
-
-      <DropDownDefault
-        componentId={props.componentId}
-        symbolId={'CLK_MCR_MCK' + props.tabTitle + '_CSS'}
-        className={props.cx('mckCSS')}
+      <KeyValueSetRadio
+        keyValueSetSymbolHook={mckCss}
+        classResolver={props.cx}
+        classPrefix={'mckRadio'}
+        labelClassPrefix='mckRadioName'
       />
 
       <FrequencyLabelComponent
         componentId={props.componentId}
         symbolId={'MCK' + props.tabTitle + '_FREQUENCY'}
-        class={props.cx('mckClk0Freq')}
+        className={props.cx('mckClk0Freq')}
       />
       <FrequencyLabelComponent
         componentId={props.componentId}
         symbolId={getFreqSymbolId(mckCss.selectedOptionPair?.key)}
-        class={props.cx('lbl_mckx_css_freq')}
+        className={props.cx('lbl_mckx_css_freq')}
         redColorForZeroFrequency={true}
       />
 

@@ -5,8 +5,8 @@ import { ListBox } from 'primereact/listbox';
 import PCKClkControllerBoxTemplate from './PCKClockControllerBoxTemplate';
 import { PluginConfigContext, useBooleanSymbol } from '@mplab_harmony/harmony-plugin-client-lib';
 import { getPckClkSettingsSymbol } from './PCKClockSettingsSymbol';
-import FreqencyLabels from 'clock-common/lib/Components/LabelComponent/FreqencyLabels';
 import { getDynamicLabelsFromJSON } from 'clock-common/lib/Tools/ClockJSONTools';
+import LoadDynamicFreqencyLabels from 'clock-common/lib/Components/Dynamic/LoadDynamicFreqencyLabels';
 
 interface Tab {
   name: string;
@@ -67,9 +67,9 @@ const PCKClockControllerXBox = (props: {
         componentId={componentId}
         cx={props.cx}
       />
-      <FreqencyLabels
+      <LoadDynamicFreqencyLabels
         componentId={componentId}
-        boxInfo={dynamicLabelSymbolInfo}
+        dynamicLabelSymbolsInfo={dynamicLabelSymbolInfo}
         cx={props.cx}
       />
     </div>

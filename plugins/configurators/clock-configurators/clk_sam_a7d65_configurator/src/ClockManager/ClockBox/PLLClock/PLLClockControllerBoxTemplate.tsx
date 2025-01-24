@@ -2,6 +2,7 @@ import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import { useContext } from 'react';
 import {
   CheckBoxDefault,
+  InputNumber,
   InputNumberDefault,
   PluginConfigContext,
   useBooleanSymbol,
@@ -12,7 +13,6 @@ import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
 import React from 'react';
-import FrequencyLabelRangeComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelRangeComponent';
 
 const PLLClockControllerBoxTemplate = (props: {
   tabTitle: string;
@@ -22,7 +22,10 @@ const PLLClockControllerBoxTemplate = (props: {
   PLLClkController: ControlInterface[];
 }) => {
   const { componentId = 'core' } = useContext(PluginConfigContext);
-
+  const coreFrequency = useIntegerSymbol({
+    componentId,
+    symbolId: props.tabTitle + '_CORE_FREQUENCY'
+  });
   const divPMC = useIntegerSymbol({
     componentId,
     symbolId: 'CLK_' + props.tabTitle + '_DIVPMC'
@@ -73,10 +76,10 @@ const PLLClockControllerBoxTemplate = (props: {
         symbolId={'CLK_' + props.tabTitle + '_FRACR'}
         className={props.cx('tab_PLLA_spinner_fracr')}
       />
-      <InputNumberDefault
-        componentId={componentId}
-        symbolId={'CLK_' + props.tabTitle + '_DIVPMC'}
+      <InputNumber
+        integerSymbolHook={divPMC}
         className={props.cx('tab_PLLA_spinner_divpmc0')}
+        hidden={false}
       />
       <CheckBoxDefault
         componentId={componentId}
@@ -98,30 +101,28 @@ const PLLClockControllerBoxTemplate = (props: {
         symbolId={'CLK_' + props.tabTitle + '_SS_NSTEP'}
         className={props.cx('tab_PLLA_spinner_nstep')}
       />
-      <FrequencyLabelRangeComponent
+      <FrequencyLabelComponent
         componentId={componentId}
         symbolId={props.tabTitle + '_CORE_FREQUENCY'}
-        class={props.cx('lbl_pll_calc_freq')}
-        minValue={600000000}
-        maxValue={1200000000}
-        labelTooltip={
-          props.tabTitle + ' Core frequency has to be between 600000000 Hz and 1200000000 Hz'
+        className={props.cx('lbl_pll_calc_freq')}
+        minMaxOutofRangeRedColorStatus={
+          coreFrequency.value < 600000000 || coreFrequency.value > 1000000000
         }
+        tooltip={props.tabTitle + ' core frequency has to be lower than 1 GHz'}
       />
-      <FrequencyLabelRangeComponent
+      <FrequencyLabelComponent
         componentId={componentId}
         symbolId={props.tabTitle + '_CORE_FREQUENCY'}
-        class={props.cx('lbl_pll_calc_freq1')}
-        minValue={600000000}
-        maxValue={1200000000}
-        labelTooltip={
-          props.tabTitle + ' Core frequency has to be between 600000000 Hz and 1200000000 Hz'
+        className={props.cx('lbl_pll_calc_freq1')}
+        minMaxOutofRangeRedColorStatus={
+          coreFrequency.value < 600000000 || coreFrequency.value > 1000000000
         }
+        tooltip={props.tabTitle + ' core frequency has to be lower than 1 GHz'}
       />
       <FrequencyLabelComponent
         componentId={componentId}
         symbolId={props.tabTitle + '_FREQUENCY'}
-        class={props.cx('label_sym_PLLACK0_FREQUENCY')}
+        className={props.cx('label_sym_PLLACK0_FREQUENCY')}
       />
       <InputNumberDefault
         componentId={componentId}
@@ -139,7 +140,7 @@ const PLLClockControllerBoxTemplate = (props: {
         <FrequencyLabelComponent
           componentId={componentId}
           symbolId={'AUDIOPLL_IO_FREQUENCY'}
-          class={props.cx('lbl_pll_divio_freq')}
+          className={props.cx('lbl_pll_divio_freq')}
         />
       )}
       <SettingsDialog
