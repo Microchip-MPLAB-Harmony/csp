@@ -27,6 +27,7 @@ global isBFMPresent
 global CORE_DSPIC33A
 global CORE_PIC32A
 global getAppPlacementParams
+import re
 
 CORE_DSPIC33A  = "dsPIC33A"
 CORE_PIC32A    = "PIC32A"
@@ -52,6 +53,10 @@ for mem_idx in range(0, len(addr_space_children)):
     if (((any(x == mem_seg for x in FlashNames) == True) and (mem_type == "flash")) or (mem_seg == "code")):
         flash_start = int(addr_space_children[mem_idx].getAttribute("start"), 16)
         flash_size  = int(addr_space_children[mem_idx].getAttribute("size"), 16)
+
+if re.search(r"(?=.*PIC32CX)(?=.*MT)", Variables.get("__PROCESSOR")):
+    if ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"IFLASH1\"]") != None:
+        flash_size *= 2
 
 def getFlashParams(app_start):
 
