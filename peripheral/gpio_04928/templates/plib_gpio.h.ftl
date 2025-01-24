@@ -1,12 +1,42 @@
-/**
- * General Purpose Input Output(GPIO) PLIB Header
- * 
- * @file       plib_gpio.h
- * 
- * @defgroup   GPIO driver General Purpose input Output Driver
- * 
- * @brief     dsPIC33A GPIO Module PLIB Header File
-*/
+/*******************************************************************************
+  GPIO PLIB
+ 
+  Company:
+    Microchip Technology Inc.
+ 
+  File Name:
+    plib_gpio.h
+ 
+  Summary:
+    gpio PLIB Header File
+ 
+  Description:
+    This file has prototype of all the interfaces provided for particular
+    gpio peripheral.
+ 
+*******************************************************************************/
+/*******************************************************************************
+* Copyright (C) 2024 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*******************************************************************************/ 
 
 #ifndef PLIB_GPIO_H
 #define PLIB_GPIO_H
@@ -72,17 +102,17 @@
 
                             <#lt>/*** Macros for ${.vars[funcname]} pin ***/
                             <#if .vars[functype] == "GPIO">
-                                <#lt>#define ${.vars[funcname]}_Set()               (LAT${.vars[pinChannel]} = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_Clear()             (LAT${.vars[pinChannel]} = (0<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_Set()               (LAT${.vars[pinChannel]} |= (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_Clear()             (LAT${.vars[pinChannel]} &= ~(1<<${.vars[pinPort]}))
                                 <#lt>#define ${.vars[funcname]}_Toggle()            (LAT${.vars[pinChannel]} ^= (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (TRIS${.vars[pinChannel]} = (0<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]} = (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (TRIS${.vars[pinChannel]} &= ~(1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]} |= (1<<${.vars[pinPort]}))
                             </#if>
                             <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
                             <#lt>#define ${.vars[funcname]}_PIN                 GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                             <#if .vars[interruptType]?has_content>
-                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN0${.vars[pinChannel]} = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN0${.vars[pinChannel]} = (0<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN0${.vars[pinChannel]} |= (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN0${.vars[pinChannel]} &= ~(1<<${.vars[pinPort]}))
                             </#if>
                         </#if>
                     </#if>
@@ -101,16 +131,14 @@
 </#list>
 
 /**
- * @ingroup  GPIO driver
  * @brief    GPIO Port Definition
  * This identifies and defines the available GPIO Ports.
  */
 typedef uint32_t GPIO_PORT;
 
 /**
- @ingroup  GPIO driver
- @enum     GPIO_INTERRUPT_STYLES
- @brief    This enumeration identifies the different interrupt styles that can be configured on the pins
+* @enum     GPIO_INTERRUPT_STYLES
+* @brief    This enumeration identifies the different interrupt styles that can be configured on the pins
 */
 typedef enum
 {
@@ -133,7 +161,6 @@ typedef enum
 </#list>
 
 /**
- * @ingroup  gpio
  * @brief    GPIO Pins Definition. Identifies and defines the available GPIO Port Pins
  */
 typedef uint32_t GPIO_PIN;
@@ -143,122 +170,201 @@ typedef  void (*GPIO_PIN_CALLBACK) (GPIO_PIN pin, uintptr_t context);
 </#if>
 
 /**
- * @ingroup  gpio
- * @brief    This function initializes the GPIO library and all ports and pins configured in the MHC Pin Manager.
- * @param    none
- * @return   none  
+ * @brief    Initializes the GPIO library
+ *
+ * @details  This function initializes the GPIO library and all its ports and pins configured
+ * in the pin settings.
+ *
+ * @pre      None
+ *
+ * @param    None
+ *
+ * @return   None  
+ *
+ * @remarks  None
  */
 void GPIO_Initialize(void);
 
 // Section: GPIO Functions which operates on multiple pins of a port
 
 /**
- * @ingroup    gpio
- * @brief      This function reads to the PORT register of the corresponding port.
- * @pre        none
+ * @brief      Reads all the I/O lines of the selected port.
+ *
+ * @details    This function reads the live data values on all the I/O lines of the selected port.
+ * Bit values returned in each position indicate corresponding pin state.
+ *
+ * @pre        Reading the I/O line levels requires the clock of the GPIO Controller to be enabled,
+ * otherwise this API reads the levels present on the I/O line at the time the clock was enabled.
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
+ *
  * @return     Corresponding PORT register value 
+ *
+ * @remarks    None
  */
 uint32_t GPIO_PortRead(GPIO_PORT port);
 
 /**
- * @ingroup    gpio
- * @brief      This function writes to the LAT register of the corresponding port and mask with the given value.
+ * @brief      Write the value on the masked I/O lines of the selected port.
+ *
+ * @details    This function writes the data values driven on selected output lines of the selected port.
+ * Bit values in each position indicate corresponding pin levels.
+ *
  * @pre        Selected pins of the port should be made output before writing.
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
- * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
+ *
+ * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which
+ * IO pins of the selected port will be written.
  * @param[in]  value- Desired value to be written on the register
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value);
 
 /**
- * @ingroup    gpio
- * @brief      This function reads to the LAT register of the corresponding port.
+ * @brief      Read the latched value on all the I/O lines of the selected port.
+ *
+ * @details    This function reads the latched data values on all the I/O lines of the selected port. 
+ * Bit values returned in each position indicate corresponding pin levels.
+ *
  * @pre        none
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
+ *
  * @return     LAT register value 
+ *
+ * @remarks    None
  */
 uint32_t GPIO_PortLatchRead (GPIO_PORT port );
 
 /**
- * @ingroup    gpio
- * @brief      This function sets the LAT register of the corresponding port and mask.
+ * @brief      Set the selected IO pins of a port.
+ *
+ * @details    This function sets (to '1') the selected IO pins of a port.
+ *
  * @pre        Selected pins of the port should be made output before setting.
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
- * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
- * @return     none  
+ * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which
+ * IO pins of the selected port will be written.
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PortSet(GPIO_PORT port, uint32_t mask);
 
 /**
- * @ingroup    gpio
- * @brief      This function clears the LAT register of the corresponding port and mask.
+ * @brief      Clear the selected IO pins of a port.
+ *
+ * @details    This function clears (to '0') the selected IO pins of a port.
+ *
  * @pre        Selected pins of the port should be made output before clearing.
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
- * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
- * @return     none  
+ * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which
+ * IO pins of the selected port will be written.
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PortClear(GPIO_PORT port, uint32_t mask);
 
 /**
- * @ingroup    gpio
- * @brief      This function inverts the LAT register of the corresponding port and mask.
+ * @brief      Toggles the selected IO pins of a port.
+ *
+ * @details    This function toggles (or invert) the selected IO pins of a port.
+ *
  * @pre        Selected pins of the port should be made output before toggling.
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
- * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
- * @return     none  
+ * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO
+ * pins of the selected port will be written.
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PortToggle(GPIO_PORT port, uint32_t mask);
 
 /**
- * @ingroup    gpio
- * @brief      This function sets the TRIS register of the corresponding port and mask. This is to set the direction of the pins as input.
- * @pre        none
+ * @brief      Enables selected IO pins of a port as input.
+ *
+ * @details    This function enables selected IO pins of a port as input.
+ *
+ * @pre        None
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
- * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
- * @return     none  
+ * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins
+ * of the selected port will be written.
+ *
+ * @return     None
+ *
+ * @remarks    None 
  */
 void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask);
 
 /**
- * @ingroup    gpio
- * @brief      This function clears the TRIS register of the corresponding port and mask. This is to set the direction of the pins as output.
- * @pre        none
+ * @brief      Enables selected IO pins of a port as output(s).
+ *
+ * @details    This function enables selected IO pins of the given port as output(s).
+ *
+ * @pre        None
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
- * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
- * @return     none  
+ * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins
+ * of the selected port will be written.
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask);
 
 <#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true>
 
 /**
- * @ingroup    gpio
- * @brief      This function sets the CNEN0 register of the corresponding port and mask. This is to be able to receive interrupts.
+ * @brief      Enables IO interrupt on selected IO pins of a port.
+ *
+ * @details    This function enables interrupt on selected IO pins of selected port.
+ *
  * @pre        Selected pins of the port should be made input before enabling interrupts.
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
  * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask);
 
 /**
- * @ingroup    gpio
- * @brief      This function clear the CNEN0 register of the corresponding port and mask. This is to disable receiving interrupts.
+ * @brief      Disables IO interrupt on selected IO pins of a port.
+ *
+ * @details    This function disables IO interrupt on selected IO pins of selected port.
+ *
  * @pre        Selected pins of the port should be made input before disabling interrupts.
+ *
  * @param[in]  port- One of the possible values from GPIO_PORT
- * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be written.
- * @return     none  
+ * @param[in]  mask- A 32 bit value in which positions of 0s and 1s decide which IO pins
+ * of the selected port will be written.
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PortInterruptDisable(GPIO_PORT port, uint32_t mask);
 
 // Section: Local Data types and Prototypes
 
 /**
- @ingroup  gpio
- @struct   GPIO_PIN_CALLBACK_OBJ
- @brief    This structure holds the callback and context information for handling
+* @struct   GPIO_PIN_CALLBACK_OBJ
+* @brief   This structure holds the callback and context information for handling
            events on a specified GPIO Pin.
 */
 typedef struct {
@@ -279,12 +385,18 @@ typedef struct {
 // Section: GPIO Functions which operates on one pin at a time
 
 /**
- * @ingroup    gpio
- * @brief      This function writes to the selected bit of the corresponding port. 
+ * @brief      Writes the logic level of the selected pin.
+ *
+ * @details    This function writes/drives the "value" on the selected I/O line/pin.
+ * 
  * @pre        Pin must be made output before writing to it.
+ *
  * @param[in]  pin- Any possible value from GPIO_PIN
  * @param[in]  value- Desired value to be written on the pin. 0 or 1 
- * @return     none  
+ *
+ * @return     None  
+ * 
+ * @remarks    None
  */
 static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
 {
@@ -292,13 +404,20 @@ static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
 }
 
 /**
- * @ingroup    gpio
  * @brief      Reads the selected pin value.
- * @pre        none
+ * 
+ * @details    This function reads the selected pin value.
+ * it reads the value regardless of pin configuration, whether uniquely as an input,
+ * or driven by the GPIO Controller, or driven by peripheral.
+ * @pre        None
+ *
  * @param[in]  pin- Any possible value from GPIO_PIN
  * @param[in]  value- Desired value to be written on the pin. 0 or 1 
+ *
  * @return     True- Pin state is HIGH level(1)
  *             False- Pin state is LOW level(0) 
+ *
+ * @remarks    None
  */
 static inline bool GPIO_PinRead(GPIO_PIN pin)
 {
@@ -306,13 +425,20 @@ static inline bool GPIO_PinRead(GPIO_PIN pin)
 }
 
 /**
- * @ingroup    gpio
  * @brief      Reads the latched value on the selected pin.
- * @pre        none
+ *
+ * @details    This function reads the data driven on the selected I/O line/pin.
+ * Whatever data is written/driven on I/O line by using any of the GPIO PLIB APIs, will be read by this API.
+ *
+ * @pre        None
+ *
  * @param[in]  pin- Any possible value from GPIO_PIN
  * @param[in]  value- Desired value to be written on the pin. 0 or 1 
+ *
  * @return     True- Pin state is HIGH level(1)
  *             False- Pin state is LOW level(0) 
+ *
+ * @remarks    None
  */
 static inline bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
@@ -320,11 +446,17 @@ static inline bool GPIO_PinLatchRead(GPIO_PIN pin)
 }
 
 /**
- * @ingroup    gpio
- * @brief      This function inverts the LAT register bit corresponding to the selected pin.
+ * @brief      Toggles the selected pin.
+ *
+ * @details    This function toggles/inverts the value on the selected I/O line/pin.
+ *
  * @pre        Pin must be made output before toggling.
+ *
  * @param[in]  pin- One of the possible values from GPIO_PIN
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 static inline void GPIO_PinToggle(GPIO_PIN pin)
 {
@@ -332,11 +464,17 @@ static inline void GPIO_PinToggle(GPIO_PIN pin)
 }
 
 /**
- * @ingroup    gpio
- * @brief      This function sets the LAT register bit corresponding to the selected pin.
+ * @brief      Sets the selected pin.
+ *
+ * @details    This function drives '1' on the selected I/O line/pin.
+ *
  * @pre        Pin must be made output before setting.
+ *
  * @param[in]  pin- One of the possible values from GPIO_PIN
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 static inline void GPIO_PinSet(GPIO_PIN pin)
 {
@@ -344,11 +482,17 @@ static inline void GPIO_PinSet(GPIO_PIN pin)
 }
 
 /**
- * @ingroup    gpio
- * @brief      This function clears the LAT register bit corresponding to the selected pin.
+ * @brief      Clears the selected pin.
+ *
+ * @details    This function drives '0' on the selected I/O line/pin.
+ *
  * @pre        Pin must be made output before clearing.
+ *
  * @param[in]  pin- One of the possible values from GPIO_PIN
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 static inline void GPIO_PinClear(GPIO_PIN pin)
 {
@@ -356,11 +500,17 @@ static inline void GPIO_PinClear(GPIO_PIN pin)
 }
 
 /**
- * @ingroup    gpio
- * @brief      This function sets the TRIS register bit corresponding to the selected pin.
- * @pre        none
+ * @brief      Enables selected IO pin as Digital input.
+ *
+ * @details    This function enables selected IO pin as Digital input.
+ *
+ * @pre        None
+ *
  * @param[in]  pin- One of the possible values from GPIO_PIN
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 static inline void GPIO_PinInputEnable(GPIO_PIN pin)
 {
@@ -368,11 +518,17 @@ static inline void GPIO_PinInputEnable(GPIO_PIN pin)
 }
 
 /**
- * @ingroup    gpio
- * @brief      This function clears the TRIS register bit corresponding to the selected pin.
- * @pre        none
+ * @brief      Enables selected IO pin as Digital output.
+ *
+ * @details    This function enables selected IO pin as Digital output.
+ *
+ * @pre        None
+ *
  * @param[in]  pin- One of the possible values from GPIO_PIN
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
 {
@@ -385,37 +541,52 @@ static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
 #define GPIO_PinInterruptDisable(pin)      GPIO_PinIntDisable(pin)
 
 /**
- * @ingroup    gpio
- * @brief      This function sets the CNEN0 and CNEN1 register bits corresponding to the selected pin and the selected interrupt style.
+ * @brief      Enables CN interrupt on selected pin.
+ *
  * @pre        Pin must be set as input before enabling interrupt.
+ *
  * @param[in]  pin- One of the possible values from GPIO_PIN
  * @param[in]  style- One of the possible values from GPIO_INTERRUPT_STYLE
- * @return     none  
+ *
+ * @return     None  
+ *
+ * @remarks    None
  */
 void GPIO_PinIntEnable(GPIO_PIN pin,GPIO_INTERRUPT_STYLE style);
 
 /**
- * @ingroup    gpio
- * @brief      This function clears the CNEN0 and CNEN1 register bits corresponding to the selected pin.
+ * @brief      Disables CN interrupt on selected pin.
+ *
+ * @details    This function disables CN interrupt on selected pin.
+ *
  * @pre        Pin must be set as input before disabling interrupt.
+ *
  * @param[in]  pin- One of the possible values from GPIO_PIN
- * @return     none  
+ *
+ * @return     None
+ *
+ * @remarks    None 
  */
 void GPIO_PinIntDisable(GPIO_PIN pin);
 
 /**
- * @ingroup    gpio
- * @brief      This function allows application to register an event handling 
+ * @brief      Allows application to register callback for every pin.
+ *
+ * @details    This function allows application to register an event handling 
  *             function for the PLIB to call back when interrupt occurs 
  *             on the selected pin. At any point if application wants to stop the callback, 
  *             it can call this function with "callback" value as NULL.
+ *
  * @param[in]  pin - One of the pins from GPIO_PIN
  * @param[in]  callback  - Pointer to the event handler function implemented by the user
  * @param[in]  context   - The value of parameter will be passed back to the 
  *                         application unchanged, when the eventHandler function is called. 
  *                         It can be used to identify any application specific value.
+ *
  * @return     Callback registration status: true  - Callback was successfully registered
  *                                           false - Callback was not registered
+ *
+ * @remarks    None
  */
 bool GPIO_PinInterruptCallbackRegister(
     GPIO_PIN pin,

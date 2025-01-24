@@ -85,6 +85,19 @@
     </@compress>
 </#if>
 
+
+
+<#list 0..GPIO_CHANNEL_TOTAL-1 as i>
+    <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
+    <#assign channelIfs = "GPIO_CHANNEL_" + i + "_IFS">
+    <#if .vars[channel]?has_content>
+		<#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
+void CN${.vars[channel]}_InterruptHandler(void);
+</#if>
+</#if>
+</#list>
+
+
 void GPIO_Initialize ( void )
 {
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
@@ -213,12 +226,15 @@ uint32_t  GPIO_PortRead(GPIO_PORT port)
 
 void  GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 {
-    if (value == 0x1) {
+    if (value == (uint32_t)0x1) {
         *(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) & (~mask)) | (mask);
     } 
-    else if (value == 0x0) {
+    else if (value == (uint32_t)0x0) {
         *(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) & (~mask));
     }
+	else{
+		*(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) & (~mask)) | (value);
+	}
 }
 
 uint32_t  GPIO_PortLatchRead(GPIO_PORT port)
