@@ -58,12 +58,12 @@
     <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
 //SPI DMAxCH Data Size Selection options
 <#list dataSizeSelectionBitsOptions as options>
-#define DMA${i}CH_SIZE_${options}          ((uint32_t)(_DMA${i}CH_SIZE_MASK & ((uint32_t)(${options_index}) << _DMA${i}CH_SIZE_POSITION))) 
+#define DMA${i}CH_SIZE_${options}          ((uint32_t)(_DMA${i}CH_SIZE_MASK & ((uint32_t)(${options_index}) << _DMA${i}CH_SIZE_POSITION)))
 </#list>
 
 //SPI DMAxCH Transfer Mode Selection options
 <#list transferModeSelectionBits as options>
-#define DMA${i}CH_TRMODE_${options}          ((uint32_t)(_DMA${i}CH_TRMODE_MASK & ((uint32_t)(${options_index}) << _DMA${i}CH_TRMODE_POSITION))) 
+#define DMA${i}CH_TRMODE_${options}          ((uint32_t)(_DMA${i}CH_TRMODE_MASK & ((uint32_t)(${options_index}) << _DMA${i}CH_TRMODE_POSITION)))
 </#list>
 
 // DMAxCH Source Address Mode Selection Options
@@ -99,7 +99,7 @@ void ${dmaModuleName}_Initialize( void )
 {
     /* Enable the ${dmaModuleName} module */
     DMACONbits.ON = 1U;
-    
+
     /* Initialize the available channel objects */
 
 <#list 0..MAX_CHANNEL_COUNT as i>
@@ -111,7 +111,7 @@ void ${dmaModuleName}_Initialize( void )
 
     </#if>
 </#list>
-    
+
     DMALOW = 0x${dmaLowAddressLimit}UL;
 
     DMAHIGH = 0x${dmaHighAddressLimit}UL;
@@ -126,7 +126,7 @@ void ${dmaModuleName}_Initialize( void )
          |</#if>DMA${i}CH_SAMODE_${sourceAddressModeBits[.vars["DMA"+i+"_CH__SAMODE"]?number]}
          | DMA${i}CH_DAMODE_${destinationAddressModeBits[.vars["DMA"+i+"_CH__DAMODE"]?number]}
          | DMA${i}CH_TRMODE_${transferModeSelectionBits[.vars["DMA"+i+"_CH__TRMODE"]?number]}
-         | DMA${i}CH_SIZE_${dataSizeSelectionBitsOptions[.vars["DMA"+i+"_CH__SIZE"]?number]}<#if .vars["DMA"+i+"_CH__DONEEN"] == true> 
+         | DMA${i}CH_SIZE_${dataSizeSelectionBitsOptions[.vars["DMA"+i+"_CH__SIZE"]?number]}<#if .vars["DMA"+i+"_CH__DONEEN"] == true>
          | _DMA${i}CH_DONEEN_MASK</#if><#if .vars["DMA"+i+"_CH__HALFEN"] == true>
          | _DMA${i}CH_HALFEN_MASK</#if>);
 
@@ -140,7 +140,7 @@ void ${dmaModuleName}_Initialize( void )
     <#assign DMA_CH_INT_ENABLE = "DMA" + i + "_CH__DONEEN">
     <#if .vars[DMA_CH_INT_ENABLE]?has_content && .vars[DMA_CH_INT_ENABLE] == true>
         <#lt>    // Clearing Channel ${i} Interrupt Flag;
-        <#lt>    _DMA${i}IF = 0U;  
+        <#lt>    _DMA${i}IF = 0U;
         <#lt>    // Enabling Channel ${i} Interrupt
         <#lt>    _DMA${i}IE = 1U;
     </#if>
@@ -156,7 +156,7 @@ void ${dmaModuleName}_Deinitialize( void )
     <#assign DMA_CH_INT_ENABLE = "DMA" + i + "_CH__DONEEN">
     <#if .vars[DMA_CH_INT_ENABLE]?has_content && .vars[DMA_CH_INT_ENABLE] == true>
         <#lt>    // Clearing Channel ${i} Interrupt Flag;
-        <#lt>    _DMA${i}IF = 0U;  
+        <#lt>    _DMA${i}IF = 0U;
         <#lt>    // disabling Channel ${i} Interrupt
         <#lt>    _DMA${i}IE = 0U;
     </#if>
@@ -180,14 +180,15 @@ bool ${dmaModuleName}_ChannelTransfer(${dmaModuleName}_CHANNEL channel, const vo
 {
     bool returnStatus = false;
     const uint32_t *XsrcAddr  = (const uint32_t *)srcAddr;
-    const uint32_t *XdestAddr = (const uint32_t *)destAddr;  
-    
+    const uint32_t *XdestAddr = (const uint32_t *)destAddr;
+
     if(dmaChannelObj[channel].inUse == false)
     {
-        switch (channel) 
+        switch (channel)
         {
         <#list 0..MAX_CHANNEL_COUNT as i>
             <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
+            <#assign DMA_TRIGGER_SOURCE = "DMA" + i + "CH_TRG_SRC">
             <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
             case ${dmaModuleName}_CHANNEL_${i}:
                 DMA${i}SRC = (uint32_t)XsrcAddr;
@@ -198,8 +199,11 @@ bool ${dmaModuleName}_ChannelTransfer(${dmaModuleName}_CHANNEL channel, const vo
 
                 //Enable ${dmaModuleName} Channel ${i}
                 DMA${i}CHbits.CHEN = 1;
+                <#if .vars[DMA_TRIGGER_SOURCE]?contains("TX")>
+                DMA${i}CHbits.CHREQ = 1U;
+                </#if>
                 break;
-                
+
             </#if>
         </#list>
             default:break;
@@ -211,7 +215,7 @@ bool ${dmaModuleName}_ChannelTransfer(${dmaModuleName}_CHANNEL channel, const vo
 
 void ${dmaModuleName}_ChannelPatternMatchSetup(${dmaModuleName}_CHANNEL channel, uint32_t patternMatchMask, uint32_t patternMatchData)
 {
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -219,20 +223,20 @@ void ${dmaModuleName}_ChannelPatternMatchSetup(${dmaModuleName}_CHANNEL channel,
         case ${dmaModuleName}_CHANNEL_${i}:
         DMA${i}MSK = patternMatchMask;
         DMA${i}PAT = patternMatchData;
-        
+
         /* Enable Pattern Match */
         DMA${i}CHbits.MATCHEN = 1U;
         break;
-        
+
         </#if>
     </#list>
         default:break;
     }
 }
 
-void ${dmaModuleName}_ChannelEnable(${dmaModuleName}_CHANNEL channel) 
+void ${dmaModuleName}_ChannelEnable(${dmaModuleName}_CHANNEL channel)
 {
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -241,7 +245,7 @@ void ${dmaModuleName}_ChannelEnable(${dmaModuleName}_CHANNEL channel)
             DMA${i}CHbits.CHEN = 1U;
             dmaChannelObj[channel].inUse = true;
             break;
-            
+
         </#if>
     </#list>
         default:break;
@@ -250,7 +254,7 @@ void ${dmaModuleName}_ChannelEnable(${dmaModuleName}_CHANNEL channel)
 
 void ${dmaModuleName}_ChannelDisable (${dmaModuleName}_CHANNEL channel)
 {
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -259,7 +263,7 @@ void ${dmaModuleName}_ChannelDisable (${dmaModuleName}_CHANNEL channel)
             DMA${i}CHbits.CHEN = 0U;
             dmaChannelObj[channel].inUse = false;
             break;
-            
+
         </#if>
     </#list>
         default: break;
@@ -268,7 +272,7 @@ void ${dmaModuleName}_ChannelDisable (${dmaModuleName}_CHANNEL channel)
 
 void ${dmaModuleName}_ChannelPatternMatchEnable(${dmaModuleName}_CHANNEL channel)
 {
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -276,7 +280,7 @@ void ${dmaModuleName}_ChannelPatternMatchEnable(${dmaModuleName}_CHANNEL channel
         case ${dmaModuleName}_CHANNEL_${i}:
             DMA${i}CHbits.MATCHEN = 1U;
             break;
-            
+
         </#if>
     </#list>
         default:break;
@@ -285,7 +289,7 @@ void ${dmaModuleName}_ChannelPatternMatchEnable(${dmaModuleName}_CHANNEL channel
 
 void ${dmaModuleName}_ChannelPatternMatchDisable(${dmaModuleName}_CHANNEL channel)
 {
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -293,7 +297,7 @@ void ${dmaModuleName}_ChannelPatternMatchDisable(${dmaModuleName}_CHANNEL channe
         case ${dmaModuleName}_CHANNEL_${i}:
             DMA${i}CHbits.MATCHEN = 0U;
             break;
-            
+
         </#if>
     </#list>
         default:break;
@@ -303,7 +307,7 @@ void ${dmaModuleName}_ChannelPatternMatchDisable(${dmaModuleName}_CHANNEL channe
 bool ${dmaModuleName}_IsSoftwareRequestPending(${dmaModuleName}_CHANNEL channel)
 {
     bool status = false;
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -311,17 +315,17 @@ bool ${dmaModuleName}_IsSoftwareRequestPending(${dmaModuleName}_CHANNEL channel)
         case ${dmaModuleName}_CHANNEL_${i}:
                 status = DMA${i}CHbits.CHREQ;
                 break;
-                
+
         </#if>
     </#list>
         default: break;
     }
     return status;
 }
- 
-void ${dmaModuleName}_ChannelSoftwareTriggerEnable(${dmaModuleName}_CHANNEL channel) 
+
+void ${dmaModuleName}_ChannelSoftwareTriggerEnable(${dmaModuleName}_CHANNEL channel)
 {
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -329,17 +333,17 @@ void ${dmaModuleName}_ChannelSoftwareTriggerEnable(${dmaModuleName}_CHANNEL chan
         case ${dmaModuleName}_CHANNEL_${i}:
             DMA${i}CHbits.CHREQ = 1U;
             break;
-            
+
         </#if>
     </#list>
         default:break;
     }
 }
- 
-uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL channel) 
+
+uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL channel)
 {
     uint32_t  count = 0;
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -347,7 +351,7 @@ uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL ch
         case ${dmaModuleName}_CHANNEL_${i}:
             count = DMA${i}CNT;
             break;
-            
+
         </#if>
     </#list>
         default:break;
@@ -358,7 +362,7 @@ uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL ch
 bool ${dmaModuleName}_ChannelIsBusy (${dmaModuleName}_CHANNEL channel)
 {
     bool busy_check = false;
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -368,14 +372,54 @@ bool ${dmaModuleName}_ChannelIsBusy (${dmaModuleName}_CHANNEL channel)
             {
                 busy_check = true;
             }
-            break;    
-                    
+            break;
+
         </#if>
     </#list>
         default:
             break;
     }
     return busy_check;
+}
+
+DMA_CHANNEL_CONFIG ${dmaModuleName}_ChannelSettingsGet(${dmaModuleName}_CHANNEL channel)
+{
+    uint32_t  setting = 0;
+    switch (channel)
+    {
+    <#list 0..MAX_CHANNEL_COUNT as i>
+        <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
+        <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
+        case ${dmaModuleName}_CHANNEL_${i}:
+            setting = DMA${i}CH;
+            break;
+
+        </#if>
+    </#list>
+        default:break;
+    }
+    return setting;
+}
+
+bool ${dmaModuleName}_ChannelSettingsSet(${dmaModuleName}_CHANNEL channel, DMA_CHANNEL_CONFIG setting)
+{
+    bool status = false;
+
+    switch (channel)
+    {
+    <#list 0..MAX_CHANNEL_COUNT as i>
+        <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
+        <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
+        case ${dmaModuleName}_CHANNEL_${i}:
+            DMA${i}CH = setting;
+            status = true;
+            break;
+
+        </#if>
+    </#list>
+        default:break;
+    }
+    return status;
 }
 
 <#if dmaIntEnabled == true>
@@ -397,35 +441,39 @@ void __attribute__((used)) DMA${i}_InterruptHandler (void)
 
     /* Clear the interrupt flag*/
     _DMA${i}IF = 0U;
-    
+
     /* Find out the channel object */
     chanObj = &dmaChannelObj[${i}];
-    
-    if(DMA${i}STATbits.OVERRUN == 1U)  
+
+    if(DMA${i}STATbits.OVERRUN == 1U)
     {
         dmaEvent = ${dmaModuleName}_OVERRUN_ERROR;
         DMA${i}STATbits.OVERRUN = 0;
+        dmaChannelObj[${i}].inUse = false;
     }
     else if(DMA${i}STATbits.MATCH == 1U)
     {
         dmaEvent = ${dmaModuleName}_PATTERN_MATCH;
         DMA${i}STATbits.MATCH = 0U;
+        dmaChannelObj[${i}].inUse = false;
     }
     else if(DMA${i}STATbits.DONE == 1U)
     {
         dmaEvent = ${dmaModuleName}_TRANSFER_EVENT_COMPLETE;
         DMA${i}STATbits.DONE = 0U;
+        dmaChannelObj[${i}].inUse = false;
     }
     else if(DMA${i}STATbits.HALF == 1U)
     {
         dmaEvent = ${dmaModuleName}_TRANSFER_EVENT_HALF_COMPLETE;
         DMA${i}STATbits.HALF = 0U;
+        dmaChannelObj[${i}].inUse = false;
     }
-    else 
+    else
     {
         // nothing to process
     }
-    
+
     if((chanObj->callback != NULL) && (dmaEvent != ${dmaModuleName}_TRANSFER_EVENT_NONE))
     {
         uintptr_t context = chanObj->context;
@@ -440,7 +488,7 @@ void __attribute__((used)) DMA${i}_InterruptHandler (void)
 ${dmaModuleName}_TRANSFER_EVENT ${dmaModuleName}_ChannelTransferStatusGet(${dmaModuleName}_CHANNEL channel)
 {
     ${dmaModuleName}_TRANSFER_EVENT dmaEvent = ${dmaModuleName}_TRANSFER_EVENT_NONE;
-    switch (channel) 
+    switch (channel)
     {
     <#list 0..MAX_CHANNEL_COUNT as i>
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
@@ -466,12 +514,12 @@ ${dmaModuleName}_TRANSFER_EVENT ${dmaModuleName}_ChannelTransferStatusGet(${dmaM
                 dmaEvent = ${dmaModuleName}_TRANSFER_EVENT_HALF_COMPLETE;
                 DMA${i}STATbits.HALF = 0U;
             }
-            else 
+            else
             {
                 // nothing to process
             }
             break;
-            
+
         </#if>
     </#list>
         default:break;

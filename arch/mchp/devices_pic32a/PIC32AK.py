@@ -77,15 +77,15 @@ def sort_alphanumeric(l):
 
 def getCorePeripheralsInterruptDataStructure():
 
-    dmacVectName = ["DMA0Interrupt", "DMA1Interrupt", "DMA2Interrupt", "DMA3Interrupt", "DMA4Interrupt", "DMA5Interrupt","DMA6Interrupt","DMA7Interrupt"]
-    dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3","CHANNEL4", "CHANNEL5", "CHANNEL6", "CHANNEL7"]
+    dmacVectName = ["DMA0Interrupt", "DMA1Interrupt", "DMA2Interrupt", "DMA3Interrupt", "DMA4Interrupt", "DMA5Interrupt"]
+    dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3", "CHANNEL4", "CHANNEL5"]
     uartIntSrc = ["USART_ERROR", "USART_RX", "USART_TX_COMPLETE"]
     spiIntSrc = ["SPI_ERROR", "SPI_RX", "SPI_TX_COMPLETE"]
     i2cIntSrc = ["I2C_0", "I2C_1"]
 
     corePeripherals = {
 
-            "DMAC" : {"name":dmacVectName, "INT_SRC":dmacIntSrc},
+            "DMA" : {"name":dmacVectName, "INT_SRC":dmacIntSrc},
 
             "UART1" : {"name":["U1EInterrupt", "U1RXInterrupt", "U1TXInterrupt"], "INT_SRC":uartIntSrc},
             "UART2" : {"name":["U2EInterrupt", "U2RXInterrupt", "U2TXInterrupt"], "INT_SRC":uartIntSrc},

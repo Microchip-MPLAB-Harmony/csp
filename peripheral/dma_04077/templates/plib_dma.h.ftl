@@ -84,7 +84,7 @@ typedef enum
 {
     /* No events yet. */
     ${dmaModuleName}_TRANSFER_EVENT_NONE = 0,
-    
+
     /* Data was transferred successfully. */
     ${dmaModuleName}_TRANSFER_EVENT_COMPLETE = 1,
 
@@ -103,7 +103,7 @@ typedef enum
 typedef void (*${dmaModuleName}_CHANNEL_CALLBACK) (${dmaModuleName}_TRANSFER_EVENT status, uintptr_t contextHandle);
 
 
-/* 
+/*
  @struct       DMA_CHANNEL_OBJECT
  @brief        Fundamental data object for a ${dmaModuleName} channel.
  @details      Used by ${dmaModuleName} logic to register/use a ${dmaModuleName} callback, report back error information
@@ -123,7 +123,7 @@ typedef struct
 } ${dmaModuleName}_CHANNEL_OBJECT;
 
 
-/* 
+/*
  @brief        Fundamental data object that represents ${dmaModuleName} channel number.
  @details      None
  @remarks      None
@@ -139,6 +139,7 @@ typedef struct
 
 typedef uint32_t ${dmaModuleName}_CHANNEL;
 
+typedef uint32_t DMA_CHANNEL_CONFIG;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -148,45 +149,45 @@ typedef uint32_t ${dmaModuleName}_CHANNEL;
 // *****************************************************************************
 
 <#if generateDoxygen>
-/** 
+/**
  * @brief    Initializes the DMA controller of the device.
- * 
+ *
  * @details  This function initializes the DMA controller of the device as configured by the user
  *           from within the DMA manager of MHC.
- * 
+ *
  * @pre      The DMA module clock requirements should have been configured in the MHC Clock Manager utility.
- * 
+ *
  * @param    none
- * 
+ *
  * @return   none
- * 
+ *
  * @b Example:
  * @code
  *     DMA_Initialize();
  * @endcode
- * 
+ *
  * @remarks  none.
  */
 </#if>
 void ${dmaModuleName}_Initialize( void );
 
 <#if generateDoxygen>
-/** 
+/**
  * @brief    De-initializes the DMA controller of the device to POR Values.
- * 
+ *
  * @details  This function de-initializes the DMA controller control and status registers to it's POR state.
- * 
+ *
  * @pre      The DMA module clock requirements should have been configured in the MHC Clock Manager utility.
- * 
+ *
  * @param    none
- * 
+ *
  * @return   none
- * 
+ *
  * @b Example:
  * @code
  *     DMA_Deinitialize();
  * @endcode
- * 
+ *
  * @remarks  none.
  */
 </#if>
@@ -196,30 +197,30 @@ void ${dmaModuleName}_Deinitialize( void );
 <#if generateDoxygen>
 /**
  * @brief   Schedules a DMA transfer on the specified DMA channel.
- * @details This function schedules a DMA transfer on the specified DMA channel and starts the transfer 
- *          when the configured trigger is received. The transfer is processed based on the channel 
- *          configuration performed in the DMA manager. The channel parameter specifies the channel to 
+ * @details This function schedules a DMA transfer on the specified DMA channel and starts the transfer
+ *          when the configured trigger is received. The transfer is processed based on the channel
+ *          configuration performed in the DMA manager. The channel parameter specifies the channel to
  *          be used for the transfer.
  *
  *          The srcAddr parameter specifies the source address from where data will be transferred.
  *
  *          The destAddr parameter specifies the address location where the data will be stored.
  *
- *          If the channel is configured for a software trigger, calling the channel transfer function 
- *          will set the source and destination address and will also start the transfer. If the channel 
- *          was configured for a peripheral trigger, the channel transfer function will set the source and 
+ *          If the channel is configured for a software trigger, calling the channel transfer function
+ *          will set the source and destination address and will also start the transfer. If the channel
+ *          was configured for a peripheral trigger, the channel transfer function will set the source and
  *          destination address and will transfer data when a trigger has occurred.
  *
- *          If the requesting client registered an event callback function before calling the channel transfer 
- *          function, this function will be called when the transfer completes. The callback function will be 
- *          called with a DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE event if the transfer was processed 
+ *          If the requesting client registered an event callback function before calling the channel transfer
+ *          function, this function will be called when the transfer completes. The callback function will be
+ *          called with a DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE event if the transfer was processed
  *          successfully and a DMA_TRANSFER_EVENT_ERROR event if the transfer was not processed successfully.
  *
- *          When a transfer is already in progress, this API will return false indicating that the transfer 
+ *          When a transfer is already in progress, this API will return false indicating that the transfer
  *          request is not accepted.
  *
- * @pre     DMA should have been initialized by calling the DMA_Initialize. The required channel transfer 
- *          parameters such as beat size, source and destination address increment should have been configured 
+ * @pre     DMA should have been initialized by calling the DMA_Initialize. The required channel transfer
+ *          parameters such as beat size, source and destination address increment should have been configured
  *          in MHC.
  *
  * @param[in] channel   The DMA channel that should be used for the transfer.
@@ -227,7 +228,7 @@ void ${dmaModuleName}_Deinitialize( void );
  * @param[in] destAddr  Destination address of the DMA transfer.
  * @param[in] blockSize Size of the transfer block in bytes.
  *
- * @return  True - if the transfer request is accepted. 
+ * @return  True - if the transfer request is accepted.
  *          False - if a previous transfer is in progress and the request is rejected.
  *
  * @note None.
@@ -244,11 +245,11 @@ void ${dmaModuleName}_Deinitialize( void );
  *
  * if (DMA_ChannelTransfer(DMA_CHANNEL_1, srcAddr, destAddr, size) == true)
  * {
- *     
+ *
  * }
  * else
  * {
- *     
+ *
  * }
  * @endcode
  */
@@ -258,12 +259,12 @@ bool ${dmaModuleName}_ChannelTransfer(${dmaModuleName}_CHANNEL channel, const vo
 <#if generateDoxygen>
 /**
  * @brief    This API is used to setup DMA pattern matching.
- * @details  When the content of the incoming data is required in making decisions in real time, 
- *           the 32-bit DMA Controller can recognize a data pattern in its internal buffer being 
- *           transferred from the source to the destination locations. The pattern match capability, 
- *           when enabled, allows a user-programmable data pattern to be compared against a (partial) 
- *           content of DMABUF[31:0]. Upon match detection, the DMA Controller invokes its interrupt 
- *           to inform the CPU to take further action. 
+ * @details  When the content of the incoming data is required in making decisions in real time,
+ *           the 32-bit DMA Controller can recognize a data pattern in its internal buffer being
+ *           transferred from the source to the destination locations. The pattern match capability,
+ *           when enabled, allows a user-programmable data pattern to be compared against a (partial)
+ *           content of DMABUF[31:0]. Upon match detection, the DMA Controller invokes its interrupt
+ *           to inform the CPU to take further action.
  *
  * @pre      DMA should have been initialized by calling DMA_Initialize.
  * @param    channel            DMA channel
@@ -285,13 +286,13 @@ void ${dmaModuleName}_ChannelPatternMatchSetup(${dmaModuleName}_CHANNEL channel,
 <#if generateDoxygen>
 /**
  * @brief     Enables the specified DMA channel.
- * @details   The function enables the specified DMA channel. Once enabled, DMA will initiate a block transfer 
+ * @details   The function enables the specified DMA channel. Once enabled, DMA will initiate a block transfer
  *            when the selected trigger is received.
  * @pre       DMA should have been initialized by calling DMA_Initialize.
  * @param[in] channel The DMA channel that needs to be enabled.
  * @return    None.
  * @code
- * 
+ *
  * DMA_ChannelEnable(DMA_CHANNEL_0);
  * @endcode
  *
@@ -303,8 +304,8 @@ void ${dmaModuleName}_ChannelEnable (${dmaModuleName}_CHANNEL channel);
 <#if generateDoxygen>
 /**
  * @brief     Disables the specified DMA channel.
- * @details   The function disables the specified DMA channel. Once disabled, the channel will ignore triggers 
- *            and will not transfer data until the next time a DMA_ChannelTransfer function is called. If there 
+ * @details   The function disables the specified DMA channel. Once disabled, the channel will ignore triggers
+ *            and will not transfer data until the next time a DMA_ChannelTransfer function is called. If there
  *            is a transfer already in progress, this will be suspended.
  * @pre       DMA should have been initialized by calling DMA_Initialize.
  * @param[in] channel The DMA channel that needs to be disabled.
@@ -312,7 +313,7 @@ void ${dmaModuleName}_ChannelEnable (${dmaModuleName}_CHANNEL channel);
  * @return    None.
  *
  * @code
- * 
+ *
  * DMA_ChannelDisable(DMA_CHANNEL_0);
  * @endcode
  *
@@ -322,7 +323,7 @@ void ${dmaModuleName}_ChannelEnable (${dmaModuleName}_CHANNEL channel);
 void ${dmaModuleName}_ChannelDisable (${dmaModuleName}_CHANNEL channel);
 
 <#if generateDoxygen>
-/** 
+/**
  * @brief    Enable DMA channel pattern matching
  * @details  This API is used to enable DMA pattern matching.
  * @pre      DMA should have been initialized by calling DMA_Initialize.
@@ -338,7 +339,7 @@ void ${dmaModuleName}_ChannelDisable (${dmaModuleName}_CHANNEL channel);
 void ${dmaModuleName}_ChannelPatternMatchEnable(${dmaModuleName}_CHANNEL channel);
 
 <#if generateDoxygen>
-/** 
+/**
  * @brief    Disable DMA channel pattern matching
  * @details  This API is used to disable DMA pattern matching.
  * @pre      DMA should have been initialized by calling DMA_Initialize.
@@ -389,17 +390,17 @@ void ${dmaModuleName}_ChannelSoftwareTriggerEnable(${dmaModuleName}_CHANNEL chan
 <#if generateDoxygen>
 /**
  * @brief       Returns the busy status of the channel.
- * @details     The function returns true if the specified channel is busy with a transfer. 
- *              This function can be used to poll for the completion of transfer that was started by 
- *              calling the DMA_ChannelTransfer() function. This function can be used as a polling 
- *              alternative to setting a callback function and receiving an asynchronous notification 
+ * @details     The function returns true if the specified channel is busy with a transfer.
+ *              This function can be used to poll for the completion of transfer that was started by
+ *              calling the DMA_ChannelTransfer() function. This function can be used as a polling
+ *              alternative to setting a callback function and receiving an asynchronous notification
  *              for transfer notification.
  * @pre         DMA should have been initialized by calling DMA_Initialize.
  * @param[in]   channel The DMA channel whose status needs to be checked.
  * @return      True - The channel is busy with an on-going transfer.
  * @return      False - The channel is not busy and is available for a transfer.
  * @code
- * 
+ *
  * while(DMA_ChannelIsBusy(DMA_CHANNEL_0));
  * @endcode
  * @remarks     None.
@@ -423,17 +424,54 @@ bool ${dmaModuleName}_ChannelIsBusy (${dmaModuleName}_CHANNEL channel);
 </#if>
 uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL channel);
 
+<#if generateDoxygen>
+/**
+ * @brief           Returns the current channel settings for the specified DMA Channel.
+ * @details         Returns the current channel settings for the specified DMA Channel.
+ * @pre             DMA should have been initialized by calling DMA_Initialize.
+ * @param           channel DMA channel.
+ * @return          Current channel settings for the specified DMA Channel.
+ * @code
+ * uint32_t setting;
+ * setting = DMA_ChannelSettingsGet(DMA_CHANNEL_0);
+ * @endcode
+ * @remarks         None.
+ */
+</#if>
+DMA_CHANNEL_CONFIG ${dmaModuleName}_ChannelSettingsGet(${dmaModuleName}_CHANNEL channel);
+
+<#if generateDoxygen>
+/**
+ * @brief           This function changes the current settings of the specified DMA channel.
+ * @details         This function changes the current settings of the specified DMA channel.
+ * @pre             DMA should have been initialized by calling DMA_Initialize.
+ * @param           channel DMA channel.
+ * @param           setting Value to be set in the specified DMA Channel.
+ * @return          True - Settings updated successfully for the specified DMA channel.
+ * @return          False - Failed to update the settings for the specified DMA channel.
+ * @code
+ * uint32_t setting;
+ * bool status;
+ * setting = DMA_ChannelSettingsGet(DMA_CHANNEL_0);
+ * setting |= _DMA0CH_CHEN_MASK;
+ * status = DMA_ChannelSettingsSet(DMA_CHANNEL_0, setting);
+ * @endcode
+ * @remarks         None.
+ */
+</#if>
+bool ${dmaModuleName}_ChannelSettingsSet(${dmaModuleName}_CHANNEL channel, DMA_CHANNEL_CONFIG setting);
+
 <#if dmaIntEnabled == true>
 <#if generateDoxygen>
 /**
  * @brief           Allows a DMA PLIB client to set an event handler.
- * @details         This function allows a client to set an event handler. The client may want to receive 
- *                  transfer related events in cases when it submits a DMA PLIB transfer request. 
+ * @details         This function allows a client to set an event handler. The client may want to receive
+ *                  transfer related events in cases when it submits a DMA PLIB transfer request.
  *                  The event handler should be set before the client intends to perform operations that could generate events.
- *                  In case of linked transfer descriptors, the callback function will be called for every transfer 
- *                  in the transfer descriptor chain. The application must implement its own logic to link the callback 
+ *                  In case of linked transfer descriptors, the callback function will be called for every transfer
+ *                  in the transfer descriptor chain. The application must implement its own logic to link the callback
  *                  to the transfer descriptor being completed.
- *                  This function accepts a context parameter. This parameter could be set by the client to contain 
+ *                  This function accepts a context parameter. This parameter could be set by the client to contain
  *                  (or point to) any client specific data object that should be associated with this DMA channel.
  * @pre             DMA should have been initialized by calling DMA_Initialize.
  * @param[in]       channel A specific DMA channel from which the events are expected.
@@ -448,10 +486,10 @@ uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL ch
  *     {
  *         case ${dmaModuleName}_TRANSFER_EVENT_COMPLETE:
  *         break;
- *         
+ *
  *         case ${dmaModuleName}_OVERRUN_ERROR:
  *         break;
- *         
+ *
  *         default:
  *         break;
  *     }
@@ -472,18 +510,18 @@ void ${dmaModuleName}_ChannelCallbackRegister(${dmaModuleName}_CHANNEL channel, 
  * @return          DMA_TRANSFER_EVENT - enum of type DMA_TRANSFER_EVENT indicating the status of the DMA transfer.
  * @code
  * bool isBusy;
- * 
+ *
  * isBusy = ${dmaModuleName}_ChannelIsBusy(${dmaModuleName}_CHANNEL_0);
- * 
+ *
  * if (isBusy == false)
  * {
  *     if (${dmaModuleName}_ChannelTransferStatusGet() == ${dmaModuleName}_TRANSFER_EVENT_ERROR)
  *     {
- *        
+ *
  *     }
  *     else
  *     {
- *         
+ *
  *     }
  * }
  * @endcode

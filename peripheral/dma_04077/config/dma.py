@@ -20,7 +20,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
- 
+
 from collections import OrderedDict
 
 global activeChList
@@ -31,6 +31,22 @@ dmaRegDefaults = OrderedDict()
 
 global isIntEnabled
 isIntEnabled = False
+
+global peridValueListSymbols
+peridValueListSymbols = []
+
+global dmaActiveChannels
+dmaActiveChannels = []
+
+dmaChannelIds = []
+
+global triggerSettings
+
+triggerSettings = {
+                        #"key"              : ["SIZE", "TRMODE",   "SAMODE",      "DAMODE" ]
+                        "Standard_Transmit" : ["Byte", "One-Shot", "Incremented", "Unchanged"],
+                        "Standard_Receive"  : ["Byte", "One-Shot", "Unchanged",   "Incremented"]
+}
 
 ################################################################################
 #### ATDF Helper Functions  ####
@@ -50,7 +66,7 @@ def getDefaultVal(initVal, mask):
     while (mask % 2) == 0:
         mask = mask >> 1
         value = value >> 1
-    return value 
+    return value
 
 global getSettingBitDefaultValue
 def getSettingBitDefaultValue(moduleName,registerGroup,register,bitfield):
@@ -63,7 +79,7 @@ def getSettingBitDefaultValue(moduleName,registerGroup,register,bitfield):
              bitMask = bitNode.getAttribute("mask")
              return getDefaultVal(regDefaultVal,bitMask)
      return 0
-     
+
 global getRegisterDefaultValue
 def getRegisterDefaultValue(module, register_group, register):
     """
@@ -116,7 +132,7 @@ def getBitfieldOptionList(node):
                 tempint = int(value)
             dict["value"] = str(tempint)
             optionList.append(dict)
-    return optionList 
+    return optionList
 
 global getKeyValuePairBasedonValue
 def getKeyValuePairBasedonValue(value,keyValueOptionList):
@@ -127,18 +143,18 @@ def getKeyValuePairBasedonValue(value,keyValueOptionList):
         index += 1
 
     print("find_key: could not find value in dictionary") # should never get here
-    return ""      
+    return ""
 
 global addKeystoKeyValueSymbol
 def addKeystoKeyValueSymbol(bitSymbol,bitfieldOptionList):
     for ii in bitfieldOptionList:
-        bitSymbol.addKey( ii['key'],ii['value'], ii['desc'] )  
+        bitSymbol.addKey( ii['key'],ii['value'], ii['desc'] )
 
 global createKeyValueSetSymbol
-def createKeyValueSetSymbol(component,moduleName,symbolKey,registerGroup,register,bitfield,menu): 
+def createKeyValueSetSymbol(component,moduleName,symbolKey,registerGroup,register,bitfield,menu):
         valueGroupEntry = getValueGroupName(moduleName,registerGroup,register,bitfield)
         valGroup = getValueGroup(moduleName,valueGroupEntry)
-        if(valGroup != None):      
+        if(valGroup != None):
             optionList = getBitfieldOptionList(valGroup)
             valueGroupEntryComp = component.createKeyValueSetSymbol(symbolKey, menu)
             valueGroupEntryComp.setLabel(symbolKey)
@@ -147,7 +163,7 @@ def createKeyValueSetSymbol(component,moduleName,symbolKey,registerGroup,registe
             valueGroupEntryComp.setOutputMode("Value")
             valueGroupEntryComp.setDisplayMode("Description")
             addKeystoKeyValueSymbol(valueGroupEntryComp,optionList)
-            return  valueGroupEntryComp           
+            return  valueGroupEntryComp
 
 global getParameterValue
 def getParameterValue(moduleName, instanceName, paramName):
@@ -156,8 +172,8 @@ def getParameterValue(moduleName, instanceName, paramName):
     if paramNode is not None:
         return paramNode.getAttribute("value")
     return None
-                   
-global getVectorIndex        
+
+global getVectorIndex
 def getVectorIndex(interruptName):
     interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
     vector_index = "-1"
@@ -168,7 +184,7 @@ def getVectorIndex(interruptName):
             break
 
     return vector_index
-        
+
 ################################################################################
 #### Symbol Constants ####
 ################################################################################
@@ -188,7 +204,7 @@ global NUM_CHANNEL
 NUM_CHANNEL = "num_channels"
 
 global DMA_ENABLE
-DMA_ENABLE = "dmaEnable"
+DMA_ENABLE = "DMA_ENABLE"
 
 global LOW_ADDR_LIMIT
 LOW_ADDR_LIMIT = "dmaLowAddressLimit"
@@ -255,7 +271,7 @@ dma_ch_constants = [
     CH_TRG_SRC,
     CH_SRC_ADDR_MODE,
     CH_DEST_ADDR_MODE,
-    CH_DATA_SIZE 
+    CH_DATA_SIZE
 ]
 
 global MAX_NUM_CHANNEL
@@ -289,7 +305,7 @@ DMA_INTERRUPT_ENABLE = "dmaIntEnabled"
 #### Callbacks ####
 ################################################################################
 
-global dmaChEnableCb     
+global dmaChEnableCb
 def dmaChEnableCb(symbol,event):
     dmaCh= symbol.getID()[3]
     dmaEnable = symbol.getComponent().getSymbolValue(DMA_ENABLE)
@@ -301,21 +317,21 @@ def dmaChEnableCb(symbol,event):
         symbolMon.setVisible(False)
     dmaChEnable(event[SOURCE],symbol,dmaCh)
 
-global dmaChEnable 
+global dmaChEnable
 def dmaChEnable(component,dmaChSymbol,dmaCh):
     for constant in dma_ch_constants:
         symbolId = constant.format(dmaCh)
         symbolMon = component.getSymbolByID(symbolId)
         if symbolMon is not None:
-            symbolMon.setVisible(dmaChSymbol.getValue()) 
-    if  dmaChSymbol.getValue(): 
+            symbolMon.setVisible(dmaChSymbol.getValue())
+    if  dmaChSymbol.getValue():
         if dmaCh not in activeChList:
             activeChList.append(dmaCh)
         if(component.getSymbolValue(CH_ENABLE_INT.format(dmaCh))):
-            updateInterruptState(dmaCh,True)                         
+            updateInterruptState(dmaCh,True)
     else :
         updateInterruptState(dmaCh,False)
-        if dmaCh in activeChList:          
+        if dmaCh in activeChList:
             activeChList.remove(dmaCh)
     activeChList.sort()
     dmaChSymbol.getComponent().getSymbolByID(DMA_REG_POR_SET).setValue(createRegPorSetString())
@@ -333,7 +349,7 @@ global updateInterruptState
 def updateInterruptState(dmaChInt,value):
     intIndex = getVectorIndex("DMA" + dmaChInt + "Interrupt")
     Database.setSymbolValue("core", INT_ENABLE.format(intIndex), value)
-    Database.setSymbolValue("core", INT_HANDLER_LOCK.format(intIndex), value) 
+    Database.setSymbolValue("core", INT_HANDLER_LOCK.format(intIndex), value)
 
 global dmaChEnableIntCmntCb
 def dmaChEnableIntCmntCb(symbol,event):
@@ -345,10 +361,10 @@ def dmaChEnableIntCmntCb(symbol,event):
     if dmaChEnable and dmaChIntVal != dmaIntVal:
         symbol.setVisible(True)
         value = "Enable" if dmaChIntVal else "Disable"
-        symbol.setLabel("Warning!!! " + value + " DMA{} Interrupt in Interrupts Section of System module".format(dmaChannel)) 
+        symbol.setLabel("Warning!!! " + value + " DMA{} Interrupt in Interrupts Section of System module".format(dmaChannel))
     elif dmaChEnable == False and dmaIntVal:
         symbol.setVisible(True)
-        symbol.setLabel("Warning!!! Disable DMA{} Interrupt in Interrupts Section of System module".format(dmaChannel)) 
+        symbol.setLabel("Warning!!! Disable DMA{} Interrupt in Interrupts Section of System module".format(dmaChannel))
     else:
          symbol.setVisible(False)
 
@@ -407,8 +423,129 @@ def anyChannelInUse(symbol,event):
         if symbol.getComponent().getSymbolValue(ENABLE_CH.format(i)) == True:
             anyChannelInUse = True
             break
-    
+
     symbol.setValue(anyChannelInUse)
+
+# This function enables DMA channel and selects respective trigger if DMA mode
+# is selected for any peripheral ID.
+# And once the DMA mode is unselected, then the corresponding DMA channel will
+# be disabled and trigger source will be reset to default
+def dmaChannelAllocLogic(symbol, event):
+    localComponent = symbol.getComponent()
+    perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
+
+    triggerSource = perID
+    dmaChannelPerID = perID
+
+    if "Transmit" in perID:
+
+        triggerSource = perID.replace("_Transmit", " TX")
+    elif "Receive" in perID:
+        triggerSource = perID.replace("_Receive", " RX")
+
+    if event["value"] == True:
+        dmaChannelCount = localComponent.getSymbolValue("DMA_CHANNEL_COUNT")
+
+        channelAllocated = False
+
+        for dmaChannel in range(dmaChannelCount):
+            dmaChannelEnable = localComponent.getSymbolValue("DMA" + str(dmaChannel) + "_CH__CHEN")
+            dmaChannelPerID = localComponent.getSymbolByID("DMA" + str(dmaChannel) + "CH_TRG_SRC").getSelectedKey()
+
+            if dmaChannelPerID == triggerSource:
+                localComponent.setSymbolValue("DMA" + str(dmaChannel) + "_CH__CHEN", True)
+                localComponent.getSymbolByID("DMA" + str(dmaChannel) + "CH_TRG_SRC").setSelectedKey(triggerSource)
+                localComponent.setSymbolValue("DMA_CH_FOR_" + perID, dmaChannel)
+                localComponent.setSymbolValue("DMA" + str(dmaChannel) + "_CH__DONEEN", True)
+                channelAllocated = True
+                break
+            # Reserve the first available free channel
+            if dmaChannelEnable == False:
+                localComponent.setSymbolValue("DMA" + str(dmaChannel) + "_CH__CHEN", True)
+                localComponent.getSymbolByID("DMA" + str(dmaChannel) + "CH_TRG_SRC").setSelectedKey(triggerSource)
+                localComponent.setSymbolValue("DMA_CH_FOR_" + perID, dmaChannel)
+                localComponent.setSymbolValue("DMA" + str(dmaChannel) + "_CH__DONEEN", True)
+                channelAllocated = True
+                break
+
+        if channelAllocated == False:
+            # Couldn't find any free DMA channel, hence set warning.
+            localComponent.clearSymbolValue("DMA_CH_FOR_" + perID)
+            localComponent.setSymbolValue("DMA_CH_FOR_" + perID, -2)
+
+        # Client requested to deallocate channel
+    else:
+        channelNumber = localComponent.getSymbolValue("DMA_CH_FOR_" + perID)
+        if channelNumber >= 0:
+            dmaChannelEnable = localComponent.getSymbolValue("DMA" + str(channelNumber) + "_CH__CHEN")
+            dmaChannelPerID = localComponent.getSymbolByID("DMA" + str(channelNumber) + "CH_TRG_SRC").getSelectedKey()
+            # Reset the previously allocated channel
+            if triggerSource == dmaChannelPerID and dmaChannelEnable == True:
+                localComponent.setSymbolValue("DMA" + str(channelNumber) + "_CH__CHEN", False)
+                localComponent.getSymbolByID("DMA" + str(channelNumber) + "CH_TRG_SRC").clearValue()
+                localComponent.setSymbolValue("DMA_CH_FOR_" + perID, -1)
+                localComponent.setSymbolValue("DMA" + str(channelNumber) + "_CH__DONEEN", False)
+
+# The following business logic creates a list of enabled DMA channels and sorts
+# them in the descending order. The left most channel number will be the highest
+# index enabled, also if the list is empty then none of the channel is enabled.
+# Highest index will be used to create DMA objects in source code.
+# List empty or non-empty status helps to generate/discard DMA code.
+def dmaGlobalLogic(symbol, event):
+
+    global dmaActiveChannels
+
+    index = (event["id"].replace("DMA", "")).replace("_CH__CHEN", "")
+
+    try:
+        index = int(index)
+    except:
+        return
+
+    if event["value"] == True:
+        if index not in dmaActiveChannels:
+            dmaActiveChannels.append(index)
+    else :
+        if index in dmaActiveChannels:
+            dmaActiveChannels.remove(index)
+
+    dmaActiveChannels.sort()
+    dmaActiveChannels.reverse()
+
+    # Check if the list is not empty first since list element is accessed in the code
+    if dmaActiveChannels:
+        if symbol.getID() == "DMA_HIGHEST_CHANNEL":
+            symbol.setValue(int(dmaActiveChannels[0]) + 1)
+
+    if symbol.getID() == "DMA_ENABLE":
+        if dmaActiveChannels and symbol.getValue() == False:
+            symbol.setValue(True)
+
+        if not dmaActiveChannels:
+            symbol.setValue(False)
+
+def onTriggerSourceChanged(symbol, event):
+    global triggerSettings
+
+    symbolID = symbol.getID()
+
+    triggerSource = event["symbol"].getSelectedKey()
+
+    trigger = ""
+    if "RX" in triggerSource:
+        trigger = "Standard_Receive"
+    elif "TX" in triggerSource:
+        trigger = "Standard_Transmit"
+
+    if trigger != "":
+        if "SIZE" in symbolID:
+            symbol.setSelectedKey(triggerSettings[trigger][0])
+        elif "TRMODE" in symbolID:
+            symbol.setSelectedKey(triggerSettings[trigger][1])
+        elif "SAMODE" in symbolID:
+            symbol.setSelectedKey(triggerSettings[trigger][2])
+        elif "DAMODE" in symbolID:
+            symbol.setSelectedKey(triggerSettings[trigger][3])
 
 ################## Symbol Creation for DMA Component ###############################################
 MAX_NUM_CHANNEL = int(getParameterValue(DMA, DMA, NUM_CHANNEL))
@@ -419,7 +556,7 @@ HIGH_ADDR_VALUE = long(int(getParameterValue(DMA, DMA, DMAHIGH),16))
 dmaMenu = coreComponent.createMenuSymbol(DMA_MENU, None)
 dmaMenu.setLabel("DMA")
 
-# DMA Enable 
+# DMA Enable
 dmaEnable = coreComponent.createBooleanSymbol(DMA_ENABLE, dmaMenu)
 dmaEnable.setLabel("Use DMA")
 dmaEnable.setVisible(True)
@@ -427,7 +564,7 @@ dmaEnable.setVisible(True)
 # DMA Lower Address Limit - DMALOW
 dmaLowerAddrLimit = coreComponent.createHexSymbol(LOW_ADDR_LIMIT, dmaEnable)
 dmaLowerAddrLimit.setLabel("Lower Address Limit")
-dmaLowerAddrLimit.setDefaultValue(LOW_ADDR_VALUE)   
+dmaLowerAddrLimit.setDefaultValue(LOW_ADDR_VALUE)
 dmaLowerAddrLimit.setMin(LOW_ADDR_VALUE)
 dmaLowerAddrLimit.setMax(HIGH_ADDR_VALUE)
 dmaLowerAddrLimit.setVisible(False)
@@ -437,9 +574,9 @@ dmaLowerAddrLimit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";com
 # DMA Higher Address Limit - DMAHIGH
 dmaHigherAddrLimit = coreComponent.createHexSymbol(HIGH_ADDR_LIMIT, dmaEnable)
 dmaHigherAddrLimit.setLabel("Higher Address Limit")
-dmaHigherAddrLimit.setDefaultValue(HIGH_ADDR_VALUE)   
+dmaHigherAddrLimit.setDefaultValue(HIGH_ADDR_VALUE)
 dmaHigherAddrLimit.setMin(LOW_ADDR_VALUE)
-dmaHigherAddrLimit.setMax(HIGH_ADDR_VALUE) 
+dmaHigherAddrLimit.setMax(HIGH_ADDR_VALUE)
 dmaHigherAddrLimit.setVisible(False)
 dmaHigherAddrLimit.setDependencies(setVisibleOnUseDma, [DMA_ENABLE])
 dmaHigherAddrLimit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAHIGH")
@@ -450,6 +587,7 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaChannelEnable.setLabel("Use DMA Channel " + str(channelID))
     dmaChannelEnable.setVisible(False)
     dmaChannelEnable.setDependencies(dmaChEnableCb, [ENABLE_CH.format(channelID),DMA_ENABLE])
+    dmaChannelIds.append(ENABLE_CH.format(channelID))
 
     # Enable interrupt
     dmaChannelEnableInt = coreComponent.createBooleanSymbol(CH_ENABLE_INT.format(channelID), dmaChannelEnable)
@@ -457,7 +595,7 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaChannelEnableInt.setVisible(False)
     dmaChannelEnableInt.setDependencies(dmaChEnableIntCb,[CH_ENABLE_INT.format(channelID),ENABLE_CH.format(channelID)])
     dmaChannelEnableInt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:intc_04436;register:IFS2")
-    
+
     #Interrupt Warning Comment
     intIndex= getVectorIndex("DMA{}Interrupt".format(channelID))
     dmaIntComment = coreComponent.createCommentSymbol(CH_ENABLE_INT_CMNT.format(channelID), dmaChannelEnable)
@@ -470,9 +608,10 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaChannelHalfInt.setVisible(False)
 
     # Trigger Source
-    dmaTrgSrc = createKeyValueSetSymbol(coreComponent, DMA, CH_TRG_SRC.format(channelID),"DMA","SEL","CHSEL",dmaChannelEnable) 
+    dmaTrgSrc = createKeyValueSetSymbol(coreComponent, DMA, CH_TRG_SRC.format(channelID),"DMA","SEL","CHSEL",dmaChannelEnable)
     dmaTrgSrc.setLabel("Trigger Source")
     dmaTrgSrc.setVisible(False)
+    dmaTrgSrc.setOutputMode("Key")
     dmaTrgSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
 
     dmaTrgSrcHex = coreComponent.createHexSymbol(CH_SEL_CHSEL.format(channelID),None)
@@ -480,29 +619,33 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaTrgSrcHex.setVisible(False)
     dmaTrgSrcHex.setDependencies(updateTrgSrc, [CH_TRG_SRC.format(channelID)])
     dmaTrgSrcHex.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxSEL")
-    
+
     # Source Address Mode
-    dmaSourceMode = createKeyValueSetSymbol(coreComponent, DMA, CH_SRC_ADDR_MODE.format(channelID), "DMA","CH","SAMODE",dmaChannelEnable)  
+    dmaSourceMode = createKeyValueSetSymbol(coreComponent, DMA, CH_SRC_ADDR_MODE.format(channelID), "DMA","CH","SAMODE",dmaChannelEnable)
     dmaSourceMode.setLabel("Source Address Mode")
     dmaSourceMode.setVisible(False)
+    dmaSourceMode.setDependencies(onTriggerSourceChanged, [CH_TRG_SRC.format(channelID)])
     dmaSourceMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
 
     # Destination Address Mode
-    dmaDestinationMode = createKeyValueSetSymbol(coreComponent, DMA, CH_DEST_ADDR_MODE.format(channelID), "DMA","CH","DAMODE",dmaChannelEnable)  
+    dmaDestinationMode = createKeyValueSetSymbol(coreComponent, DMA, CH_DEST_ADDR_MODE.format(channelID), "DMA","CH","DAMODE",dmaChannelEnable)
     dmaDestinationMode.setLabel("Destination Address Mode")
     dmaDestinationMode.setVisible(False)
+    dmaDestinationMode.setDependencies(onTriggerSourceChanged, [CH_TRG_SRC.format(channelID)])
     dmaDestinationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
 
     # Data Size
-    dmaDataSize = createKeyValueSetSymbol(coreComponent, DMA, CH_DATA_SIZE.format(channelID), "DMA","CH","SIZE",dmaChannelEnable)  
+    dmaDataSize = createKeyValueSetSymbol(coreComponent, DMA, CH_DATA_SIZE.format(channelID), "DMA","CH","SIZE",dmaChannelEnable)
     dmaDataSize.setLabel("Data Size")
     dmaDataSize.setVisible(False)
+    dmaDataSize.setDependencies(onTriggerSourceChanged, [CH_TRG_SRC.format(channelID)])
     dmaDataSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
 
     # Transfer Mode
-    dmaTransferMode = createKeyValueSetSymbol(coreComponent, DMA, CH_TRANSFER_MODE.format(channelID),"DMA","CH","TRMODE", dmaChannelEnable)  
+    dmaTransferMode = createKeyValueSetSymbol(coreComponent, DMA, CH_TRANSFER_MODE.format(channelID),"DMA","CH","TRMODE", dmaChannelEnable)
     dmaTransferMode.setLabel("Transfer Mode")
     dmaTransferMode.setVisible(False)
+    dmaTransferMode.setDependencies(onTriggerSourceChanged, [CH_TRG_SRC.format(channelID)])
     dmaTransferMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
 
     # Enable reload count
@@ -511,7 +654,7 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaEnableReloadCnt.setVisible(False)
     dmaEnableReloadCnt.setDependencies(dmaChReloadCb,[ENABLE_CH.format(channelID),CH_TRANSFER_MODE.format(channelID)])
     dmaEnableReloadCnt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
-    
+
     # Enable reload destination address
     dmaEnableReloadDst = coreComponent.createBooleanSymbol(CH_RELOAD_DST.format(channelID) , dmaTransferMode)
     dmaEnableReloadDst.setLabel("Reload Destination Address")
@@ -523,7 +666,7 @@ for channelID in range(0, MAX_NUM_CHANNEL):
     dmaEnableReloadSrc.setLabel("Reload Source Address")
     dmaEnableReloadSrc.setVisible(False)
     dmaEnableReloadSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_04077;register:DMAxCH")
-    
+
     dmaChannelEnableTrap = coreComponent.createBooleanSymbol(CH_ENABLE_TRAP.format(channelID), dmaChannelEnable)
     dmaChannelEnableTrap.setLabel("Enable Read Error Trap")
     dmaChannelEnableTrap.setVisible(False)
@@ -533,14 +676,14 @@ channelInUse = coreComponent.createBooleanSymbol("anyChannelEnabled", None)
 channelInUse.setVisible(False)
 channelList = [ENABLE_CH.format(channelID) for channelID in range(0, MAX_NUM_CHANNEL)]
 channelInUse.setDependencies(anyChannelInUse,channelList)
-         
+
 moduleName = coreComponent.createStringSymbol(MODULE_NAME, None)
 moduleName.setDefaultValue(DMA)
 moduleName.setVisible(False)
 
 numChannel = coreComponent.createIntegerSymbol(MAX_CHANNEL_COUNT, None)
 numChannel.setDefaultValue(MAX_NUM_CHANNEL)
-numChannel.setVisible(False)     
+numChannel.setVisible(False)
 
 regPorSet = coreComponent.createStringSymbol(DMA_REG_POR_SET, None)
 regPorSet.setDefaultValue(createRegPorSetString())
@@ -549,6 +692,119 @@ regPorSet.setVisible(False)
 intEnabled = coreComponent.createBooleanSymbol(DMA_INTERRUPT_ENABLE, None)
 intEnabled.setDefaultValue(False)
 intEnabled.setVisible(False)
+
+#DMA - Source AM Mask
+dmaSym_DMAxCH_SAMODE_MASK = coreComponent.createStringSymbol("DMA_SRC_AM_MASK", None)
+dmaSym_DMAxCH_SAMODE_MASK.setDefaultValue("0xC000")
+dmaSym_DMAxCH_SAMODE_MASK.setVisible(False)
+
+#DMA - Source FIXED_AM Value
+dmaSym_DMAxCH_SAMODE_UNCHANGED = coreComponent.createStringSymbol("DMA_SRC_FIXED_AM_VALUE", None)
+dmaSym_DMAxCH_SAMODE_UNCHANGED.setDefaultValue("0x0")
+dmaSym_DMAxCH_SAMODE_UNCHANGED.setVisible(False)
+
+#DMA - Source INCREMENTED_AM Value
+dmaSym_DMAxCH_SAMODE_INCREMENTED = coreComponent.createStringSymbol("DMA_SRC_INCREMENTED_AM_VALUE", None)
+dmaSym_DMAxCH_SAMODE_INCREMENTED.setDefaultValue("0x4000")
+dmaSym_DMAxCH_SAMODE_INCREMENTED.setVisible(False)
+
+#DMA - Source DECREMENTED_AM Value
+dmaSym_DMAxCH_SAMODE_DECREMENTED = coreComponent.createStringSymbol("DMA_SRC_DECREMENTED_AM_VALUE", None)
+dmaSym_DMAxCH_SAMODE_DECREMENTED.setDefaultValue("0x8000")
+dmaSym_DMAxCH_SAMODE_DECREMENTED.setVisible(False)
+
+#DMA - Destination AM Mask
+dmaSym_DMAxCH_DAMODE_MASK = coreComponent.createStringSymbol("DMA_DST_AM_MASK", None)
+dmaSym_DMAxCH_DAMODE_MASK.setDefaultValue("0x3000")
+dmaSym_DMAxCH_DAMODE_MASK.setVisible(False)
+
+#DMA - Destination FIXED_AM Value
+dmaSym_DMAxCH_DAMODE_UNCHANGED = coreComponent.createStringSymbol("DMA_DST_FIXED_AM_VALUE", None)
+dmaSym_DMAxCH_DAMODE_UNCHANGED.setDefaultValue("0x0")
+dmaSym_DMAxCH_DAMODE_UNCHANGED.setVisible(False)
+
+#DMA - Destination INCREMENTED_AM Value
+dmaSym_DMAxCH_DAMODE_INCREMENTED = coreComponent.createStringSymbol("DMA_DST_INCREMENTED_AM_VALUE", None)
+dmaSym_DMAxCH_DAMODE_INCREMENTED.setDefaultValue("0x1000")
+dmaSym_DMAxCH_DAMODE_INCREMENTED.setVisible(False)
+
+#DMA - Destination DECREMENTED_AM Value
+dmaSym_DMAxCH_DAMODE_DECREMENTED = coreComponent.createStringSymbol("DMA_DST_DECREMENTED_AM_VALUE", None)
+dmaSym_DMAxCH_DAMODE_DECREMENTED.setDefaultValue("0x2000")
+dmaSym_DMAxCH_DAMODE_DECREMENTED.setVisible(False)
+
+#DMA - Data Width Mask
+dmaSym_DMAxCH_SIZE_MASK = coreComponent.createStringSymbol("DMA_DATA_WIDTH_MASK", None)
+dmaSym_DMAxCH_SIZE_MASK.setDefaultValue("0xC0")
+dmaSym_DMAxCH_SIZE_MASK.setVisible(False)
+
+#DMA - Beat Size BYTE Value
+dmaSym_DMAxCH_SIZE_BYTE = coreComponent.createStringSymbol("DMA_DATA_WIDTH_BYTE_VALUE", None)
+dmaSym_DMAxCH_SIZE_BYTE.setDefaultValue("0x0")
+dmaSym_DMAxCH_SIZE_BYTE.setVisible(False)
+
+#DMA - Beat Size HWORD Value
+dmaSym_DMAxCH_SIZE_HWORD = coreComponent.createStringSymbol("DMA_DATA_WIDTH_HALFWORD_VALUE", None)
+dmaSym_DMAxCH_SIZE_HWORD.setDefaultValue("0x40")
+dmaSym_DMAxCH_SIZE_HWORD.setVisible(False)
+
+#DMA - Beat Size WORD Value
+dmaSym_DMAxCH_SIZE_WORD = coreComponent.createStringSymbol("DMA_DATA_WIDTH_WORD_VALUE", None)
+dmaSym_DMAxCH_SIZE_WORD.setDefaultValue("0x80")
+dmaSym_DMAxCH_SIZE_WORD.setVisible(False)
+
+# DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
+dmaSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
+dmaSymAPI_Prefix.setDefaultValue("DMA")
+dmaSymAPI_Prefix.setVisible(False)
+
+# DMA_INSTANCE_NAME: Needed to map DMA system service APIs to PLIB APIs
+dmaInstanceName = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
+dmaInstanceName.setDefaultValue(ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="DMA"]/instance').getAttribute("name"))
+dmaInstanceName.setVisible(False)
+
+# DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
+dmaChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmaEnable)
+dmaChCount.setDefaultValue(MAX_NUM_CHANNEL)
+dmaChCount.setVisible(False)
+
+dmaHighestCh = coreComponent.createIntegerSymbol("DMA_HIGHEST_CHANNEL", dmaEnable)
+dmaHighestCh.setLabel("DMA Highest Active Channel")
+dmaHighestCh.setVisible(False)
+dmaHighestCh.setDependencies(dmaGlobalLogic, dmaChannelIds)
+dmaEnable.setDependencies(dmaGlobalLogic, dmaChannelIds)
+
+per_instance = {}  # this is an array of key/value pairs
+trgSrcValueGrpName = getValueGroupName(DMA,DMA,"SEL","CHSEL")
+trgSrcValGrp = getValueGroup(DMA,trgSrcValueGrpName)
+chSelNode = trgSrcValGrp.getChildren()
+for ii in range(0,len(chSelNode)):
+    per_instance[chSelNode[ii].getAttribute("caption")] = chSelNode[ii].getAttribute("value")
+
+# Interface for Peripheral clients
+for per in per_instance.keys():
+
+    name = per
+
+    if "TX" in per:
+        name = name.replace(' TX', '_Transmit')
+    elif "RX" in per:
+        name = name.replace(' RX', '_Receive')
+
+    dmaChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(name), dmaMenu)
+    dmaChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(name))
+    dmaChannelNeeded.setVisible(False)
+    peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(name))
+
+    dmaChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(name), dmaMenu)
+    dmaChannel.setLabel("Local DMA_CH_FOR_" + str(name))
+    dmaChannel.setDefaultValue(-1)
+    dmaChannel.setVisible(False)
+
+dmaPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", dmaMenu)
+dmaPERIDChannelUpdate.setLabel("Local dmaChannelAllocLogic")
+dmaPERIDChannelUpdate.setVisible(False)
+dmaPERIDChannelUpdate.setDependencies(dmaChannelAllocLogic, peridValueListSymbols)
 
 ##################### Code Generation #######################################
 configName = Variables.get("__CONFIGURATION_NAME")
