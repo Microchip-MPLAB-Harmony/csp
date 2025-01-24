@@ -146,7 +146,7 @@ SPI_DUMMY_DATA_DESC = "Dummy Data to be written during SPI Read"
 SPIS_TX_BUFFER_SIZE_LABEL = "TX Buffer Size (in bytes)"
 SPIS_RX_BUFFER_SIZE_LABEL = "RX Buffer Size (in bytes)"
 SPIS_CLIENT_SELECT_ENABLE_LABEL = "Enable Client Select"
-
+SPI2_PIN_CONFIGURATION_MESSAGE = "Note: To use non-PPS pins for SPI2, enable SPI2PIN in System/Device_Configuration/FDEVOPT and configure it accordingly."
 SPI_CON1__MODE_32_MODE_16 = "SPI_CON1__MODE_32_MODE_16"
 
 # ATDF Helper Functions start
@@ -924,6 +924,11 @@ def instantiateComponent(spiComponent):
     createInterruptSymbols(spiComponent,intSymbolMap)
 
     updateInterruptLists(instanceNumber.getValue(), interruptList)
+
+    # Non-pps pin notification
+    if(spiInstanceName.getValue() == "SPI2"):
+     spi2NonPpsPinsComment = spiComponent.createCommentSymbol("spi2NonPpsPinsComment",None)
+     spi2NonPpsPinsComment.setLabel(SPI2_PIN_CONFIGURATION_MESSAGE)
 
     intComment = spiComponent.createCommentSymbol(INTERRUPT_COMMENT, None)
     intComment.setVisible(False)
