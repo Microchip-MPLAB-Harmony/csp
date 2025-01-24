@@ -793,7 +793,7 @@ void CLK_PeripheralClockConfigSet(ID_PERIPH periphID, bool periphClkEn, bool gcl
 /*********************************************************************************
                                 Clock Initialize
 *********************************************************************************/
-void CLK_Initialize( void )
+void CLOCK_Initialize( void )
 {
 <#if CPU_CORE_ID == 0>
     if(RSTC_PMCResetStatusGet())
