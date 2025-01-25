@@ -226,15 +226,7 @@ uint32_t  GPIO_PortRead(GPIO_PORT port)
 
 void  GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 {
-    if (value == (uint32_t)0x1) {
-        *(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) & (~mask)) | (mask);
-    } 
-    else if (value == (uint32_t)0x0) {
-        *(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) & (~mask));
-    }
-	else{
-		*(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) & (~mask)) | (value);
-	}
+    *(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) = (*(volatile uint32_t *)((uint32_t)&LAT${GPIO_CHANNEL_0_NAME} + (port * OFFSET_REG)) & (~mask)) | (mask & value);
 }
 
 uint32_t  GPIO_PortLatchRead(GPIO_PORT port)
