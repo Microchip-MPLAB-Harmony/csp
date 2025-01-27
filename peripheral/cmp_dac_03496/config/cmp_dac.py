@@ -305,7 +305,7 @@ def interruptControlHelper(symbol, event):
 
     component = symbol.getComponent()
     instNum = component.getSymbolValue(CMP_DAC_INST_NUM)
-    intMode = event["value"]
+    intMode = component.getSymbolByID(DAC_CON__IRQM).getSelectedKey()
 
     handleInterruptControl(instNum, intMode)
 
@@ -357,6 +357,11 @@ def getRegisterDefaultValue(module, registerGroup, register):
 def setDacModeDependency(symbol, event):
 
     symbolID = symbol.getID()
+    component = symbol.getComponent()
+
+    component.setSymbolValue(DAC_SLPCON__HME, False)
+    component.setSymbolValue(DAC_SLPCON__TWME, False)
+    component.setSymbolValue(DAC_SLPCON__SLOPEN, False)
 
     if event["value"] == "Hysteretic-Mode" and symbolID == DAC_SLPCON__HME:
         symbol.setValue(True)
