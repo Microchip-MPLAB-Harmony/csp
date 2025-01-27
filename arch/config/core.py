@@ -115,6 +115,9 @@ def handleMessage(messageID, args):
         else:
             Database.setSymbolValue("core", "SYSTICK_PUBLISH_CAPABILITIES", False)
             Database.setSymbolValue("core", "SYSTICK_BUSY", False)
+            
+    elif (messageID == "CONFIGURATOR_CLOCK_AUTO_CALCULATE_PLL_DIVIDERS"):
+        return handleClockSettingsMessage(messageID,args)        
 
     elif (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
         if Database.getSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID") != "":

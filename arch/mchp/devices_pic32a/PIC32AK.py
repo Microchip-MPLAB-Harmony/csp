@@ -173,8 +173,6 @@ def fuseConfigCb(symbol, event):
         for bitfield_index in range(len(bitfieldNode)):
              bitfieldName = bitfieldNode[bitfield_index].getAttribute('values')
              bitfieldValue = symbol.getComponent().getSymbolValue("CONFIG_"+bitfieldName)
-             if bitfieldValue is None:
-                print("my bit is sad ", bitfieldName)
              if re.match(hexConfigBitPattern, bitfieldName):
                 desc = bitfieldNode[bitfield_index].getAttribute('caption')
                 fuseCodeGenValue += "#pragma config {} = {}            // {}\n".format(bitfieldName, hex(int(bitfieldValue)).rstrip('L'),desc)
@@ -280,7 +278,15 @@ coreFPU.setVisible(False)
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_04449/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_04449/plugin/clockmanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "CLOCK_04449_MANAGER",
+                        {
+                            "plugin_name": "Clock Configuration",
+                            "main_html_path": "csp/plugins/configurators/clock-configurators/clk_04449_configurator/build/index.html",
+                            "componentId": coreComponent.getID()
+                        }
+                        )
+
 
 # load pin manager
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_04928/config/gpio.py")
