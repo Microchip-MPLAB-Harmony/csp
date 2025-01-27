@@ -26,7 +26,7 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
+#include "stdbool.h"
 #include "device.h"
 #include "plib_tmr${TMR_INSTANCE_NUMBER}.h"
 <#if core.CoreSysIntFile == true & TMR_INTERRUPT_MODE == true>
@@ -153,5 +153,14 @@ void TMR${TMR_INSTANCE_NUMBER}_CallbackRegister( TMR_CALLBACK callback_fn, uintp
     /* - Save callback_fn and context in local memory */
     tmr${TMR_INSTANCE_NUMBER}Obj.callback_fn = callback_fn;
     tmr${TMR_INSTANCE_NUMBER}Obj.context = context;
+}
+<#else>
+bool TMR${TMR_INSTANCE_NUMBER}_PeriodHasExpired(void)
+{
+	bool status;
+	status = (_T${TMR_INSTANCE_NUMBER}IF != 0U);
+    _T${TMR_INSTANCE_NUMBER}IF = 0;
+	
+	return status;
 }
 </#if>

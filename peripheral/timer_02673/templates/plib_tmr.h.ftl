@@ -18,7 +18,7 @@
 */
 
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2024 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,7 +38,7 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+*******************************************************************************/ 
 
 #ifndef PLIB_TMR${TMR_INSTANCE_NUMBER}_H
 #define PLIB_TMR${TMR_INSTANCE_NUMBER}_H
@@ -57,123 +57,171 @@
 #endif
 // DOM-IGNORE-END
 
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup  timer
  * @brief    Initializes the TMR module
- * @return   none
+ *
+ * @details  This function initializes the TMR registers based on
+ * the selections made in Configuration Options
+ *
+ * @pre      None
+ *
+ * @param    None
+ *
+ * @return   None
  */
-</#if>
-
 void TMR${TMR_INSTANCE_NUMBER}_Initialize(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup  timer
  * @brief    De-initializes the TMR module
- * @return   none
+ *
+ * @details This function de-initializes the timer registers to POR values
+ *
+ * @pre     None
+ *
+ * @param   None
+ *
+ * @return   None
  */
-</#if>
-
 void TMR${TMR_INSTANCE_NUMBER}_Deinitialize(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
-/**
- * @ingroup  timer
- * @brief    Starts the timer
- * @return   none
- */
-</#if>
 
+/**
+ * @brief    Starts the timer
+ *
+ * @details  This function starts the timer
+ *
+ * @pre      Timer should be initialized properly
+ *
+ * @param    None
+ *
+ * @return   None
+ */
 void TMR${TMR_INSTANCE_NUMBER}_Start(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup  timer
  * @brief    Stops the timer
- * @return   none
+ *
+ * @details  This function stops the timer
+ *
+ * @pre      None
+ *
+ * @param    None
+ *
+ * @return   None
  */
-</#if>
- 
 void TMR${TMR_INSTANCE_NUMBER}_Stop(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup    timer
  * @brief      Sets the timer period count value
+ *
+ * @details    This function sets the timer period count value
+ *
+ * @pre        Timer should be initialized properly
+ *
  * @param[in]  period - number of clock counts
- * @return     none
+ *
+ * @return     None
  */
-</#if>
- 
 void TMR${TMR_INSTANCE_NUMBER}_PeriodSet(uint32_t period);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup    timer
  * @brief      Returns the timer period count value
+ *
+ * @details    This function returns the period count value
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      None
+ *
  * @return     Number of clock counts
  */
-</#if>
- 
 uint32_t TMR${TMR_INSTANCE_NUMBER}_PeriodGet(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup    timer
  * @brief      Returns the timer elasped time value
+ *
+ * @details    This function returns the timer elasped time value
+ *
+ * @pre        Timer should be initialized properly
+ * 
+ * @param      None
+ *
  * @return     Elapsed count value of the timer
  */
-</#if>
- 
 uint32_t TMR${TMR_INSTANCE_NUMBER}_CounterGet(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup    timer
  * @brief      Returns the timer clock frequency
+ *
+ * @details    This function returns the timer clock ffrequency
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      None
+ *
  * @return     Timer clock frequency
  */
-</#if>
-
 uint32_t TMR${TMR_INSTANCE_NUMBER}_FrequencyGet(void);
 <#if TMR_INTERRUPT_MODE == true>
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
+
 /**
- * @ingroup    timer
  * @brief      Enables the timer interrupt
+ *
+ * @details    This function enables the timer interrupt
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      None
+ *
+ * @remarks   None
  */
-</#if>
-
 void TMR${TMR_INSTANCE_NUMBER}_InterruptEnable(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
-/**
- * @ingroup    timer
- * @brief      Disables the timer interrupt
- */
-</#if>
 
-void TMR${TMR_INSTANCE_NUMBER}_InterruptDisable(void);
-<#assign generateDoxygen = true>
-<#if generateDoxygen>
 /**
- * @ingroup    timer
- * @brief      This function allows application to register an event handling 
+ * @brief      Disables the timer interrupt
+ *
+ * @details    This function disables the timer interrupt
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      None
+ *
+ * @remarks    None
+ */
+void TMR${TMR_INSTANCE_NUMBER}_InterruptDisable(void);
+
+/**
+ * @brief      Registers a callback function
+ * @details    This function allows application to register an event handling 
  *             function for the PLIB to call back when external interrupt occurs. 
  *             At any point if application wants to stop the callback, 
  *             it can call this function with "callback" value as NULL.
+ * 
+ * @pre        Timer should be initialized properly
+ *
  * @param[in]  callback  - Pointer to the event handler function implemented by the user
  * @param[in]  context   - The value of parameter will be passed back to the 
  *                         application unchanged, when the eventHandler function is called. 
  *                         It can be used to identify any application specific value.
+ *
+ * @return      None
  */
+void TMR${TMR_INSTANCE_NUMBER}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context );
+<#else>
+/**
+ * @brief      Checks period expiration
+ *
+ * @details    This function returns the status of expiration of period
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      None
+ *
+ * @return     Status of period match
+ */
+bool TMR${TMR_INSTANCE_NUMBER}_PeriodHasExpired(void);
 </#if>
 
-void TMR${TMR_INSTANCE_NUMBER}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context );
-</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
