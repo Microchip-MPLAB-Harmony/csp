@@ -342,22 +342,22 @@ def interruptStatusWarning(symbol, event):
 
     sentOperatingValue = symbol.getComponent().getSymbolValue(SENT_CON1__RCVEN)
     sentInstanceName = symbol.getComponent().getSymbolValue("SENT_INSTANCE_NAME")
+    interruptMode = symbol.getComponent().getSymbolValue(INTERRUPT_MODE)
 
-    if sentOperatingValue == TRANSMITTER:
+    if sentOperatingValue == TRANSMITTER and interruptMode:
         transmitterInterrupt = next((intIndex for key, intIndex in intVectorDataDictionary.items() if key == sentInstanceName + "Interrupt"), None)
         symbol.setVisible(not bool(Database.getSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(transmitterInterrupt))))
-    elif sentOperatingValue == RECEIVER:
+    elif sentOperatingValue == RECEIVER and interruptMode:
         recieveInterrupt = next((intIndex for key, intIndex in intVectorDataDictionary.items() if key == sentInstanceName + "Interrupt" or key == sentInstanceName + "EInterrupt"), None)
         symbol.setVisible(not bool(Database.getSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(recieveInterrupt))))
         
 def updatePattern(symbol, event):
     sentInstanceName = symbol.getComponent().getSymbolValue("SENT_INSTANCE_NAME")
     sentOperatingValue = symbol.getComponent().getSymbolValue(SENT_CON1__RCVEN)
+    interruptMode = symbol.getComponent().getSymbolValue(INTERRUPT_MODE)
 
     pattern = r"^" + sentInstanceName + r"(EInterrupt|Interrupt)"
     symbol.setValue(pattern)
-
-    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
     for interrupt in interruptsChildrenList:
         vIndex = int(interrupt.getAttribute("index"))
@@ -366,27 +366,23 @@ def updatePattern(symbol, event):
 
         if re.search(currentPattern, vName):
             intVectorDataDictionary[vName] = vIndex
-    
-    for intIndex in intVectorDataDictionary.values():
 
+    for intIndex in intVectorDataDictionary.values():
         Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(intIndex), False)
         Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_HANDLER_LOCK".format(intIndex), False)
 
     for key, intIndex in intVectorDataDictionary.items():
+        if interruptMode:
+            if (sentOperatingValue == RECEIVER and (key == sentInstanceName + "Interrupt" or key == sentInstanceName + "EInterrupt")) or \
+            (sentOperatingValue == TRANSMITTER and key == sentInstanceName + "Interrupt"):
+                Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(intIndex), True)
+                Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_HANDLER_LOCK".format(intIndex), True)
 
-        if sentOperatingValue == RECEIVER and (key == sentInstanceName + "Interrupt" or  key == sentInstanceName + "EInterrupt"):
-              
-            Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(intIndex), True)
-            Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_HANDLER_LOCK".format(intIndex), True)
-
-        elif sentOperatingValue == TRANSMITTER and (key == sentInstanceName + "Interrupt"):
-            
-            Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(intIndex), True)
-            Database.setSymbolValue(CORE_COMPONENT, "INTC_{}_HANDLER_LOCK".format(intIndex), True)
   
 def instantiateComponent(sentComponent):
 
-    global sentInstance
+    global sentInstance, intVectorDataDictionary, interruptsChildrenList
+    intVectorDataDictionary = {}
 
     sentInstance = sentComponent.createStringSymbol(SENT_INSTANCE, None)
     sentInstance.setVisible(False)
@@ -520,7 +516,6 @@ def instantiateComponent(sentComponent):
 
     pattern = r"^" + sentInstanceName.getValue() + r"(Interrupt)"
     interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
-    intVectorDataDictionary = {}
 
     for interrupt in interruptsChildrenList:
         vIndex = int(interrupt.getAttribute("index"))
@@ -535,7 +530,7 @@ def instantiateComponent(sentComponent):
     patternSymbol = sentComponent.createStringSymbol("PATTERN_SYMBOL", None)
     patternSymbol.setLabel("Patterns for Interrupts")
     patternSymbol.setVisible(False)
-    patternSymbol.setDependencies(updatePattern, [SENT_CON1__RCVEN])
+    patternSymbol.setDependencies(updatePattern, [SENT_CON1__RCVEN, INTERRUPT_MODE])
 
     sentComment = sentComponent.createCommentSymbol("ENABLE_COMMENT", messageSettings)
     sentComment.setVisible(any(not bool(Database.getSymbolValue(CORE_COMPONENT, "INTC_{}_ENABLE".format(intIndex))) for intIndex in intVectorDataDictionary.values()))
