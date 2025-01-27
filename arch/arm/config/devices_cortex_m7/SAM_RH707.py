@@ -139,7 +139,16 @@ cacheAlign.setDefaultValue(32)
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_rh707/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_sam_rh707/plugin/clk_sam_rh707.jar")
+# coreComponent.addPlugin("../peripheral/clk_sam_rh707/plugin/clk_sam_rh707.jar")
+coreComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "CLK_UI_MANAGER_ID_CLK_SAMRH707",
+        {
+            "plugin_name": "Clock Configuration",
+            "main_html_path": "csp/plugins/configurators/clock-configurators/clk_sam_rh707_configurator/build/index.html",
+            "componentId": coreComponent.getID()
+        }
+    )
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")

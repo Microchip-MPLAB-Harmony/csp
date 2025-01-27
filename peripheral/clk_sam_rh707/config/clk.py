@@ -900,6 +900,8 @@ def __prog_clock_menu(clk_comp, clk_menu):
 def __peri_clock_menu(clk_comp, clk_menu):
     pcr_menu = clk_comp.createMenuSymbol("CLK_PCR_MENU", clk_menu)
     pcr_menu.setLabel("Peripheral Clock Configuration")
+    
+    gclkIOConfiguration_UI = []
 
     # [INSTANCE]_CLOCK_ENABLE
     # [INSTANCE]_CLOCK_FREQUENCY
@@ -929,6 +931,8 @@ def __peri_clock_menu(clk_comp, clk_menu):
 
                     periph_menu = clk_comp.createMenuSymbol("CLK_"+clock_id_name+"_MENU", pcr_menu)
                     periph_menu.setLabel(clock_id_name)
+                    
+                    gclkIOConfiguration_UI.append(clock_id_name)
 
                     # Create peripheral clock enable symbol [instance]_CLOCK_ENABLE
                     periph_en = clk_comp.createBooleanSymbol(clock_id_name+"_CLOCK_ENABLE", periph_menu)
@@ -943,6 +947,11 @@ def __peri_clock_menu(clk_comp, clk_menu):
 
                     # Create peripheral clock frequency symbol [instance]_CLOCK_FREQUENCY
                     sym_constructor(clock_id_name, clk_comp, periph_menu)
+    #########################################################################
+    #Combo symbol for UI to identify gclk IO configuration */
+    gclk_io_clk_ui_list_sym = clk_comp.createComboSymbol("GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
+    gclk_io_clk_ui_list_sym.setVisible(False)
+    #####################################################################
 
 
 if __name__ == "__main__":
