@@ -1384,6 +1384,7 @@ for peripheral in atdfContent.iter("module"):
 
 
 channelMap = {}
+gclkIOConfiguration_UI = []
 for key in indexSymbolMap.keys():
     index=key.split("GCLK_ID_")[1]
     channelMap[int(index)]=key
@@ -1392,6 +1393,8 @@ for index in sorted(channelMap.iterkeys()):
     key=channelMap[index]
     name = indexSymbolMap.get(key)
     name = " ".join(name)
+    
+    gclkIOConfiguration_UI.append(key)
 
     #GCLK Peripheral Channel Enable
     clkSymPeripheral = coreComponent.createBooleanSymbol(key + "_CHEN", gclkPeriChannel_menu)
@@ -1473,6 +1476,12 @@ for name in peripheralList:
     clkSymExtPeripheralFreq.setReadOnly(True)
 
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
+    
+#########################################################################
+#Combo symbol for UI to identify gclk IO configuration */
+gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
+gclk_io_clk_ui_list_sym.setVisible(False)
+#####################################################################    
 
 clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
 clockTrigger.setVisible(False)
@@ -1817,4 +1826,13 @@ clockSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 clockSystemDefFile.setSourcePath("../peripheral/clk_sam_l22/templates/system/definitions.h.ftl")
 clockSystemDefFile.setMarkup(True)
 
-coreComponent.addPlugin("../peripheral/clk_sam_l22/plugin/clk_sam_l22.jar")
+# coreComponent.addPlugin("../peripheral/clk_sam_l22/plugin/clk_sam_l22.jar")
+coreComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "CLK_UI_MANAGER_ID_CLK_SAM_L22",
+        {
+            "plugin_name": "Clock Configuration",
+            "main_html_path": "csp/plugins/configurators/clock-configurators/clk_sam_l22_configurator/build/index.html",
+            "componentId": coreComponent.getID()
+        }
+    )
