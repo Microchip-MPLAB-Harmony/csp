@@ -140,14 +140,16 @@ cacheAlign.setDefaultValue(32)
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_rh71/config/clk.py")
-# coreComponent.addPlugin("../peripheral/clk_sam_rh71/plugin/clk_sam_rh71.jar")
+coreComponent.addPlugin("../peripheral/clk_sam_rh71/plugin/clk_sam_rh71.jar")
 coreComponent.addPlugin(
         "../../harmony-services/plugins/generic_plugin.jar",
         "CLK_UI_MANAGER_ID_CLK_SAMRH71",
         {
-            "plugin_name": "Clock Configuration",
+            "plugin_name": "Clock Configuration New",
             "main_html_path": "csp/plugins/configurators/clock-configurators/clk_sam_rh71_configurator/build/index.html",
-            "componentId": coreComponent.getID()
+            "componentId": coreComponent.getID(),
+            "local_server":"true",
+            "debug":"true"
         }
     )
 

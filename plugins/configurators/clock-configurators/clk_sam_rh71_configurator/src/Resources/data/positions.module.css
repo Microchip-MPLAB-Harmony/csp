@@ -1,0 +1,441 @@
+.main-block-diagram {
+    position: absolute;
+    width: 1417px;
+    height: 1000px;
+    left: 0;
+    top: 0
+    }
+.slck_xtralsel_en0 {
+    position: absolute;
+    left: 441px;
+    top: 71px
+    }
+.slck_xtralsel_en1 {
+    position: absolute;
+    left: 442px;
+    top: 123px
+    }
+.slowClkFrq {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 425px;
+    top: 215px
+    }
+.slck_oscbypass_en {
+    position: absolute;
+    left: 352px;
+    top: 179px
+    }
+.slck_ext_frq {
+    position: absolute;
+    width: 80px;
+    left: 152px;
+    top: 94px
+    }
+.clk_main_moscrcf {
+    position: absolute;
+    width: 100px;
+    left: 98px;
+    top: 263px
+    }
+.clk_moscxt_freq {
+    position: absolute;
+    width: 120px;
+    top: 297px;
+    left: 141px
+    }
+.clk_moscrcen {
+    position: absolute;
+    left: 275px;
+    top: 239px
+    }
+.clk_moscxten {
+    position: absolute;
+    left: 276px;
+    top: 329px
+    }
+.clk_moscxtby {
+    position: absolute;
+    top: 403px;
+    left: 362px
+    }
+.clk_main_moscsel0 {
+    position: absolute;
+    top: 268px;
+    left: 454px
+    }
+.clk_main_moscsel1 {
+    position: absolute;
+    top: 338px;
+    left: 454px
+    }
+.mainClkFrq {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 483px;
+    top: 333px
+    }
+.clk_rc2ck_oscrcf {
+    position: absolute;
+    width: 100px;
+    left: 322px;
+    top: 540px
+    }
+.monitoringClkFrq {
+    position: absolute;
+    left: 457px;
+    top: 502px;
+    width: 100px;
+    height: 20px
+    }
+.clk_rc2ck_en {
+    position: absolute;
+    left: 302px;
+    top: 475px
+    }
+.clk_plla_mul {
+    position: absolute;
+    width: 50px;
+    top: 732px;
+    left: 343px
+    }
+.clk_plla_div {
+    position: absolute;
+    width: 50px;
+    left: 447px;
+    top: 732px
+    }
+.pllaMulLbl {
+    position: absolute;
+    height: 20px;
+    left: 363px;
+    top: 693px
+    }
+.pllaDivLbl {
+    position: absolute;
+    left: 463px;
+    height: 20px;
+    top: 693px
+    }
+.pllaClkFrq {
+    position: absolute;
+    left: 514px;
+    top: 705px;
+    width: 100px;
+    height: 20px
+    }
+.pllbClkFrq {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 516px;
+    top: 866px
+    }
+.clk_pllb_src {
+    position: absolute;
+    width: 200px;
+    left: 258px;
+    top: 923px
+    }
+.pllbMulLbl {
+    position: absolute;
+    left: 374px;
+    height: 20px;
+    top: 854px
+    }
+.pllbDivLbl {
+    position: absolute;
+    left: 463px;
+    height: 20px;
+    top: 853px
+    }
+.clk_pllb_mul {
+    position: absolute;
+    width: 80px;
+    left: 355px;
+    top: 890px
+    }
+.clk_pllb_div {
+    position: absolute;
+    width: 80px;
+    left: 449px;
+    top: 889px
+    }
+.clk_mck_css0 {
+    position: absolute;
+    left: 823.667px;
+    top: 57px
+    }
+.clk_mck_css1 {
+    position: absolute;
+    left: 823px;
+    top: 103px
+    }
+.clk_mck_css2 {
+    position: absolute;
+    left: 823px;
+    top: 143px
+    }
+.masterClkSlowLabeL {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 66px;
+    left: 737px
+    }
+.masterClkMainLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 110px;
+    left: 737px
+    }
+.masterClkPllaLabel {
+    position: absolute;
+    top: 153px;
+    width: 100px;
+    height: 20px;
+    left: 736px
+    }
+.processorPresLabel {
+    position: absolute;
+    left: 888.667px;
+    top: 91px;
+    height: 20px
+    }
+.clk_mck_mdiv_lbl {
+    position: absolute;
+    left: 998.667px;
+    top: 149px;
+    height: 20px
+    }
+.clk_mck_pres {
+    position: absolute;
+    width: 100px;
+    height: 24px;
+    left: 841px;
+    top: 175px
+    }
+.clk_mck_mdiv {
+    position: absolute;
+    width: 100px;
+    height: 24px;
+    left: 951px;
+    top: 198px
+    }
+.processClkFrq {
+    position: absolute;
+    top: 54px;
+    width: 100px;
+    height: 20px;
+    left: 1112px
+    }
+.ddfClkFrq {
+    position: absolute;
+    top: 105px;
+    width: 100px;
+    height: 20px;
+    left: 1110px
+    }
+.masterClkFrq {
+    position: absolute;
+    left: 1112px;
+    top: 161px;
+    width: 100px;
+    height: 20px
+    }
+.gclkTabbedPane {
+    display: block;
+    position: absolute;
+    width: 60px;
+    top: 233px;
+    left: 1035px;
+    height: 100px
+    }
+.clk_pck_css0 {
+    position: absolute;
+    left: 843px;
+    top: 286px
+    }
+.clk_pck_css1 {
+    position: absolute;
+    top: 322px;
+    left: 844px
+    }
+.clk_pck_css2 {
+    position: absolute;
+    left: 844px;
+    top: 355px
+    }
+.clk_pck_css3 {
+    position: absolute;
+    top: 386px;
+    left: 843px
+    }
+.clk_pck_css4 {
+    position: absolute;
+    left: 844px;
+    top: 416px
+    }
+.programClkSlowLbl {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 739px;
+    top: 296px
+    }
+.programClkMainLbl {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 332px;
+    left: 740px
+    }
+.programClkPllaLbl {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 740px;
+    top: 364px
+    }
+.programClkPllbLbl {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 739px;
+    top: 395px
+    }
+.programClkMckLbl {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 744px;
+    top: 422px
+    }
+.clk_pck_pres {
+    position: absolute;
+    width: 50px;
+    height: 20px;
+    left: 914px;
+    top: 395px
+    }
+.clk_pck_pres_lbl {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 931px;
+    top: 342px
+    }
+.clk_pck_en {
+    position: absolute;
+    left: 990px;
+    top: 282px
+    }
+.progrramblrClkFrq {
+    position: absolute;
+    left: 1040px;
+    top: 353.333px;
+    width: 100px;
+    height: 20px
+    }
+.clockConfigbtn {
+    position: absolute;
+    width: 150px;
+    left: 877px;
+    top: 558px
+    }
+.clk_moscxtst {
+    position: absolute;
+    left: 48px;
+    top: 445px
+    }
+.inputNumberClass {
+    position: absolute;
+    width: 50px;
+    left: 131px;
+    top: 441px
+    }
+.outputClass {
+    position: absolute;
+    width: 300px;
+    left: 208px;
+    top: 447px
+    }
+.pllaSet {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: 757px;
+    left: 579px
+    }
+.pllaReset {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 608px;
+    top: 757px
+    }
+.pllbReset {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 611px;
+    top: 933px
+    }
+.pllbSet {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 579px;
+    top: 933px
+    }
+.rc2ck {
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 573px;
+    width: 100px;
+    left: 739px
+    }
+.mdslk {
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 614px;
+    width: 100px;
+    left: 737px
+    }
+.mainck {
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 644px;
+    width: 100px;
+    left: 738px
+    }
+.pllack {
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 679px;
+    width: 100px;
+    left: 739px
+    }
+.pllbck {
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 713px;
+    width: 100px;
+    left: 740px
+    }
+.mck {
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 752px;
+    width: 100px;
+    left: 738px
+    }
