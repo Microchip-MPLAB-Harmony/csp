@@ -1358,6 +1358,7 @@ for peripheral in atdfContent.iter("module"):
 
 
 channelMap = {}
+gclkIOConfiguration_UI = []
 for key in indexSymbolMap.keys():
     index=key.split("GCLK_ID_")[1]
     channelMap[int(index)]=key
@@ -1366,6 +1367,8 @@ for index in sorted(channelMap.iterkeys()):
     key=channelMap[index]
     name = indexSymbolMap.get(key)
     name = " ".join(name)
+    
+    gclkIOConfiguration_UI.append(key)
 
     #GCLK Peripheral Channel Enable
     clkSymPeripheral = coreComponent.createBooleanSymbol(key + "_CHEN", gclkPeriChannel_menu)
@@ -1446,6 +1449,12 @@ for name in peripheralList:
     clkSymExtPeripheralFreq.setReadOnly(True)
 
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
+    
+#########################################################################
+#Combo symbol for UI to identify gclk IO configuration */
+gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
+gclk_io_clk_ui_list_sym.setVisible(False)
+#####################################################################    
 
 clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
 clockTrigger.setVisible(False)

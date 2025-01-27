@@ -1,0 +1,25 @@
+html {
+  font-family: 'Calibri';
+  font-size: 12px;
+  position: relative;
+}
+body {
+  margin: 0px;
+}
+input {
+  min-width: 40px;
+}
+.p-radiobutton .p-radiobutton-box {
+  width: 20px;
+  height: 20px;
+}
+
+/* input[type='radio' i] {
+  background-color: initial;
+  cursor: default;
+  appearance: auto;
+  box-sizing: border-box;
+  margin: 3px 3px 0px 5px;
+  padding: initial;
+  border: initial;
+} */
