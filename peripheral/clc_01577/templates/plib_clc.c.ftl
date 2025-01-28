@@ -50,6 +50,7 @@
 
 #include "device.h"
 #include "plib_${CLC_INSTANCE_NAME?lower_case}.h"
+#include <stddef.h>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -57,7 +58,16 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if CLC_INTERRUPT_TYPE != "Disabled">
+  <#if core.CoreArchitecture?contains("PIC32A") || core.CoreArchitecture?contains("dsPIC33A")>
+    <#if CLC_INTERRUPT_TYPE == "Rising Edge" || CLC_INTERRUPT_TYPE == "Both Edge">
+    <#lt>static volatile CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}PEdgeCallbackObject;
+    </#if>
+    <#if CLC_INTERRUPT_TYPE == "Falling Edge" || CLC_INTERRUPT_TYPE == "Both Edge">
+    <#lt>static volatile CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}NEdgeCallbackObject;
+    </#if>
+  <#else>
 static volatile CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObject;
+  </#if>
 </#if>
 
 // *****************************************************************************
@@ -95,6 +105,9 @@ static volatile CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObjec
   <#assign CLCxCON += "_" + CLC_INSTANCE_NAME +  "CON_INTP_MASK,">
 <#elseif CLC_INTERRUPT_TYPE == "Falling Edge">
   <#assign CLCxCON += "_" + CLC_INSTANCE_NAME +  "CON_INTN_MASK,">
+<#elseif CLC_INTERRUPT_TYPE == "Both Edge">
+  <#assign CLCxCON += "_" + CLC_INSTANCE_NAME +  "CON_INTP_MASK,">
+  <#assign CLCxCON += "_" + CLC_INSTANCE_NAME +  "CON_INTN_MASK,">
 </#if>
 
 <#if CLC_PORT_ENABLE>
@@ -106,6 +119,9 @@ static volatile CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObjec
 </#if>
 
 <#assign CLC_IFS_REG = "IFS" + CLC_IRQ_REG_INDEX>
+<#if CLC_IRQ_REG_INDEX1??>
+<#assign CLC_IFS_REG1 = "IFS" + CLC_IRQ_REG_INDEX1>
+</#if>
 </#compress>
 void ${CLC_INSTANCE_NAME}_Initialize( void )
 {
@@ -154,6 +170,41 @@ void ${CLC_INSTANCE_NAME}_Enable(bool enable)
 
 <#if CLC_INTERRUPT_TYPE != "Disabled">
 
+<#if core.CoreArchitecture?contains("PIC32A") || core.CoreArchitecture?contains("dsPIC33A")>
+<#if CLC_INTERRUPT_TYPE == "Rising Edge" || CLC_INTERRUPT_TYPE == "Both Edge">
+void ${CLC_INSTANCE_NAME}_PEdgeRegisterCallback(CLC_CALLBACK callback, uintptr_t context)
+{
+    ${CLC_INSTANCE_NAME?lower_case}PEdgeCallbackObject.callback = callback;
+    ${CLC_INSTANCE_NAME?lower_case}PEdgeCallbackObject.context = context;
+}
+
+void  __attribute__((used)) ${CLC_INSTANCE_NAME}P_InterruptHandler(void)
+{
+    ${CLC_IFS_REG} &= ~_${CLC_IFS_REG}_${CLC_INSTANCE_NAME}PIF_MASK;
+    if((${CLC_INSTANCE_NAME?lower_case}PEdgeCallbackObject.callback != NULL))
+    {
+        ${CLC_INSTANCE_NAME?lower_case}PEdgeCallbackObject.callback(${CLC_INSTANCE_NAME?lower_case}PEdgeCallbackObject.context);
+    }
+}
+</#if>
+
+<#if CLC_INTERRUPT_TYPE == "Falling Edge" || CLC_INTERRUPT_TYPE == "Both Edge">
+void ${CLC_INSTANCE_NAME}_NEdgeRegisterCallback(CLC_CALLBACK callback, uintptr_t context)
+{
+    ${CLC_INSTANCE_NAME?lower_case}NEdgeCallbackObject.callback = callback;
+    ${CLC_INSTANCE_NAME?lower_case}NEdgeCallbackObject.context = context;
+}
+
+void  __attribute__((used)) ${CLC_INSTANCE_NAME}N_InterruptHandler(void)
+{
+    ${CLC_IFS_REG1} &= ~_${CLC_IFS_REG1}_${CLC_INSTANCE_NAME}NIF_MASK;
+    if((${CLC_INSTANCE_NAME?lower_case}NEdgeCallbackObject.callback != NULL))
+    {
+        ${CLC_INSTANCE_NAME?lower_case}NEdgeCallbackObject.callback(${CLC_INSTANCE_NAME?lower_case}NEdgeCallbackObject.context);
+    }
+}
+</#if>
+<#else>
 void ${CLC_INSTANCE_NAME}_RegisterCallback(CLC_CALLBACK callback, uintptr_t context)
 {
     ${CLC_INSTANCE_NAME?lower_case}CallbackObject.callback = callback;
@@ -168,4 +219,5 @@ void  __attribute__((used)) ${CLC_INSTANCE_NAME}_InterruptHandler(void)
         ${CLC_INSTANCE_NAME?lower_case}CallbackObject.callback(${CLC_INSTANCE_NAME?lower_case}CallbackObject.context);
     }
 }
+</#if>
 </#if>

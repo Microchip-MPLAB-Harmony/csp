@@ -111,7 +111,58 @@ void ${CLC_INSTANCE_NAME}_Initialize( void );
 void ${CLC_INSTANCE_NAME}_Enable(bool enable);
 <#if CLC_INTERRUPT_TYPE != "Disabled">
 
+<#if core.CoreArchitecture?contains("PIC32A") || core.CoreArchitecture?contains("dsPIC33A")>
+<#if CLC_INTERRUPT_TYPE == "Rising Edge" || CLC_INTERRUPT_TYPE == "Both Edge">
 
+// *****************************************************************************
+/* Function:
+    void ${CLC_INSTANCE_NAME}_PEdgeRegisterCallback(CLC_CALLBACK callback, uintptr_t context);
+
+  Summary:
+    Register callback for ${CLC_INSTANCE_NAME} positive edge interrupt.
+
+  Description:
+      When the  ${CLC_INSTANCE_NAME} positive edge interrupt occurs the given callback will be called with the
+      given context.
+
+  Precondition:
+    None.
+
+  Parameters:
+    callback    - Callback function
+    context     - paramter to callback function
+
+  Returns:
+    None.
+*/
+void ${CLC_INSTANCE_NAME}_PEdgeRegisterCallback(CLC_CALLBACK callback, uintptr_t context);
+</#if>
+<#if CLC_INTERRUPT_TYPE == "Falling Edge" || CLC_INTERRUPT_TYPE == "Both Edge">
+
+// *****************************************************************************
+/* Function:
+    void ${CLC_INSTANCE_NAME}_NEdgeRegisterCallback(CLC_CALLBACK callback, uintptr_t context);
+
+  Summary:
+    Register callback for ${CLC_INSTANCE_NAME} negative edge interrupt.
+
+  Description:
+      When the  ${CLC_INSTANCE_NAME} negative edge interrupt occurs the given callback will be called with the
+      given context.
+
+  Precondition:
+    None.
+
+  Parameters:
+    callback    - Callback function
+    context     - paramter to callback function
+
+  Returns:
+    None.
+*/
+void ${CLC_INSTANCE_NAME}_NEdgeRegisterCallback(CLC_CALLBACK callback, uintptr_t context);
+</#if>
+<#else>
 // *****************************************************************************
 /* Function:
     void ${CLC_INSTANCE_NAME}_CallbackRegister(CLC_CALLBACK callback, uintptr_t context);
@@ -134,6 +185,7 @@ void ${CLC_INSTANCE_NAME}_Enable(bool enable);
     None.
 */
 void ${CLC_INSTANCE_NAME}_RegisterCallback(CLC_CALLBACK callback, uintptr_t context);
+</#if>
 </#if>
 
 // DOM-IGNORE-BEGIN
