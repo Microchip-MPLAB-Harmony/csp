@@ -28,8 +28,25 @@ def instantiateComponent(crcComponent):
     crcInstanceName.setVisible(False)
     crcInstanceName.setDefaultValue(crcComponent.getID().upper())
 
-    # Clock enable
-    Database.setSymbolValue("core", crcInstanceName.getValue() + "_CLOCK_ENABLE", True)
+    if (Database.getSymbolValue("core", "CoreArchitecture") != "PIC32A" and
+        Database.getSymbolValue("core", "CoreArchitecture") != "dsPIC33A"):
+        # Clock enable
+        Database.setSymbolValue("core", crcInstanceName.getValue() + "_CLOCK_ENABLE", True)
+        intName = "CRC"
+    else:
+        intName = "CRCInterrupt"
+
+    vector_index = 0
+    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if intName == name:
+            vector_index = int(param.getAttribute("index"))
+            break
+
+    crcCrcifIfsReg = crcComponent.createStringSymbol("CRC_IFS_REG", None)
+    crcCrcifIfsReg.setVisible(False)
+    crcCrcifIfsReg.setDefaultValue("IFS" + str(int(vector_index / 32)))
 
 ################################################################################
 ########                      Code Generation                      #############

@@ -87,7 +87,7 @@ static uint32_t ${CRC_INSTANCE_NAME}_BitReverse( uint32_t num, uint32_t bits)
 
 void ${CRC_INSTANCE_NAME}_CRCSetup(CRC_SETUP CRCSetup)
 {
-	uint8_t temp = (gCRCSetup.polynomial_length - 1U);
+    uint8_t temp = (gCRCSetup.polynomial_length - 1U);
     gCRCSetup.reverse_crc_input     = CRCSetup.reverse_crc_input;
     gCRCSetup.polynomial_length     = CRCSetup.polynomial_length;
     gCRCSetup.polynomial            = CRCSetup.polynomial;
@@ -140,7 +140,7 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
     CRCWDAT = seed;
 
     /* Clear the interrupt flag */
-    IFS0CLR = _IFS0_CRCIF_MASK;
+    ${CRC_IFS_REG} &= ~_${CRC_IFS_REG}_CRCIF_MASK;
 
     /* Start CRC Calculation */
     CRCCONbits.CRCGO = 1;
@@ -163,7 +163,7 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
     /* Suspend CRC Calculation and Clear interrupt flag */
     CRCCONbits.CRCGO = 0;
 
-    IFS0CLR = _IFS0_CRCIF_MASK;
+    ${CRC_IFS_REG} &= ~_${CRC_IFS_REG}_CRCIF_MASK;
 
     /* Write the last Data into FIFO for completing the CRC Calculation */
     *((volatile uint8_t *)&CRCDAT) = *buffer_8;
@@ -172,7 +172,7 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
     CRCCONbits.CRCGO = 1;
 
 
-    while(IFS0bits.CRCIF == 0U)
+    while(${CRC_IFS_REG}bits.CRCIF == 0U)
     {
         /* Wait until CRC Calculation is completed */
     }
