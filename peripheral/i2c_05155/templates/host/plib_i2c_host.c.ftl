@@ -554,7 +554,7 @@ bool ${moduleName}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq 
         srcClkFreq = 100000000UL;
     }
     
-    fBaudValue = (((1.0f/(2.0f * i2cClkSpeed))-0.0000002f) * srcClkFreq) - 3;
+    fBaudValue = (float)((((1.0f / (2.0f * (float)i2cClkSpeed)) - 0.0000002f) * (float)srcClkFreq) - 3.0f);
     baudValue = (uint32_t)fBaudValue;
 
     /* I2CxBRG value cannot be from 0 to 3 or more than the size of the baud rate register */
