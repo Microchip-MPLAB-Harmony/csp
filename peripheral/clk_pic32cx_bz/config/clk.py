@@ -214,6 +214,7 @@ pmdDict_bz6 =  {
         "AC":["1","6"],
         "ADCHS":["1","7","8", "9", "10"], # ADC has multiple PMD bits
         #"CVD":["1","9"], #CVD is part of ADCHS itself
+        "RTC":["1", "16"],
         "QSPI":["1","29"],
 
         "REFO1":["2","28"],
@@ -236,7 +237,7 @@ pmdDict_bz6 =  {
         "TC0":["3","8"],
         "TC1":["3","9"],
         "TC2":["3","10"],
-        "TC3":["3","10"],
+        "TC3":["3","11"],
         "TC4":["3","12"],
         "TC5":["3","13"],
         "TC6":["3","14"],
@@ -274,6 +275,17 @@ def updateMaxFreq(symbol, event):
         symbol.setValue(250000000, 2)
 
 global _get_bitfield_names
+
+def find_set_bit_position(n):
+    """
+    Returns the zero-based position of the single set bit in a number that is a power of 2.
+
+    :param n: An integer that is a power of 2.
+    :return: Zero-based position of the set bit.
+    """
+    if n <= 0 or (n & (n - 1)) != 0:
+        print ("The number must be a positive power of 2.")
+    return n.bit_length()
 
 def _get_bitfield_names(node, outputList):
     '''
@@ -2566,20 +2578,58 @@ if __name__ == "__main__":
     atdfContent = ElementTree.fromstring(atdfFile.read())
 
     maxGCLKId = 0
-    # parse atdf xml file to get instance name
-    # for the peripheral which has gclk id
-    for peripheral in atdfContent.iter("module"):
-        for instance in peripheral.iter("instance"):
-            for param in instance.iter("param"):
-                if "GCLK_ID" in param.attrib["name"]:
 
-                    indexID = param.attrib["value"]
-                    symbolValue = instance.attrib["name"] + param.attrib["name"].split("GCLK_ID")[1]
-                    symbolId = "GCLK_ID_" + str(indexID)
-                    indexSymbolMap[symbolId].append(symbolValue)
 
-                    if maxGCLKId < int(indexID):
-                        maxGCLKId = int(indexID)
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ6":
+        # Now update the indexSymbolMap dictionary values with CFGPCLKGENx bit masks. Must needed for PIC32CX-BZ6 devices.
+        for reg_idx in range (1,8):
+            node_str = "/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group@[name=\"CFG\"]/register@[name=\"CFGPCLKGEN{0}\"]".format(reg_idx)
+            CFGPCLKGENx_node = ATDF.getNode(node_str)
+            if CFGPCLKGENx_node != None:
+                CFGPCLKGENx_node_values = CFGPCLKGENx_node.getChildren()
+                for id in range(len(CFGPCLKGENx_node_values)):
+                    bitfield_name = CFGPCLKGENx_node_values[id].getAttribute("name")
+                    bitfield_mask = CFGPCLKGENx_node_values[id].getAttribute("mask")
+                    if bitfield_name.endswith("CD"):
+                        bitfield_name = bitfield_name[:-len("CD")]
+                        if bitfield_name.endswith("_"):
+                            bitfield_name = bitfield_name[:-1]
+                        for periph_x in bitfield_name.split("__"):
+                            bitfield_name_lst = periph_x.split("_")
+                            val = find_set_bit_position(int(bitfield_mask, 0))
+                            val = ((reg_idx - 1) * 8) + ((val/4) - 1)
+                            gclk_id = "GCLK_ID_" + str(val)
+                            if gclk_id not in indexSymbolMap:
+                                indexSymbolMap[gclk_id] = list()
+                            periph = bitfield_name_lst.pop(0)
+                            if bitfield_name_lst:
+                                for inst in bitfield_name_lst:
+                                    periph_name = periph + inst
+                                    if periph in ["EVSYS", "FREQM"]:
+                                        periph_name = periph + "_" + inst
+                                    elif periph in ["SERCOM"]:
+                                        periph_name = periph + inst + "_CORE"
+                                    indexSymbolMap[gclk_id].append(periph_name)
+                            else:
+                                indexSymbolMap[gclk_id].append(periph)
+
+                            if maxGCLKId < val:
+                                maxGCLKId = val
+    else:
+        # parse atdf xml file to get instance name
+        # for the peripheral which has gclk id
+        for peripheral in atdfContent.iter("module"):
+            for instance in peripheral.iter("instance"):
+                for param in instance.iter("param"):
+                    if "GCLK_ID" in param.attrib["name"]:
+
+                        indexID = param.attrib["value"]
+                        symbolValue = instance.attrib["name"] + param.attrib["name"].split("GCLK_ID")[1]
+                        symbolId = "GCLK_ID_" + str(indexID)
+                        indexSymbolMap[symbolId].append(symbolValue)
+
+                        if maxGCLKId < int(indexID):
+                            maxGCLKId = int(indexID)
 
     PeriGenRegCount = maxGCLKId/8 + 1
     # for FTL
@@ -2656,7 +2706,6 @@ if __name__ == "__main__":
         gclkSym_CFGPCLKGENx_REG.setDefaultValue(0x00000000)
 
     gclkSym_CFGPCLKGENx_REG.setDependencies(setCFGPCLKGENx_Reg, Gclk_Channel_CFGPCLKGEN_list)
-
 
     peripheralList = []
     for value in indexSymbolMap.values():
