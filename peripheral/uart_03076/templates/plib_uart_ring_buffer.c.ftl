@@ -1,21 +1,45 @@
 <#assign uconModeOptions = ["8_BIT_NONE","7_BIT","8_BIT_ODD","8_BIT_EVEN"]>
 <#assign uconStpOptions = ["1_SENT_1_RECEIVE","1_5_SENT_1_5_RECEIVE","2_SENT_2_RECEIVE","2_SENT_1_RECEIVE"]>
 <#assign uconClkselOptions = ["UPB_CLOCK","CLOCK_GEN_"+clkSrcGenNumber]>
-/**
- * ${moduleName} Generated PLIB Source File
- * 
- * @file      plib_${moduleName?lower_case}.c
- *            
- * @ingroup   uart_plib
- *            
- * @brief     This is the generated plib source file for the ${moduleName}.
- *
- * @skipline  Harmony Chip support Package Version  {core.libVersion}
- *            
- * @skipline  Device : {core.deviceName}
-*/
-
-//{core.disclaimer}
+/*******************************************************************************
+  ${moduleName?lower_case} PLIB
+ 
+  Company:
+    Microchip Technology Inc.
+ 
+  File Name:
+    plib_${moduleName?lower_case}.c
+ 
+  Summary:
+    ${moduleName?lower_case} PLIB Source File
+ 
+  Description:
+    None
+ 
+*******************************************************************************/
+ 
+/*******************************************************************************
+* Copyright (C) 2024 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*******************************************************************************/
 
 // Section: Included Files
 

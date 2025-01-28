@@ -1,18 +1,43 @@
-/**
- * UART Generated PLIB Types Header File
- * 
- * @file      plib_uart_common.h
- *            
- * @defgroup  uart_plib uart_plib_doc
- *            
- * @brief     Universal Asynchronous Receiver Transmitter PLIB using dsPIC MCUs
- *
- * @skipline  Harmony Chip support Package Version  {core.libVersion}
- *            
- * @skipline  Device : {core.deviceName}
-*/
-
-//{core.disclaimer}
+/*******************************************************************************
+  ${moduleName?lower_case} PLIB
+ 
+  Company:
+    Microchip Technology Inc.
+ 
+  File Name:
+    plib_${moduleName?lower_case}_common.h
+ 
+  Summary:
+    UART Common Header File
+ 
+  Description:
+    This file has prototype of all the interfaces which are common for all the
+    UART peripherals.
+ 
+*******************************************************************************/
+ 
+/*******************************************************************************
+* Copyright (C) 2024 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*******************************************************************************/
 
 #ifndef PLIB_UART_COMMON_H
 #define PLIB_UART_COMMON_H
@@ -33,13 +58,11 @@
 // Section: Common Definitions
 
 /** 
-  @ingroup  uart_plib
   @brief    This macro defines the hardware receive FIFO depth
 */
 #define UART_RXFIFO_DEPTH       (9U)
 
 /** 
-  @ingroup  uart_plib
   @brief    These macro defines the parity types supported 
 */
 #define    UART_PARITY_NONE    (0x00U)
@@ -50,7 +73,6 @@
 typedef uint32_t UART_PARITY;
 
 /** 
-  @ingroup  uart_plib
   @brief    These macro defines the data width types supported
 */
 #define    UART_DATA_8_BIT   (0x00U)
@@ -60,7 +82,6 @@ typedef uint32_t UART_PARITY;
 typedef uint32_t UART_DATA;
 
 /** 
-  @ingroup  uart_plib
   @brief    These macro defines the stop bit settings supported in the PLIB
 */
 #define    UART_STOP_2_SENT_1_CHECKED   (0x03U)
@@ -72,7 +93,6 @@ typedef uint32_t UART_DATA;
 typedef uint32_t UART_STOP;
 
 /** 
-  @ingroup  uart_plib
   @brief    Data type containing the serial settings used by UARTx_SerialSetup API
 */
 typedef struct
@@ -84,7 +104,6 @@ typedef struct
 } UART_SERIAL_SETUP;
 
 /** 
-  @ingroup  uart_plib
   @brief    These macro defines UART errors supported by PLIB
 */
 #define    UART_ERROR_NONE      (0U)
@@ -95,7 +114,6 @@ typedef struct
 typedef uint32_t UART_ERROR;
 
 /** 
-  @ingroup  uart_plib
   @brief    Callback function prototype
 */
 typedef void (* UART_CALLBACK)( uintptr_t context );
