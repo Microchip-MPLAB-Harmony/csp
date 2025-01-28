@@ -1,20 +1,45 @@
-<#assign generateDoxygen = false>
 <#assign monIntTypes = ["rdy", "mon", "fail", "warn"]>
-/**
- * Clock Generated PLIB Header File
- * 
- * @file      plib_clk.h
- *            
- * @ingroup   plib_clk
- *            
- * @brief     This is the generated plib header file for the Clock
- *
- * @skipline  Harmony Chip support Package Version  {core.libVersion}
- *            
- * @skipline  Device : {core.deviceName}
-*/
-
-//{core.disclaimer}
+<#assign generateDoxygen = true>
+/*******************************************************************************
+  clock PLIB
+ 
+  Company:
+    Microchip Technology Inc.
+ 
+  File Name:
+    plib_clk.h
+ 
+  Summary:
+    Clock PLIB Header File
+ 
+  Description:
+    This file has prototype of all the interfaces provided for particular
+    Clock peripheral.
+ 
+*******************************************************************************/
+ 
+/*******************************************************************************
+* Copyright (C) 2024 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*******************************************************************************/
 
 #ifndef PLIB_CLK_H
 #define PLIB_CLK_H
@@ -39,7 +64,6 @@
 
 <#if generateDoxygen>
 /**
- * @ingroup  clock_plib
  * @brief    Initializes all the CLOCK sources and clock switch configurations. 
  * @pre      none
  * @param    none
@@ -50,7 +74,6 @@ void CLOCK_Initialize(void);
 
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This inline function returns clock generator frequency in Hz
  * @pre         none
  * @param[in]   generator - instance of clock generator
@@ -78,7 +101,6 @@ inline static uint32_t CLOCK_GeneratorFrequencyGet(CLOCK_GENERATOR generator)
 
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This inline function returns clock generator failure status.
  * @pre         none
  * @param       none
@@ -97,7 +119,6 @@ inline static uint32_t CLOCK_FailStatusGet(void)
 <#if useClockMonitor>
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This inline function enables clock monitor
  * @pre         none
  * @param[in]   monitor - instance of clock monitor
@@ -122,7 +143,6 @@ inline static void CLOCK_MonitorEnable(CLOCK_MONITOR monitor)
 
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This inline function disables clock monitor
  * @pre         none
  * @param[in]   monitor - instance of clock monitor
@@ -147,7 +167,6 @@ inline static void CLOCK_MonitorDisable(CLOCK_MONITOR monitor)
 
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This inline function checks if the clock monitor capture data is ready
  * @pre         none
  * @param[in]   monitor - instance of clock monitor
@@ -176,7 +195,6 @@ inline static bool CLOCK_MonitorIsReady(CLOCK_MONITOR monitor)
 
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This inline function returns the accumulated data after the capture.
  * @pre         \ref CLOCK_Monitor_IsReady to be called before calling this function in non-interrupt operation
  * @param[in]   monitor - instance of clock monitor
@@ -205,7 +223,6 @@ inline static uint32_t CLOCK_MonitorAccumulatedCountGet(CLOCK_MONITOR monitor)
 <#if clockFailIntEnable == true>
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This function can be used to override default callback and to 
  *              define custom callback for CLOCK Combined Clock Fail event
  * @param       callback - Address of the callback routine
@@ -224,7 +241,6 @@ void CLOCK_CombinedClockFailCallbackRegister(CLOCK_CombinedFailCallback callback
 <#if (.vars["cm"+i+type+"IntEnable"]??) &&  (.vars["cm"+i+type+"IntEnable"]== true)>
 <#if generateDoxygen>
 /**
- * @ingroup     clock_plib
  * @brief       This function can be used to override default callback 
  *              \ref CLOCK_Monitor${type}Callback and to define custom callback for 
  *              CLOCK Monitor ${type} event.
