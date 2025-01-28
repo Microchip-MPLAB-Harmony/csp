@@ -55,9 +55,9 @@ typedef enum
 } CMP_DAC_SLOPE_UPDATE_MODE;
 
 /** 
- * @ summary      CMP Callback Function Pointer.
- * @ breif        This data type defines the CMP Callback Function Pointer.
- * @ remarks      None
+ * @brief       CMP Callback Function Pointer.
+ * @details     This data type defines the CMP Callback Function Pointer.
+ * @remarks     None
  **/
 typedef void (*CMP_CALLBACK) (uintptr_t contextHandle);
 
