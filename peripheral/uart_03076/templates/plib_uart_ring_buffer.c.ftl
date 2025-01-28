@@ -51,6 +51,10 @@
 #include "interrupts.h"
 #include "plib_${moduleName?lower_case}.h"
 
+void ${errorIsrHandlerName}(void);
+void ${rxIsrHandlerName}(void);
+void ${txIsrHandlerName}(void);
+
 // Section: ${moduleName} Implementation
 
 volatile static UART_RING_BUFFER_OBJECT ${moduleName?lower_case}Obj;
@@ -129,6 +133,9 @@ void ${moduleName}_Initialize( void )
             |_U${instanceNumber}CON_CLKMOD_MASK</#if>
             |U${instanceNumber}CON_FLO_NONE
             |U${instanceNumber}CON_CLKSEL_${uconClkselOptions[U_CON__CLKSEL?number]});
+    U${instanceNumber}STAT = (_U${instanceNumber}STAT_RXFOIE_MASK
+            |_U${instanceNumber}STAT_FERIE_MASK
+            |_U${instanceNumber}STAT_PERIE_MASK);
 
     /* BAUD Rate register Setup */
     U${instanceNumber}BRG = ${brgRegValue};

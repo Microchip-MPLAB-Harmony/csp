@@ -66,8 +66,8 @@
   @brief    These macro defines the parity types supported 
 */
 #define    UART_PARITY_NONE    (0x00U)
-#define    UART_PARITY_EVEN    (0x02U)
-#define    UART_PARITY_ODD     (0x04U)
+#define    UART_PARITY_EVEN    (0x03U)
+#define    UART_PARITY_ODD     (0x02U)
 /* Force the compiler to reserve 32-bit space for each enum */
 #define    UART_PARITY_INVALID (0xFFFFFFFFU)
 typedef uint32_t UART_PARITY;
@@ -109,7 +109,7 @@ typedef struct
 #define    UART_ERROR_NONE      (0U)
 #define    UART_ERROR_OVERRUN   (0x02U)
 #define    UART_ERROR_FRAMING   (0x08U)
-#define    UART_ERROR_PARITY    (0x04U)
+#define    UART_ERROR_PARITY    (0x40U)
 
 typedef uint32_t UART_ERROR;
 
