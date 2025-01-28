@@ -8,11 +8,11 @@
     plib_${moduleName?lower_case}_common.h
  
   Summary:
-    PWM Common Header File
+    ADC Common Header File
  
   Description:
     This file has prototype of all the interfaces which are common for all the
-    PWM peripherals.
+    ADC peripherals.
  
 *******************************************************************************/
  
@@ -38,8 +38,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
-//{core.disclaimer}
 
 #ifndef PLIB_ADC_COMMON_H
 #define PLIB_ADC_COMMON_H

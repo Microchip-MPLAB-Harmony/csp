@@ -42,8 +42,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-//{core.disclaimer}
-
 // Section: Included Files
 
 #include <stdint.h>

@@ -1,5 +1,5 @@
 <#assign showExample = false>
-<#assign showDocument = true>
+<#assign generateDoxygen = true>
 /*******************************************************************************
   ${moduleName?lower_case} PLIB
  
@@ -62,9 +62,8 @@
 
 // Section: Data Types
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
- @ingroup  plib_adc
  @enum     ADC${instance}_CHANNEL
  @brief    Defines the ADC channles that are selected
 */
@@ -81,9 +80,8 @@ typedef enum
     ADC${instance}_MAX_CHANNELS = ${maxEnabledChannels}
 } ADC${instance}_CHANNEL;
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
- @ingroup  adc_plib
  @enum     ADC_PWM_INSTANCE
  @brief    Defines the ADC PWM trigger sources that are 
            available for the module to use.
@@ -99,7 +97,7 @@ typedef enum
 
 // Section: Driver Interface Functions
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief    Initializes ${moduleName} module, using the given initialization data
  *           This function must be called before any other ${moduleName} function is called
@@ -109,7 +107,7 @@ typedef enum
 </#if>
 void ${moduleName}_Initialize (void);
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief    Deinitializes the ${moduleName} to POR values
  * @param    none
@@ -118,7 +116,7 @@ void ${moduleName}_Initialize (void);
 </#if>
 void ${moduleName}_Deinitialize(void);
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief    This inline function enables the ${moduleName} module
  * @pre      none
@@ -133,7 +131,7 @@ inline static void ${moduleName}_Enable(void)
     while(AD${instance}CONbits.ADRDY == 0U){};
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief    This inline function disables the ${moduleName} module
  * @pre      none
@@ -147,7 +145,7 @@ inline static void ${moduleName}_Disable(void)
 }
 
 <#if isChannelSelected == true>
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief    This inline function sets software common trigger
  * @pre      none
@@ -160,7 +158,7 @@ inline static void ${moduleName}_SoftwareTriggerEnable(void)
    AD${instance}SWTRG = 0xFFFFFFFFU;
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief       This inline function sets individual software trigger
  * @pre         none
@@ -185,7 +183,7 @@ inline static void ${moduleName}_ChannelSoftwareTriggerEnable(${moduleName}_CHAN
 }
 
 <#if anyChannelWithIntOrWinConversion>
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function returns the requested conversion count
  * @pre        none
@@ -213,7 +211,7 @@ inline static uint16_t ${moduleName}_SampleCountGet(${moduleName}_CHANNEL channe
     return count;
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function returns the status of completed conversion count
  * @pre        none
@@ -242,7 +240,7 @@ inline static uint16_t ${moduleName}_SampleCountStatusGet(${moduleName}_CHANNEL 
 }
 
 </#if>
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      Returns the conversion value for the channel selected
  * @pre        This inline function returns the conversion value only after the conversion is complete. 
@@ -272,7 +270,7 @@ inline static uint32_t ${moduleName}_ChannelResultGet(${moduleName}_CHANNEL chan
 }
 
 <#if chWithIntConversionAndSecAcc>
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      Returns secondary accumulator conversion value for the channel selected
  * @pre        This inline function returns the conversion value only after the conversion is complete. 
@@ -305,7 +303,7 @@ inline static uint32_t ${moduleName}_SecondaryAccumulatorGet(${moduleName}_CHANN
 }
 
 </#if>
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function returns the status of conversion.This function is used to 
  *             determine if conversion is completed. When conversion is complete 
@@ -336,7 +334,7 @@ inline static bool ${moduleName}_ChannelResultIsReady(${moduleName}_CHANNEL chan
     return status;
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function enables individual channel interrupt
  * @param[in]  channel - Selected channel  
@@ -359,7 +357,7 @@ inline static void ${moduleName}_ChannelResultInterruptEnable(${moduleName}_CHAN
     }
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function disables individual channel interrupt
  * @param[in]  channel - Selected channel  
@@ -382,7 +380,7 @@ inline static void ${moduleName}_ChannelResultInterruptDisable(${moduleName}_CHA
     }
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function clears individual channel interrupt flag
  * @pre        The flag is not cleared without reading the data from buffer.
@@ -408,7 +406,7 @@ inline static void ${moduleName}_ChannelResultFlagClear(${moduleName}_CHANNEL ch
     }
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function returns the status of the comparator
  * @pre        none
@@ -438,7 +436,7 @@ inline static bool ${moduleName}_CompareStatusGet(${moduleName}_CHANNEL channel)
     return status;
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This inline function allows selection of priority for individual channel interrupt
  * @param[in]  channel - Selected channel 
@@ -462,7 +460,7 @@ inline static void ${moduleName}_IndividualChannelInterruptPrioritySet(${moduleN
 	}
 }
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief      This function can be used to define custom callback for ${moduleName} Channel event. 
  *             Read the conversion result of the corresponding channel in the custom callback.
@@ -475,9 +473,8 @@ inline static void ${moduleName}_IndividualChannelInterruptPrioritySet(${moduleN
 </#if>
 void ${moduleName}_ChannelCallbackRegister(${moduleName}_CHANNEL channel,ADC_CHANNEL_CALLBACK callback,uintptr_t context);
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
- * @ingroup    plib_adc
  * @brief      This function can be used to define custom callback for ${moduleName} Comparator event
  * @pre        none
  * @param[in]  channel - Selected channel.  
@@ -488,7 +485,7 @@ void ${moduleName}_ChannelCallbackRegister(${moduleName}_CHANNEL channel,ADC_CHA
 </#if>
 void ${moduleName}_ComparatorCallbackRegister(${moduleName}_CHANNEL channel,ADC_CMP_CALLBACK callback,uintptr_t context);
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief    Calibrates the ${moduleName} Core
  * @pre      none 
@@ -498,7 +495,7 @@ void ${moduleName}_ComparatorCallbackRegister(${moduleName}_CHANNEL channel,ADC_
 </#if>
 void ${moduleName}_SharedCoreCalibration(void);
 
-<#if showDocument>
+<#if generateDoxygen>
 /**
  * @brief    Sets Trigger source as PWM Trigger 
  * @pre      PWM must be enabled and configured 
