@@ -39,28 +39,38 @@
 // DOM-IGNORE-END
 
 /**
- * @ingroup  ${moduleName?lower_case}
- * @brief    Initializes the ${moduleName?lower_case} module
- * @param    none
- * @return   none  
+ * @brief    Initializes the OPA${OPAMP_INSTANCE} module
+ * @details  This function initializes the OPA${OPAMP_INSTANCE} module, setting it up for operation according to the predefined configuration.
+ * @pre      This function should be called before any other OPA${OPAMP_INSTANCE} functions are used.
+ * @param    None
+ * @note     This function must be called only once and before any other OPA${OPAMP_INSTANCE} function is called.
+ * @remarks  Ensure that the OPA${OPAMP_INSTANCE} module is properly configured before calling this function.
+ * @return   None
+ * 
  */
 void OPA${OPAMP_INSTANCE}_Initialize (void);
 
 /**
- * @ingroup  ${moduleName?lower_case}
- * @brief    Deinitializes the ${moduleName?lower_case} module
- * @param    none
- * @return   none  
+ * @brief    Deinitializes the OPA${OPAMP_INSTANCE} module
+ * @details  This function deinitializes the OPA${OPAMP_INSTANCE} module, resetting it to its default state and disabling its operation.
+ * @pre      This function should be called to properly shut down the OPA${OPAMP_INSTANCE} module before system power-down or reconfiguration.
+ * @param    None
+ * @note     This function should be called to release any resources allocated by the OPA${OPAMP_INSTANCE} module.
+ * @remarks  Ensure that any necessary cleanup or state saving is performed before calling this function.
+ * @return   None
+ * 
  */
 void OPA${OPAMP_INSTANCE}_Deinitialize(void);
 
 /**
- * @ingroup  ${moduleName?lower_case}
- * @brief    This inline function enables OPA1 module
- * @pre      The OPA1_Initialize function should be called for the 
- *           specified OPA1 driver instance.
- * @param    none
- * @return   none  
+ * @brief    This inline function enables the OPA${OPAMP_INSTANCE} module
+ * @details  This function sets the enable bit for the OPA${OPAMP_INSTANCE} module, allowing it to start operation.
+ * @pre      The OPA${OPAMP_INSTANCE}_Initialize function should be called for the specified OPA${OPAMP_INSTANCE} driver instance before calling this function.
+ * @param    None
+ * @note     Ensure that the OPA${OPAMP_INSTANCE} module is properly initialized before enabling it.
+ * @remarks  This function directly sets the enable bit in the control register of the OPA${OPAMP_INSTANCE} module.
+ * @return   None
+ * 
  */
 inline static void OPA${OPAMP_INSTANCE}_Enable( void )
 {
@@ -68,10 +78,14 @@ inline static void OPA${OPAMP_INSTANCE}_Enable( void )
 }
 
 /**
- * @ingroup  ${moduleName?lower_case}
- * @brief    This inline function disables OPA1 module
- * @param    none
- * @return   none  
+ * @brief    This inline function disables the OPA${OPAMP_INSTANCE} module
+ * @details  This function clears the enable bit for the OPA${OPAMP_INSTANCE} module, stopping its operation.
+ * @pre      The OPA${OPAMP_INSTANCE} module should be enabled and operational before calling this function.
+ * @param    None
+ * @note     Ensure that any necessary cleanup or state saving is performed before disabling the OPA${OPAMP_INSTANCE} module.
+ * @remarks  None
+ * @return   None
+ * 
  */
 inline static void OPA${OPAMP_INSTANCE}_Disable( void )
 {
@@ -79,10 +93,13 @@ inline static void OPA${OPAMP_INSTANCE}_Disable( void )
 }
 
 /**
- * @brief      This inline function enables/disables unity gain of OPA module
- * @param[in]  enable - true, enables unity gain 
- * @param[in]  enable - false, disables unity gain  
- * @return     none  
+ * @brief    This inline function enables or disables unity gain for the OPA${OPAMP_INSTANCE} module
+ * @details  This function sets or clears the unity gain enable bit for the OPA${OPAMP_INSTANCE} module based on the input parameter.
+ * @param[in]  enable - If true, enables unity gain; if false, disables unity gain.
+ * @note     Ensure that the OPA${OPAMP_INSTANCE} module is properly initialized before configuring unity gain.
+ * @remarks  None
+ * @return   None
+ * 
  */
 inline static void OPA${OPAMP_INSTANCE}_UnityGainEnable( bool enable )
 {
@@ -90,10 +107,13 @@ inline static void OPA${OPAMP_INSTANCE}_UnityGainEnable( bool enable )
 }
 
 /**
- * @brief      This inline function enables/disables high power mode of OPA module
- * @param[in]  enable - true, enables High Power Mode
- * @param[in]  enable - false, disables High Power Mode 
- * @return     none  
+ * @brief    This inline function enables or disables High Power Mode for the OPA${OPAMP_INSTANCE} module
+ * @details  This function sets or clears the High Power Mode enable bit for the OPA${OPAMP_INSTANCE} module based on the input parameter.
+ * @param[in]  enable - If true, enables High Power Mode; if false, disables High Power Mode.
+ * @note     Ensure that the OPA${OPAMP_INSTANCE} module is properly initialized before configuring High Power Mode.
+ * @remarks  None
+ * @return   None
+ * 
  */
 inline static void OPA${OPAMP_INSTANCE}_HighPowerModeEnable( bool enable )
 {
@@ -103,21 +123,13 @@ inline static void OPA${OPAMP_INSTANCE}_HighPowerModeEnable( bool enable )
 <#if OPA_IOMONITOR_AVAILABLE?? && OPA_IOMONITOR_AVAILABLE == true>
 
 /**
- * @brief      This inline function enables/disables positive input of OPA module to ADC
- * @param[in]  enable - true, enables input Monitor
- * @param[in]  enable - false, disables input Monitor 
- * @return     none  
- */
-inline static void OPA${OPAMP_INSTANCE}_InputMonitorEnable( bool enable )
-{
-    AMP${OPAMP_INSTANCE}CON1bits.IMONEN = enable;     
-}
-
-/**
- * @brief      This inline function enables/disables Enables output of OPA module to ADC
- * @param[in]  enable - true, enables output Monitor
- * @param[in]  enable - false, disables output Monitor 
- * @return     none  
+ * @brief      This inline function enables or disables the output of the OPA${OPAMP_INSTANCE} module to the ADC
+ * @details    This function sets or clears the output monitor enable bit for the OPA${OPAMP_INSTANCE} module based on the input parameter.
+ * @param[in]  enable - If true, enables the output monitor; if false, disables the output monitor.
+ * @note       Ensure that the OPA${OPAMP_INSTANCE} module is properly initialized before configuring the output monitor.
+ * @remarks    None
+ * @return     None
+ * 
  */
 inline static void OPA${OPAMP_INSTANCE}_OutputMonitorEnable( bool enable )
 {
@@ -126,9 +138,13 @@ inline static void OPA${OPAMP_INSTANCE}_OutputMonitorEnable( bool enable )
 </#if>
 
 /**
- * @brief      This inline function enables/disables Enables output of OPA module to ADC
- * @param[in]  input - selected differential input mode
- * @return     none  
+ * @brief      This inline function sets the differential input mode for the OPA${OPAMP_INSTANCE} module
+ * @details    This function configures the differential input mode for the OPA${OPAMP_INSTANCE} module by setting the appropriate bits in the control register.
+ * @param[in]  input - The selected differential input mode. This parameter should be of type OPA_DIFFERENTIAL_INPUT_MODE.
+ * @note       Ensure that the OPA${OPAMP_INSTANCE} module is properly initialized before configuring the differential input mode.
+ * @remarks    None
+ * @return     None
+ * 
  */
 inline static void OPA${OPAMP_INSTANCE}_DifferentialInputModeSet(OPA_DIFFERENTIAL_INPUT_MODE input)
 {
@@ -139,7 +155,7 @@ inline static void OPA${OPAMP_INSTANCE}_DifferentialInputModeSet(OPA_DIFFERENTIA
  * @brief      This inline function enables/disables Enables output of OPA module to ADC
  * @param[in]  inputType   - selected differential input offset register type
  * @param[in]  unitVoltage - selected unit voltage
- * @return     none  
+ * @return     None  
  * @Note       Unit voltage = trim step voltage 3 mV
  */
 inline static void OPA${OPAMP_INSTANCE}_OffsetCorrection(OPA_OFFSET_INPUT_TYPE inputType, OPA_OUTPUT_VOLTAGE_OFFSET_CORRECTION unitVoltage)

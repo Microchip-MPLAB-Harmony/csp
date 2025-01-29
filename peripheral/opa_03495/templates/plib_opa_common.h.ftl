@@ -23,6 +23,11 @@
 
 #endif
 
+/**
+ * @summary     OPA Differential Input Mode Enums
+ * @brief     Enumeration for selecting the differential input mode of the OPA module.
+ * @remarks   None
+ */
 typedef enum
 { 
     OPA_DIFFERENTIAL_INPUT_NMOS_PMOS_PAIR   = 0,    /**< Use both NMOS and PMOS differential input pair */
@@ -32,6 +37,11 @@ typedef enum
 
 }  OPA_DIFFERENTIAL_INPUT_MODE; 
 
+/**
+ * @summary      OPA Offset Event Enums
+ * @brief     Enum for selecting the output voltage offset correction in the OPA module.
+ * @remarks   None
+ */
 typedef enum
 {
     OPA_PMOS_OFFSET_IN_HIGH_POWER_MODE,     /**< Offset Correction for PMOS Differential Input Pair (High-Power mode) */
@@ -41,7 +51,11 @@ typedef enum
 
 } OPA_OFFSET_INPUT_TYPE;
 
-
+/**
+ * @summary      OPA Offset Correction Enums
+ * @brief     Enumeration for selecting the output voltage offset correction for the OPA module.
+ * @remarks   None
+ */
 typedef enum
 {
 

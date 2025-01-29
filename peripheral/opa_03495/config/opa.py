@@ -116,14 +116,6 @@ def instantiateComponent(opampComponent):
     configurePins = opampComponent.createCommentSymbol(CONFIGURE_PIN, None)
     configurePins.setLabel("*** Configure Pins from Pin Manager ***")
 
-    settingBitIMONEN = getBitField(MODULE_NAME,"AMP","CON1","IMONEN")
-    if settingBitIMONEN != None:
-        enableInputMonitor = opampComponent.createBooleanSymbol(INPUT_MONITOR_SUPPORT, None)
-        enableInputMonitor.setLabel("Enable Input Monitor")
-        enableInputMonitor.setDefaultValue(False)
-        enableInputMonitor.setVisible(False)
-        enableInputMonitor.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opa_03495;register:AMPxCON1")
-
     settingBitOMONEN = getBitField(MODULE_NAME,"AMP","CON1","OMONEN")
     if settingBitOMONEN != None:
         enableOutputMonitor = opampComponent.createBooleanSymbol(OUTPUT_MONITOR_SUPPORT, None)
@@ -132,11 +124,10 @@ def instantiateComponent(opampComponent):
         enableOutputMonitor.setVisible(False)
         enableOutputMonitor.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opa_03495;register:AMPxCON1")
 
-    if settingBitIMONEN is not None and settingBitOMONEN is not None:
+    if  settingBitOMONEN is not None:
         ioMonitorFeatureAvailable = opampComponent.createBooleanSymbol(OPA_IOMONITOR_AVAILABLE, None)
         ioMonitorFeatureAvailable.setDefaultValue(True)
         ioMonitorFeatureAvailable.setVisible(False)
-
 
 ######### Code Generation ###########
 
