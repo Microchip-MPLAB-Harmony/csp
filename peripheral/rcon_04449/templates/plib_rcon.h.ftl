@@ -22,10 +22,7 @@
 #ifndef PLIB_${RCON_INSTANCE_NAME}_H      // Guards against multiple inclusion
 #define PLIB_${RCON_INSTANCE_NAME}_H
 
-
-// *****************************************************************************
 // Section: Included Files
-// *****************************************************************************
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -39,15 +36,12 @@
 #endif
 // DOM-IGNORE-END
 
-<#assign generateDoxygen = false>
-<#if generateDoxygen>
-/**
- * @ingroup  rcon
- * @brief    Initializes the RCON module
- * @return   none
- */
-</#if>
 
+/**
+ * @summary  Identifies the possible reason of device reset.
+ * @brief    This enumeration identifies the possible reason of device reset.
+ * @remarks  None
+ */
 typedef enum
 {
 <#list 0..(RCON_CAUSE_COUNT - 1) as i>
@@ -56,49 +50,44 @@ typedef enum
 
 </#list>
 } RCON_RESET_CAUSE;
-<#assign generateDoxygen = false>
-<#if generateDoxygen>
-/**
- * @brief    This enumeration identifies the possible reason of device reset.
- * Identifies the possible reason of device reset.
- */
- </#if>
 
-// *****************************************************************************
 // Section: Interface
-// *****************************************************************************
 
-<#assign generateDoxygen = false>
-<#if generateDoxygen>
- /**
- * @brief    This function returns the cause of the last reset. The reset could be due to multiple reasons. The application should compare the returned value against different values in the RCON_RESET_CAUSE enumeration to identify the possible causes.
- * @param    None
- * @return   RCON_RESET_CAUSE - Identifies type of reset.
+/**
+ * @brief    Reports the cause of the last reset.
+ * @details  This function returns the cause of the last reset. The reset could be due to multiple reasons. The application should compare the returned value against different values in the RCON_RESET_CAUSE enumeration to identify the possible causes.
  * @pre      None
- * Reports the cause of the last reset.
+ * @param    None
+ * @note     This function can be called multiple times to retrieve the reset cause, but the reset cause bits may be cleared by other operations.
+ * @remarks  None
+ * @return   RCON_RESET_CAUSE - Identifies type of reset.
+ * 
  */
- </#if>
 RCON_RESET_CAUSE ${RCON_INSTANCE_NAME}_ResetCauseGet( void );
 
-<#assign generateDoxygen = false>
-<#if generateDoxygen>
 /**
- * @brief    This function clears the particular reset bit in the RCON register. Multiple reasons for a reset can be ORed together and given as an input parameter to clear them simultaneously.
- * @param    Reset status needs to be clear
- * @return   None
+ * @brief    Clears the particular reset cause status bit.
+ * @details  This function clears the particular reset bit in the RCON register. Multiple reasons for a reset can be ORed together and given as an input parameter to clear them simultaneously.
  * @pre      None
- * Clears the particular reset cause status bit.
+ * @param    Reset status needs to be clear
+ * @note     This function should be called to clear the reset cause bits after they have been retrieved using ${RCON_INSTANCE_NAME}_ResetCauseGet, to ensure that subsequent resets can be accurately detected.
+ * @remarks  None
+ * @return   None.
+ * 
  */
- </#if>
 void ${RCON_INSTANCE_NAME}_ResetCauseClear( RCON_RESET_CAUSE cause );
 
-<#assign generateDoxygen = false>
-<#if generateDoxygen>
 /**
- * @brief    Clears the Reset Cause register
- * @return   none  
+ * @brief    Clears all reset causes in the ${RCON_INSTANCE_NAME} module
+ * @details  This function clears all the reset cause bits in the ${RCON_INSTANCE_NAME} peripheral.
+ * @pre      This function should be called after the reset causes have been retrieved and handled.
+ * @param    None
+ * @note     This function should be called to clear all reset cause bits after they have been retrieved using ${RCON_INSTANCE_NAME}_ResetCauseGet, to ensure that subsequent resets can be accurately detected.
+ * 
+ * @remarks  Ensure that all reset cause bits are cleared to avoid misinterpretation of future reset causes.
+ * @return   None
+ * 
  */
-</#if>
 void ${RCON_INSTANCE_NAME}_CauseClearAll(void);
 
 

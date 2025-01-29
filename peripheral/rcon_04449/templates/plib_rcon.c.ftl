@@ -21,7 +21,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2024 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -44,15 +44,11 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-// *****************************************************************************
 // Section: Included Files
-// *****************************************************************************
 
 #include "plib_${RCON_INSTANCE_NAME?lower_case}.h"
 
-// *****************************************************************************
 // Section: ${RCON_INSTANCE_NAME} Implementation
-// *****************************************************************************
 
 RCON_RESET_CAUSE ${RCON_INSTANCE_NAME}_ResetCauseGet( void )
 {

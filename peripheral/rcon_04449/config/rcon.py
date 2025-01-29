@@ -42,7 +42,7 @@ def instantiateComponent(rconComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     rcon_HeaderFile = rconComponent.createFileSymbol("RCON_HEADER", None)
-    rcon_HeaderFile.setSourcePath("../peripheral/rcon/templates/plib_rcon.h.ftl")
+    rcon_HeaderFile.setSourcePath("../peripheral/rcon_04449/templates/plib_rcon.h.ftl")
     rcon_HeaderFile.setOutputName("plib_" + rcon_Instance.getValue().lower() + ".h")
     rcon_HeaderFile.setDestPath("peripheral/rcon/")
     rcon_HeaderFile.setProjectPath("config/" + configName + "/peripheral/rcon/")
@@ -50,7 +50,7 @@ def instantiateComponent(rconComponent):
     rcon_HeaderFile.setMarkup(True)
 
     rcon_SourceFile = rconComponent.createFileSymbol("RCON_SOURCE", None)
-    rcon_SourceFile.setSourcePath("../peripheral/rcon/templates/plib_rcon.c.ftl")
+    rcon_SourceFile.setSourcePath("../peripheral/rcon_04449/templates/plib_rcon.c.ftl")
     rcon_SourceFile.setOutputName("plib_" + rcon_Instance.getValue().lower() + ".c")
     rcon_SourceFile.setDestPath("peripheral/rcon/")
     rcon_SourceFile.setProjectPath("config/" + configName + "/peripheral/rcon/")
@@ -60,5 +60,5 @@ def instantiateComponent(rconComponent):
     rcon_SystemDefFile = rconComponent.createFileSymbol("RCON_SYS_DEF", None)
     rcon_SystemDefFile.setType("STRING")
     rcon_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rcon_SystemDefFile.setSourcePath("../peripheral/rcon/templates/system/definitions.h.ftl")
+    rcon_SystemDefFile.setSourcePath("../peripheral/rcon_04449/templates/system/definitions.h.ftl")
     rcon_SystemDefFile.setMarkup(True)
