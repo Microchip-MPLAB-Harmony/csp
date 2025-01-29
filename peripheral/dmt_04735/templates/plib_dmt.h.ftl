@@ -45,11 +45,7 @@
 #ifndef PLIB_${DMT_INSTANCE_NAME}_H
 #define PLIB_${DMT_INSTANCE_NAME}_H
 
-// *****************************************************************************
-// *****************************************************************************
 // Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
 
 #include <stddef.h>
 #include <stdint.h>
@@ -64,11 +60,7 @@
 #endif
 // DOM-IGNORE-END
 
-// *****************************************************************************
-// *****************************************************************************
 // Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
 
 /**
  * @brief    Initializes the ${DMT_INSTANCE_NAME} module
@@ -79,8 +71,8 @@
  * 
  * @b Example:
  * @code
- *    PSCNT = 0x1234;  // Set the instruction fetch counter limit
- *    PSINTV = 0x5678; // Set the window interval limit
+ *    PSCNT = 0x1234;   Set the instruction fetch counter limit
+ *    PSINTV = 0x5678;  Set the window interval limit
  *    DMT_Initialize();
  * @endcode
  * 
@@ -116,8 +108,8 @@ void ${DMT_INSTANCE_NAME}_Clear( void );
  * 
  * @b Example:
  * @code
- *        DMT_Initialize(); // Initialize the DMT module
- *        DMT_Enable();     // Enable the DMT module
+ *        DMT_Initialize();  Initialize the DMT module
+ *        DMT_Enable();      Enable the DMT module
  * @endcode
  * @return   None
  */
