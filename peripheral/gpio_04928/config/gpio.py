@@ -802,7 +802,7 @@ for pinNumber in range(1, packagePinCount + 1):
 ###################################################################################################
 pioSymChannel.sort()
 
-PPSPinCount = packagePinCount
+PPSPinCount = max(packagePinCount,60)
 
 ppsPinInputConfiguration= coreComponent.createMenuSymbol("GPIO_PPS_PIN_INPUT_CONFIGURATION", pioEnable)
 ppsPinInputConfiguration.setLabel("PPS Input Pin Configuration")
@@ -848,7 +848,7 @@ for myGroups in root.findall('groups'):
             elif  myFunction.get("direction") == "in" and myFunction.get("register-name") is not None:
                 PORTS_REMAP_INPUT_FUNCTION[myFunction.get("name")] = myFunction.get("register-name") + "bits." + myFunction.get("name") # Input Pin function map {"CLC10OUT":"78"}
 
-for pinNumber in range(0,packagePinCount):
+for pinNumber in range(0,PPSPinCount):
 
     #PPS input pin Configuration
     ppsInputEnable.append(pinNumber)
@@ -887,7 +887,7 @@ for pinNumber in range(0,packagePinCount):
         ppsInputPin[pinNumber].addKey(key, value, key)
     ppsInputPin[pinNumber].setDependencies(PPSOptionsVisibilityControl, ["USE_PPS_INPUT_" + str(pinNumber)])
 
-for pinNumber in range(0, packagePinCount):
+for pinNumber in range(0, PPSPinCount):
     #PPS Output pin Configuration
     ppsOutputEnable.append(pinNumber)
     ppsOutputEnable[pinNumber] = coreComponent.createBooleanSymbol("USE_PPS_OUTPUT_" + str(pinNumber), ppsPinOutputConfiguration)
