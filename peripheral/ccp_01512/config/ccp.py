@@ -22,54 +22,50 @@
 *****************************************************************************"""
 
 ################################################################################
-#### Register Information ####
-################################################################################
-ccpBitField_CCPCON1_SYNC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="TMR"]/register@[name="CCP1CON1"]/bitfield@[name="SYNC"]')
-ccpValGrp_CCPCON1_SYNC = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON1__SYNC\"]")
-
-
-
-ccpBitField_CCPCON1_TMRPS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON1"]/bitfield@[name="TMRPS"]')
-ccpValGrp_CCPCON1_TMRPS = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON1__TMRPS\"]")
-
-ccpBitField_CCPCON2_ASDGM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON2"]/bitfield@[name="ASDGM"]')
-ccpValGrp_CCPCON2_ASDGM = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON2__ASDGM\"]")
-
-ccpBitField_CCPCON3_PSSACE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON3"]/bitfield@[name="PSSACE"]')
-ccpValGrp_CCPCON3_PSSACE = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON3__PSSACE\"]")
-
-ccpBitField_CCPCON2_PWMRSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON2"]/bitfield@[name="PWMRSEN"]')
-ccpValGrp_CCPCON2_PWMRSEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON2__PWMRSEN\"]")
-
-ccpBitField_CCPCON1_OPS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON1"]/bitfield@[name="OPS"]')
-ccpValGrp_CCPCON1_OPS = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON1__OPS\"]")
-
-################################################################################
 #### Global Variables ####
 ################################################################################
 
-global PrescalerDict
-PrescalerDict = {
-                    "1:64 prescale" : 64,
-                    "1:16 prescale" : 16,
-                    "1:4 prescale"  : 4,
-                    "1:1 prescale"  : 1,
-                }
 global ccpTimerUnit
 ccpTimerUnit = { "millisecond" : 1000.0,
-                "microsecon" : 1000000.0, 
+                "microsecon" : 1000000.0,
                 "nanosecond"  : 1000000000.0,
-                }                 
+                }
 global ccpInterruptVector
 global ccpInterruptHandlerLock
 global ccpInterruptHandler
 global ccpInterruptVectorUpdate
 global sysTimeComponentId
 global ccpSym_PERIOD_MS
+global moduleName
+moduleName = "CCP"
 
 ################################################################################
 #### Helper Functions ####
 ################################################################################
+def getBitField(moduleName, registerGroup, register, bitfield):
+    atdfPath = '/avr-tools-device-file/modules/module@[name="' + moduleName + '"]/register-group@[name="'+ registerGroup + '"]/register@[name="'+ register + '"]/bitfield@[name="'+bitfield +'"]'
+    return ATDF.getNode(atdfPath)
+
+def getValueGroupName(moduleName, registerGroup, register, bitfield):
+    bitNode = getBitField(moduleName, registerGroup, register, bitfield)
+    if(bitNode != None):
+        return bitNode.getAttribute("values")
+    return ""
+
+def getValueGroup(moduleName,valueGroupName):
+    atdfPath = '/avr-tools-device-file/modules/module@[name="' + moduleName + '"]/value-group@[name="'+ valueGroupName + '"]'
+    return ATDF.getNode(atdfPath)
+
+def setClockGeneratorData(moduleName, valueGroupName):
+    clkNode = getValueGroup(moduleName,valueGroupName).getChildren()
+    for bitfield in clkNode:
+        if "Clock Generator" in bitfield.getAttribute("caption"):
+            return bitfield.getAttribute("caption")
+
+def isPic32aDspic33aPresent():
+    return (Database.getSymbolValue("core", "CoreArchitecture") == "PIC32A" or
+            Database.getSymbolValue("core", "CoreArchitecture") == "dsPIC33A")
+
 def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
@@ -156,15 +152,15 @@ def find_key_value(value, keypairs):
 ################################################################################
 
 def PreScaler_ValueUpdate(symbol, event):
-    symbol.setValue(PrescalerDict[event["symbol"].getKey(event["value"])], 1)
+    symbol.setValue(pow(4, event["value"]))
 
 def autoShutdownVisibility(symbol, event):
     symObj = event["symbol"]
-    val = symObj.getSelectedValue()    
+    val = symObj.getSelectedValue()
     if val == "0":
         symbol.setVisible(False)
     else:
-        symbol.setVisible(True)   
+        symbol.setVisible(True)
 
 def ccpExtClkVisible(symbol, event):
     symObj = event["symbol"]
@@ -172,70 +168,116 @@ def ccpExtClkVisible(symbol, event):
     if val == "6" or val == "7" or val == "3":
         symbol.setVisible(True)
     else:
-        symbol.setVisible(False)     
+        symbol.setVisible(False)
 
 def timerInterruptSet(symbol, event):
     if (event["id"] == "CCP_TIMER_INTERRUPT"):
         setTMRInterruptData(event["value"])
 
 def captureCompareInterruptSet(symbol, event):
+    global CaptureCompareIrq
+
     status = event["value"]
-    Database.setSymbolValue("core", ccpCaptureCompareInterruptVector, status, 2)
-    Database.setSymbolValue("core", ccpCaptureCompareInterruptHandlerLock, status, 2)
-    interruptName = ccpCaptureCompareInterruptHandler.split("_INTERRUPT_HANDLER")[0]
-    if status == True:
-        Database.setSymbolValue("core", ccpCaptureCompareInterruptHandler, interruptName + "_InterruptHandler", 2)
+    if isPic32aDspic33aPresent():
+        Database.setSymbolValue("core", "INTC_" + getIRQnumber(CaptureCompareIrq) + "_ENABLE", status)
+        Database.setSymbolValue("core", "INTC_" + getIRQnumber(CaptureCompareIrq) + "_HANDLER_LOCK", status)
     else:
-        Database.setSymbolValue("core", ccpCaptureCompareInterruptHandler, interruptName + "_Handler", 2)        
+        Database.setSymbolValue("core", ccpCaptureCompareInterruptVector, status, 2)
+        Database.setSymbolValue("core", ccpCaptureCompareInterruptHandlerLock, status, 2)
+        interruptName = ccpCaptureCompareInterruptHandler.split("_INTERRUPT_HANDLER")[0]
+        if status == True:
+            Database.setSymbolValue("core", ccpCaptureCompareInterruptHandler, interruptName + "_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", ccpCaptureCompareInterruptHandler, interruptName + "_Handler", 2)
 
 def setTMRInterruptData(status):
-    Database.setSymbolValue("core", ccpInterruptVector, status, 2)
-    Database.setSymbolValue("core", ccpInterruptHandlerLock, status, 2)
-    interruptName = ccpInterruptHandler.split("_INTERRUPT_HANDLER")[0]
-    if status == True:
-        Database.setSymbolValue("core", ccpInterruptHandler, interruptName + "_InterruptHandler", 2)
+    global tmrIrq
+
+    if isPic32aDspic33aPresent():
+        Database.setSymbolValue("core", "INTC_" + getIRQnumber(tmrIrq) + "_ENABLE", status)
+        Database.setSymbolValue("core", "INTC_" + getIRQnumber(tmrIrq) + "_HANDLER_LOCK", status)
     else:
-        Database.setSymbolValue("core", ccpInterruptHandler, interruptName + "_Handler", 2)
+        Database.setSymbolValue("core", ccpInterruptVector, status, 2)
+        Database.setSymbolValue("core", ccpInterruptHandlerLock, status, 2)
+        interruptName = ccpInterruptHandler.split("_INTERRUPT_HANDLER")[0]
+        if status == True:
+            Database.setSymbolValue("core", ccpInterruptHandler, interruptName + "_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", ccpInterruptHandler, interruptName + "_Handler", 2)
 
 def updateTMRInterruptData(symbol, event):
-    component = symbol.getComponent()
-    tmrIrq = "CCT" + str(instanceNum)
-    tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
-    if ccpSym_TimerInterrupt.getValue() == True and Database.getSymbolValue("core", tmrInterruptVectorUpdate) == True:
-        symbol.setVisible(True)
+    global tmrIrq
+
+    if isPic32aDspic33aPresent():
+        if ((ccpSym_TimerInterrupt.getValue() == True) and (Database.getSymbolValue("core", "INTC_" + getIRQnumber(tmrIrq) + "_ENABLE") == False)):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
     else:
-        symbol.setVisible(False)
+        tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
+        if ccpSym_TimerInterrupt.getValue() == True and Database.getSymbolValue("core", tmrInterruptVectorUpdate) == True:
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
 
 def updateCAPInterruptData(symbol, event):
+    global CaptureCompareIrq
+
     component = symbol.getComponent()
-    capIrq = "CCP" + str(instanceNum)
-    capInterruptVectorUpdate = capIrq + "_INTERRUPT_ENABLE_UPDATE"
-    if (component.getSymbolValue("CCP_CAP_INTERRUPT") == True or component.getSymbolValue("CCP_COMP_INTERRUPT") == True) and (Database.getSymbolValue("core", capInterruptVectorUpdate) == True):
-        symbol.setVisible(True)
+    if isPic32aDspic33aPresent():
+        if (((component.getSymbolValue("CCP_CAP_INTERRUPT") == True) and (event["source"].getSymbolByID("CCP_OPERATION_MODE").getValue() == "Capture") and (Database.getSymbolValue("core", "INTC_" + getIRQnumber(CaptureCompareIrq) + "_ENABLE") == False)) or
+            ((component.getSymbolValue("CCP_COMP_INTERRUPT") == True) and (event["source"].getSymbolByID("CCP_OPERATION_MODE").getValue() == "Compare") and (Database.getSymbolValue("core", "INTC_" + getIRQnumber(CaptureCompareIrq) + "_ENABLE") == False))):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
     else:
-        symbol.setVisible(False)    
+        capInterruptVectorUpdate = CaptureCompareIrq + "_INTERRUPT_ENABLE_UPDATE"
+        if (component.getSymbolValue("CCP_CAP_INTERRUPT") == True or component.getSymbolValue("CCP_COMP_INTERRUPT") == True) and (Database.getSymbolValue("core", capInterruptVectorUpdate) == True):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
 
 def updateTMRClockWarningStatus(symbol, event):
-    symbol.setVisible(not event["value"])        
+    global clkGenEnableSym
+
+    if isPic32aDspic33aPresent():
+        src = int(symbol.getComponent().getSymbolValue("CCP_CCPCON1_CLKSEL"))
+        if (src == 1) and (Database.getSymbolValue("core", clkGenEnableSym) == False):
+            symbol.setLabel("Warning!!! (Clock input for " + ccpInstanceName.getValue() + ") Clock Generator" + clkGenEnableSym.replace("clkGen","").replace("Enable", "") + "is disabled in Clock Manager")
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        if "CLOCK_ENABLE" in event["id"]:
+            symbol.setLabel("Warning!!! " + ccpInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+            symbol.setVisible(not event["value"])
 
 def IECRegName(symbol, event):
-    tmrIrq = "CCT" + str(int(instanceNum))
+    global tmrIrq
     tmrIrq_index = int(getIRQnumber(tmrIrq))
     enblRegName = _get_enblReg_parms(tmrIrq_index)
     symbol.setValue(enblRegName, 2)
 
 def IFSRegName(symbol, event):
-    tmrIrq = "CCT" + str(int(instanceNum))
+    global tmrIrq
     tmrIrq_index = int(getIRQnumber(tmrIrq))
     statRegName = _get_statReg_parms(tmrIrq_index)
     symbol.setValue(statRegName, 2)
 
 def calcTimerFreq(symbol, event):
+    global clkGenFreqSym
+
     component = symbol.getComponent()
     src = int(component.getSymbolValue("CCP_CCPCON1_CLKSEL"))
     prescale = component.getSymbolValue("CCP_PRESCALER_VALUE")
     if src < 3:
-        clock = int(Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY")) / prescale
+        if isPic32aDspic33aPresent():
+            if src == 1:
+                clock = int(Database.getSymbolValue("core", clkGenFreqSym)) / prescale
+            else:
+                clock = int(Database.getSymbolValue("core", "stdSpeedClkFreq")) / prescale
+        else:
+            clock = int(Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY")) / prescale
         symbol.setValue(clock)
     else:
         clock = component.getSymbolValue("CCP_EXT_CLOCK_FREQ")/prescale
@@ -254,7 +296,7 @@ def CCPCON1combineValues(symbol, event):
     ops = int(ccpSym_CCPCON1_OPS.getSelectedValue()) << 24
     oneshot = 0
     ccsel = 0
-    
+
     if mode == "Timer":
         ccpMod = 0
         oneshot = int(component.getSymbolValue("CCP_CCPCON1_ONESHOT")) << 22
@@ -265,7 +307,7 @@ def CCPCON1combineValues(symbol, event):
         ccpMod = int(ccpSym_Cap_CCPCON1_MOD.getSelectedValue())
     ccpcon1 = ccpMod | ccsel | t32 | prescale | clk | sidl | sync | trig | ops | oneshot
     symbol.setValue(ccpcon1)
-    
+
 
 def CCPCON2combineValues(symbol, event):
     component = symbol.getComponent()
@@ -286,11 +328,11 @@ def CCPCON2combineValues(symbol, event):
             oce = int(component.getSymbolValue("CCP_COMP_CCPCON2_OCEEN")) << 28
             ocf = int(component.getSymbolValue("CCP_COMP_CCPCON2_OCFEN")) << 29
     if mode == "Capture":
-       ics = int(ccpSym_Cap_CCPCON2_ICS.getSelectedValue()) << 16 
+       ics = int(ccpSym_Cap_CCPCON2_ICS.getSelectedValue()) << 16
     ccpcon2 = (asdg) | (asdgm) | (pwmrsen) | (oca) | (ocb) | (occ) | (ocd) | (oce) | (ocf) | (oensync) | (ics)
     symbol.setValue(ccpcon2)
 
-def CCPCON3combineValues(symbol, event):    
+def CCPCON3combineValues(symbol, event):
     component = symbol.getComponent()
     ccpcon3 = 0
     mode = ccpSym_OprationMode.getValue()
@@ -315,7 +357,7 @@ def ccpCaptureCompareInterruptByMode(symbol, event):
         Database.setSymbolValue("core", ccpCaptureCompareInterruptVector, status, 2)
     elif event["value"] == "Capture":
         status = component.getSymbolValue("CCP_CAP_INTERRUPT")
-        Database.setSymbolValue("core", ccpCaptureCompareInterruptVector, status, 2)       
+        Database.setSymbolValue("core", ccpCaptureCompareInterruptVector, status, 2)
 
 def ccpFileGen(symbol, event):
     component = symbol.getComponent()
@@ -335,13 +377,13 @@ def ccpFileGen(symbol, event):
         component.getSymbolByID("CCP_COMPARE_SOURCE").setEnabled(True)
     elif event["value"] == "Capture":
         component.getSymbolByID("CCP_CAPTURE_HEADER").setEnabled(True)
-        component.getSymbolByID("CCP_CAPTURE_SOURCE").setEnabled(True)    
+        component.getSymbolByID("CCP_CAPTURE_SOURCE").setEnabled(True)
 
 def handleMessage(messageID, args):
     retDict = {}
     if (messageID == "CCP_CONFIG_HW_IO"):
         global ccpSym_OprationMode
-        
+
         component = str(ccpInstanceName.getValue()).lower()
         opMode, outputPin, enable = args['config']
 
@@ -382,6 +424,10 @@ def instantiateComponent(ccpComponent):
     global ccpcon1_depList
     global ccpcon2_depList
     global ccpcon3_depList
+    global tmrIrq
+    global CaptureCompareIrq
+    global clkGenFreqSym
+    global clkGenEnableSym
 
     ccpcon1_depList = []
     ccpcon2_depList = []
@@ -397,40 +443,59 @@ def instantiateComponent(ccpComponent):
     instanceNum = filter(str.isdigit,str(ccpComponent.getID()))
     ccpInstanceNum.setDefaultValue(instanceNum)
 
+    peripheralNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
+    for index in range(0, len(peripheralNode)):
+        if peripheralNode[index].getAttribute("name").upper() == "CCP":
+            moduleName = peripheralNode[index].getAttribute("name")
+            break
+
     global mccpPresent
     mccpPresent = ccpComponent.createBooleanSymbol("CCP_MCCP_PRESENT", None)
     mccpPresent.setVisible(False)
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"CCP\"]/instance@[name=\""+ccpInstanceName.getValue()+"\"]/parameters")
-    param_values = []
-    param_values = node.getChildren()
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"" + moduleName + "\"]/instance@[name=\""+ccpInstanceName.getValue()+"\"]/parameters")
     mccp = "0"
-    for index in range(0, len(param_values)):
-        if "MCCP_PRESENT" in param_values[index].getAttribute("name"):
-            mccp = param_values[index].getAttribute("value")
+    if node != None:
+        param_values = []
+        param_values = node.getChildren()
+        for index in range(0, len(param_values)):
+            if "MCCP_PRESENT" in param_values[index].getAttribute("name"):
+                mccp = param_values[index].getAttribute("value")
     if mccp == "0":
         mccpPresent.setDefaultValue(False)
     else:
         mccpPresent.setDefaultValue(True)
 
-    #Clock enable
-    Database.setSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
+    if isPic32aDspic33aPresent() == False:
+        #Clock enable
+        Database.setSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
+        defaultClkFreq = int(Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+        tmrIrq = "CCT" + ccpInstanceNum.getValue()
+        CaptureCompareIrq = "CCP" + ccpInstanceNum.getValue()
+    else:
+        defaultClkFreq = int(Database.getSymbolValue("core", "stdSpeedClkFreq"))
+        tmrIrq = "CCT" + ccpInstanceNum.getValue() + "Interrupt"
+        CaptureCompareIrq = "CCP" + ccpInstanceNum.getValue() + "Interrupt"
+        clockGenerator = setClockGeneratorData(moduleName, getValueGroupName(moduleName, "CCP", "CCP" + str(instanceNum) + "CON1", "CLKSEL"))
+        clkGenFreqSym = "clkGen" + clockGenerator[-1] + "OutFrequency"
+        clkGenEnableSym = "clkGen" + clockGenerator[-1] + "Enable"
 
     # SIDL
     ccpSym_CCPCON2_SIDL = ccpComponent.createBooleanSymbol("CCP_CCPCON1_SIDL", None)
     ccpSym_CCPCON2_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCPxCON1")
     ccpSym_CCPCON2_SIDL.setLabel("Enable Stop in Idle Mode")
     ccpcon1_depList.append("CCP_CCPCON1_SIDL")
-    
+
     #clock source
-    ccpValGrp_CCPCON1_CLKSEL = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP" + str(instanceNum) + "CON1__CLKSEL\"]")
     global ccpSym_CCPCON1_CLKSEL
     clock_names = []
-    _get_bitfield_names(ccpValGrp_CCPCON1_CLKSEL, clock_names)    
+    _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP" + str(instanceNum) + "CON1", "CLKSEL")), clock_names)
     ccpSym_CCPCON1_CLKSEL = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_CLKSEL", None)
     ccpSym_CCPCON1_CLKSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON1")
     ccpSym_CCPCON1_CLKSEL.setLabel("Select Clock Source")
     ccpSym_CCPCON1_CLKSEL.setOutputMode("Value")
     ccpSym_CCPCON1_CLKSEL.setDisplayMode("Description")
+    if int(clock_names[0]['value'], 0) != 0:
+        clock_names.reverse()
     for ii in clock_names:
         ccpSym_CCPCON1_CLKSEL.addKey(ii['desc'], ii['value'], ii['key'])
     ccpSym_CCPCON1_CLKSEL.setDefaultValue(0)
@@ -447,12 +512,14 @@ def instantiateComponent(ccpComponent):
     #prescaler configuration
     global ccpSym_CCPCON1_TMRPS
     prescale_names = []
-    _get_bitfield_names(ccpValGrp_CCPCON1_TMRPS, prescale_names)
+    _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON1", "TMRPS")), prescale_names)
     ccpSym_CCPCON1_TMRPS = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_TMRPS", None)
     ccpSym_CCPCON1_TMRPS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1PR")
     ccpSym_CCPCON1_TMRPS.setLabel("Select Prescaler")
     ccpSym_CCPCON1_TMRPS.setOutputMode("Value")
     ccpSym_CCPCON1_TMRPS.setDisplayMode("Description")
+    if int(prescale_names[0]['value'], 0) != 0:
+        prescale_names.reverse()
     for ii in prescale_names:
         ccpSym_CCPCON1_TMRPS.addKey( ii['desc'], ii['value'], ii['key'] )
     ccpSym_CCPCON1_TMRPS.setDefaultValue(0)
@@ -472,9 +539,9 @@ def instantiateComponent(ccpComponent):
     ccpSym_CLOCK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1PR")
     ccpSym_CLOCK_FREQ.setLabel("CCP Clock Frequency")
     ccpSym_CLOCK_FREQ.setReadOnly(True)
-    ccpSym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    ccpSym_CLOCK_FREQ.setDefaultValue(defaultClkFreq)
     ccpSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + ccpInstanceName.getValue() + "_CLOCK_FREQUENCY","CCP_PRESCALER_VALUE",
-        "CCP_CCPCON1_CLKSEL", "CCP_EXT_CLOCK_FREQ"])    
+        "CCP_CCPCON1_CLKSEL", "CCP_EXT_CLOCK_FREQ", "core.stdSpeedClkFreq", "core." + clkGenFreqSym])
 
      #32 bit timer mode selection bits
     ccpSym_CCPCON1_T32 = ccpComponent.createBooleanSymbol("CCP_CCPCON1_T32", None)
@@ -483,17 +550,27 @@ def instantiateComponent(ccpComponent):
     ccpcon1_depList.append("CCP_CCPCON1_T32")
 
     # ASDG, Timer Gated Time Accumulation Enable bit
-    ccpValGrp_CCPCON2_ASDG = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP" + str(instanceNum) + "CON2__ASDG\"]")
     global ccpSym_CCPCON2_ASDG
     tgate_names = []
-    _get_bitfield_names(ccpValGrp_CCPCON2_ASDG, tgate_names)
+    _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP" + str(instanceNum) + "CON2", "ASDG")), tgate_names)
     ccpSym_CCPCON2_ASDG = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON2_ASDG", None)
     ccpSym_CCPCON2_ASDG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_CCPCON2_ASDG.setLabel("Select Auto Shutdown Source")
     ccpSym_CCPCON2_ASDG.setOutputMode( "Value" )
     ccpSym_CCPCON2_ASDG.setDisplayMode( "Description" )
-    for ii in tgate_names:
-        ccpSym_CCPCON2_ASDG.addKey( ii['key'],ii['value'], ii['desc'] )
+    if isPic32aDspic33aPresent():
+        ccpSym_CCPCON2_ASDG.addKey("disabled" , str(int("0x0",0)), "disabled")
+        ccpSym_CCPCON2_ASDG.addKey("Comparator 1 Output" , str(int("0x1",0)), "Comparator 1 Output")
+        ccpSym_CCPCON2_ASDG.addKey("Comparator 2 Output" , str(int("0x2",0)), "Comparator 2 Output")
+        ccpSym_CCPCON2_ASDG.addKey("OCFC" , str(int("0x4",0)), "OCFC")
+        ccpSym_CCPCON2_ASDG.addKey("OCFD" , str(int("0x8",0)), "OCFD")
+        ccpSym_CCPCON2_ASDG.addKey("ICMn" , str(int("0x10",0)), "ICMn")
+        ccpSym_CCPCON2_ASDG.addKey("CLC1" , str(int("0x20",0)), "CLC1")
+        ccpSym_CCPCON2_ASDG.addKey("OCFA" , str(int("0x40",0)), "OCFA")
+        ccpSym_CCPCON2_ASDG.addKey("OCFB" , str(int("0x80",0)), "OCFB")
+    else:
+        for ii in tgate_names:
+            ccpSym_CCPCON2_ASDG.addKey( ii['key'],ii['value'], ii['desc'] )
     ccpSym_CCPCON2_ASDG.setDefaultValue(0)  # gated time accumulation disabled
     ccpSym_CCPCON2_ASDG.setVisible(True)
     ccpcon2_depList.append("CCP_CCPCON2_ASDG")
@@ -501,31 +578,35 @@ def instantiateComponent(ccpComponent):
     #Auto shutdown configuration
     global ccpSym_CCPCON2_ASDGM
     asdgm_names = []
-    _get_bitfield_names(ccpValGrp_CCPCON2_ASDGM, asdgm_names)
+    _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON2", "ASDGM")), asdgm_names)
     ccpSym_CCPCON2_ASDGM = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON2_ASDGM", ccpSym_CCPCON2_ASDG)
     ccpSym_CCPCON2_ASDGM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_CCPCON2_ASDGM.setLabel("Select Auto Shutdown Gate Mode")
     ccpSym_CCPCON2_ASDGM.setVisible(False if ccpSym_CCPCON2_ASDG.getSelectedValue() == "0" else True)
     ccpSym_CCPCON2_ASDGM.setOutputMode( "Value" )
     ccpSym_CCPCON2_ASDGM.setDisplayMode( "Description" )
+    if int(asdgm_names[0]['value'], 0) != 0:
+        asdgm_names.reverse()
     for ii in asdgm_names:
-        ccpSym_CCPCON2_ASDGM.addKey( ii['key'],ii['value'], ii['desc'] )    
+        ccpSym_CCPCON2_ASDGM.addKey( ii['key'],ii['value'], ii['desc'] )
     ccpSym_CCPCON2_ASDGM.setDependencies(autoShutdownVisibility, ["CCP_CCPCON2_ASDG"])
     ccpcon2_depList.append("CCP_CCPCON2_ASDGM")
 
     global ccpSym_CCPCON3_PSSACE
     shutdown_state = []
-    _get_bitfield_names(ccpValGrp_CCPCON3_PSSACE, shutdown_state)
+    _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON3", "PSSACE")), shutdown_state)
     ccpSym_CCPCON3_PSSACE = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON3_PSSACE", ccpSym_CCPCON2_ASDG)
     ccpSym_CCPCON3_PSSACE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_CCPCON3_PSSACE.setLabel("Output pins (A, C, E) Shutdown State")
     ccpSym_CCPCON3_PSSACE.setVisible(False if ccpSym_CCPCON2_ASDG.getSelectedValue() == "0" else True)
     ccpSym_CCPCON3_PSSACE.setOutputMode( "Value" )
     ccpSym_CCPCON3_PSSACE.setDisplayMode( "Description" )
+    if int(shutdown_state[0]['value'], 0) != 0:
+        shutdown_state.reverse()
     for ii in shutdown_state:
-        ccpSym_CCPCON3_PSSACE.addKey( ii['key'],ii['value'], ii['desc'] )    
+        ccpSym_CCPCON3_PSSACE.addKey( ii['key'],ii['value'], ii['desc'] )
     ccpSym_CCPCON3_PSSACE.setDependencies(autoShutdownVisibility, ["CCP_CCPCON2_ASDG"])
-    ccpcon3_depList.append("CCP_CCPCON3_PSSACE")   
+    ccpcon3_depList.append("CCP_CCPCON3_PSSACE")
 
     if mccpPresent.getValue() == True:
         global ccpSym_CCPCON3_PSSBDF
@@ -536,9 +617,9 @@ def instantiateComponent(ccpComponent):
         ccpSym_CCPCON3_PSSBDF.setOutputMode( "Value" )
         ccpSym_CCPCON3_PSSBDF.setDisplayMode( "Description" )
         for ii in shutdown_state:
-            ccpSym_CCPCON3_PSSBDF.addKey( ii['key'],ii['value'], ii['desc'] )    
+            ccpSym_CCPCON3_PSSBDF.addKey( ii['key'],ii['value'], ii['desc'] )
         ccpSym_CCPCON3_PSSBDF.setDependencies(autoShutdownVisibility, ["CCP_CCPCON2_ASDG"])
-        ccpcon3_depList.append("CCP_CCPCON3_PSSBDF")        
+        ccpcon3_depList.append("CCP_CCPCON3_PSSBDF")
 
     #Auto restart enable
     global ccpSym_CCPCON2_PWMRSEN
@@ -546,9 +627,14 @@ def instantiateComponent(ccpComponent):
     ccpSym_CCPCON2_PWMRSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
     ccpSym_CCPCON2_PWMRSEN.setLabel("Select PWM Restart Option")
     restart_source = []
-    _get_bitfield_names(ccpValGrp_CCPCON2_PWMRSEN, restart_source)
+    valGrpName = getValueGroupName(moduleName, "CCP", "CCP1CON2", "PWMRSEN")
+    if valGrpName == None:
+        valGrpName = "CCP1CON2__PWMRSEN"
+    _get_bitfield_names(getValueGroup(moduleName, valGrpName), restart_source)
     ccpSym_CCPCON2_PWMRSEN.setOutputMode( "Value" )
     ccpSym_CCPCON2_PWMRSEN.setDisplayMode( "Description" )
+    if int(restart_source[0]['value'], 0) != 0:
+        restart_source.reverse()
     for ii in restart_source:
         ccpSym_CCPCON2_PWMRSEN.addKey( ii['key'],ii['value'], ii['desc'] )
     ccpSym_CCPCON2_PWMRSEN.setDefaultValue(0)
@@ -564,12 +650,14 @@ def instantiateComponent(ccpComponent):
     # SYNC source
     global ccpSym_CCPCON1_SYNC
     sync_names = []
-    _get_bitfield_names(ccpValGrp_CCPCON1_SYNC, sync_names)
+    _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON1", "SYNC")), sync_names)
     ccpSym_CCPCON1_SYNC = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_SYNC", None)
     ccpSym_CCPCON1_SYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON1")
     ccpSym_CCPCON1_SYNC.setLabel("Select Trigger/Synchronization Source")
     ccpSym_CCPCON1_SYNC.setOutputMode( "Value" )
     ccpSym_CCPCON1_SYNC.setDisplayMode( "Description" )
+    if int(sync_names[0]['value'], 0) != 0:
+        sync_names.reverse()
     for ii in sync_names:
         ccpSym_CCPCON1_SYNC.addKey( ii['key'],ii['value'], ii['desc'] )
     ccpSym_CCPCON1_SYNC.setDefaultValue(find_key_value(0,sync_names))
@@ -586,17 +674,19 @@ def instantiateComponent(ccpComponent):
     #interrupt postscale
     global ccpSym_CCPCON1_OPS
     postscale = []
-    _get_bitfield_names(ccpValGrp_CCPCON1_OPS, postscale)
+    _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON1", "OPS")), postscale)
     ccpSym_CCPCON1_OPS = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_OPS", None)
     ccpSym_CCPCON1_OPS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON1")
     ccpSym_CCPCON1_OPS.setLabel("Select Interrupt Output Postscale")
     ccpSym_CCPCON1_OPS.setOutputMode( "Value" )
     ccpSym_CCPCON1_OPS.setDisplayMode( "Description" )
+    if int(postscale[0]['value'], 0) != 0:
+        postscale.reverse()
     for ii in postscale:
         ccpSym_CCPCON1_OPS.addKey( ii['key'],ii['value'], ii['desc'] )
     ccpSym_CCPCON1_OPS.setDefaultValue(0)
     ccpSym_CCPCON1_OPS.setVisible(True)
-    ccpcon1_depList.append("CCP_CCPCON1_OPS")    
+    ccpcon1_depList.append("CCP_CCPCON1_OPS")
 
     global ccpSym_OprationMode
     operationMode = ["Timer", "Compare", "Capture"]
@@ -628,10 +718,10 @@ def instantiateComponent(ccpComponent):
     ccpSym_CCPCON3_Value = ccpComponent.createHexSymbol("CCPCON3_REG_VALUE",None)
     ccpSym_CCPCON3_Value.setDefaultValue(0)
     ccpSym_CCPCON3_Value.setVisible(False)
-    ccpSym_CCPCON3_Value.setDependencies(CCPCON3combineValues, ccpcon3_depList)  
+    ccpSym_CCPCON3_Value.setDependencies(CCPCON3combineValues, ccpcon3_depList)
 
     #file generation
-    ccpSym_FileGen = ccpComponent.createIntegerSymbol("CCP_FILE_GEN", None)  
+    ccpSym_FileGen = ccpComponent.createIntegerSymbol("CCP_FILE_GEN", None)
     ccpSym_FileGen.setVisible(False)
     ccpSym_FileGen.setDependencies(ccpFileGen, ["CCP_OPERATION_MODE"])
 
@@ -647,7 +737,7 @@ def instantiateComponent(ccpComponent):
     ccpInterruptHandler = ccpIrq + "_INTERRUPT_HANDLER"
     ccpInterruptHandlerLock = ccpIrq + "_INTERRUPT_HANDLER_LOCK"
     ccpInterruptVectorUpdate = ccpIrq + "_INTERRUPT_ENABLE_UPDATE"
-    ccpIrq_index = int(getIRQnumber(ccpIrq))
+    ccpIrq_index = int(getIRQnumber(tmrIrq))
 
     ccpSym_irq = ccpComponent.createStringSymbol("CCP_TIMER_IRQ", None)
     ccpSym_irq.setVisible(False)
@@ -666,21 +756,21 @@ def instantiateComponent(ccpComponent):
     ccpIFS.setDefaultValue(statRegName)
     ccpIFS.setVisible(False)
 
-    ## EVIC Interrupt Dynamic settings
+    ## Interrupt Dynamic settings
     setTMRInterruptData(ccpSym_TimerInterrupt.getValue())
 
     ccpSymIntEnComment = ccpComponent.createCommentSymbol("CCP_INTRRUPT_ENABLE_COMMENT", None)
     ccpSymIntEnComment.setLabel("Warning!!! " + ccpInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     ccpSymIntEnComment.setVisible(False)
-    ccpSymIntEnComment.setDependencies(updateTMRInterruptData, ["CCP_TIMER_INTERRUPT", "core." + ccpInterruptVectorUpdate])
+    ccpSymIntEnComment.setDependencies(updateTMRInterruptData, ["CCP_TIMER_INTERRUPT", "core." + ccpInterruptVectorUpdate, "core.INTC_" + getIRQnumber(tmrIrq) + "_ENABLE"])
 
-#Calculate the proper interrupt registers using CCP Capture IRQ#
+    #Calculate the proper interrupt registers using CCP Capture IRQ#
     ccpCaptureCompareIrq = "CCP" + str(instanceNum)
     ccpCaptureCompareInterruptVector = ccpCaptureCompareIrq + "_INTERRUPT_ENABLE"
     ccpCaptureCompareInterruptHandler = ccpCaptureCompareIrq + "_INTERRUPT_HANDLER"
     ccpCaptureCompareInterruptHandlerLock = ccpCaptureCompareIrq + "_INTERRUPT_HANDLER_LOCK"
     ccpCaptureCompareInterruptVectorUpdate = ccpCaptureCompareIrq + "_INTERRUPT_ENABLE_UPDATE"
-    ccpCaptureCompareIrq_index = int(getIRQnumber(ccpCaptureCompareIrq))
+    ccpCaptureCompareIrq_index = int(getIRQnumber(CaptureCompareIrq))
 
     ccpSym_capture_irq = ccpComponent.createStringSymbol("CCP_CAPTURE_COMPARE_IRQ", None)
     ccpSym_capture_irq.setVisible(False)
@@ -702,14 +792,14 @@ def instantiateComponent(ccpComponent):
     ccpSymIntEnComment = ccpComponent.createCommentSymbol("CCP_CAP_COMP_INTRRUPT_ENABLE_COMMENT", ccpSym_CaptureMenu)
     ccpSymIntEnComment.setLabel("Warning!!! " + ccpInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     ccpSymIntEnComment.setVisible(False)
-    ccpSymIntEnComment.setDependencies(updateCAPInterruptData, ["CCP_CAP_INTERRUPT", "CCP_COMP_INTERRUPT", "core." + ccpCaptureCompareInterruptVectorUpdate])
+    ccpSymIntEnComment.setDependencies(updateCAPInterruptData, ["CCP_CAP_INTERRUPT", "CCP_COMP_INTERRUPT", "core." + ccpCaptureCompareInterruptVectorUpdate, "core.INTC_" + getIRQnumber(CaptureCompareIrq) + "_ENABLE"])
 
 
     # Clock Warning status
     ccpSym_ClkEnComment = ccpComponent.createCommentSymbol("CCP_CLOCK_ENABLE_COMMENT", None)
-    ccpSym_ClkEnComment.setLabel("Warning!!! " + ccpInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
     ccpSym_ClkEnComment.setVisible(False)
-    ccpSym_ClkEnComment.setDependencies(updateTMRClockWarningStatus, ["core." + ccpInstanceName.getValue() + "_CLOCK_ENABLE"])
+    ccpSym_ClkEnComment.setLabel("Warning!!! " + ccpInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    ccpSym_ClkEnComment.setDependencies(updateTMRClockWarningStatus, ["core." + ccpInstanceName.getValue() + "_CLOCK_ENABLE", "CCP_CCPCON1_CLKSEL", "core." + clkGenEnableSym])
 
     irqEnumName_Sym = ccpComponent.createStringSymbol("IRQ_ENUM_NAME", None)
     irqEnumName_Sym.setVisible(False)
@@ -767,7 +857,7 @@ def instantiateComponent(ccpComponent):
     ccpSourceFile.setProjectPath("config/" + configName + "/peripheral/ccp/")
     ccpSourceFile.setType("SOURCE")
     ccpSourceFile.setMarkup(True)
-    ccpSourceFile.setOverwrite(True) 
+    ccpSourceFile.setOverwrite(True)
 
     # Instance Header File
     ccpHeaderFile = ccpComponent.createFileSymbol("CCP_CAPTURE_HEADER", None)
@@ -787,7 +877,7 @@ def instantiateComponent(ccpComponent):
     ccpSourceFile.setProjectPath("config/" + configName + "/peripheral/ccp/")
     ccpSourceFile.setType("SOURCE")
     ccpSourceFile.setMarkup(True)
-    ccpSourceFile.setOverwrite(True)      
+    ccpSourceFile.setOverwrite(True)
 
     ccpSym_SystemInitFile = ccpComponent.createFileSymbol("CCP_SYS_INT", None)
     ccpSym_SystemInitFile.setType("STRING")

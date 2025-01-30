@@ -32,13 +32,22 @@ def ccpTimerVisible(symbol, event):
         symbol.setVisible(False)
 
 def timerMaxValue(symbol, event):
+    global clkGenFreqSym
+
     component = symbol.getComponent()
     src = int(component.getSymbolValue("CCP_CCPCON1_CLKSEL"))
     unit = ccpTimerUnit[component.getSymbolValue("CCP_UNIT")]
     if(src >= 3):
         clock = component.getSymbolValue("CCP_EXT_CLOCK_FREQ")
     else:
-        clock = Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY")
+        if isPic32aDspic33aPresent():
+            if src == 1:
+                clock = int(Database.getSymbolValue("core", clkGenFreqSym))
+            else:
+                clock = int(Database.getSymbolValue("core", "stdSpeedClkFreq"))
+        else:
+            clock = int(Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+
     if(clock != 0):
         resolution = unit * component.getSymbolValue("CCP_PRESCALER_VALUE")/float(clock)
     else:
@@ -80,9 +89,15 @@ timerUnit = ["millisecond", "microsecond", "nanosecond"]
 ccpSym_TimerUnit = ccpComponent.createComboSymbol("CCP_UNIT", ccpSym_TimerMenu, timerUnit)
 ccpSym_TimerUnit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1PR")
 ccpSym_TimerUnit.setLabel("Timer Period Unit")
-ccpSym_TimerUnit.setDefaultValue("millisecond")          
+ccpSym_TimerUnit.setDefaultValue("millisecond")
 
-clock = Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY")
+if isPic32aDspic33aPresent():
+    if Database.getSymbolValue(ccpInstanceName.getValue().lower(), "CCP_CCPCON1_CLKSEL") == 1:
+        clock = int(Database.getSymbolValue("core", clkGenFreqSym))
+    else:
+        clock = int(Database.getSymbolValue("core", "stdSpeedClkFreq"))
+else:
+    clock = Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY")
 if(clock != 0):
     resolution = 1000.0 * ccpPrescalerValue.getValue()/float(clock)
     max = (65537.0 * resolution)
@@ -96,7 +111,7 @@ ccpSym_PERIOD_MS.setDefaultValue(0.3)
 ccpSym_PERIOD_MS.setMin(0.0)
 ccpSym_PERIOD_MS.setMax(max)
 ccpSym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + ccpInstanceName.getValue() + "_CLOCK_FREQUENCY", "CCP_CLOCK_FREQ",
-    "CCP_CCPCON1_T32", "CCP_UNIT"])
+    "CCP_CCPCON1_T32", "CCP_UNIT", "core.stdSpeedClkFreq", "core." + clkGenFreqSym])
 
 if clock != 0:
     period = (ccpSym_PERIOD_MS.getValue() / resolution) - 1
@@ -119,4 +134,3 @@ ccpSym_CCPCON1_ONESHOT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + 
 ccpSym_CCPCON1_ONESHOT.setLabel("Enable One Shot")
 ccpcon1_depList.append("CCP_CCPCON1_ONESHOT")
 
-    

@@ -63,7 +63,7 @@ static volatile CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
 void ${CCP_INSTANCE_NAME}_TimerInitialize(void)
 {
     /* Disable Timer */
-    CCP${CCP_INSTANCE_NUM}CON1CLR = _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
+    CCP${CCP_INSTANCE_NUM}CON1 &= ~_CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
 
     CCP${CCP_INSTANCE_NUM}CON1 = 0x${CCPCON1_REG_VALUE};
 
@@ -78,7 +78,7 @@ void ${CCP_INSTANCE_NAME}_TimerInitialize(void)
     CCP${CCP_INSTANCE_NUM}PR = ${CCP_PERIOD}U;
 
     <#if CCP_TIMER_INTERRUPT == true>
-    ${CCP_IEC_REG}SET = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG} |= _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
     </#if>
 
 }
@@ -86,13 +86,13 @@ void ${CCP_INSTANCE_NAME}_TimerInitialize(void)
 
 void ${CCP_INSTANCE_NAME}_TimerStart(void)
 {
-    CCP${CCP_INSTANCE_NUM}CON1SET = _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
+    CCP${CCP_INSTANCE_NUM}CON1 |= _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
 }
 
 
 void ${CCP_INSTANCE_NAME}_TimerStop (void)
 {
-    CCP${CCP_INSTANCE_NUM}CON1CLR = _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
+    CCP${CCP_INSTANCE_NUM}CON1 &= ~_CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
 }
 
 <#if CCP_CCPCON1_T32 == false>
@@ -140,7 +140,7 @@ void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}Obj.context;
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
-    ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;
+    ${CCP_IFS_REG} &= ~_${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;
 
     if((${CCP_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
@@ -152,13 +152,13 @@ void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 void ${CCP_INSTANCE_NAME}_TimerInterruptEnable(void)
 {
 
-    ${CCP_IEC_REG}SET = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG} |= _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
 }
 
 
 void ${CCP_INSTANCE_NAME}_TimerInterruptDisable(void)
 {
-    ${CCP_IEC_REG}CLR = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG} &= ~_${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
 }
 
 

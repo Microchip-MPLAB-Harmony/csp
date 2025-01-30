@@ -59,7 +59,7 @@ static volatile CCP_CAPTURE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CaptureObj;
 void ${CCP_INSTANCE_NAME}_CaptureInitialize (void)
 {
     /* Disable Timer */
-    CCP${CCP_INSTANCE_NUM}CON1CLR = _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
+    CCP${CCP_INSTANCE_NUM}CON1 &= ~_CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
 
     CCP${CCP_INSTANCE_NUM}CON1 = 0x${CCPCON1_REG_VALUE};
 
@@ -69,24 +69,24 @@ void ${CCP_INSTANCE_NAME}_CaptureInitialize (void)
 
     <#if CCP_TIMER_INTERRUPT == true>
     /* Enable Timer overflow interrupt */
-    ${CCP_IEC_REG}SET = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG} |= _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
     </#if>
     <#if CCP_CAP_INTERRUPT == true>
     /* Enable input capture interrupt */
-    ${CCP_CAP_COMP_IEC_REG}SET = _${CCP_CAP_COMP_IEC_REG}_CCP${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_CAP_COMP_IEC_REG} |= _${CCP_CAP_COMP_IEC_REG}_CCP${CCP_INSTANCE_NUM}IE_MASK;
     </#if>
 }
 
 
 void ${CCP_INSTANCE_NAME}_CaptureStart (void)
 {
-    CCP${CCP_INSTANCE_NUM}CON1SET = _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
+    CCP${CCP_INSTANCE_NUM}CON1 |= _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
 }
 
 
 void ${CCP_INSTANCE_NAME}_CaptureStop (void)
 {
-    CCP${CCP_INSTANCE_NUM}CON1CLR = _CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
+    CCP${CCP_INSTANCE_NUM}CON1 &= ~_CCP${CCP_INSTANCE_NUM}CON1_ON_MASK;
 }
 
 <#if CCP_CCPCON1_T32 == true>
@@ -114,7 +114,7 @@ void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler(void)
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}TimerObj.context;
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
-    ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
+    ${CCP_IFS_REG} &= ~_${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
     if( (${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn != NULL))
     {
         ${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn(status, context);
@@ -134,7 +134,7 @@ void __attribute__((used)) CCP${CCP_INSTANCE_NUM}_InterruptHandler(void)
 {
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}CaptureObj.context;
-    ${CCP_CAP_COMP_IFS_REG}CLR = _${CCP_CAP_COMP_IFS_REG}_CCP${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
+    ${CCP_CAP_COMP_IFS_REG} &= ~_${CCP_CAP_COMP_IFS_REG}_CCP${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
     if( (${CCP_INSTANCE_NAME?lower_case}CaptureObj.callback_fn != NULL))
     {
         ${CCP_INSTANCE_NAME?lower_case}CaptureObj.callback_fn(context);

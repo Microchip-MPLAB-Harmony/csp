@@ -21,17 +21,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-ccpBitField_CCPCON2_OENSYNC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON2"]/bitfield@[name="OENSYNC"]')
-ccpValGrp_CCPCON2_OENSYNC = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON2__OENSYNC\"]")
-
-ccpBitField_CCPCON3_POLACE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON3"]/bitfield@[name="POLACE"]')
-ccpValGrp_CCPCON3_POLACE = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON3__POLACE\"]")
-
-ccpBitField_CCPCON2_OENSYNC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON2"]/bitfield@[name="OENSYNC"]')
-ccpValGrp_CCPCON2_OENSYNC = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON2__OENSYNC\"]")
-
-ccpValGrp_CCPCON2_ICS = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON2__ICS\"]")
-
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -52,7 +41,7 @@ def ccpCompareVisible(symbol, event):
     if event["value"] == "Compare":
         symbol.setVisible(True)
     else:
-        symbol.setVisible(False)        
+        symbol.setVisible(False)
 ###################################################################################################
 ########################################## Capture  #############################################
 ###################################################################################################
@@ -71,8 +60,9 @@ ccpSym_Comp_CCPCON1_MOD.addKey("16-Bit/32-Bit Single Edge mode: Drives output lo
 ccpSym_Comp_CCPCON1_MOD.addKey("16-Bit/32-Bit Single Edge mode: Toggles output on compare match", "3", "16-Bit/32-Bit Single Edge mode: Toggles output on compare match")
 ccpSym_Comp_CCPCON1_MOD.addKey("Dual Edge Compare mode", "4", "Dual Edge Compare mode")
 ccpSym_Comp_CCPCON1_MOD.addKey("Dual Edge Compare mode, buffered", "5", "Dual Edge Compare mode, buffered")
-ccpSym_Comp_CCPCON1_MOD.addKey("Center-Aligned Pulse Compare mode, buffered", "6", "Center-Aligned Pulse Compare mode, buffered")
-ccpSym_Comp_CCPCON1_MOD.addKey("Variable Frequency Pulse mode", "7", "Variable Frequency Pulse mode")
+if isPic32aDspic33aPresent() == False:
+    ccpSym_Comp_CCPCON1_MOD.addKey("Center-Aligned Pulse Compare mode, buffered", "6", "Center-Aligned Pulse Compare mode, buffered")
+    ccpSym_Comp_CCPCON1_MOD.addKey("Variable Frequency Pulse mode", "7", "Variable Frequency Pulse mode")
 ccpSym_Comp_CCPCON1_MOD.addKey("External Input mode: Pulse generator is disabled, source is selected by ICS<2:0>", "15", "External Input mode: Pulse generator is disabled, source is selected by ICS<2:0>")
 ccpSym_Comp_CCPCON1_MOD.setDefaultValue(0)
 ccpSym_Comp_CCPCON1_MOD.setOutputMode( "Value" )
@@ -85,9 +75,11 @@ ccpSym_Comp_CCPCON2_ICS = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON2
 ccpSym_Comp_CCPCON2_ICS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON1")
 ccpSym_Comp_CCPCON2_ICS.setLabel("Select Input Capture Source")
 capture_source = []
-_get_bitfield_names(ccpValGrp_CCPCON2_ICS, capture_source)
+_get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON2", "ICS")), capture_source)
 ccpSym_Comp_CCPCON2_ICS.setOutputMode( "Value" )
 ccpSym_Comp_CCPCON2_ICS.setDisplayMode( "Description" )
+if int(capture_source[0]['value'], 0) != 0:
+    capture_source.reverse()
 for ii in capture_source:
     ccpSym_Comp_CCPCON2_ICS.addKey( ii['key'],ii['value'], ii['desc'] )
 ccpSym_Comp_CCPCON2_ICS.setDefaultValue(0)
@@ -148,7 +140,7 @@ if mccpPresent.getValue() == True:
     ccpSym_Comp_CCPCON3_DT.setMin(0)
     ccpSym_Comp_CCPCON3_DT.setMax(63)
     ccpcon3_depList.append("CCP_COMP_CCPCON3_DT")
-    
+
 ccpSym_Comp_Interrupt = ccpComponent.createBooleanSymbol("CCP_COMP_INTERRUPT", ccpSym_CompareMenu)
 ccpSym_Comp_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:IEC2")
 ccpSym_Comp_Interrupt.setLabel("Enable Compare Interrupt")
@@ -193,9 +185,11 @@ ccpSym_Comp_CCPCON2_OENSYNC = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCP
 ccpSym_Comp_CCPCON2_OENSYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON2")
 ccpSym_Comp_CCPCON2_OENSYNC.setLabel("Output Enable Synchronization")
 sync_source = []
-_get_bitfield_names(ccpValGrp_CCPCON2_OENSYNC, sync_source)
+_get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON2", "OENSYNC")), sync_source)
 ccpSym_Comp_CCPCON2_OENSYNC.setOutputMode( "Value" )
 ccpSym_Comp_CCPCON2_OENSYNC.setDisplayMode( "Description" )
+if int(sync_source[0]['value'], 0) != 0:
+    sync_source.reverse()
 for ii in sync_source:
     ccpSym_Comp_CCPCON2_OENSYNC.addKey( ii['key'],ii['value'], ii['desc'] )
 ccpSym_Comp_CCPCON2_OENSYNC.setDefaultValue(0)
@@ -207,9 +201,14 @@ ccpSym_Comp_CCPCON3_POLACE = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPC
 ccpSym_Comp_CCPCON3_POLACE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON3")
 ccpSym_Comp_CCPCON3_POLACE.setLabel("Output Polarity for High Side Outputs")
 polarity_source = []
-_get_bitfield_names(ccpValGrp_CCPCON3_POLACE, polarity_source)
+valGrpName = getValueGroupName(moduleName, "CCP", "CCP1CON3", "POLACE")
+if "CCP1CON3__POLACE" not in valGrpName:
+    valGrpName = "CCP1CON3__POLACE"
+_get_bitfield_names(getValueGroup(moduleName, valGrpName), polarity_source)
 ccpSym_Comp_CCPCON3_POLACE.setOutputMode( "Value" )
 ccpSym_Comp_CCPCON3_POLACE.setDisplayMode( "Description" )
+if int(polarity_source[0]['value'], 0) != 0:
+    polarity_source.reverse()
 for ii in polarity_source:
     ccpSym_Comp_CCPCON3_POLACE.addKey( ii['key'],ii['value'], ii['desc'] )
 ccpSym_Comp_CCPCON3_POLACE.setDefaultValue(0)
