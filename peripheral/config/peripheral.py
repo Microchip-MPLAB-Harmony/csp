@@ -188,7 +188,7 @@ else:
     peripherals["TC_6082"]=["TMR"]
 
 # Create RAM Peripheral Library
-if ("CEC173" not in processor):
+if ("CEC173" not in processor and "dsPIC33AK" not in processor and "PIC32AK" not in processor):
     print("CSP: create component: Peripheral RAM")
     ramComponent = Module.CreateComponent("ram", "RAM", "/Peripherals/RAM/", "../peripheral/ram/config/ram.py")
     ramComponent.setDisplayType("Peripheral Library")
