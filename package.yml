@@ -216,4 +216,4 @@ package:
       version: "1.2.17"
     - name: "PIC32AK-GC_DEV_DFP"
       type: "dfp"
-      version: "0.1.49"
+      version: "0.1.58"

@@ -559,6 +559,8 @@ def instantiateComponent( coreComponent ):
     coreSeries = coreComponent.createStringSymbol( "CoreSeries", None )
     archName = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
     seriesName = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" )
+   
+    
     if "33Axxx" in archName:
         if CORE_PIC32A in seriesName:
             coreArch.setDefaultValue(CORE_PIC32A)
@@ -568,8 +570,8 @@ def instantiateComponent( coreComponent ):
         coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
 
     coreArch.setReadOnly( True )
-    coreArch.setVisible( True )
-
+    coreArch.setVisible( False )
+    
     coreSeries.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" ) )
     coreSeries.setReadOnly( True )
     coreSeries.setVisible( False )
