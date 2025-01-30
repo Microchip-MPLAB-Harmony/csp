@@ -5,6 +5,7 @@ import {
 } from '@mplab_harmony/harmony-plugin-client-lib';
 import { Button } from 'primereact/button';
 import { InputNumber } from 'primereact/inputnumber';
+import { InputTextarea } from 'primereact/inputtextarea';
 
 
 const PLLControllerAutoCalcBox = (props: {
@@ -42,7 +43,7 @@ const PLLControllerAutoCalcBox = (props: {
             delete calcMap.calcPlloFreq;
         }
         if (calcMap.calcPllVcoDivFreq !== undefined) {
-            setPlloVcoDivValue(calcMap.calcPllVcoDivFreq); 
+            setPlloVcoDivValue(calcMap.calcPllVcoDivFreq);
             delete calcMap.calcPllVcoDivFreq;
         }
         setPllParamsMap(calcMap);
@@ -86,20 +87,33 @@ const PLLControllerAutoCalcBox = (props: {
     };
 
 
-   return (
+    return (
+
+
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <label>
-                    PLL{props.index} Clock Source Frequency (Hz)
-                </label>
-                <InputNumber
-                    value={props.inputClkSrcFreq}
-                    readOnly={true}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1.5rem' }}>
+                <InputTextarea
+                    value={"Note: The PLL FOUT frequency and PLL VCO DIV frequency share the same PLLPRE divider and FBDIV multiplier components. If only the PLL FOUT frequency is requested, the PLL VCO DIV frequency will also be updated accordingly, and vice versa.\nIf both frequencies are requested simultaneously, the auto-calculation function will aim to achieve the closest possible values for both, prioritizing the PLL FOUT frequency."}
+                    rows={6} cols={90}
                 />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <label>
-                    Request PLL{props.index} Out output frequency (Hz)
+                    PLL{props.index} Clock Source Frequency :
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <InputNumber
+                        value={props.inputClkSrcFreq}
+                        readOnly={true}
+                    />
+                    <label>
+                        Hz
+                    </label>
+                </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <label>
+                    Request PLL{props.index} FOUT frequency
                     <input
                         type="checkbox"
                         checked={isChecked1}
@@ -107,17 +121,23 @@ const PLLControllerAutoCalcBox = (props: {
                     />
                 </label>
                 {isChecked1 && (
-                    <InputNumber
-                        value={inputValue1}
-                        onValueChange={(e) => setInputValue1(e.value !== null ? e.value : 0)}
-                        placeholder="Enter Frequency(Hz)"
-                        showButtons={false}
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <InputNumber
+                            value={inputValue1}
+                            onValueChange={(e) => setInputValue1(e.value !== null ? e.value : 0)}
+                            placeholder="Enter Frequency(Hz)"
+                            showButtons={false}
+                        />
+                        <label>
+                            Hz
+                        </label>
+                    </div>
+
                 )}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <label>
-                    Request PLL{props.index} VCO Divider frequency (Hz)
+                    Request PLL{props.index} VCO DIV frequency
                     <input
                         type="checkbox"
                         checked={isChecked2}
@@ -125,39 +145,55 @@ const PLLControllerAutoCalcBox = (props: {
                     />
                 </label>
                 {isChecked2 && (
-                    <InputNumber
-                        value={inputValue2}
-                        onValueChange={(e) => setInputValue2(e.value !== null ? e.value : 0)}
-                        placeholder="Enter Frequency(Hz)"
-                        showButtons={false}
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <InputNumber
+                            value={inputValue2}
+                            onValueChange={(e) => setInputValue2(e.value !== null ? e.value : 0)}
+                            placeholder="Enter Frequency(Hz)"
+                            showButtons={false}
+                        />
+                        <label>
+                            Hz
+                        </label>
+                    </div>
                 )}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <Button
                     label={'Calculate'}
                     onClick={handleClick}
-                    disabled = {!isChecked1 && !isChecked2}
+                    disabled={!isChecked1 && !isChecked2}
                 />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <label>
-                    Calculated PLL{props.index} Fout frequency (Hz)
+                    Calculated PLL{props.index} FOUT frequency
                 </label>
-                <InputNumber
-                    value={plloOutputValue}
-                    readOnly={true}
-                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <InputNumber
+                        value={plloOutputValue}
+                        readOnly={true}
+                    />
+                    <label>
+                        Hz
+                    </label>
+                </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <label>
-                    Calculated PLL{props.index} VCO Divider frequency (Hz)
+                    Calculated PLL{props.index} VCO DIV frequency (Hz)
                 </label>
-                <InputNumber
-                    value={plloVcoDivValue}
-                    readOnly={true}
-                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <InputNumber
+                        value={plloVcoDivValue}
+                        readOnly={true}
+                    />
+                    <label>
+                        Hz
+                    </label>
+                </div>
             </div>
+
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1.5rem' }}>
                 <Button
                     label={'Accept'}

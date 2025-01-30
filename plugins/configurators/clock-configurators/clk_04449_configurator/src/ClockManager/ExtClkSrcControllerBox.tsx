@@ -14,6 +14,7 @@ import {
 } from 'clock-common/lib/Tools/ClockJSONTools';
 import LoadDynamicComponents from 'clock-common/lib/Components/Dynamic/LoadDynamicComponents';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
+import { InputNumber } from 'primereact/inputnumber';
 
 
 const ExtClkSrcControllerBox = (props: {
@@ -26,7 +27,7 @@ const ExtClkSrcControllerBox = (props: {
         getDynamicSymbolsFromJSON(props.ExtClkSrcControllerData)
     );
 
-    const pllFreq = useIntegerSymbol({
+    const extClkSrcFrq = useIntegerSymbol({
         componentId,
         symbolId: 'extClkSrcFreq'
     });
@@ -74,15 +75,15 @@ const ExtClkSrcControllerBox = (props: {
             />
             
             <PlainLabel
-                disPlayText="External Clock Sources"
+                disPlayText="External Clock (POSC) Source"
                 className={props.cx('extClkSrcLabel')}
             />
-            {extClkSrc.value !== "None" && (
+            {/* {extClkSrc.value !== "None" && ( */}
                 <PlainLabel
-                    disPlayText={`Primary/External Clock Frequency`}
+                    disPlayText={`Primary/External Clock Frequency (POSC)`}
                     className={props.cx('priClkFreqLabel')}
                 />
-            )}
+           {/* // )} */}
             {extClkSrc.value !== "Primary Oscillator" && (
                 <PlainLabel
                     disPlayText={`Enable CLKO Pin`}
@@ -109,6 +110,16 @@ const ExtClkSrcControllerBox = (props: {
                     className={props.cx('refi2FreqLabel')}
                 />
             )}
+            {extClkSrc.value == "None" && (
+                <InputNumber
+                    value={0}
+                    suffix=' Hz'
+                    showButtons={false}
+                    className={props.cx('primaryOscFreq')}
+                    disabled ={true}
+                />)
+            }
+                     
             <InputNumberDefault
                 componentId={componentId}
                 symbolId={'extClkSrcFreq'}

@@ -142,10 +142,10 @@ const PLLControllerBox = (props: {
                 disabled={!pllEnable.value}
             />
             <Dialog
-                header='Auto Calculate PLL Dividers'
+                header='Auto Calculate PLL FOUT and PLL VCO DIV frequencies'
                 visible={dialogStatus}
                 maximizable={true}
-                style={{ width: '45rem', height: '35rem' }}
+                style={{ width: '55rem', height: '45rem' }}
                 onHide={() => {
                     dialogClosed(false);
                 }}>

@@ -1256,6 +1256,7 @@ def pllPfdDivFreqCb(symbol, event):
     component = symbol.getComponent() 
     value = calcPllVcoPfdFreq(component, pllNo) if component.getSymbolValue(PLL_ENABLE.format(pllNo)) else 0
     symbol.setValue(value)  
+    
 global calcPllVcoPfdFreq
 def calcPllVcoPfdFreq(component, pllNo):
     pllClkSrcFreq = component.getSymbolValue(PLL_CLOCK_SOURCE_FREQ.format(pllNo))
@@ -1264,7 +1265,8 @@ def calcPllVcoPfdFreq(component, pllNo):
     pllVcoPfdFreq = 0
     if pllPre > 0 :
         pllVcoPfdFreq = (pllClkSrcFreq * pllFbd) / (pllPre)   
-    return pllVcoPfdFreq           
+    return pllVcoPfdFreq 
+          
 def calcPllVcoDivFreq(component, pllNo):
     pllClkSrcFreq = component.getSymbolValue(PLL_CLOCK_SOURCE_FREQ.format(pllNo))
     pllPre = component.getSymbolValue(PLLPRE.format(pllNo))
@@ -1945,7 +1947,7 @@ for i in range(1, totalPllCount+1):
     pllVcoPfdFreq.setLabel("Calculated PFD Divider Frequency")
     pllVcoPfdFreq.setVisible(False)
     pllVcoPfdFreq.setReadOnly(True)
-    pllVcoPfdFreq.setDependencies(pllPfdDivFreqCb ,[PLL_ENABLE.format(i),PLL_CALC_PFD_FREQ.format(i) ,PLL_CLOCK_SOURCE_FREQ.format(i),PLLPRE.format(i),PLLFBD.format(i)])
+    pllVcoPfdFreq.setDependencies(pllPfdDivFreqCb ,[PLL_ENABLE.format(i) ,PLL_CLOCK_SOURCE_FREQ.format(i),PLLPRE.format(i),PLLFBD.format(i)])
         
     pllVcoDiv = createClkIntSymbol(coreComponent,PLL_INTDIV.format(i),pllClkMenu,pllIntdivDefaultValue,"VCO Integer Divider(INTDIV)")
     pllVcoDiv.setVisible(True)
@@ -2054,8 +2056,15 @@ for i in range(1, totalClkGenCount+1):
     if i in defaultEnabledClkGenList :
         clkGenMenu.setValue(True)
         clkGenMenu.setReadOnly(True)    
-    
+       
     clkGenClkSrc = createKeyValueSettingSymbol(coreComponent,CLK_GEN_NOSC.format(i),INTERNAL_OSCILLATOR,CLK_CON_REG_GROUP,CLK_CON_REG,NOSC,clkGenMenu)
+    if i ==2 :
+        clkGenClkSrc.setReadOnly(True)
+    
+    if i==3 :
+        clkGenClkSrc.setReadOnly(True) 
+        clkGenClkSrc.setSelectedKey(BACKUP_FRC_OSCILLATOR)    
+                   
     clkGenClkSrc.setLabel("Clock Source")
     clkGenClkSrc.setVisible(True)
     clkGenClkSrc.setHelp(
@@ -2096,6 +2105,19 @@ for i in range(1, totalClkGenCount+1):
             	+ Variables.get("__PROCESSOR")
             	+ ";comp:clk_04449;register:CLKxDIV"
         )
+        
+    if( i == 4): #condition added specifically for plugin requirement
+        enableClkDiv = createClkBooleanSymbol(coreComponent, CLK_GEN_DIVIDER_ENABLE.format(i), clkGenMenu, "Enable Clock Divider", False)
+        enableClkDiv.setVisible(False)
+        
+        intDiv = coreComponent.createIntegerSymbol(CLK_GEN_INTDIV.format(i), enableClkDiv)
+        intDiv.setDefaultValue(1)
+        intDiv.setVisible(False)
+
+        fracDiv = coreComponent.createIntegerSymbol(CLK_GEN_FRACDIV.format(i), enableClkDiv)
+        fracDiv.setDefaultValue(0)
+        fracDiv.setVisible(False)
+
         
     clkGenFreqCmnt = coreComponent.createCommentSymbol(CLK_GEN_CALCULATED_FREQ_CMNT.format(i), clkGenMenu)
     paramName = "CLK_GEN_"+str(i)
