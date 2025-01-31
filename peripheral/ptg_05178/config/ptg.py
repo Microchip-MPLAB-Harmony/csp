@@ -41,8 +41,8 @@ MICROSECOND_COMPENSATION  = 1000000
 
 CLK_SRC_KEY = "CLK_SRC"
 CLK_FREQ_KEY = "CLK_FREQ"
-CLOCK_SETTINGS_KEY = "Clock Settings"
-WATCHDOG_TRIGGER_SETTINGS_KEY  = "WatchDog and Trigger Settings"
+CLOCK_SETTINGS_KEY = "Clock_Settings"
+WATCHDOG_TRIGGER_SETTINGS_KEY  = "WatchDog_And_TriggerSettings"
 PTG_WDT = "PTGWDT"
 PTG_ITM = "PTGITM"
 STEP_SEQUENCE_QUEUE_KEY = "StepSequenceQueue"
@@ -71,7 +71,7 @@ COUNTER1_KEY = "PTGC1LIM"
 HOLD_VALUE_KEY = "PTGHOLD"
 ADJUST_VALUE_KEY = "PTGADJ"
 LITERAL_VALUE_KEY = "PTGL0"
-INTERRUPT_SETTINGS_KEY = "Interrupt Settings"
+INTERRUPT_SETTINGS_KEY = "Interrupt_Settings"
 INTERRUPT_MODE_TEMPLATE = "{}Interrupt"
 INTERRUPT = "Interrupt"
 IC_PREFIX = "INTC"
@@ -835,7 +835,7 @@ def instantiateComponent(ptgComponent):
 
     clkSrc = ptgComponent.createStringSymbol(CLK_SRC_KEY, clk_setting)
     clkSrc.setLabel("Clock Source")
-    clkSrc.setDefaultValue("Clock Generator 10") # read from atdf
+    clkSrc.setDefaultValue("Clock Generator 10")
     clkSrc.setReadOnly(True)
 
     clkDiv = createKeyValueSetSymbol( ptgComponent, MODULE_NAME, PTG, CON, PTGDIV, clk_setting)
