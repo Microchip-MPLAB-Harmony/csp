@@ -174,12 +174,11 @@ const InterruptTable = () => {
     }
     let id = ROWID_NAME_INTERRUPTID_OBJECT_MAP[rowData.id]['id'];
     let symbolId = 'INTC_' + id + '_HANDLER';
-    let handlerLockId = 'INTC_' + id + '_HANDLER_LOCK';
     return (
       <InputText
         component_id={component_id}
         symbolId={symbolId}
-        symbolListeners={[symbolId, handlerLockId]}
+        symbolListeners={[symbolId]}
         styleObject={Object.fromEntries(inputTextStyle)}
         className={null}
         onChange={HandlerChanged}
