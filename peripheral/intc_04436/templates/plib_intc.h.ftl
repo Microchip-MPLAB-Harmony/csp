@@ -93,8 +93,7 @@ typedef enum
 <#list 0..MAX_EXTERNAL_INT_COUNT as i>
     <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
     <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
-        <#assign IECMask = "_" + .vars["extInt" + i + "IECReg"] + "_INT" + i + "IE_MASK"/>
-        <#lt>    EXTERNAL_INT_${i} = ${IECMask},  /**< Mask for enabling/disabling External Interrupt ${i} */
+        <#lt>    EXTERNAL_INT_${i} = ${i},  /**< External Interrupt ${i} */
     </#if>
 </#list>
 }EXTERNAL_INT_PIN;

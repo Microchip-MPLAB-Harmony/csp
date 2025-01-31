@@ -145,12 +145,38 @@ void ${moduleNameUpperCase}_Restore( bool state )
 <#if 0 < numOfEnabledExtInt>
 void ${moduleNameUpperCase}_ExternalInterruptEnable( EXTERNAL_INT_PIN extIntPin )
 {
-    IEC1 |= extIntPin;
+    switch (extIntPin)
+    {
+    <#list 0..MAX_EXTERNAL_INT_COUNT as i>
+        <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
+        <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
+        case EXTERNAL_INT_${i}: 
+            _INT${i}IE = 1U; 
+            break;
+
+        </#if>
+    </#list>
+        default: /* Invalid pin, do nothing */ 
+            break;
+    }
 }
 
 void ${moduleNameUpperCase}_ExternalInterruptDisable( EXTERNAL_INT_PIN extIntPin )
 {
-    IEC1 &= ~extIntPin;
+    switch (extIntPin)
+    {
+    <#list 0..MAX_EXTERNAL_INT_COUNT as i>
+        <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
+        <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
+        case EXTERNAL_INT_${i}: 
+            _INT${i}IE = 0U; 
+            break;
+            
+        </#if>
+    </#list>
+        default: /* Invalid pin, do nothing */ 
+            break;
+    }
 }
 
 bool ${moduleNameUpperCase}_ExternalInterruptCallbackRegister(
@@ -182,7 +208,6 @@ bool ${moduleNameUpperCase}_ExternalInterruptCallbackRegister(
 <#list 0..MAX_EXTERNAL_INT_COUNT as i>
     <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
     <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
-    <#assign IFS_REG = .vars["extInt" + i + "IFSReg"]>
 /**
  @brief    Interrupt Handler for External Interrupt pin ${i}.
 
@@ -196,10 +221,8 @@ void __attribute__((used)) INT${i}_InterruptHandler(void)
         context_var = extInt${i}CbObj.context;
         extInt${i}CbObj.callback (EXTERNAL_INT_${i}, context_var);
     }
-<#assign IFSMask = "_" + .vars["extInt" + i + "IFSReg"] + "_INT" + i + "IF_MASK"/>
-<#lt>    ${IFS_REG} &= ~${IFSMask};
+    _INT${i}IF = 0U;
 }
-
     </#if>
 </#list>
 </#if>
