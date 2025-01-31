@@ -18,6 +18,8 @@ const PLLControllerAutoCalcBox = (props: {
 }) => {
 
     const componentId = props.componentId;
+    const maxPllVcoFreq = 800000000;
+    const maxPlloFreq = 800000000;
 
     const [isChecked1, setIsChecked1] = useState(false);
     const [isChecked2, setIsChecked2] = useState(false);
@@ -127,9 +129,10 @@ const PLLControllerAutoCalcBox = (props: {
                             onValueChange={(e) => setInputValue1(e.value !== null ? e.value : 0)}
                             placeholder="Enter Frequency(Hz)"
                             showButtons={false}
+                            max={maxPlloFreq}
                         />
                         <label>
-                            Hz
+                        {'Hz <=800 MHz'}
                         </label>
                     </div>
 
@@ -151,9 +154,10 @@ const PLLControllerAutoCalcBox = (props: {
                             onValueChange={(e) => setInputValue2(e.value !== null ? e.value : 0)}
                             placeholder="Enter Frequency(Hz)"
                             showButtons={false}
+                            max={maxPllVcoFreq}
                         />
                         <label>
-                            Hz
+                        {'Hz <=800 MHz'}
                         </label>
                     </div>
                 )}

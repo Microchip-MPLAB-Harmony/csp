@@ -128,6 +128,7 @@
 </#list>
 <#if useClockMonitor>
 <#list 1..maxClockMon as i>
+<#if (.vars["cm"+i+"Enable"]??) && (.vars["cm"+i+"Enable"] == true)>
 //CLOCK CMxCON CNTDIV options
 <#list clkmonCntDivOptions as options>
 <#if options != "">
@@ -159,6 +160,7 @@
 </#if>
 </#list>
 
+</#if>
 </#list>
 </#if>
 

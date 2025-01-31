@@ -1320,7 +1320,7 @@ def clkGenBackUpClkSrcCb(symbol, event):
     failSafeEnableBit = component.getSymbolByID(CLK_GEN_FSCMEN.format(clkPllNo))
 
     if clkGenFailSafeEnableVal == True:
-           failSafeEnableBit.setSelectedKey("enabled")
+        failSafeEnableBit.setSelectedKey("enabled")
     else :
         failSafeEnableBit.setSelectedKey("disabled")       
     # symbol.setVisible(clkGenFailSafeEnableVal)      
@@ -1951,6 +1951,7 @@ for i in range(1, totalPllCount+1):
         
     pllVcoDiv = createClkIntSymbol(coreComponent,PLL_INTDIV.format(i),pllClkMenu,pllIntdivDefaultValue,"VCO Integer Divider(INTDIV)")
     pllVcoDiv.setVisible(True)
+    pllVcoDiv.setDefaultValue(1)
     pllVcoDiv.setHelp(
         "atmel;device:"
         + Variables.get("__PROCESSOR")
@@ -1978,10 +1979,8 @@ for i in range(1, totalPllCount+1):
         + Variables.get("__PROCESSOR")
         + ";comp:clk_04449;register:PLLxDIV"
     )
-    if i == 1:
-        pllPostDiv1.setValue("4")
-    else:
-         pllPostDiv1.setValue("1")    
+    pllPostDiv1.setValue("4")
+  
 
     pllPostDiv2 = coreComponent.createComboSymbol(POSTDIV2.format(i).format(i),pllClkMenu,pllPostDiv2Options) 
     pllPostDiv2.setLabel("Post Divider 2(POSTDIV2)")
@@ -2036,8 +2035,9 @@ for i in range(1, totalPllCount+1):
         + ";comp:clk_04449;register:PLLxCON"
     )
     
-    pllVcoDivFreq.setValue(calcPllVcoDivFreq(pllVcoDivFreq.getComponent(),i))
-    plloFreq.setValue(calcPlloFreq(plloFreq.getComponent(),i))
+    if pllClkMenu:
+        pllVcoDivFreq.setValue(calcPllVcoDivFreq(pllVcoDivFreq.getComponent(),i))
+        plloFreq.setValue(calcPlloFreq(plloFreq.getComponent(),i))
     clkPllEnable(pllClkMenu.getComponent(),pllClkMenu,i)
 
 #Clock Generator Configuration
