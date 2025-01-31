@@ -170,10 +170,15 @@ void ${moduleNameUpperCase}_Initialize ( void );
  * @pre     The ${moduleNameUpperCase}_Initialize() function must have been called first.
  * @param   source One of the possible values from INT_SOURCE.
  * @return  None.
+ * @note    This API performs a Read-Modify-Write (RMW) operation on the IECx register. 
+ *          To prevent race conditions, please disable global interrupts using 
+ *          `${moduleNameUpperCase}_Disable` API before calling this function.
  * 
  * @b Example
  * @code
+ * bool prevStatus = ${moduleNameUpperCase}_Disable();
  * ${moduleNameUpperCase}_SourceEnable(INT_SOURCE_INT0);
+ * ${moduleNameUpperCase}_Restore(prevStatus);
  * @endcode
  * 
  * @remarks This function implements an operation of the SourceControl feature. 
@@ -190,10 +195,15 @@ void ${moduleNameUpperCase}_SourceEnable( INT_SOURCE source );
  * @pre     The ${moduleNameUpperCase}_Initialize() function must have been called first.
  * @param   source One of the possible values from INT_SOURCE.
  * @return  None.
- * 
+ * @note    This API performs a Read-Modify-Write (RMW) operation on the IECx register. 
+ *          To prevent race conditions, please disable global interrupts using 
+ *          `${moduleNameUpperCase}_Disable` API before calling this function.
+ *
  * @b Example
  * @code
+ * bool prevStatus = ${moduleNameUpperCase}_Disable();
  * ${moduleNameUpperCase}_SourceDisable(INT_SOURCE_INT0);
+ * ${moduleNameUpperCase}_Restore(prevStatus);
  * @endcode
  * 
  * @remarks This function implements an operation of the SourceControl feature. 
@@ -262,7 +272,8 @@ bool ${moduleNameUpperCase}_SourceStatusGet( INT_SOURCE source );
 /**
  * @brief   Sets the status of the interrupt flag for the selected source.
  * @details This function sets the status of the interrupt flag for the selected 
- *          source. This function will not be used during normal operation of the system. 
+ *          source. 
+ * @note    This function will not be used during normal operation of the system. 
  *          It is used to generate test interrupts for debug and testing purposes.
  * @pre     The ${moduleNameUpperCase}_Initialize() function must have been called first.
  * @param   source One of the possible values from INT_SOURCE.
@@ -359,6 +370,7 @@ bool ${moduleNameUpperCase}_Disable( void );
  * @b Example
  * @code
  * bool prevStatus = ${moduleNameUpperCase}_Disable();
+ * ${moduleNameUpperCase}_SourceEnable(INT_SOURCE_INT0);
  * ${moduleNameUpperCase}_Restore(prevStatus);
  * @endcode
  * 
