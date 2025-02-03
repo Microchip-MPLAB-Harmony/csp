@@ -102,17 +102,17 @@
 
                             <#lt>/*** Macros for ${.vars[funcname]} pin ***/
                             <#if .vars[functype] == "GPIO">
-                                <#lt>#define ${.vars[funcname]}_Set()               (LAT${.vars[pinChannel]} |= (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_Clear()             (LAT${.vars[pinChannel]} &= ~(1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_Toggle()            (LAT${.vars[pinChannel]} ^= (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (TRIS${.vars[pinChannel]} &= ~(1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]} |= (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_Set()               (_LAT${.vars[pinChannel]}${.vars[pinPort]} = 1)
+                                <#lt>#define ${.vars[funcname]}_Clear()             (_LAT${.vars[pinChannel]}${.vars[pinPort]} = 0)
+                                <#lt>#define ${.vars[funcname]}_Toggle()            (_LAT${.vars[pinChannel]}${.vars[pinPort]} ^= 1)
+                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (_TRIS${.vars[pinChannel]}${.vars[pinPort]} = 0)
+                                <#lt>#define ${.vars[funcname]}_InputEnable()       (_TRIS${.vars[pinChannel]}${.vars[pinPort]} = 1)
                             </#if>
                             <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
                             <#lt>#define ${.vars[funcname]}_PIN                 GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                             <#if .vars[interruptType]?has_content>
-                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN0${.vars[pinChannel]} |= (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN0${.vars[pinChannel]} &= ~(1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (_CNEN0${.vars[pinChannel]}${.vars[pinPort]} = 1)
+                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (_CNEN0${.vars[pinChannel]}${.vars[pinPort]} = 0)
                             </#if>
                         </#if>
                     </#if>
