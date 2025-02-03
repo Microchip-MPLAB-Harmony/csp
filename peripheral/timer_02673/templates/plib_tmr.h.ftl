@@ -48,6 +48,7 @@
 #include "device.h"
 #include "plib_tmr_common.h"
 
+#define TIMER_CLOCK_FREQUENCY          ${TIMER_CLOCK_FREQ}
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

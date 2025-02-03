@@ -40,8 +40,6 @@ void T${TMR_INSTANCE_NUMBER}_InterruptHandler (void);
 
 // Section: Macro Definitions
 
-#define TIMER_CLOCK_FREQUENCY          ${TIMER_CLOCK_FREQ}
-
 //Timer Pre-Scalar options
 <#list preScalarOptions as options>
 #define T${TMR_INSTANCE_NUMBER}CON_TCKPS_${options}      ((uint32_t)(_T${TMR_INSTANCE_NUMBER}CON_TCKPS_MASK & ((uint32_t)(${options_index}) << _T${TMR_INSTANCE_NUMBER}CON_TCKPS_POSITION))) 
@@ -157,9 +155,11 @@ void TMR${TMR_INSTANCE_NUMBER}_CallbackRegister( TMR_CALLBACK callback_fn, uintp
 <#else>
 bool TMR${TMR_INSTANCE_NUMBER}_PeriodHasExpired(void)
 {
-	bool status;
-	status = (_T${TMR_INSTANCE_NUMBER}IF != 0U);
-    _T${TMR_INSTANCE_NUMBER}IF = 0;
+	bool status = false;
+	if(_T${TMR_INSTANCE_NUMBER}IF == 1U){
+		status = true;
+		_T${TMR_INSTANCE_NUMBER}IF = 0;
+	}
 	
 	return status;
 }
