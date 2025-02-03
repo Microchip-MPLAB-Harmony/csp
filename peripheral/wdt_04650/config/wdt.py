@@ -110,9 +110,13 @@ def updateClockFrequencies(symbol,event):
 
 def getTimeOutPeriodRunMode():
     wdtFreq = Database.getSymbolValue(CORE_COMPONENT, CLOCK_FREQUENCY_ID)/32.0
-    postScaler = int(Database.getSymbolValue(CORE_COMPONENT, runModePostScaler)[2:])
 
+    if wdtFreq == 0:
+        return "0 s"
+    
+    postScaler = int(Database.getSymbolValue(CORE_COMPONENT, runModePostScaler)[2:])
     period = (postScaler * CONVERT_TO_MILLISECONDS)/wdtFreq 
+
     if period > CONVERT_TO_MILLISECONDS:
         return (str(period / CONVERT_TO_MILLISECONDS) + " s")
     else:
@@ -144,6 +148,9 @@ def getTimeOutPeriodWindowMode():
     windowSize = int(Database.getSymbolValue(CORE_COMPONENT, allowedWindowSize)[3:])
     windowSize = windowSize / 100.0 
     wdtFreq = Database.getSymbolValue(CORE_COMPONENT, CLOCK_FREQUENCY_ID)/32.0
+
+    if wdtFreq == 0:
+        return "0 s"
     postScaler = int(Database.getSymbolValue(CORE_COMPONENT, runModePostScaler)[2:])
 
     period = (postScaler * CONVERT_TO_MILLISECONDS * windowSize)/wdtFreq
