@@ -227,15 +227,17 @@
 // Section: File specific functions
 
 <#list 1..MAX_GENERATOR_COUNT as i>
+    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
+    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
         <#lt>volatile static PWM_GENERATOR_EOC_EVENT_CALLBACK_OBJ pwmGen${i}CbObj;
     </#if>
 </#list>
 
 <#list 1..MAX_GENERATOR_COUNT as i>
+    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
+    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
 void PWM${i}_InterruptHandler(void);
     </#if>
 </#list>
@@ -310,16 +312,18 @@ void ${moduleNameUpperCase}_Initialize (void)
             |PCLKCON_MCLKSEL_${PWMMasterClockSelectionOptions[.vars["PCLKCON_PCLKCON__MCLKSEL"]?number]});
     
 <#list 1..MAX_GENERATOR_COUNT as i>
+    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
+    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
             <#lt>    /* Initialize PWM Generator ${i} EOC Event callback object */
             <#lt>    pwmGen${i}CbObj.callback = NULL;
     </#if>
 </#list>
 
 <#list 1..MAX_GENERATOR_COUNT as i>
+    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
+    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
         <#lt>    ${.vars["pg"+i+"intFlagBit"]} = 0U;
         <#lt>    ${.vars["pg"+i+"intEnableBit"]} = 1U;
     </#if>
@@ -344,8 +348,9 @@ void ${moduleNameUpperCase}_Deinitialize (void)
 </#list>
 
 <#list 1..MAX_GENERATOR_COUNT as i>
+    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
+    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
         <#lt>    ${.vars["pg"+i+"intFlagBit"]} = 0U;
         <#lt>    ${.vars["pg"+i+"intEnableBit"]} = 0U;
     </#if>
@@ -365,8 +370,9 @@ bool ${moduleNameUpperCase}_EOCEventCallbackRegister(
     bool status = true;
     switch(genNum) { 
 <#list 1..MAX_GENERATOR_COUNT as i>
+    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
+    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
         case PWM_GENERATOR_${i}:
             pwmGen${i}CbObj.callback = callback;
             pwmGen${i}CbObj.context  = context;
@@ -382,8 +388,9 @@ bool ${moduleNameUpperCase}_EOCEventCallbackRegister(
 }
 
 <#list 1..MAX_GENERATOR_COUNT as i>
+    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
+    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
 /**
  @brief    Interrupt Handler for PWM Generator ${i}.
 
