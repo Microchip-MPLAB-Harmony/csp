@@ -392,17 +392,6 @@ def instantiateComponent(i2cComponent):
         enableDataHold.setDependencies(clientModeVisibility,[OPERATING_MODE])
         enableDataHold.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_05155;register:I2CxCON1")
 
-    # Setup and Rise Time
-    setupAndRiseTime = i2cComponent.createKeyValueSetSymbol("SETUP_RISE_TIME", None)
-    setupAndRiseTime.setLabel("Setup and Rise Time")
-    setupAndRiseTime.addKey("0", "0" , "100 kHz - Setup time 250ns, Rise time 1000ns")
-    setupAndRiseTime.addKey("1", "1" , "400 kHz - Setup time 100ns, Rise time 300ns")
-    setupAndRiseTime.addKey("2", "2" , "1000 kHz - Setup time 50ns, Rise time 120ns")
-    setupAndRiseTime.setDisplayMode("Description")
-    setupAndRiseTime.setDefaultValue(0)
-    setupAndRiseTime.setVisible(False)
-    setupAndRiseTime.setDependencies(clientModeVisibility,[OPERATING_MODE])
-
     interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
     for interrupt in range (0, len(interruptsChildrenList)):
         vIndex = int(interruptsChildrenList[interrupt].getAttribute("index"))
