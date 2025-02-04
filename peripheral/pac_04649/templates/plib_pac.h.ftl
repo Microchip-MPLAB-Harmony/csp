@@ -112,7 +112,7 @@ typedef enum
 #define PAC_PERIPHERAL_CM4RANGE   18U
 #define PAC_PERIPHERAL_WDTCON     19U
 #define PAC_PERIPHERAL_RPCON      20U
-#define PAC_PERIPHERAL_MBISTCON   21U
+#define PAC_PERIPHERAL_MBISTCON   22U
 
 /**
  * @brief    PAC Peripheral Definition
