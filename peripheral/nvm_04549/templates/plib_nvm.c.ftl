@@ -54,7 +54,7 @@
 #include "plib_${NVM_INSTANCE_NAME?lower_case}.h"
 
 #define  FLASH_ERASE_PAGE_SIZE_IN_INSTRUCTIONS  ${FLASH_ERASE_SIZE}U
-#define  FLASH_ERASE_PAGE_MASK  (~(FLASH_ERASE_PAGE_SIZE_IN_INSTRUCTIONS - 1U))
+#define  FLASH_ERASE_PAGE_MASK  (~((FLASH_ERASE_PAGE_SIZE_IN_INSTRUCTIONS * 4U) - 1U))
 #define  FLASH_ADDRESS_MASK  ${NVM_WORD_WRITE_SIZE}U
 
 /* ************************************************************************** */
