@@ -195,6 +195,9 @@ def setSysClkFreq(symbol, event):
 
 def getTickTime(tickTime, clkFreq):
 
+    if clkFreq == 0:
+        return '0x0'
+
     calTickTime = ((tickTime * clkFreq) / MICRO_SECONDS) - 1
     return hex(int(calTickTime))
 
@@ -206,6 +209,9 @@ def updateTickTime(symbol, event):
     symbol.setValue(int(calculatedTickTime, 16)) 
     
 def getTickPeriodCalculation(tickTime, clkFreq):
+
+    if clkFreq == 0:
+        return 0
     
     freq = clkFreq / MICRO_SECONDS
     calTickPeriod = (tickTime+1) / freq
