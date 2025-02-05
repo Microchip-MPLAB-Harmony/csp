@@ -116,6 +116,9 @@ void ${moduleName}_Initialize(void)
 
 void QEI1_Deinitialize(void)
 {
+    // Disable QEI
+    QEI1_Disable();
+
 	// De-initializing registers to POR values
 ${regPorSet}
 }

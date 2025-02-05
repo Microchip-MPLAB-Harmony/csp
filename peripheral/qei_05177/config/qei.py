@@ -376,11 +376,11 @@ def instantiateComponent(qeiComponent):
 
     regPorSet = qeiComponent.createStringSymbol("regPorSet", None)
     regPorDict = {
-        "QEI": ["IOC", "STAT", "GEC", "LEC"],
+        "QEI": ["CON", "IOC", "STAT", "GEC", "LEC"],
         "POS": ["CNT", "HLD"],
         "VEL": ["CNT", "HLD"],
         "INT": ["TMR", "HLD", "HLD"],
-        "INDX": ["CNT"],
+        "INDX": ["CNT", "HLD"],
     }
     regPorSet.setDefaultValue(
         create_reg_por_set_string("QEI", regPorDict, qeiInstNum.getValue())
