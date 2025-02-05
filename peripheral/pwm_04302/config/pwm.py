@@ -458,6 +458,7 @@ def getDeadTimeRegVal(deadTime,clkFreq):
     return dtRegVal
 
 def getDTCalcVal(reqDeadTime,clkFreq):
+    if clkFreq == 0: return 0
     dtRegVal = getDeadTimeRegVal(reqDeadTime,clkFreq)
     deadTimeMinMax = getMinMaxDeadTime(clkFreq)
 
@@ -478,6 +479,7 @@ def getPhaseRegVal(reqPhase,clkFreq):
     return phaseRegVal
 
 def getPhaseCalcVal(reqPhase,clkFreq):
+    if clkFreq == 0: return 0
     phaseRegVal = getPhaseRegVal(reqPhase,clkFreq)
     phaseMinMax = getMinMaxPhase(clkFreq)
     phaseCalcVal = int(phaseRegVal / (16 * clkFreq * MICRO_SECONDS))
@@ -706,7 +708,7 @@ def useMasterDCCallbck(symbol, event):
 def useMasterPhaseCallbck(symbol,event):
     pgName = symbol.getID().split("_")[0]
     useMasterPhase = symbol.getComponent().getSymbolValue(PG_USE_MASTER_PHASE.format(pgName))
-    outputMode = symbol.getComponent().getSymbolByID("{}_{}".format(pgName, CONST_PMOD)).getSelectedKey()
+    operatingMode = symbol.getComponent().getSymbolByID("{}_{}".format(pgName, CONST_MODSEL)).getSelectedKey()
 
     primaryReqPhase = symbol.getComponent().getSymbolByID(PG_REQ_PHASE.format(pgName)) 
     secReqPhase = symbol.getComponent().getSymbolByID(PG_SEC_REQ_PHASE.format(pgName))
@@ -716,7 +718,7 @@ def useMasterPhaseCallbck(symbol,event):
     primaryReqPhase.setReadOnly(useMasterPhase)
     secReqPhase.setReadOnly(useMasterPhase)
     primaryReqPhase.setVisible(not useMasterPhase)
-    secReqPhase.setVisible(useMasterPhase == False and outputMode == INDEPENDENT_EDGE_DUAL_OUTPUT)
+    secReqPhase.setVisible(useMasterPhase == False and operatingMode == INDEPENDENT_EDGE_DUAL_OUTPUT)
 
     primaryCalPhase.setValue(symbol.getComponent().getSymbolValue(MASTER_PRIMARY_CAL_PHASE) if useMasterPhase else 0)
     secCalPhase.setValue(symbol.getComponent().getSymbolValue(MASTER_SEC_CAL_PHASE) if useMasterPhase else 0)
@@ -860,7 +862,7 @@ def pinsCallback(symbol,event):
     commentSym = symbol.getComponent().getSymbolByID("{}_PINS_COMMENT".format(pgName))
     comment = ""
     ppsSuffix= "" if ppsen == "enabled" else "-"
-    ppsOrNonpps = "(PPS)" if ppsen == "enabled" else "(NON-PPS)"
+    ppsOrNonpps = "(PPS)" if ppsen == "enabled" else "(non-PPS)"
     if penl == "enabled" and penh == "enabled":
         comment = "Warning!!!! Go to Pin Configuration and set PWM{}{}L and PWM{}{}H {} pins".format(pgName[-1],ppsSuffix,pgName[-1],ppsSuffix,ppsOrNonpps)
     elif penl == "enabled":
@@ -868,7 +870,7 @@ def pinsCallback(symbol,event):
     elif penh == "enabled":
         comment = "Warning!!!! Go to Pin Configuration and set PWM{}{}H {} pin".format(pgName[-1],ppsSuffix,ppsOrNonpps)
     else:
-        comment = "Warning!!!! Enable the bit here and configure the pins in the Pins Module."
+        comment = "Note: Enable the bit here and configure the pins in the Pins Module."
 
     commentSym.setLabel(comment)
 
@@ -958,6 +960,35 @@ def anyGenInUse(symbol,event):
             break
     
     symbol.setValue(anyGenInUse)
+
+def updateTriggerCompare(symbol, event):
+    # PGTRIGA and PGTRIGB will be used for secondary DC and Phase in INDEPENDENT_EDGE_DUAL_OUTPUT mode
+    prefix = symbol.getID().split("_")[0]
+    component = symbol.getComponent()
+    operatingMode = component.getSymbolByID("{}_{}".format(prefix, CONST_MODSEL)).getSelectedKey()
+
+    secDC = 0
+    secPhase = 0
+
+    if INDEPENDENT_EDGE_DUAL_OUTPUT == operatingMode:
+        if component.getSymbolValue(PG_USE_MASTER_DC.format(prefix)) == True:
+            secDC = int(component.getSymbolValue(MASTER_SEC_DC_REG_VAL.format(prefix)))
+        else:
+            secDC = int(component.getSymbolValue(PG_SEC_DC_REG_VAL.format(prefix)))
+
+        if component.getSymbolValue(PG_USE_MASTER_PHASE.format(prefix)) == True:
+            secPhase = int(component.getSymbolValue(MASTER_SEC_PHASE_REG_VAL.format(prefix)))
+        else:
+            secPhase = int(component.getSymbolValue(PG_SEC_PHASE_REG_VAL.format(prefix)))
+
+    component.getSymbolByID(PG_TRIG_A_COMP.format(prefix)).setReadOnly(INDEPENDENT_EDGE_DUAL_OUTPUT == operatingMode)
+    component.getSymbolByID(PG_TRIG_B_COMP.format(prefix)).setReadOnly(INDEPENDENT_EDGE_DUAL_OUTPUT == operatingMode)
+
+    component.getSymbolByID(PG_TRIG_A_COMP.format(prefix)).setValue(secPhase)
+    component.getSymbolByID(PG_TRIG_B_COMP.format(prefix)).setValue(secDC)
+
+    for sym in [PG_TRIG_B_COMP, PG_TRIG_A_COMP]:
+        component.getSymbolByID(sym.format(prefix)).setVisible(INDEPENDENT_EDGE_DUAL_OUTPUT != operatingMode)
 
 NUMBER_OF_GENERATORS = getParamValue("num_gen","int")
 MIN_PERIOD_VAL = getParamValue("periodMinValue")
@@ -1311,6 +1342,7 @@ def instantiateComponent(pwmComponent):
         pgSecDC.setVisible(False)
         pgSecDC.setMin(0)
         pgSecDC.setMax(100)
+        pgSecDC.setDependencies(operatingModeVisibility,["{}_{}".format(pgName, CONST_MODSEL)])
         pgSecDC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_04302;register:PGxTRIGB")
         
         pgSecDCRegVal = pwmComponent.createHexSymbol(PG_SEC_DC_REG_VAL.format(pgName),pgOperationMenu)
@@ -1378,7 +1410,7 @@ def instantiateComponent(pwmComponent):
         pgPinSwap.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_04302;register:PGxIOCON")
 
         pgPinsComment = pwmComponent.createCommentSymbol("{}_PINS_COMMENT".format(pgName),pgPinConfiguration)
-        pgPinsComment.setLabel("Warning!!!! Enable the bit here and configure the pins in the Pin Configuration Module.")
+        pgPinsComment.setLabel("Note: Enable the bit here and configure the pins in the Pins Module.")
         pgPinsComment.setDependencies(pinsCallback,["{}_{}".format(pgName,CONST_PPSEN),"{}_{}".format(pgName,CONST_PENL),"{}_{}".format(pgName,CONST_PENH)])
 
         pgDeadTimeMenu = pwmComponent.createMenuSymbol(PG_DEAD_TIME_MENU.format(pgName),pgMenu)
@@ -1511,6 +1543,7 @@ def instantiateComponent(pwmComponent):
         pgTrigACmp.setLabel("Trigger A Compare")
         pgTrigACmp.setMin(MIN_TRG_VAL)
         pgTrigACmp.setMax(MAX_TRG_VAL)
+        pgTrigACmp.setDependencies(updateTriggerCompare,["{}_{}".format(pgName, CONST_MODSEL),PG_SEC_DC_REG_VAL.format(pgName),PG_SEC_PHASE_REG_VAL.format(pgName),PG_USE_MASTER_DC.format(pgName),PG_USE_MASTER_PHASE.format(pgName)])
         pgTrigACmp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_04302;register:PGxTRIGA")
 
         pgTrigBCmp = pwmComponent.createHexSymbol(PG_TRIG_B_COMP.format(pgName),triggerMenu)
