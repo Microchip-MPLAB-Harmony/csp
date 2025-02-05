@@ -56,7 +56,7 @@ void TMR${TMR_INSTANCE_NUMBER}_Initialize(void)
     T${TMR_INSTANCE_NUMBER}CONbits.ON = 0;
 
 	<#if TCON_SRC_SEL=="0" & TCON_PRE_SCALER =="0" & TCON_TSYNC =="0" & TCON_TWDIS =="0" & TCON_TGATE == "0">
-	T${TMR_INSTANCE_NUMBER}CON = 0x0U;
+	T${TMR_INSTANCE_NUMBER}CON = 0x0UL;
 	<#else>
     T${TMR_INSTANCE_NUMBER}CON = (T${TMR_INSTANCE_NUMBER}CON_TCKPS_${preScalarOptions[TCON_PRE_SCALER?number]}<#if TCON_TGATE == "1" & TCON_SRC_SEL == "0">
 	        |_T${TMR_INSTANCE_NUMBER}CON_TGATE_MASK</#if>
@@ -65,10 +65,10 @@ void TMR${TMR_INSTANCE_NUMBER}_Initialize(void)
 			|_T${TMR_INSTANCE_NUMBER}CON_TMWDIS_MASK</#if>);
 	</#if>	
     /* Clear counter */
-    TMR${TMR_INSTANCE_NUMBER} = 0x0U;
+    TMR${TMR_INSTANCE_NUMBER} = 0x0UL;
 
     /*Set period */
-    PR${TMR_INSTANCE_NUMBER} = 0x${TIMER_PERIOD}U; /* Decimal Equivalent ${PERIOD_REG_COMMENT} */
+    PR${TMR_INSTANCE_NUMBER} = 0x${TIMER_PERIOD}UL; /* Decimal Equivalent ${PERIOD_REG_COMMENT} */
 
     <#if TMR_INTERRUPT_MODE == true>
     /* Setup TMR1 Interrupt */
