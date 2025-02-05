@@ -251,7 +251,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     </#if>
 
     <#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
-    if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTSR & FLEX_PTSR_RXTEN_Msk) && (channelStatus & FLEX_US_CSR_ENDRX_Msk))
+    if (((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTSR & FLEX_PTSR_RXTEN_Msk) != 0U) && ((channelStatus & FLEX_US_CSR_ENDRX_Msk) != 0U))
     {
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
         {
@@ -312,7 +312,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 </#if>
 
     <#if USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true>
-    if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTSR & FLEX_PTSR_TXTEN_Msk) && (channelStatus & FLEX_US_CSR_ENDTX_Msk))
+    if (((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTSR & FLEX_PTSR_TXTEN_Msk) != 0U) && ((channelStatus & FLEX_US_CSR_ENDTX_Msk) != 0U))
     {
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
         {
@@ -617,7 +617,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             status = true;
 
 <#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_RPR = (uint32_t) buffer;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_RPR = (uint32_t)(uint8_t*)buffer;
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_RCR = (uint32_t) size;
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_RXTEN_Msk;
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_ENDRX_Msk;
@@ -671,7 +671,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             status = true;
 
         <#if USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true>
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TPR = (uint32_t) buffer;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TPR = (uint32_t)(uint8_t*)buffer;
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TCR = (uint32_t) size;
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_TXTEN_Msk;
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_ENDTX_Msk;
