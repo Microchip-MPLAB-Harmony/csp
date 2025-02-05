@@ -169,6 +169,18 @@ def getSettingBitDefaultValue(moduleName,registerGroup,register,bitfield):
              bitMask = bitNode.getAttribute("mask")
              return getDefaultVal(regDefaultVal,bitMask)
      return 0
+ 
+global getClockSettingBitMaxValFromMask
+def getClockSettingBitMaxValFromMask(hex_string): 
+    # Convert hex string to integer
+    integer_value = int(hex_string, 16)
+    # Convert integer to binary string and remove the '0b' prefix
+    binary_string = bin(integer_value)[2:]
+    # Remove trailing zeroes
+    trimmed_binary_string = binary_string.rstrip('0')
+    # Recalculate the integer value from the trimmed binary string
+    trimmed_integer_value = int(trimmed_binary_string, 2)
+    return trimmed_integer_value
 
 global getSettingBitDefaultAndMaskValue 
 def getSettingBitDefaultAndMaskValue(moduleName,registerGroup,register,bitfield):
@@ -179,7 +191,7 @@ def getSettingBitDefaultAndMaskValue(moduleName,registerGroup,register,bitfield)
          bitNode = getBitField(moduleName,registerGroup,register,bitfield)
          if(bitNode != None):
              bitMask = bitNode.getAttribute("mask")
-             bitMaskVal = int( bitMask.rstrip('0'), 16)
+             bitMaskVal = getClockSettingBitMaxValFromMask(bitMask)
              return{
                  "defaultValue" : getDefaultVal(regDefaultVal,bitMask),
                  "maskValue" :bitMaskVal
@@ -1692,7 +1704,8 @@ def getVcodivFactor(maxVcodiv,reqVcodivfreq,clkSrcFreq,vcoFreq,pllpre,fbdiv):
         "vcoFreq": calculated_output_freq,
         "vcoFreqDiff" : difference 
     }  
-      
+
+     
 global getPlloandVcoFreqParams
 def getPlloandVcoFreqParams(pllNo,clkSrcFreq, plloOutFreq, vcoDivFreq, pll_mul_div_ranges, pll_freq_ranges):
     fbdiv_max = pll_mul_div_ranges["fbdiv_max"]
@@ -1928,6 +1941,7 @@ for i in range(1, totalPllCount+1):
         
     pllPre = createClkIntSymbol(coreComponent,PLLPRE.format(i),pllClkMenu,pllPreDefaultValue,"Clock Prescaler(PLLPRE)")
     pllPre.setVisible(True)
+    pllPre.setMin(1)
     pllPre.setHelp(
         "atmel;device:"
         + Variables.get("__PROCESSOR")
@@ -1936,6 +1950,7 @@ for i in range(1, totalPllCount+1):
     
     pllFbd = createClkIntSymbol(coreComponent,PLLFBD.format(i),pllClkMenu,pllFbdDefaultValue,"Feedback Divider(PLLFBDIV)")
     pllFbd.setVisible(True)
+    pllFbd.setMin(1)
     pllFbd.setHelp(
         "atmel;device:"
         + Variables.get("__PROCESSOR")
@@ -2088,6 +2103,7 @@ for i in range(1, totalClkGenCount+1):
         intDivDefaultAndMaskValue = getSettingBitDefaultAndMaskValue(INTERNAL_OSCILLATOR,CLK_CON_REG_GROUP,CLK_DIV_REG,"INTDIV")
         intDiv = createClkIntSymbol(coreComponent, CLK_GEN_INTDIV.format(i), enableClkDiv,intDivDefaultAndMaskValue ,"Integer Divider(INTDIV)")
         intDiv.setDefaultValue(1)
+        intDiv.setMin(1)
         intDiv.setDependencies(clkDivBasedCb,[CLK_GEN_DIVIDER_ENABLE.format(i)])
         intDiv.setVisible(False)
         intDiv.setHelp(
@@ -2446,3 +2462,4 @@ CLK_SYS_INIT_LIST_ENTRY.setType("STRING")
 CLK_SYS_INIT_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 CLK_SYS_INIT_LIST_ENTRY.setSourcePath("../peripheral/clk_04449/templates/system/initialization.c.ftl")
 CLK_SYS_INIT_LIST_ENTRY.setMarkup(True)
+
