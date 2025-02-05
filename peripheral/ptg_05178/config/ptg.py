@@ -867,7 +867,7 @@ def instantiateComponent(ptgComponent):
 
     # WatchDog
     watchDog = createKeyValueSetSymbol(ptgComponent, PTG, PTG, CON, PTG_WDT,wdt_setting)
-    watchDog.setLabel("WatchDog Timeout")  
+    watchDog.setLabel("WatchDog Timeout (PTG Clock Cycles)")  
     watchDog.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ptg_05178;register:PTGCON")
 
 
