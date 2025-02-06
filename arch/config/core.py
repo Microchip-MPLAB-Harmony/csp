@@ -1023,6 +1023,7 @@ def instantiateComponent( coreComponent ):
     ############################# MISRAC Menu #################################
     misracMenu = coreComponent.createMenuSymbol("MISRAC_MENU", projMenu)
     misracMenu.setLabel( "MISRA-C:2012" )
+    misracMenu.setVisible(False)
 
     suppressionMenu = coreComponent.createMenuSymbol("SUPPRESS_DEVIATIONS_MENU", misracMenu)
     suppressionMenu.setLabel("Suppress Deviations")

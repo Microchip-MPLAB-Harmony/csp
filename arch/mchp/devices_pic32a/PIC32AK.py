@@ -193,6 +193,7 @@ for reg_index in range(len(register)):
     porValue = register[reg_index].getAttribute('initval')
     # print( " porValue %x = ", porValue)
     symbolName = register[reg_index].getAttribute('name')
+    regName = symbolName
     #print( " symbolName" + symbolName)
     menuitem = coreComponent.createMenuSymbol(symbolName, fuseSettings)
     menuitem.setVisible(True)
@@ -208,6 +209,7 @@ for reg_index in range(len(register)):
         if re.match(hexConfigBitPattern, bitfieldName):
             bitfielditem = coreComponent.createHexSymbol('CONFIG_'+bitfieldName,menuitem) # symbol ID must match ftl file symbol
             bitfielditem.setDefaultValue(_find_default_value(bitfields[bitfield_index], porValue))
+            bitfielditem.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fuseconfig_04436;register:"+regName)
         else: # key value type symbol
             moduleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]")
             submodnode = moduleNode.getChildren()   # <value-group > entries
@@ -225,6 +227,7 @@ for reg_index in range(len(register)):
                         #print("key name = ",name2)
                         keyVals[valuenode[option_index].getAttribute("name")] = _process_valuegroup_entry(valuenode[option_index])
             bitfielditem = coreComponent.createComboSymbol('CONFIG_'+bitfieldName, menuitem, sort_alphanumeric(keyVals.keys()))
+            bitfielditem.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fuseconfig_04436;register:"+regName)
             if bitfieldName == "FWDT_WDTEN": #Deviation for WDT, Fusebits WDT Enable combo option set to default Value Software
                     if 'SW' in keyVals:
                       bitfielditem.setDefaultValue('SW')
