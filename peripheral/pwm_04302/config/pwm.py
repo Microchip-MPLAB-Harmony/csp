@@ -717,7 +717,7 @@ def useMasterPhaseCallbck(symbol,event):
 
     primaryReqPhase.setReadOnly(useMasterPhase)
     secReqPhase.setReadOnly(useMasterPhase)
-    primaryReqPhase.setVisible(not useMasterPhase)
+    primaryReqPhase.setVisible(not useMasterPhase and operatingMode != CENTER_ALIGNED)
     secReqPhase.setVisible(useMasterPhase == False and operatingMode == INDEPENDENT_EDGE_DUAL_OUTPUT)
 
     primaryCalPhase.setValue(symbol.getComponent().getSymbolValue(MASTER_PRIMARY_CAL_PHASE) if useMasterPhase else 0)
