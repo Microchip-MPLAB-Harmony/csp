@@ -1343,12 +1343,13 @@ def clkDivBasedCb(symbol, event):
 def clkGenFreqCb(symbol, event):
     component = symbol.getComponent()
     clkGenNo = getClkGenNo(symbol.getID())
-    if(event["id"] == CLK_GEN_CALCULATED_FREQ.format(clkGenNo)):
-        clkSrc = "Clock Generator " + clkGenNo
-        clkFreq = event["value"]
-        updateClkGenBasedClkSrcFreq(symbol.getComponent(),clkSrc,clkFreq)  
-    else:
-        symbol.setValue(calcClkGenFreq(component, clkGenNo))
+    if(component.getSymbolValue(CLK_GEN_ENABLE.format(clkGenNo))):
+        if(event["id"] == CLK_GEN_CALCULATED_FREQ.format(clkGenNo)):
+            clkSrc = "Clock Generator " + clkGenNo
+            clkFreq = event["value"]
+            updateClkGenBasedClkSrcFreq(symbol.getComponent(),clkSrc,clkFreq)  
+        else:
+            symbol.setValue(calcClkGenFreq(component, clkGenNo))
  
 global clkGenFreqCmntCb
 def clkGenFreqCmntCb(symbol, event): 
