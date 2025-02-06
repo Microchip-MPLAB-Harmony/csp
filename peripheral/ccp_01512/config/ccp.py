@@ -476,8 +476,8 @@ def instantiateComponent(ccpComponent):
         tmrIrq = "CCT" + ccpInstanceNum.getValue() + "Interrupt"
         CaptureCompareIrq = "CCP" + ccpInstanceNum.getValue() + "Interrupt"
         clockGenerator = setClockGeneratorData(moduleName, getValueGroupName(moduleName, "CCP", "CCP" + str(instanceNum) + "CON1", "CLKSEL"))
-        clkGenFreqSym = "clkGen" + clockGenerator[-1] + "OutFrequency"
-        clkGenEnableSym = "clkGen" + clockGenerator[-1] + "Enable"
+        clkGenFreqSym = "clkGen" + ''.join(filter(str.isdigit, str(clockGenerator))) + "OutFrequency"
+        clkGenEnableSym = "clkGen" + ''.join(filter(str.isdigit, str(clockGenerator))) + "Enable"
 
     # SIDL
     ccpSym_CCPCON2_SIDL = ccpComponent.createBooleanSymbol("CCP_CCPCON1_SIDL", None)
