@@ -25,7 +25,7 @@
 
 ### Known Issues
 
--  None
+-  Applications created for PIC32CM-GC/SG family of microcontrollers when built with -Os optimization results in hard fault.
 
 ### Development Tools
 
