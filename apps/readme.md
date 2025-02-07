@@ -37,7 +37,7 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_sam_l22](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_l22) | Application examples for SAM L22 family |
 | [csp_apps_sam_rh707](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_rh707) | Application examples for SAMRH707 family |
 | [csp_apps_sam_rh71](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_rh71) | Application examples for SAMRH71 family |
-| [csp_apps_pic32cxbz6_wbz6](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz6_wbz6) | Application examples for PIC32CX-BZ6 and WBZ653 family |
+| [csp_apps_pic32cxbz6_wmbz6](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz6_wmbz6) | Application examples for PIC32CX-BZ6 and PIC32WM_BZ6204 family |
 | [csp_apps_pic32cm_sg_gc](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_sg_gc) | Application examples for PIC32CM-GC/SG family |
 | [csp_apps_pic32cz_ca70](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cz_ca70) | Application examples for PIC32CZ-CA70 family |
 

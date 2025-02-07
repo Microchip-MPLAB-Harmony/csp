@@ -3,6 +3,38 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.21.0
+
+### New Features
+
+- **New part support**
+  - Added support for new parts in PIC32CM JH family of microcontrollers
+  - Added support for PIC32CM-GV family of microcontrollers
+  - Added support for PIC32WM_BZ6204 part in PIC32CX-BZ6 family of microcontrollers
+
+- **New Features and Enhancements**
+  - None
+  
+- **Bug Fixes**
+  - Fixed MISRA-C violation in FLEXCOM peripheral
+  - FIxed clock related issue in PIC32CZCA-80/90, PIC32CXMTSH and PIC32CM-GC/SG family of microcontrollers
+  - Updates to the Pin Manager
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+### Known Issues
+
+-  None
+
+### Development Tools
+
+- Same as CSP Release v3.20.0
+
+### Notes
+
+-  None
+
 ## CSP Release v3.20.0
 
 ### New Features
