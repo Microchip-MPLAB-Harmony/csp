@@ -318,8 +318,10 @@ def getBaudParams(clkFreq,reqBaudrate):
         brg = round(float(clkFreq) / reqBaudrate)
         if(brg < minFracBrg or brg > brgMax):
             brg_4Div = min(round((clkFreq/(4*reqBaudrate))-1),brgMax)
+            brg_4Div = brg_4Div if brg_4Div >0 else 0
             calcBaud_4DiV = clkFreq/(4*(brg_4Div+1))
             brg_16Div = min(round((clkFreq/(16*reqBaudrate))-1),brgMax)
+            brg_16Div = brg_16Div if brg_16Div >0 else 0
             calcBaud_16DiV = clkFreq/(16*(brg_16Div+1))
             baudError_4Div = abs(reqBaudrate - calcBaud_4DiV)
             baudError_16Div = abs(reqBaudrate - calcBaud_16DiV)
