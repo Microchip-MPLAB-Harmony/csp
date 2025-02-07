@@ -137,25 +137,36 @@ def createKeyValueSetSymbol(component,moduleName,registerGroup,register,bitfield
 
 global handleClockSettingsMessage 
 def handleClockSettingsMessage(messageID, args):
+   
     if messageID == "CONFIGURATOR_CLOCK_AUTO_CALCULATE_PLL_DIVIDERS":
-        pllClkSrc = args.get('pllClkSrcFreq')
+        pllClkSrcFreq = args.get('pllClkSrcFreq')
         requestedPllFout = args.get('reqPlloFreq')
         requestedPllVcoDivider = args.get('reqPllVcoDivFreq')
         pllNo = args.get('pllNo')
         val = {}
         if requestedPllFout is not None and requestedPllVcoDivider is not None:
-            val = getPlloandVcoFreqParams(pllNo, pllClkSrc, requestedPllFout, requestedPllVcoDivider, pll_mul_div_ranges, pll_freq_ranges)
+            val = getPlloandVcoFreqParams(pllNo, pllClkSrcFreq, requestedPllFout, requestedPllVcoDivider, pll_mul_div_ranges, pll_freq_ranges)
         elif requestedPllFout is not None:
-            val = getPlloFreqParams(pllNo, pllClkSrc, requestedPllFout, pll_mul_div_ranges, pll_freq_ranges)
+            val = getPlloFreqParams(pllNo, pllClkSrcFreq, requestedPllFout, pll_mul_div_ranges, pll_freq_ranges)
             intdiv = Database.getSymbolValue("core",PLL_INTDIV.format(pllNo))
-            val["calcPllVcoDivFreq"] = getCalcVcoFreq(pllClkSrc, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],intdiv) 
+            val["calcPllVcoDivFreq"] = getCalcVcoFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],intdiv) 
             
         elif requestedPllVcoDivider is not None:
-            val = getPllVcoDivParams(pllNo, pllClkSrc, requestedPllVcoDivider, pll_mul_div_ranges, pll_freq_ranges)
+            val = getPllVcoDivParams(pllNo, pllClkSrcFreq, requestedPllVcoDivider, pll_mul_div_ranges, pll_freq_ranges)
             postdiv1 = int(Database.getSymbolValue("core",POSTDIV1.format(pllNo)))
             postdiv2 = int(Database.getSymbolValue("core",POSTDIV2.format(pllNo)))
-            val["calcPlloFreq"] = getCalcPlloFreq(pllClkSrc, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],postdiv1 ,postdiv2)
+            val["calcPlloFreq"] = getCalcPlloFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],postdiv1 ,postdiv2)
         return val
+    
+    elif messageID == "CONFIGURATOR_CLOCK_AUTO_CALCULATE_CLK_GEN_DIVIDERS":
+        clkGenNo = args.get('clkGenNo')
+        requestedClkGenFreq = args.get('requestedClkGenFreq')
+        clkGenClkSrcFreq = Database.getSymbolValue("core",CLK_GEN_CLK_SRC_FREQ.format(clkGenNo))
+        intdiv_max = getSettingBitDefaultAndMaskValue(INTERNAL_OSCILLATOR,CLK_CON_REG_GROUP,"DIV","INTDIV")["maskValue"]
+        fracdiv_max = getSettingBitDefaultAndMaskValue(INTERNAL_OSCILLATOR,CLK_CON_REG_GROUP,"DIV","FRACDIV")["maskValue"]
+        clk_gen_max_freq = int(getAtdfParameterCaption(INTERNAL_OSCILLATOR,CLOCK,"CLK_GEN_"+clkGenNo))*1000000
+        
+        return get_clk_gen_output_freq_params(clkGenNo,clkGenClkSrcFreq,requestedClkGenFreq,intdiv_max,fracdiv_max,clk_gen_max_freq)
     return {}     
 
 global getSettingBitDefaultValue
@@ -1706,6 +1717,39 @@ def getVcodivFactor(maxVcodiv,reqVcodivfreq,clkSrcFreq,vcoFreq,pllpre,fbdiv):
         "vcoFreqDiff" : difference 
     }  
 
+global get_clk_gen_output_freq_params
+def get_clk_gen_output_freq_params(clkGenNo,input_clk_freq,req_clk_freq,max_int_div,max_frac_div,clk_gen_max_freq):
+    integer_div = 1
+    fractional_div = 0
+    frac_div_cycle_count = 512
+    if req_clk_freq > 0 and input_clk_freq > 0 and input_clk_freq > req_clk_freq:
+        clk_ratio = input_clk_freq / (req_clk_freq * 2.0)
+        if clk_ratio >= 1:
+            max_allowable_decimal_part = max_frac_div / float(frac_div_cycle_count)
+            if clk_ratio < max_int_div + max_allowable_decimal_part:
+                if str(clk_ratio).find(".") == -1:
+                    integer_div = int(clk_ratio)
+                else:
+                    integer_div = int(clk_ratio)
+                    decimal_part = clk_ratio - integer_div
+                    if decimal_part >= max_allowable_decimal_part:
+                        fractional_div = max_frac_div
+                    else:
+                        fractional_div = int(round(decimal_part * frac_div_cycle_count))
+                        calc_freq_val = input_clk_freq / (2.0 * (integer_div + fractional_div / float(frac_div_cycle_count)))
+                        if calc_freq_val > clk_gen_max_freq:
+                            fractional_div = fractional_div + 1
+                        fractional_div = min(fractional_div, max_frac_div)
+            else:
+                integer_div = max_int_div
+                fractional_div = max_frac_div
+        elif (req_clk_freq * 2.0) / input_clk_freq < 1.5:
+            integer_div = 1
+    return {
+        CLK_GEN_INTDIV.format(clkGenNo): integer_div,
+        CLK_GEN_FRACDIV.format(clkGenNo): fractional_div,
+        'calcClkGenFreq': (input_clk_freq/(2*(integer_div + float(fractional_div)/ float(max_frac_div))))
+    }
      
 global getPlloandVcoFreqParams
 def getPlloandVcoFreqParams(pllNo,clkSrcFreq, plloOutFreq, vcoDivFreq, pll_mul_div_ranges, pll_freq_ranges):

@@ -611,43 +611,43 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 606px;
-    left: 808px
+    left: 808px;
+    top: 606px
     }
 .ClockGenRadio1 {
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 630px;
-    left: 808px
+    left: 808px;
+    top: 630px
     }
 .ClockGenRadio2 {
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 654px;
-    left: 808px
+    left: 808px;
+    top: 654px
     }
 .ClockGenRadio3 {
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 682px;
-    left: 808px
+    left: 808px;
+    top: 682px
     }
 .ClockGenRadio4 {
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 705px;
-    left: 808px
+    left: 808px;
+    top: 705px
     }
 .ClockGenRadio5 {
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 729px;
-    left: 808px
+    left: 808px;
+    top: 729px
     }
 .ClockGenRadio6 {
     position: absolute;
@@ -919,22 +919,22 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    left: 942px;
-    top: 888px
+    top: 888px;
+    left: 935px
     }
 .clkGen_Reset {
     position: absolute;
     width: 30px;
     height: 30px;
-    left: 965px;
-    top: 888px
+    top: 888px;
+    left: 962px
     }
 .clkGenEnable {
     position: absolute;
     width: 20px;
     height: 20px;
-    left: 970px;
-    top: 538px
+    left: 882px;
+    top: 543px
     }
 .clkGen2ClkSrc {
     position: absolute;
@@ -1117,4 +1117,18 @@
     width: 200px;
     left: 67px;
     top: 270px
+    }
+.ClkGenAutoCalcButton {
+    position: absolute;
+    height: 30px;
+    width: 120px;
+    left: 842px;
+    top: 282px
+    }
+.ClockGenAutoCalcButton {
+    position: absolute;
+    height: 30px;
+    width: 120px;
+    left: 796px;
+    top: 885px
     }

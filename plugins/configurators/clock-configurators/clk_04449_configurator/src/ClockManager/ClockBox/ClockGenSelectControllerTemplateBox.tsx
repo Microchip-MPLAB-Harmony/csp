@@ -17,6 +17,9 @@ import {
     getDynamicLabelsFromJSON,
 } from 'clock-common/lib/Tools/ClockJSONTools';
 import LoadDynamicFreqencyLabels from 'clock-common/lib/Components/Dynamic/LoadDynamicFreqencyLabels';
+import { GetButton } from '../ClockHelper/LoadDynamicInputNoComponents';
+import { Dialog } from 'primereact/dialog';
+import ClockGenAutoCalc from './ClockGenAutoCalc';
 
 const ClockGenSelectControllerTemplateBox = (props: {
     index: string;
@@ -26,6 +29,17 @@ const ClockGenSelectControllerTemplateBox = (props: {
 }) => {
 
     const { componentId = 'core' } = useContext(PluginConfigContext);
+
+    const [dialogStatus, setdialogStatus] = useState(false);
+
+    function clkGenAutoCalculationButtonClicked() {
+        setdialogStatus(true);
+    }
+
+    const dialogClosed = (acceptStatus: boolean) => {
+        setdialogStatus(false);
+    };
+
 
     const isClkGenEnabled = useBooleanSymbol({
         componentId,
@@ -47,10 +61,10 @@ const ClockGenSelectControllerTemplateBox = (props: {
         symbolId: 'clkGen' + props.index + 'OutFrequency'
     });
 
-    // const clkSrcFreq = useIntegerSymbol({
-    //     componentId,
-    //     symbolId: 'clkGen' + props.index + 'ClkSrcFrequency'
-    // });
+    const clkSrcFreq = useIntegerSymbol({
+        componentId,
+        symbolId: 'clkGen' + props.index + 'ClkSrcFrequency'
+    });
 
     let clkGenSymbols = [
         'clkGen' + props.index + 'enableFailSafeClock',
@@ -91,6 +105,7 @@ const ClockGenSelectControllerTemplateBox = (props: {
     const key: any = 'CLKGEN' + index
 
     const maxClkGenOut = clkGenFrequencies[key]
+    const maxClkGenDivOutFreq = Math.min(clkSrcFreq.value/2,maxClkGenOut)
     const clkGenOutfreqVal = Number(clkGenOutfreq.value);
     const textColorClkGenOutFreq = clkGenOutfreqVal > maxClkGenOut ? 'red' : 'black';
 
@@ -197,6 +212,7 @@ const ClockGenSelectControllerTemplateBox = (props: {
                 componentId={componentId}
                 className={props.cx('clkGen_Settings')}
                 symbolArray={clkGenSymbols}
+                disabled = {!isClkGenEnabled.value}
                 dialogWidth='50rem'
                 dialogHeight='40rem'
             />
@@ -205,7 +221,35 @@ const ClockGenSelectControllerTemplateBox = (props: {
                 className={props.cx('clkGen_Reset')}
                 componentId={componentId}
                 resetSymbolsArray={clkGenResetSymbols}
+                disabled = {!isClkGenEnabled.value}
             />
+            {isClkGenDivEnabled.value &&
+            <GetButton
+                buttonDisplayText={'Auto Calculate...'}
+                className={props.cx('ClockGenAutoCalcButton')}
+                toolTip={'click here for Clock Generator Auto Calculation'}
+                buttonClick={clkGenAutoCalculationButtonClicked}
+                disabled = {!isClkGenEnabled.value}
+            />}
+           <Dialog
+                header={'Auto Calculate Clock Generator ' + props.index + ' Output frequency'}
+                visible={dialogStatus}
+                maximizable={true}
+                style={{ width: '55rem', height: '45rem' }}
+                onHide={() => {
+                    dialogClosed(false);
+                }}>
+                <ClockGenAutoCalc
+                    index={props.index}
+                    componentId={componentId}
+                    inputClkSrcFreq={clkSrcFreq.value}
+                    reqClkSrcFreq = {clkGenOutfreq.value}
+                    maxClkGenFreq={maxClkGenDivOutFreq}
+                    close = {() => {
+                        dialogClosed(false);
+                    }}
+                />
+            </Dialog>
         </div>
     )
 
