@@ -22,8 +22,6 @@ reference information.
 
 - [Release Notes](./release_notes.md)
 - [Microchip SLA](Microchip_SLA001.md)
-- [MPLAB® Harmony 3 CSP Wiki](https://github.com/Microchip-MPLAB-Harmony/csp/wiki)
-- [MPLAB® Harmony 3 CSP API Help](https://microchip-mplab-harmony.github.io/csp)
 
 # Contents Summary
 
