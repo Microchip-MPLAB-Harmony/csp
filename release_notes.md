@@ -17,7 +17,7 @@
   
 - **Bug Fixes**
   - Fixed MISRA-C violation in FLEXCOM peripheral
-  - FIxed clock related issue in PIC32CZCA-80/90, PIC32CXMTSH and PIC32CM-GC/SG family of microcontrollers
+  - Fixed clock related issue in PIC32CZCA-80/90, PIC32CXMTSH and PIC32CM-GC/SG family of microcontrollers
   - Updates to the Pin Manager
 
 - **Applications**
