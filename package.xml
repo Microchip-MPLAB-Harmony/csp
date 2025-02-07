@@ -2,6 +2,6 @@
 <Package name="csp" required="true">
     <Dependencies>
         <Dependency name="CMSIS_5" version="5.9.0"/>
-        <Dependency name="harmony-services" version="v1.4.0"/>
+        <Dependency name="harmony-services" version="v1.5.0"/>
     </Dependencies>
 </Package>
