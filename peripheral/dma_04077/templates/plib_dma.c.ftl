@@ -498,21 +498,25 @@ ${dmaModuleName}_TRANSFER_EVENT ${dmaModuleName}_ChannelTransferStatusGet(${dmaM
             {
                 dmaEvent = ${dmaModuleName}_OVERRUN_ERROR;
                 DMA${i}STATbits.OVERRUN = 0U;
+                dmaChannelObj[${i}].inUse = false;
             }
             else if(DMA${i}STATbits.MATCH == 1U)
             {
                 dmaEvent = ${dmaModuleName}_PATTERN_MATCH;
                 DMA${i}STATbits.MATCH = 0U;
+                dmaChannelObj[${i}].inUse = false;
             }
             else if(DMA${i}STATbits.DONE == 1U)
             {
                 dmaEvent = ${dmaModuleName}_TRANSFER_EVENT_COMPLETE;
                 DMA${i}STATbits.DONE = 0U;
+                dmaChannelObj[${i}].inUse = false;
             }
             else if(DMA${i}STATbits.HALF == 1U)
             {
                 dmaEvent = ${dmaModuleName}_TRANSFER_EVENT_HALF_COMPLETE;
                 DMA${i}STATbits.HALF = 0U;
+                dmaChannelObj[${i}].inUse = false;
             }
             else
             {
