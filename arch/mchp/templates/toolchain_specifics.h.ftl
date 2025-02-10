@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2025 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -49,6 +49,9 @@
     <#lt>#ifndef   __STATIC_INLINE
     <#lt>    #define __STATIC_INLINE            static __inline__
     <#lt>#endif
+    <#lt>#ifndef   __STATIC_FORCEINLINE
+    <#lt>    #define __STATIC_FORCEINLINE      
+    <#lt>#endif
     <#lt>#ifndef   __NO_RETURN
     <#lt>    #define __NO_RETURN                __attribute__((__noreturn__))
     <#lt>#endif
@@ -68,12 +71,25 @@
     <#lt>    #define __PACKED_UNION             union __attribute__((packed, aligned(1)))
     <#lt>#endif
     <#lt>#ifndef   __COHERENT
-    <#lt>    #define __COHERENT                 __attribute__((coherent))
+    <#lt>    #define __COHERENT                 
     <#lt>#endif
     <#lt>#ifndef   __ALIGNED
     <#lt>    #define __ALIGNED(x)               __attribute__((aligned(x)))
     <#lt>#endif
-    
+    <#lt>#ifndef   __RESTRICT
+    <#lt>    #define __RESTRICT                 
+    <#lt>#endif
+
+    <#if CACHE_ALIGN?? >
+        <#lt>#define CACHE_LINE_SIZE                (${CACHE_ALIGN}u)
+        <#lt>#define CACHE_ALIGN                    __COHERENT
+    <#else>
+        <#lt>#define CACHE_LINE_SIZE                (4u)
+        <#lt>#define CACHE_ALIGN
+    </#if>
+
+    <#lt>#define CACHE_ALIGNED_SIZE_GET(size)     ((size) + ((((size) % (CACHE_LINE_SIZE))!= 0U)? ((CACHE_LINE_SIZE) - ((size) % (CACHE_LINE_SIZE))) : (0U)))
+
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
     <#lt>#endif
