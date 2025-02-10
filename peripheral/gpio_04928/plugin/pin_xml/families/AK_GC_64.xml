@@ -214,6 +214,9 @@
         </group>
     </groups>
     <modules>
+        <module name="ADC" desc="ADC">
+            <function name="ADTRIG31"/>
+        </module>
         <module name="ADC1" desc="ADC 1" analog="true">
             <function name="AD1AN0"/>
             <function name="AD1AN1"/>
@@ -247,6 +250,12 @@
             <function name="AD2ANN2"/>
             <function name="AD2ANN3"/>
         </module>
+        <module name="BISS" desc="BISS">
+            <function name="BISS1GS"/>
+            <function name="BISS1MA"/>
+            <function name="BISS1MO"/>
+            <function name="BISS1SL"/>
+        </module>
         <module name="CBG" desc="CBG" analog="true">
             <function name="IBIAS0"/>
             <function name="IBIAS1"/>
@@ -257,33 +266,58 @@
             <function name="ISRC2"/>
             <function name="ISRC3"/>
         </module>
+        <module name="CLC" desc="CLC">
+            <function name="CLCINA"/>
+            <function name="CLCINB"/>
+            <function name="CLCINC"/>
+            <function name="CLCIND"/>
+        </module>
+        <module name="CLC1" desc="CLC 1">
+            <function name="CLC1OUT"/>
+        </module>
+        <module name="CLC2" desc="CLC 2">
+            <function name="CLC2OUT"/>
+        </module>
+        <module name="CLC3" desc="CLC 3">
+            <function name="CLC3OUT"/>
+        </module>
+        <module name="CLC4" desc="CLC 4">
+            <function name="CLC4OUT"/>
+        </module>
         <module name="CLOCK" desc="CLOCK">
             <function name="CLKI"/>
             <function name="CLKO"/>
             <function name="MCLR"/>
             <function name="OSCI"/>
             <function name="OSCO"/>
+            <function name="REFI1"/>
+            <function name="REFI2"/>
+            <function name="REFO1"/>
+            <function name="REFO2"/>
         </module>
         <module name="CMP" desc="CMP" analog="true">
             <function name="DACOUT1"/>
         </module>
-        <module name="CMP1" desc="CMP 1" analog="true">
-            <function name="CMP1A"/>
-            <function name="CMP1B"/>
-            <function name="CMP1C"/>
-            <function name="CMP1D"/>
+        <module name="CMP1" desc="CMP 1">
+            <function name="CMP1"/>
+            <function name="CMP1A" analog="true"/>
+            <function name="CMP1B" analog="true"/>
+            <function name="CMP1C" analog="true"/>
+            <function name="CMP1D" analog="true"/>
         </module>
-        <module name="CMP2" desc="CMP 2" analog="true">
-            <function name="CMP2A"/>
-            <function name="CMP2B"/>
-            <function name="CMP2C"/>
-            <function name="CMP2D"/>
+        <module name="CMP2" desc="CMP 2">
+            <function name="CMP2"/>
+            <function name="CMP2A" analog="true"/>
+            <function name="CMP2B" analog="true"/>
+            <function name="CMP2C" analog="true"/>
+            <function name="CMP2D" analog="true"/>
         </module>
-        <module name="CMP3" desc="CMP 3" analog="true">
-            <function name="CMP3A"/>
-            <function name="CMP3B"/>
-            <function name="CMP3C"/>
-            <function name="CMP3D"/>
+        <module name="CMP3" desc="CMP 3">
+            <function name="CMP3"/>
+            <function name="CMP3A" analog="true"/>
+            <function name="CMP3B" analog="true"/>
+            <function name="CMP3C" analog="true"/>
+            <function name="CMP3D" analog="true"/>
         </module>
         <module name="EXT_INT" desc="EXT_INT">
             <function name="INT0" analog="true"/>
@@ -323,54 +357,11 @@
             <function name="OA3IN-"/>
             <function name="OA3OUT"/>
         </module>
+        <module name="PTG" desc="PTG">
+            <function name="PTGTRG24"/>
+            <function name="PTGTRG25"/>
+        </module>
         <module name="PWM" desc="PWM">
-            <function name="PCI19"/>
-            <function name="PCI20"/>
-            <function name="PCI21"/>
-            <function name="PCI22"/>
-            <function name="PWM1-H"/>
-            <function name="PWM1-L"/>
-            <function name="PWM2-H"/>
-            <function name="PWM2-L"/>
-            <function name="PWM3-H"/>
-            <function name="PWM3-L"/>
-            <function name="PWM4-H"/>
-            <function name="PWM4-L"/>
-        </module>
-        <module name="SPI2" desc="SPI 2">
-            <function name="SCK-2"/>
-            <function name="SDI-2"/>
-            <function name="SDO-2"/>
-        </module>
-        <module name="UNKNOWN" desc="UNKNOWN">
-            <function name="ADTRIG31"/>
-            <function name="BISS1GS"/>
-            <function name="BISS1MA"/>
-            <function name="BISS1MO"/>
-            <function name="BISS1SL"/>
-            <function name="CLC1OUT"/>
-            <function name="CLC2OUT"/>
-            <function name="CLC3OUT"/>
-            <function name="CLC4OUT"/>
-            <function name="CLCINA"/>
-            <function name="CLCINB"/>
-            <function name="CLCINC"/>
-            <function name="CLCIND"/>
-            <function name="CMP1"/>
-            <function name="CMP2"/>
-            <function name="CMP3"/>
-            <function name="ICM1"/>
-            <function name="ICM2"/>
-            <function name="ICM3"/>
-            <function name="ICM4"/>
-            <function name="OCFA"/>
-            <function name="OCFB"/>
-            <function name="OCFC"/>
-            <function name="OCFD"/>
-            <function name="OCM1"/>
-            <function name="OCM2"/>
-            <function name="OCM3"/>
-            <function name="OCM4"/>
             <function name="PCI10"/>
             <function name="PCI11"/>
             <function name="PCI12"/>
@@ -380,6 +371,10 @@
             <function name="PCI16"/>
             <function name="PCI17"/>
             <function name="PCI18"/>
+            <function name="PCI19"/>
+            <function name="PCI20"/>
+            <function name="PCI21"/>
+            <function name="PCI22"/>
             <function name="PCI8"/>
             <function name="PCI9"/>
             <function name="PEVTA"/>
@@ -388,54 +383,101 @@
             <function name="PEVTD"/>
             <function name="PEVTE"/>
             <function name="PEVTF"/>
-            <function name="PTGTRG24"/>
-            <function name="PTGTRG25"/>
+            <function name="PWM1-H"/>
+            <function name="PWM1-L"/>
             <function name="PWM1H"/>
             <function name="PWM1L"/>
+            <function name="PWM2-H"/>
+            <function name="PWM2-L"/>
             <function name="PWM2H"/>
             <function name="PWM2L"/>
+            <function name="PWM3-H"/>
+            <function name="PWM3-L"/>
             <function name="PWM3H"/>
             <function name="PWM3L"/>
+            <function name="PWM4-H"/>
+            <function name="PWM4-L"/>
             <function name="PWM4H"/>
             <function name="PWM4L"/>
+        </module>
+        <module name="QEI1" desc="QEI 1">
             <function name="QEI1CMP"/>
             <function name="QEIA1"/>
             <function name="QEIB1"/>
             <function name="QEIHOME1"/>
             <function name="QEIINDX1"/>
-            <function name="REFI1"/>
-            <function name="REFI2"/>
-            <function name="REFO1"/>
-            <function name="REFO2"/>
-            <function name="SCK1"/>
-            <function name="SCK2"/>
-            <function name="SCK3"/>
-            <function name="SDI1"/>
-            <function name="SDI2"/>
-            <function name="SDI3"/>
-            <function name="SDO1"/>
-            <function name="SDO2"/>
-            <function name="SDO3"/>
+        </module>
+        <module name="SCCP" desc="SCCP">
+            <function name="OCFA"/>
+            <function name="OCFB"/>
+            <function name="OCFC"/>
+            <function name="OCFD"/>
+        </module>
+        <module name="SCCP1" desc="SCCP 1">
+            <function name="ICM1"/>
+            <function name="OCM1"/>
+        </module>
+        <module name="SCCP2" desc="SCCP 2">
+            <function name="ICM2"/>
+            <function name="OCM2"/>
+        </module>
+        <module name="SCCP3" desc="SCCP 3">
+            <function name="ICM3"/>
+            <function name="OCM3"/>
+        </module>
+        <module name="SCCP4" desc="SCCP 4">
+            <function name="ICM4"/>
+            <function name="OCM4"/>
+        </module>
+        <module name="SENT1" desc="SENT 1">
             <function name="SENT1"/>
             <function name="SENT1TX"/>
+        </module>
+        <module name="SENT2" desc="SENT 2">
             <function name="SENT2"/>
             <function name="SENT2TX"/>
+        </module>
+        <module name="SPI1" desc="SPI 1">
+            <function name="SCK1"/>
+            <function name="SDI1"/>
+            <function name="SDO1"/>
             <function name="SS1"/>
+        </module>
+        <module name="SPI2" desc="SPI 2">
+            <function name="SCK-2"/>
+            <function name="SCK2"/>
+            <function name="SDI-2"/>
+            <function name="SDI2"/>
+            <function name="SDO-2"/>
+            <function name="SDO2"/>
             <function name="SS2"/>
+        </module>
+        <module name="SPI3" desc="SPI 3">
+            <function name="SCK3"/>
+            <function name="SDI3"/>
+            <function name="SDO3"/>
             <function name="SS3"/>
+        </module>
+        <module name="TMR1" desc="TMR 1">
             <function name="T1CK"/>
+        </module>
+        <module name="UART1" desc="UART 1">
             <function name="U1CTS"/>
             <function name="U1DSR"/>
             <function name="U1DTR"/>
             <function name="U1RTS"/>
             <function name="U1RX"/>
             <function name="U1TX"/>
+        </module>
+        <module name="UART2" desc="UART 2">
             <function name="U2CTS"/>
             <function name="U2DSR"/>
             <function name="U2DTR"/>
             <function name="U2RTS"/>
             <function name="U2RX"/>
             <function name="U2TX"/>
+        </module>
+        <module name="UART3" desc="UART 3">
             <function name="U3CTS"/>
             <function name="U3DSR"/>
             <function name="U3DTR"/>
