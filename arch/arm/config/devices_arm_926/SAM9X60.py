@@ -160,8 +160,15 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v5/config/mmu.py")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_9x60/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_sam_9x60/plugin/clk_sam_9x60.jar")
-
+coreComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "CLK_UI_MANAGER_ID_CLK_SAM9X60",
+        {
+            "plugin_name": "Clock Configuration",
+            "main_html_path": "csp/plugins/configurators/clock-configurators/clk_sam_9x60_configurator/build/index.html",
+            "componentId": coreComponent.getID()
+        }
+    )
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11004/plugin/pio_11004.jar")

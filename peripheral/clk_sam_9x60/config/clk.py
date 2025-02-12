@@ -789,6 +789,8 @@ generic_clocks = ["FLEXCOM", "SDMMC", "TC", "ADC", "LCDC", "I2SMCC", "PIT64B", "
 generic_clocks_map = coreComponent.createKeyValueSetSymbol("GCLK_INSTANCE_PID", gclk_menu)
 generic_clocks_map.setVisible(False)
 
+pcrclkIOConfiguration_UI = []
+gclkIOConfiguration_UI = []
 peripherals_node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 for module_node in peripherals_node.getChildren():
     for instance_node in module_node.getChildren():
@@ -800,6 +802,7 @@ for module_node in peripherals_node.getChildren():
         pcr_en = coreComponent.createBooleanSymbol(instance_name + "_CLOCK_ENABLE", pcr_menu)
         pcr_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_9x60;register:PMC_PCR")
         pcr_en.setLabel(instance_name)
+        pcrclkIOConfiguration_UI.append(instance_name)
 
         id_name_map = coreComponent.createStringSymbol("CLK_ID_NAME_"+clock_id_node.getAttribute("value"), pcr_menu)
         id_name_map.setVisible(False)
@@ -815,6 +818,7 @@ for module_node in peripherals_node.getChildren():
             generic_clocks_map.addKey(instance_name, clock_id_node.getAttribute("value"), "")
             gclk_periph = coreComponent.createMenuSymbol(None, gclk_menu)
             gclk_periph.setLabel(instance_name)
+            gclkIOConfiguration_UI.append(instance_name)
 
             gclk_en = coreComponent.createBooleanSymbol("CLK_"+instance_name+"_GCLKEN", gclk_periph)
             gclk_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_9x60;register:PMC_PCR")
@@ -906,6 +910,14 @@ for module_node in peripherals_node.getChildren():
                                          ['MCK_FREQUENCY', instance_name + '_GCLK_FREQUENCY',
                                           instance_name.lower() + "." + gclk_dependency_map[instance_name], instance_name + "_CLOCK_ENABLE"])
 
+
+#########################################################################
+#Combo symbol for UI to identify gclk IO configuration */
+pcrclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("PCRCLK_IO_CLOCK_CONFIG_UI", None, pcrclkIOConfiguration_UI)
+pcrclk_io_clk_ui_list_sym.setVisible(False)
+gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
+gclk_io_clk_ui_list_sym.setVisible(False)
+#####################################################################
 
 #Memory controllers all share one clock id 49
 memory_controllers = ['MPDDRC', 'SDRAMC', 'SMC']
