@@ -3,6 +3,7 @@ import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
 import { useContext, useState } from 'react';
 import {
+    configSymbolApi,
     KeyValueSetRadio,
     PluginConfigContext,
     useBooleanSymbol,
@@ -16,9 +17,10 @@ import {
 import LoadDynamicComponents from 'clock-common/lib/Components/Dynamic/LoadDynamicComponents';
 import LoadDynamicFreqencyLabels from 'clock-common/lib/Components/Dynamic/LoadDynamicFreqencyLabels';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
-import { GetButton } from '../ClockHelper/LoadDynamicInputNoComponents';
+import { ControlInputNoInterface, GetButton, getDynamicInputNoSymbolsFromJSON, LoadDynamicInputNoComponents } from '../ClockHelper/LoadDynamicInputNoComponents';
 import { Dialog } from 'primereact/dialog';
 import ClockGenAutoCalc from './ClockGenAutoCalc';
+import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
 
 
 const ClockGenControllerBox = (props: {
@@ -31,7 +33,16 @@ const ClockGenControllerBox = (props: {
         getDynamicSymbolsFromJSON(props.ClkGenControllerData)
     );
 
+    const [dynamicInputNoSymbolsInfo] = useState(() => {
+        let inputNoFields: ControlInputNoInterface[] = getDynamicInputNoSymbolsFromJSON(props.ClkGenControllerData);
+        inputNoFields.forEach((e) => {
+            configSymbolApi.getSymbol(componentId, e.symbol_id ?? "").then((data) => e.tooltip = `Min: ${data.min}, Max: ${data.max}`)
+        })
+        return inputNoFields;
+    });
+
     const [dynamicLabelSymbolsInfo] = useState(() => getDynamicLabelsFromJSON(props.ClkGenControllerData));
+
 
     const clockSource = useKeyValueSetSymbol({
         componentId,
@@ -77,14 +88,31 @@ const ClockGenControllerBox = (props: {
         setdialogStatus(false);
     };
 
+
     const clkGenMaxFreq = 200000000
-    const clockGenDivMaxFreq = Math.min(clockSourceFreq.value/2,clkGenMaxFreq)
+    const clockGenDivMaxFreq = Math.min(clockSourceFreq.value / 2, clkGenMaxFreq)
+    const clkGenName = "System Clock/Clock Generator 1";
+    const maxFreqLabel = " (Max Frequency = " + GetClockDisplayFreqValue(clkGenMaxFreq) + ")";
+    const textColorClkGenOutFreq = Number(clkGenOutfreq.value) > clkGenMaxFreq ? 'red' : 'black';
+
     return (
         <div>
+            <label
+                className={props.cx('clkGenLabel')}
+            >
+                <span style={{ fontWeight: 'bold' }}>{clkGenName} </span>
+                <span style={{ fontWeight: 'bold', color: textColorClkGenOutFreq }}>{maxFreqLabel} </span>
+            </label>
             <LoadDynamicComponents
                 componentId={componentId}
                 dynamicSymbolsInfo={dynamicSymbolInfo}
                 cx={props.cx}
+            />
+            <LoadDynamicInputNoComponents
+                componentId={componentId}
+                dynamicSymbolsInfo={dynamicInputNoSymbolsInfo}
+                cx={props.cx}
+                disable={!isClkGenDivEnabled.value}
             />
             <LoadDynamicFreqencyLabels
                 componentId={componentId}
@@ -114,15 +142,21 @@ const ClockGenControllerBox = (props: {
                 componentId={componentId}
                 resetSymbolsArray={clkGenResetSymbols}
             />
+            <label
+                className={props.cx('ClkGenSysFreq')}
+            >
+                <span style={{ fontWeight: 'bold', color: textColorClkGenOutFreq }}>{GetClockDisplayFreqValue(clkGenOutfreq.value)} </span>
+                {/* <span style={{ color: 'blue' }}>{'<= ' + GetClockDisplayFreqValue(maxClkGenOut)} </span> */}
+            </label>
             {isClkGenDivEnabled.value &&
-            <GetButton
-                buttonDisplayText={'Auto Calculate...'}
-                className={props.cx('ClkGenAutoCalcButton')}
-                toolTip={'click here for Clock Generator Auto Calculation'}
-                buttonClick={clkGenAutoCalculationButtonClicked}
-                disabled = {false}
-            />}
-           <Dialog
+                <GetButton
+                    buttonDisplayText={'Auto Calculate...'}
+                    className={props.cx('ClkGenAutoCalcButton')}
+                    toolTip={'click here for Clock Generator Auto Calculation'}
+                    buttonClick={clkGenAutoCalculationButtonClicked}
+                    disabled={false}
+                />}
+            <Dialog
                 header='Auto Calculate System Clock frequency'
                 visible={dialogStatus}
                 maximizable={true}
@@ -134,9 +168,9 @@ const ClockGenControllerBox = (props: {
                     index={"1"}
                     componentId={componentId}
                     inputClkSrcFreq={clockSourceFreq.value}
-                    reqClkSrcFreq = {clkGenOutfreq.value}
+                    reqClkSrcFreq={clkGenOutfreq.value}
                     maxClkGenFreq={clockGenDivMaxFreq}
-                    close = {() => {
+                    close={() => {
                         dialogClosed(false);
                     }}
                 />

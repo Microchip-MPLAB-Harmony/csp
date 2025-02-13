@@ -1,9 +1,10 @@
 import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
     CheckBoxDefault,
+    configSymbolApi,
     InputNumberDefault,
     KeyValueSetRadio,
     PluginConfigContext,
@@ -105,7 +106,7 @@ const ClockGenSelectControllerTemplateBox = (props: {
     const key: any = 'CLKGEN' + index
 
     const maxClkGenOut = clkGenFrequencies[key]
-    const maxClkGenDivOutFreq = Math.min(clkSrcFreq.value/2,maxClkGenOut)
+    const maxClkGenDivOutFreq = Math.min(clkSrcFreq.value / 2, maxClkGenOut)
     const clkGenOutfreqVal = Number(clkGenOutfreq.value);
     const textColorClkGenOutFreq = clkGenOutfreqVal > maxClkGenOut ? 'red' : 'black';
 
@@ -128,18 +129,29 @@ const ClockGenSelectControllerTemplateBox = (props: {
 
     const value = clkGenPane[key];
     const clkGenName = "Clock Generator " + index;
-    const maxFreqLabel = " (Max Frequency = "+GetClockDisplayFreqValue(maxClkGenOut)+")" ;
+    const maxFreqLabel = " (Max Frequency = " + GetClockDisplayFreqValue(maxClkGenOut) + ")";
     const inputClockDescription = "Clock Input for " + value;
-    
+
     const [dynamicLabelSymbolsInfo] = useState(() => getDynamicLabelsFromJSON(props.ClkGenControllerData));
-    
+
+    const [intdivTooltip, setIntdivTooltip] = useState(props.index);
+    const [fracdivTooltip, setFracdivTooltip] = useState(props.index);
+
+    useEffect(() => {
+        configSymbolApi.getSymbol(componentId, 'clkGen' + props.index + 'DIV__INTDIV')
+            .then((data) => setIntdivTooltip(`Min: ${data.min}, Max: ${data.max}`));
+            configSymbolApi.getSymbol(componentId, 'clkGen' + props.index + 'DIV__FRACDIV')
+            .then((data) => setFracdivTooltip(`Min: ${data.min}, Max: ${data.max}`));    
+    }, [props.index]);
+
+
     return (
         <div>
             <label
                 className={props.cx('clockGenPaneName')}
             >
                 <span style={{ fontWeight: 'bold' }}>{clkGenName} </span>
-                <span style={{ fontWeight: 'bold',color: textColorClkGenOutFreq }}>{maxFreqLabel} </span>
+                <span style={{ fontWeight: 'bold', color: textColorClkGenOutFreq }}>{maxFreqLabel} </span>
             </label>
             <label
                 className={props.cx('clockInputLabelDescription')}
@@ -151,9 +163,9 @@ const ClockGenSelectControllerTemplateBox = (props: {
                 classPrefix={'ClockGenRadio'}
                 labelClassPrefix={'ClockGenRadioName'}
                 classResolver={props.cx}
-                disabled = {!isClkGenEnabled.value}
+                disabled={!isClkGenEnabled.value}
             />
-             <LoadDynamicFreqencyLabels
+            <LoadDynamicFreqencyLabels
                 componentId={componentId}
                 dynamicLabelSymbolsInfo={dynamicLabelSymbolsInfo}
                 cx={props.cx}
@@ -173,29 +185,30 @@ const ClockGenSelectControllerTemplateBox = (props: {
                     componentId={componentId}
                     symbolId={'clkGen' + props.index + 'IsDividerEnabled'}
                     className={props.cx('clockGenDivCheckBox')}
-                    disabled = {!isClkGenEnabled.value}
+                    disabled={!isClkGenEnabled.value}
                 />}
             {props.index != '4' &&
                 <InputNumberDefault
                     componentId={componentId}
                     symbolId={'clkGen' + props.index + 'DIV__INTDIV'}
-                    tooltip=''
+                    tooltip={intdivTooltip}
                     className={props.cx('clockGenIntdiv')}
-                    disabled = {!isClkGenEnabled.value}
+                    disabled={!isClkGenEnabled.value}
                 />}
             {props.index != '4' &&
                 <InputNumberDefault
                     componentId={componentId}
                     symbolId={'clkGen' + props.index + 'DIV__FRACDIV'}
                     className={props.cx('clockGenFracdiv')}
-                    disabled = {!isClkGenEnabled.value}
-                    //style={{!isClkGenEnabled.value ? opacity:0.5}}
+                    disabled={!isClkGenEnabled.value}
+                    tooltip={fracdivTooltip}
+                //style={{!isClkGenEnabled.value ? opacity:0.5}}
                 />}
 
             <label
                 className={props.cx('clockGenOutFreq')}
             >
-                <span style={{ fontWeight: 'bold' , color: textColorClkGenOutFreq }}>{isClkGenEnabled.value ? GetClockDisplayFreqValue(clkGenOutfreqVal) : '0 Hz'} </span>
+                <span style={{ fontWeight: 'bold', color: textColorClkGenOutFreq }}>{isClkGenEnabled.value ? GetClockDisplayFreqValue(clkGenOutfreqVal) : '0 Hz'} </span>
                 {/* <span style={{ color: 'blue' }}>{'<= ' + GetClockDisplayFreqValue(maxClkGenOut)} </span> */}
             </label>
             {/* {props.index != '4' && isClkGenDivEnabled.value && <PlainLabel
@@ -205,14 +218,14 @@ const ClockGenSelectControllerTemplateBox = (props: {
             <PlainLabel
                 disPlayText={'Clock Gen ' + props.index + ' Frequency'}
                 className={props.cx('clockGenFreqLabel')}
-                //redColorStatus={textColorClkGenOutFreq === 'red' ? true : false}
+            //redColorStatus={textColorClkGenOutFreq === 'red' ? true : false}
             />
             <SettingsDialog
                 tooltip={'Clock Generator ' + props.index + ' Advanced Settings'}
                 componentId={componentId}
                 className={props.cx('clkGen_Settings')}
                 symbolArray={clkGenSymbols}
-                disabled = {!isClkGenEnabled.value}
+                disabled={!isClkGenEnabled.value}
                 dialogWidth='50rem'
                 dialogHeight='40rem'
             />
@@ -221,17 +234,17 @@ const ClockGenSelectControllerTemplateBox = (props: {
                 className={props.cx('clkGen_Reset')}
                 componentId={componentId}
                 resetSymbolsArray={clkGenResetSymbols}
-                disabled = {!isClkGenEnabled.value}
+                disabled={!isClkGenEnabled.value}
             />
             {isClkGenDivEnabled.value &&
-            <GetButton
-                buttonDisplayText={'Auto Calculate...'}
-                className={props.cx('ClockGenAutoCalcButton')}
-                toolTip={'click here for Clock Generator Auto Calculation'}
-                buttonClick={clkGenAutoCalculationButtonClicked}
-                disabled = {!isClkGenEnabled.value}
-            />}
-           <Dialog
+                <GetButton
+                    buttonDisplayText={'Auto Calculate...'}
+                    className={props.cx('ClockGenAutoCalcButton')}
+                    toolTip={'click here for Clock Generator Auto Calculation'}
+                    buttonClick={clkGenAutoCalculationButtonClicked}
+                    disabled={!isClkGenEnabled.value}
+                />}
+            <Dialog
                 header={'Auto Calculate Clock Generator ' + props.index + ' Output frequency'}
                 visible={dialogStatus}
                 maximizable={true}
@@ -243,9 +256,9 @@ const ClockGenSelectControllerTemplateBox = (props: {
                     index={props.index}
                     componentId={componentId}
                     inputClkSrcFreq={clkSrcFreq.value}
-                    reqClkSrcFreq = {clkGenOutfreq.value}
+                    reqClkSrcFreq={clkGenOutfreq.value}
                     maxClkGenFreq={maxClkGenDivOutFreq}
-                    close = {() => {
+                    close={() => {
                         dialogClosed(false);
                     }}
                 />

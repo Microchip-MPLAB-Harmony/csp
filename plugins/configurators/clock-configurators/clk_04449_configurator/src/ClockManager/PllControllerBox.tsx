@@ -5,6 +5,7 @@ import { useContext, useState } from 'react';
 import {
     CheckBoxDefault,
     ComboBoxDefault,
+    configSymbolApi,
     KeyValueSetRadio,
     PluginConfigContext,
     useBooleanSymbol,
@@ -18,7 +19,9 @@ import {
 import LoadDynamicFreqencyLabels from 'clock-common/lib/Components/Dynamic/LoadDynamicFreqencyLabels';
 import { Dialog } from 'primereact/dialog';
 import PLLControllerAutoCalcBox from './PllControllerAutoCalcBox';
-import { GetButton, LoadDynamicInputNoComponents } from './ClockHelper/LoadDynamicInputNoComponents';
+import { ControlInputNoInterface, GetButton, LoadDynamicInputNoComponents } from './ClockHelper/LoadDynamicInputNoComponents';
+import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
+import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 
 const PLLControllerBox = (props: {
     index: string
@@ -36,6 +39,12 @@ const PLLControllerBox = (props: {
         componentId,
         symbolId: 'pll' + props.index + 'ClockSourceFreq'
     });
+
+    const pllPfdFreq = useIntegerSymbol({
+        componentId,
+        symbolId: 'pll' + props.index + 'calculatedPfdFrequency'
+    });
+
     const pllCalcPlloFreq = useIntegerSymbol({
         componentId,
         symbolId: 'pll' + props.index + 'calculatedFoutFrequency'
@@ -55,9 +64,15 @@ const PLLControllerBox = (props: {
         setdialogStatus(false);
     };
 
-    const [dynamicSymbolInfo] = useState(() =>
-        getDynamicSymbolsFromJSON(props.PLLControllerData)
+    const [dynamicSymbolInfo] = useState(() => {
+        let inputNoFields: ControlInputNoInterface[] = getDynamicSymbolsFromJSON(props.PLLControllerData);
+        inputNoFields.forEach((e) => {
+            configSymbolApi.getSymbol(componentId, e.symbol_id ?? "").then((data) => e.tooltip = `Min: ${data.min}, Max: ${data.max}`)
+        })
+        return inputNoFields;
+    }
     );
+
     const [dynamicLabelSymbolsInfo] = useState(() => getDynamicLabelsFromJSON(props.PLLControllerData));
 
     const clockSource = useKeyValueSetSymbol({
@@ -81,6 +96,14 @@ const PLLControllerBox = (props: {
         'pll' + props.index + 'CON__BOSC'
     ];
 
+    const minPllPfdFreq = 500000000;
+    const maxPllPfdFreq = 1600000000;
+    const maxPlloFreq = 800000000;
+    const maxPllVcoFreq = 800000000;
+
+    const textColorPllPfdFreq = pllEnable.value && (pllPfdFreq.value > maxPllPfdFreq || pllPfdFreq.value < minPllPfdFreq)? "Red" :"Black" ;
+    const textColorPllOutFreq = pllEnable.value && pllCalcPlloFreq.value > maxPlloFreq ? "Red" :"Black" ;
+    const textColorPllVcoFreq = pllEnable.value && pllCalcVcoDivFreq.value > maxPllVcoFreq ? "Red" :"Black" ;
     return (
         <div>
             <SettingsDialog
@@ -127,6 +150,24 @@ const PLLControllerBox = (props: {
                 classResolver={props.cx}
                 disabled={!pllEnable.value}
             />
+            <PlainLabel
+                disPlayText={GetClockDisplayFreqValue(pllPfdFreq.value)}
+                className={props.cx('pll' + props.index +'FvcoFreq')}
+                toolTip={"Min: 500 MHz, Max: 1600 MHz"}
+                redColorStatus = {textColorPllPfdFreq == "Red" ? true:false}
+            />
+            <PlainLabel
+                disPlayText={GetClockDisplayFreqValue(pllCalcPlloFreq.value)}
+                className={props.cx('pll' + props.index +'_plloFreq')}
+                toolTip={"Max: 800 MHz"}
+                redColorStatus = {textColorPllOutFreq == "Red" ? true:false}
+            />
+            <PlainLabel
+                disPlayText={GetClockDisplayFreqValue(pllCalcVcoDivFreq.value)}
+                className={props.cx('pll' + props.index +'_pllVcoFreq')}
+                toolTip={"Max: 800 MHz"}
+                redColorStatus = {textColorPllVcoFreq == "Red" ? true:false}
+            />
             <ResetSymbolsIcon
                 tooltip={'Reset Phase Lock Loop ' + props.index + ' Settings to default value'}
                 className={props.cx('pll' + props.index + 'Clk_reset')}
@@ -155,7 +196,7 @@ const PLLControllerBox = (props: {
                     inputClkSrcFreq={pllClkSrcFreq.value}
                     initialPlloFreq={pllCalcPlloFreq.value}
                     initialPllVcoFreq={pllCalcVcoDivFreq.value}
-                    close = {() => {
+                    close={() => {
                         dialogClosed(false);
                     }}
                 />

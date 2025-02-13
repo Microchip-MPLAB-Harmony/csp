@@ -1,7 +1,8 @@
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
     CheckBoxDefault,
+    configSymbolApi,
     InputNumberDefault,
     PluginConfigContext,
     useBooleanSymbol,
@@ -15,6 +16,7 @@ import {
 import LoadDynamicComponents from 'clock-common/lib/Components/Dynamic/LoadDynamicComponents';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import { InputNumber } from 'primereact/inputnumber';
+import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
 
 
 const ExtClkSrcControllerBox = (props: {
@@ -57,6 +59,17 @@ const ExtClkSrcControllerBox = (props: {
         symbolId: "extClkSrcSel"
     });
 
+    const [poscFreqTooltip, setPoscFreqTooltip] = useState(extClkSrc.value);
+    const [refFreqTooltip, setRefFreqTooltip] = useState(extClkSrc.value);
+
+    useEffect(() => {
+        configSymbolApi.getSymbol(componentId, `extClkSrcFreq`)
+            .then((data) => setPoscFreqTooltip(`Min: ${GetClockDisplayFreqValue(data.min)}, Max: ${GetClockDisplayFreqValue(data.max)}`));
+        configSymbolApi.getSymbol(componentId, 'referenceInputPinFreq1')
+            .then((data) => setRefFreqTooltip(`Max: ${GetClockDisplayFreqValue(data.max)}`));
+    }, [extClkSrc.value]);
+
+
     return (
         <div>
             <LoadDynamicComponents
@@ -73,17 +86,17 @@ const ExtClkSrcControllerBox = (props: {
                 symbolId={'clockFailIntEnable'}
                 className={props.cx('clkFailIntEnable')}
             />
-            
+
             <PlainLabel
                 disPlayText="External Clock (POSC) Source"
                 className={props.cx('extClkSrcLabel')}
             />
             {/* {extClkSrc.value !== "None" && ( */}
-                <PlainLabel
-                    disPlayText={`Primary/External Clock Frequency (POSC)`}
-                    className={props.cx('priClkFreqLabel')}
-                />
-           {/* // )} */}
+            <PlainLabel
+                disPlayText={`Primary/External Clock Frequency (POSC)`}
+                className={props.cx('priClkFreqLabel')}
+            />
+            {/* // )} */}
             {extClkSrc.value !== "Primary Oscillator" && (
                 <PlainLabel
                     disPlayText={`Enable CLKO Pin`}
@@ -91,7 +104,7 @@ const ExtClkSrcControllerBox = (props: {
                 />
             )}
             <PlainLabel
-                disPlayText={`Use Reference Input 1`}
+                disPlayText={`Use Reference Input 1(REFI1)`}
                 className={props.cx('enableRefIpPin1Label')}
             />
             {refInput1Hook.value && (
@@ -101,7 +114,7 @@ const ExtClkSrcControllerBox = (props: {
                 />
             )}
             <PlainLabel
-                disPlayText={`Use Reference Input 2`}
+                disPlayText={`Use Reference Input 2(REFI2)`}
                 className={props.cx('enableRefIpPin2Label')}
             />
             {refInput2Hook.value && (
@@ -116,33 +129,33 @@ const ExtClkSrcControllerBox = (props: {
                     suffix=' Hz'
                     showButtons={false}
                     className={props.cx('primaryOscFreq')}
-                    disabled ={true}
+                    disabled={true}
                 />)
             }
-                     
+
             <InputNumberDefault
                 componentId={componentId}
                 symbolId={'extClkSrcFreq'}
-                tooltip=''
+                tooltip={poscFreqTooltip}
                 className={props.cx('primaryOscFreq')}
                 showButtons={false}
-                suffix = " Hz"
+                suffix=" Hz"
             />
             <InputNumberDefault
                 componentId={componentId}
                 symbolId={'referenceInputPinFreq1'}
-                tooltip=''
+                tooltip={refFreqTooltip}
                 className={props.cx('refi1Freq')}
                 showButtons={false}
-                suffix = " Hz"
+                suffix=" Hz"
             />
             <InputNumberDefault
                 componentId={componentId}
                 symbolId={'referenceInputPinFreq2'}
-                tooltip=''
+                tooltip={refFreqTooltip}
                 className={props.cx('refi2Freq')}
                 showButtons={false}
-                suffix = " Hz"
+                suffix=" Hz"
             />
             {/* <FrequencyLabelComponent
                 componentId={componentId}
@@ -157,6 +170,6 @@ const ExtClkSrcControllerBox = (props: {
     );
 };
 
-            
+
 
 export default ExtClkSrcControllerBox;

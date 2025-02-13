@@ -149,13 +149,23 @@ def handleClockSettingsMessage(messageID, args):
         elif requestedPllFout is not None:
             val = getPlloFreqParams(pllNo, pllClkSrcFreq, requestedPllFout, pll_mul_div_ranges, pll_freq_ranges)
             intdiv = Database.getSymbolValue("core",PLL_INTDIV.format(pllNo))
-            val["calcPllVcoDivFreq"] = getCalcVcoFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],intdiv) 
+            vcoFreq = getCalcVcoFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],intdiv)
+            if vcoFreq > pll_freq_ranges["maxVcoFreq"]:
+                val[PLL_INTDIV.format(pllNo)] = 1
+                val["calcPllVcoDivFreq"] = getCalcVcoFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],1) 
+            else:
+                val["calcPllVcoDivFreq"] = getCalcVcoFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],intdiv)     
             
         elif requestedPllVcoDivider is not None:
             val = getPllVcoDivParams(pllNo, pllClkSrcFreq, requestedPllVcoDivider, pll_mul_div_ranges, pll_freq_ranges)
             postdiv1 = int(Database.getSymbolValue("core",POSTDIV1.format(pllNo)))
             postdiv2 = int(Database.getSymbolValue("core",POSTDIV2.format(pllNo)))
-            val["calcPlloFreq"] = getCalcPlloFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],postdiv1 ,postdiv2)
+            plloFreq = getCalcPlloFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],postdiv1 ,postdiv2)
+            if plloFreq > pll_freq_ranges["maxPlloFreq"]:
+                val[POSTDIV1.format(pllNo)] = str(2)
+                val["calcPlloFreq"] = getCalcPlloFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],2 ,postdiv2)
+            else:
+                val["calcPlloFreq"] = getCalcPlloFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],postdiv1 ,postdiv2)
         return val
     
     elif messageID == "CONFIGURATOR_CLOCK_AUTO_CALCULATE_CLK_GEN_DIVIDERS":
@@ -493,6 +503,9 @@ PARAM_REFERENCE_INPUT_SRC_COUNT = "REFERENCE_INPUT_SRC_COUNT"
 global PARAM_Pll_GEN_COUNT
 PARAM_Pll_GEN_COUNT = "Pll_Gen_Count"
 
+global CLOCK_32BIT_INT_MAX
+CLOCK_32BIT_INT_MAX = 2147483647
+
 global SERIAL_TEST_MODE_CLOCK
 SERIAL_TEST_MODE_CLOCK = "Serial Test Mode clock (PGC)"
 
@@ -620,6 +633,9 @@ REF_INPUT_PIN_FREQ = "referenceInputPinFreq"
 
 global REF_INPUT_DEFAULT_FREQ
 REF_INPUT_DEFAULT_FREQ = 8000000
+
+global REF_INPUT_MAX_FREQ
+REF_INPUT_MAX_FREQ = 50000000
 
 global PLL_ENABLE
 PLL_ENABLE = "pll{}Enable"
@@ -1262,22 +1278,13 @@ def clkGenClkSrcChangeCb(symbol, event):
     clkSrc = symbol.getComponent().getSymbolByID(event["id"]).getSelectedKey()
     symbol.setValue(getClkSourceFrequency(symbol.getComponent(), clkSrc))
                         
-def pllVcoDivFreqCb(symbol, event):
-    pllNo = symbol.getID()[3]
-    component = symbol.getComponent()
-    if event["id"] == PLL_CALC_VCO_FREQ.format(pllNo):
-        clkSrc = "PLL" + pllNo + " VCO DIV"
-        clkFreq = event["value"]
-        updateClkSrcFreq(symbol.getComponent(),clkSrc,clkFreq)
-    else : 
-        value = calcPllVcoDivFreq(component, pllNo) if component.getSymbolValue(PLL_ENABLE.format(pllNo)) else 0
-        symbol.setValue(value)
+
 
 global pllPfdDivFreqCb         
 def pllPfdDivFreqCb(symbol, event):
     pllNo = symbol.getID()[3]
     component = symbol.getComponent() 
-    value = calcPllVcoPfdFreq(component, pllNo) if component.getSymbolValue(PLL_ENABLE.format(pllNo)) else 0
+    value = min(calcPllVcoPfdFreq(component, pllNo),CLOCK_32BIT_INT_MAX) if component.getSymbolValue(PLL_ENABLE.format(pllNo)) else 0
     symbol.setValue(value)  
     
 global calcPllVcoPfdFreq
@@ -1289,6 +1296,17 @@ def calcPllVcoPfdFreq(component, pllNo):
     if pllPre > 0 :
         pllVcoPfdFreq = (pllClkSrcFreq * pllFbd) / (pllPre)   
     return pllVcoPfdFreq 
+
+def pllVcoDivFreqCb(symbol, event):
+    pllNo = symbol.getID()[3]
+    component = symbol.getComponent()
+    if event["id"] == PLL_CALC_VCO_FREQ.format(pllNo):
+        clkSrc = "PLL" + pllNo + " VCO DIV"
+        clkFreq = event["value"]
+        updateClkSrcFreq(symbol.getComponent(),clkSrc,clkFreq)
+    else : 
+        value = min(calcPllVcoDivFreq(component, pllNo),CLOCK_32BIT_INT_MAX) if component.getSymbolValue(PLL_ENABLE.format(pllNo)) else 0        
+        symbol.setValue(value)
           
 def calcPllVcoDivFreq(component, pllNo):
     pllClkSrcFreq = component.getSymbolValue(PLL_CLOCK_SOURCE_FREQ.format(pllNo))
@@ -1309,7 +1327,7 @@ def plloFreqCb(symbol, event):
         clkFreq = event["value"]
         updateClkSrcFreq(symbol.getComponent(),clkSrc,clkFreq)
     else :
-        value = calcPlloFreq(component, pllNo) if component.getSymbolValue(PLL_ENABLE.format(pllNo)) else 0
+        value = min(calcPlloFreq(component, pllNo),CLOCK_32BIT_INT_MAX) if component.getSymbolValue(PLL_ENABLE.format(pllNo)) else 0
         symbol.setValue(value)
        
 def calcPlloFreq(component, pllNo):
@@ -1321,7 +1339,7 @@ def calcPlloFreq(component, pllNo):
     plloFreq = 0
     if pllPre > 0 and postDiv1 > 0 and postDiv2 > 0:
         plloFreq = (pllClkSrcFreq * pllFbd) / (pllPre * postDiv1 * postDiv2)
-    return plloFreq 
+    return plloFreq
 
 def clkPllBackUpClkSrcCb(symbol, event):
     component = symbol.getComponent()
@@ -1576,8 +1594,9 @@ global pll_freq_ranges
 pll_freq_ranges = {
     "minVcoInterimFreq": getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MIN_PLL_VCO_INTERIM_FREQ_HZ"),
     "maxVcoInterimFreq": getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MAX_PLL_VCO_INTERIM_FREQ_HZ"),
-    "minPlloFreq": getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MIN_PLLO_FREQ_HZ"),
-    "maxPlloFreq": getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MAX_PLLO_FREQ_HZ")
+    #"minPlloFreq": getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MIN_PLLO_FREQ_HZ"),
+    "maxPlloFreq": getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MAX_PLLO_FREQ_HZ"),
+    "maxVcoFreq": getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MAX_PLL_VCO_FREQ_HZ"),
 }
 global round_up_to_next_number
 def round_up_to_next_number(n):
@@ -1601,7 +1620,7 @@ def getPlloFreqParams(pllNo,clkSrcFreq, reqPlloOutFreq, pll_mul_div_ranges, pll_
     vcodiv_max = pll_mul_div_ranges["vcodiv_max"]
     min_vco_interim_freq = pll_freq_ranges["minVcoInterimFreq"]
     max_vco_interim_freq = pll_freq_ranges["maxVcoInterimFreq"]
-    min_pllo_freq = pll_freq_ranges["minPlloFreq"]
+    #min_pllo_freq = pll_freq_ranges["minPlloFreq"]
     max_pllo_freq = pll_freq_ranges["maxPlloFreq"]
     smallest_difference = -1
     pllpreVal = 1
@@ -1627,7 +1646,7 @@ def getPlloFreqParams(pllNo,clkSrcFreq, reqPlloOutFreq, pll_mul_div_ranges, pll_
                     else:
                         postdiv2 = val    
                     calculated_output_freq = (clkSrcFreq * fbdiv) / (pllpre *postdiv1 * postdiv2)
-                    if min_pllo_freq <= calculated_output_freq <= max_pllo_freq:
+                    if calculated_output_freq <= max_pllo_freq:
                                 difference = abs(calculated_output_freq - reqPlloOutFreq)
                                 if difference == 0:
                                     return {
@@ -1761,7 +1780,7 @@ def getPlloandVcoFreqParams(pllNo,clkSrcFreq, plloOutFreq, vcoDivFreq, pll_mul_d
     vcodiv_max = pll_mul_div_ranges["vcodiv_max"]
     min_vco_interim_freq = pll_freq_ranges["minVcoInterimFreq"]
     max_vco_interim_freq = pll_freq_ranges["maxVcoInterimFreq"]
-    min_pllo_freq = pll_freq_ranges["minPlloFreq"]
+    #min_pllo_freq = pll_freq_ranges["minPlloFreq"]
     max_pllo_freq = pll_freq_ranges["maxPlloFreq"]
     smallest_Pllo_difference = -1
     smallest_Vcodiv_difference = -1
@@ -1790,9 +1809,11 @@ def getPlloandVcoFreqParams(pllNo,clkSrcFreq, plloOutFreq, vcoDivFreq, pll_mul_d
                     else:
                         postdiv2 = val
                     calculated_output_freq = (clkSrcFreq * fbdiv) / (pllpre *postdiv1 * postdiv2)
-                    if min_pllo_freq <= calculated_output_freq <= max_pllo_freq:
+                    if calculated_output_freq <= max_pllo_freq:
                                 difference = abs(calculated_output_freq - plloOutFreq)
                                 if difference == 0: 
+                                    if(isPlloFreqAchieved == False):
+                                        smallest_Vcodiv_difference = -1
                                     isPlloFreqAchieved = True                        
                                     vcoDivParams = getVcodivFactor(vcodiv_max,vcoDivFreq,clkSrcFreq,interim_freq,pllpre,fbdiv)
                                     if vcoDivParams["vcoFreqDiff"] == 0:
@@ -1907,6 +1928,7 @@ poscFreqVal = coreComponent.createIntegerSymbol("POSC_FREQ",clkSourceMenu)
 poscFreqVal.setDefaultValue(0) # should this be read from ATDF
 poscFreqVal.setVisible(False)
 poscFreqVal.setDependencies(poscFreqCb,[EXT_CLK_SRC_SEL,EXT_CLK_SRC_FREQ])
+
 for i in range(1, totalRefInputSrcCount+1):   
     refInpPinEnable = coreComponent.createBooleanSymbol(REF_INPUT_PIN_ENABLE+ str(i), extInputSrcMenu)
     refInpPinEnable.setLabel("Use Reference Input " +str(i))
@@ -1916,6 +1938,7 @@ for i in range(1, totalRefInputSrcCount+1):
     refInputFreq.setDefaultValue(REF_INPUT_DEFAULT_FREQ)
     refInputFreq.setLabel("Reference Input" + str(i) + " Frequency")
     refInputFreq.setVisible(False)
+    refInputFreq.setMax(REF_INPUT_MAX_FREQ)
     refInputFreq.setDependencies(referenceInputFreqCb,[REF_INPUT_PIN_FREQ+str(i)])
     refInputDisplayFreq = coreComponent.createIntegerSymbol("REFI{}_FREQ".format(str(i)),refInpPinEnable)
     refInputDisplayFreq.setDefaultValue(0)
@@ -1955,7 +1978,7 @@ pllPostDiv1DefaultValue = getSettingBitDefaultAndMaskValue(INTERNAL_OSCILLATOR,P
 pllPostDiv2DefaultValue = getSettingBitDefaultAndMaskValue(INTERNAL_OSCILLATOR,PLL_REG_GROUP,PLL_REG_DIV,"POSTDIV2") 
 pllIntdivDefaultValue = getSettingBitDefaultAndMaskValue(INTERNAL_OSCILLATOR,VCO_REG_GROUP,PLL_REG_DIV,"INTDIV")
 
-pllPostDiv1Options = ["{}".format(i) for i in range(1, pllPostDiv2DefaultValue["maskValue"]+1)]
+pllPostDiv1Options = ["{}".format(i) for i in range(1, pllPostDiv1DefaultValue["maskValue"]+1)]
 pllPostDiv2Options = ["{}".format(i) for i in range(1, pllPostDiv2DefaultValue["maskValue"]+1)]
 pllClkSrcDefault = {
                 "defaultValue" : 0,
@@ -1995,7 +2018,7 @@ for i in range(1, totalPllCount+1):
     
     pllFbd = createClkIntSymbol(coreComponent,PLLFBD.format(i),pllClkMenu,pllFbdDefaultValue,"Feedback Divider(PLLFBDIV)")
     pllFbd.setVisible(True)
-    pllFbd.setMin(1)
+    pllFbd.setMin(getIntValueForAtdfParam(INTERNAL_OSCILLATOR,CLOCK,"MIN_PLL_FEEDBACK_DIV"))
     pllFbd.setHelp(
         "atmel;device:"
         + Variables.get("__PROCESSOR")
@@ -2249,6 +2272,8 @@ for i in range(1, totalClkGenCount+1):
         + Variables.get("__PROCESSOR")
         + ";comp:clk_04449;register:CLKxCON"
     )
+    if(i == 1):
+        enableFailSafeClk.setDefaultValue(True)
 
     failSafeEnableBit = createKeyValueSettingSymbol(coreComponent,CLK_GEN_FSCMEN.format(i),INTERNAL_OSCILLATOR,CLK_CON_REG_GROUP,CLK_CON_REG,"FSCMEN",clkGenMenu)
     

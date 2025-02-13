@@ -597,15 +597,15 @@
     position: absolute;
     height: 20px;
     width: 100px;
-    left: 1034px;
-    top: 265px
+    left: 997px;
+    top: 264px
     }
 .ClkGenSlowPeripheralFreq {
     position: absolute;
     height: 20px;
     width: 100px;
-    left: 1022px;
-    top: 324px
+    left: 997px;
+    top: 326px
     }
 .ClockGenRadio0 {
     position: absolute;
@@ -864,14 +864,14 @@
     width: 100px;
     height: 30px;
     left: 367px;
-    top: 120px
+    top: 122px
     }
 .refi2Freq {
     position: absolute;
     width: 100px;
     height: 30px;
     left: 367px;
-    top: 164px
+    top: 166px
     }
 .clockOutputPin {
     position: absolute;
@@ -1016,9 +1016,9 @@
 .clockGenPaneName {
     position: absolute;
     height: 20px;
-    width: 345px;
     left: 584px;
-    top: 538px
+    top: 538px;
+    width: 295px
     }
 .clockInputLabelDescription {
     position: absolute;
@@ -1051,44 +1051,44 @@
 .enableRefIpPin1Label {
     position: absolute;
     height: 30px;
-    width: 150px;
     left: 65px;
-    top: 123px
+    top: 123px;
+    width: 188px
     }
 .enableRefIpPin2Label {
     position: absolute;
     height: 30px;
-    width: 150px;
-    left: 64px;
-    top: 170px
+    width: 188px;
+    left: 65px;
+    top: 166px
     }
 .enRefi1Checkbox {
     position: absolute;
     height: 20px;
     width: 20px;
-    left: 228px;
-    top: 123px
+    top: 123px;
+    left: 254px
     }
 .enRefi2Checkbox {
     position: absolute;
     height: 20px;
     width: 20px;
-    left: 228px;
-    top: 169px
+    left: 254px;
+    top: 166px
     }
 .refi1FreqLabel {
     position: absolute;
-    width: 100px;
     height: 30px;
-    left: 267px;
-    top: 123px
+    width: 75px;
+    left: 286px;
+    top: 122px
     }
 .refi2FreqLabel {
     position: absolute;
-    width: 100px;
     height: 30px;
-    left: 268px;
-    top: 169px
+    width: 75px;
+    left: 286px;
+    top: 166px
     }
 .ClkGenDivEn {
     position: absolute;
@@ -1131,4 +1131,11 @@
     width: 120px;
     left: 796px;
     top: 885px
+    }
+.clkGenLabel {
+    position: absolute;
+    left: 584px;
+    height: 20px;
+    top: 4px;
+    width: 385px
     }

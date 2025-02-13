@@ -401,16 +401,6 @@
     Clock Generator 2 (FRC)
    </text>
   </g>
-  <g transform="translate(633.312,-1192.44)">
-   <desc>
-    System Clock (Clock Generator 1)
-   </desc>
-   <rect class="st12" height="14.8531" width="292.6" x="0" y="1200.24">
-   </rect>
-   <text class="st17" x="22.69" y="1213.07">
-    System Clock (Clock Generator 1)
-   </text>
-  </g>
   <g transform="translate(920.284,-722.316)">
    <path class="st3" d="M0 1223.75 L381.33 1224.43">
    </path>
@@ -474,7 +464,7 @@
    </path>
   </g>
   <g transform="translate(652.437,-593.937)">
-   <g class="st5" id="shadow3291-261" transform="matrix(1,0,0,1,0,3)">
+   <g class="st5" id="shadow3291-258" transform="matrix(1,0,0,1,0,3)">
     <path class="st6" d="M0 1215.1 L480.12 1215.1 L480.12 1143.74 L0 1143.74 L0 1215.1 Z">
     </path>
    </g>
@@ -482,7 +472,7 @@
    </path>
   </g>
   <g transform="translate(653.904,-99.8455)">
-   <g class="st5" id="shadow3294-266" transform="matrix(1,0,0,1,0,3)">
+   <g class="st5" id="shadow3294-263" transform="matrix(1,0,0,1,0,3)">
     <path class="st6" d="M0 1215.1 L505.9 1215.1 L505.9 749.35 L0 749.35 L0 1215.1 Z">
     </path>
    </g>
@@ -736,7 +726,7 @@
    </g>
   </g>
   <g transform="translate(16.5,-831.5)">
-   <g class="st5" id="shadow3361-362" transform="matrix(1,0,0,1,0,3)">
+   <g class="st5" id="shadow3361-359" transform="matrix(1,0,0,1,0,3)">
     <path class="st6" d="M0 1215.1 L526.03 1215.1 L526.03 1116.14 L0 1116.14 L0 1215.1 Z">
     </path>
    </g>
@@ -754,7 +744,7 @@
    </text>
   </g>
   <g transform="translate(16.0285,-7.49999)">
-   <g class="st5" id="shadow3365-370" transform="matrix(1,0,0,1,0,3)">
+   <g class="st5" id="shadow3365-367" transform="matrix(1,0,0,1,0,3)">
     <path class="st6" d="M0 1215.1 L1143.84 1215.1 L1143.84 1142 L0 1142 L0 1215.1 Z">
     </path>
    </g>
@@ -772,7 +762,7 @@
    </text>
   </g>
   <g transform="translate(15.125,-103.22)">
-   <g class="st5" id="shadow3453-378" transform="matrix(1,0,0,1,0,3)">
+   <g class="st5" id="shadow3453-375" transform="matrix(1,0,0,1,0,3)">
     <path class="st6" d="M0 1215.1 L528.25 1215.1 L528.25 868.6 L0 868.6 L0 1215.1 Z">
     </path>
    </g>
