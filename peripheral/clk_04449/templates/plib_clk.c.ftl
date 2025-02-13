@@ -164,6 +164,9 @@
 </#list>
 </#if>
 
+#define PLL1FOUT_SOURCE         5U
+#define PLL2VCODIV_SOURCE       8U 
+
 // Section: ISR declaration
 <#if clockFailIntEnable == true>
 void ${clkfailIsrHandlerName}(void);
@@ -231,6 +234,14 @@ void CLOCK_Initialize(void)
     while(OSCCTRLbits.POSCRDY == 0U){};
     </#if>
     
+    //If CLK GEN 1 (system clock) is using a PLL, switch to FRC to avoid risk of overclocking the CPU while changing PLL settings
+    if((CLK1CONbits.COSC >= PLL1FOUT_SOURCE) && (CLK1CONbits.COSC <= PLL2VCODIV_SOURCE))
+    {
+        CLK1CONbits.NOSC = 1U; //FRC as source 
+        CLK1CONbits.OSWEN = 1U;
+        while(CLK1CONbits.OSWEN);
+    }
+    
     <#list 1..maxPllGen as i>
 	<#if (.vars["pll"+i+"Enable"]??) && (.vars["pll"+i+"Enable"])>
     //PLL ${i} settings
@@ -270,13 +281,14 @@ void CLOCK_Initialize(void)
     while(PLL${i}CONbits.DIVSWEN == 1U){}; 
 #endif
     
+    //Clearing ON shuts down oscillator when no downstream clkgen or peripheral is requesting the clock
+    PLL${i}CONbits.ON = 0U;
 	</#if>
     </#list>
     <#list 1..maxClockGen as i>
     <#if (.vars["clkGen"+i+"Enable"]??) && (.vars["clkGen"+i+"Enable"] == true)>
     //Clock Generator ${i} settings
     CLK${i}CON = (_CLK${i}CON_ON_MASK
-                |_CLK${i}CON_OE_MASK
                 |CLK${i}CON_NOSC_${clkgenClockSources[.vars["clkGen"+i+"CON__NOSC"]?number]}
                 |CLK${i}CON_BOSC_${clkgenClockSources[.vars["clkGen"+i+"CON__BOSC"]?number]}<#if .vars["clkGen"+i+"CON__FSCMEN"]?number == 1>
                 |_CLK${i}CON_FSCMEN_MASK</#if>);
