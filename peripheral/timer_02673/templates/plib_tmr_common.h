@@ -89,7 +89,7 @@ extern "C" {
   Remarks:
     The callback should look like:
       void callback(handle, context);
-	Make sure the return value and parameters of the callback are correct.
+    Make sure the return value and parameters of the callback are correct.
 */
 
 typedef void (*TMR_CALLBACK)(uint32_t status, uintptr_t context);
@@ -102,6 +102,8 @@ typedef struct
     TMR_CALLBACK callback_fn;
     /* - Client data (Event Context) that will be passed to callback */
     uintptr_t context;
+    /* Tick counter increments at every timer interrupt */
+    uint32_t  tickCounter;
 
 }TIMER_OBJECT;
 

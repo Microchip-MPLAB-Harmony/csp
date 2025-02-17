@@ -38,7 +38,7 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/ 
+*******************************************************************************/
 
 #ifndef PLIB_TMR${TMR_INSTANCE_NUMBER}_H
 #define PLIB_TMR${TMR_INSTANCE_NUMBER}_H
@@ -49,6 +49,16 @@
 #include "plib_tmr_common.h"
 
 #define TIMER_CLOCK_FREQUENCY          ${TIMER_CLOCK_FREQ}
+
+<#if TMR_INTERRUPT_MODE == true>
+#define TMR_INTERRUPT_PERIOD_IN_US     ${TIMER_PERIOD_US}
+typedef struct
+{
+    uint32_t start;
+    uint32_t count;
+} TMR_TIMEOUT;
+</#if>
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -144,7 +154,7 @@ uint32_t TMR${TMR_INSTANCE_NUMBER}_PeriodGet(void);
  * @details    This function returns the timer elasped time value
  *
  * @pre        Timer should be initialized properly
- * 
+ *
  * @param      None
  *
  * @return     Elapsed count value of the timer
@@ -164,6 +174,67 @@ uint32_t TMR${TMR_INSTANCE_NUMBER}_CounterGet(void);
  */
 uint32_t TMR${TMR_INSTANCE_NUMBER}_FrequencyGet(void);
 <#if TMR_INTERRUPT_MODE == true>
+
+/**
+ * @brief      Returns current tick count
+ *
+ * @details    This function returns current tick count
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      None
+ *
+ * @return     Current tick count
+ *
+ * @remarks    None
+ */
+uint32_t TMR${TMR_INSTANCE_NUMBER}_GetTickCounter(void);
+
+/**
+ * @brief      Stores current tick count and delay value in the timeout
+ *
+ * @details    This function stores current tick count and delay value in the timeout
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      timeout - timeout structure stores current tick count and delay value
+ * @param      delay_ms - Delay value in millisecond
+ *
+ * @return     None
+ *
+ * @remarks    None
+ */
+void TMR${TMR_INSTANCE_NUMBER}_StartTimeOut (TMR_TIMEOUT* timeout, uint32_t delay_ms);
+
+/**
+ * @brief      Resets current tick count in the timeout
+ *
+ * @details    This function resets current tick count in the timeout
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      timeout - timeout structure stores current tick count
+ *
+ * @return     None
+ *
+ * @remarks    None
+ */
+void TMR${TMR_INSTANCE_NUMBER}_ResetTimeOut (TMR_TIMEOUT* timeout);
+
+/**
+ * @brief      Checks for timeout
+ *
+ * @details    This function checks for timeout
+ *
+ * @pre        Timer should be initialized properly
+ *
+ * @param      timeout - Pointer to timeout structure
+ *
+ * @return     Returns true if timeout occurred otherwise false
+ *
+ * @remarks    None
+ */
+bool TMR${TMR_INSTANCE_NUMBER}_IsTimeoutReached (TMR_TIMEOUT* timeout);
 
 /**
  * @brief      Enables the timer interrupt
@@ -193,16 +264,16 @@ void TMR${TMR_INSTANCE_NUMBER}_InterruptDisable(void);
 
 /**
  * @brief      Registers a callback function
- * @details    This function allows application to register an event handling 
- *             function for the PLIB to call back when external interrupt occurs. 
- *             At any point if application wants to stop the callback, 
+ * @details    This function allows application to register an event handling
+ *             function for the PLIB to call back when external interrupt occurs.
+ *             At any point if application wants to stop the callback,
  *             it can call this function with "callback" value as NULL.
- * 
+ *
  * @pre        Timer should be initialized properly
  *
  * @param[in]  callback  - Pointer to the event handler function implemented by the user
- * @param[in]  context   - The value of parameter will be passed back to the 
- *                         application unchanged, when the eventHandler function is called. 
+ * @param[in]  context   - The value of parameter will be passed back to the
+ *                         application unchanged, when the eventHandler function is called.
  *                         It can be used to identify any application specific value.
  *
  * @return      None

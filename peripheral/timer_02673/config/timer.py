@@ -1,5 +1,29 @@
+"""*****************************************************************************
+* Copyright (C) 2025 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************"""
+
 TMR_INSTANCE_NUMBER = "TMR_INSTANCE_NUMBER"
 TMR_INTERRUPT_MODE = "TMR_INTERRUPT_MODE"
+TMR_AUTOSTART = "TMR_AUTOSTART"
 TCON_PRE_SCALER = "TCON_PRE_SCALER"
 TCON_SRC_SEL = "TCON_SRC_SEL"
 TCON_TGATE = "TCON_TGATE"
@@ -50,6 +74,7 @@ def calcAchievableFreq():
 def handleMessage(messageID, args):
     global sysTimeComponentId
     global timePeriodMs
+    global timerUnit
 
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
@@ -63,10 +88,20 @@ def handleMessage(messageID, args):
         if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
             timePeriodMs.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
 
-    if messageID == "SYS_TIME_TICK_RATE_CHANGED":
+    elif messageID == "SYS_TIME_TICK_RATE_CHANGED":
         if sysTimeComponentId.getValue() != "":
             # Set the Time Period (millisecond)
             timePeriodMs.setValue(args["sys_time_tick_ms"])
+
+    elif messageID == "TMR1_TIMER_CONFIG":
+        if "isTmrIntEn" in args:
+            Database.setSymbolValue(timePeriodMs.getComponent().getID().lower(), TMR_INTERRUPT_MODE, args["isTmrIntEn"])
+            if args["isTmrIntEn"] == True:
+                timerUnit.setValue("millisecond")
+            else:
+                timerUnit.clearValue()
+        if "isTmrAutoStart" in args:
+            Database.setSymbolValue(timePeriodMs.getComponent().getID().lower(), TMR_AUTOSTART, args["isTmrAutoStart"])
 
     return dummy_dict
 
@@ -199,6 +234,7 @@ def prescalerStrtoInt(prescalerStr):
 
 
 def timePeriodCalc(symbol, event):
+    global timerPeriodUS
 
     component = symbol.getComponent()
     clock = component.getSymbolValue(TIMER_CLOCK_FREQ)
@@ -211,6 +247,12 @@ def timePeriodCalc(symbol, event):
 
     symbol.setLabel("Time in {}".format(timerUnitName))
 
+    if timerUnitName == "millisecond":
+        timerPeriodUS.setValue(int(round(symbol.getValue() * 1000.0)))
+    elif timerUnitName == "microsecond":
+        timerPeriodUS.setValue(int(round(symbol.getValue())))
+    elif timerUnitName == "nanosecond":
+        timerPeriodUS.setValue(int(round(symbol.getValue() / 1000.0)))
 
 def periodRegCalc(symbol, event):
 
@@ -252,11 +294,11 @@ def handleInterruptControl(instNum, intMode):
     intIndex = getVectorIndex("T{}Interrupt".format(instNum))
 
     if intMode == True:
-        Database.setSymbolValue("core", "INTC_{}_ENABLE".format(intIndex), True)
-        Database.setSymbolValue("core", "INTC_{}_HANDLER_LOCK".format(intIndex), True)
+        Database.sendMessage("core", "INTC_{}_ENABLE".format(intIndex), {"isEnabled":True})
+        Database.sendMessage("core", "INTC_{}_HANDLER_LOCK".format(intIndex), {"isEnabled":True})
     else:
-        Database.setSymbolValue("core", "INTC_{}_ENABLE".format(intIndex), False)
-        Database.setSymbolValue("core", "INTC_{}_HANDLER_LOCK".format(intIndex), False)
+        Database.sendMessage("core", "INTC_{}_ENABLE".format(intIndex), {"isEnabled":False})
+        Database.sendMessage("core", "INTC_{}_HANDLER_LOCK".format(intIndex), {"isEnabled":False})
 
 
 def defaultInterruptControl(component):
@@ -631,6 +673,12 @@ def instantiateComponent(tmrComponent):
         ],
     )
 
+    global timerPeriodUS
+    timerPeriodUS = tmrComponent.createIntegerSymbol("TIMER_PERIOD_US", None)
+    timerPeriodUS.setVisible(False)
+    timerPeriodUS.setDefaultValue(int(round(timePeriodMs.getValue() * 1000)))
+    timerPeriodUS.setMin(0)
+
     global periodReg
     periodReg = tmrComponent.createHexSymbol(TIMER_PERIOD, timePeriodMs)
     periodReg.setLabel("Period Register")
@@ -769,6 +817,11 @@ def instantiateComponent(tmrComponent):
     periodSetApiName_Sym = tmrComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
     periodSetApiName_Sym.setVisible(False)
     periodSetApiName_Sym.setDefaultValue(periodSetApiName)
+
+    tmrAutoStart = tmrComponent.createBooleanSymbol(TMR_AUTOSTART, None)
+    tmrAutoStart.setLabel("Auto start timer after initialization")
+    tmrAutoStart.setDefaultValue(False)
+    tmrAutoStart.setVisible(False)
 
     # Code Generation
 

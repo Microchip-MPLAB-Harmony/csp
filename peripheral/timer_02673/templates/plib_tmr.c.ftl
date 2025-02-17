@@ -42,12 +42,12 @@ void T${TMR_INSTANCE_NUMBER}_InterruptHandler (void);
 
 //Timer Pre-Scalar options
 <#list preScalarOptions as options>
-#define T${TMR_INSTANCE_NUMBER}CON_TCKPS_${options}      ((uint32_t)(_T${TMR_INSTANCE_NUMBER}CON_TCKPS_MASK & ((uint32_t)(${options_index}) << _T${TMR_INSTANCE_NUMBER}CON_TCKPS_POSITION))) 
+#define T${TMR_INSTANCE_NUMBER}CON_TCKPS_${options}      ((uint32_t)(_T${TMR_INSTANCE_NUMBER}CON_TCKPS_MASK & ((uint32_t)(${options_index}) << _T${TMR_INSTANCE_NUMBER}CON_TCKPS_POSITION)))
 </#list>
 
 //Clock selection options
 <#list clockSelectionOptions as options>
-#define T${TMR_INSTANCE_NUMBER}CON_SRC_SEL_${options}      ((uint32_t)(_T${TMR_INSTANCE_NUMBER}CON_TCS_MASK & ((uint32_t)(${options_index}) << _T${TMR_INSTANCE_NUMBER}CON_TCS_POSITION))) 
+#define T${TMR_INSTANCE_NUMBER}CON_SRC_SEL_${options}      ((uint32_t)(_T${TMR_INSTANCE_NUMBER}CON_TCS_MASK & ((uint32_t)(${options_index}) << _T${TMR_INSTANCE_NUMBER}CON_TCS_POSITION)))
 </#list>
 
 void TMR${TMR_INSTANCE_NUMBER}_Initialize(void)
@@ -55,15 +55,15 @@ void TMR${TMR_INSTANCE_NUMBER}_Initialize(void)
     /* Disable Timer */
     T${TMR_INSTANCE_NUMBER}CONbits.ON = 0;
 
-	<#if TCON_SRC_SEL=="0" & TCON_PRE_SCALER =="0" & TCON_TSYNC =="0" & TCON_TWDIS =="0" & TCON_TGATE == "0">
-	T${TMR_INSTANCE_NUMBER}CON = 0x0UL;
-	<#else>
+    <#if TCON_SRC_SEL=="0" & TCON_PRE_SCALER =="0" & TCON_TSYNC =="0" & TCON_TWDIS =="0" & TCON_TGATE == "0">
+    T${TMR_INSTANCE_NUMBER}CON = 0x0UL;
+    <#else>
     T${TMR_INSTANCE_NUMBER}CON = (T${TMR_INSTANCE_NUMBER}CON_TCKPS_${preScalarOptions[TCON_PRE_SCALER?number]}<#if TCON_TGATE == "1" & TCON_SRC_SEL == "0">
-	        |_T${TMR_INSTANCE_NUMBER}CON_TGATE_MASK</#if>
-			| T${TMR_INSTANCE_NUMBER}CON_SRC_SEL_${clockSelectionOptions[TCON_SRC_SEL?number]}<#if TCON_TSYNC == "1" & TCON_SRC_SEL=="1">
-			|_T${TMR_INSTANCE_NUMBER}CON_TSYNC_MASK</#if><#if TCON_TWDIS == "1" & TCON_TSYNC == "0">
-			|_T${TMR_INSTANCE_NUMBER}CON_TMWDIS_MASK</#if>);
-	</#if>	
+            |_T${TMR_INSTANCE_NUMBER}CON_TGATE_MASK</#if>
+            | T${TMR_INSTANCE_NUMBER}CON_SRC_SEL_${clockSelectionOptions[TCON_SRC_SEL?number]}<#if TCON_TSYNC == "1" & TCON_SRC_SEL=="1">
+            |_T${TMR_INSTANCE_NUMBER}CON_TSYNC_MASK</#if><#if TCON_TWDIS == "1" & TCON_TSYNC == "0">
+            |_T${TMR_INSTANCE_NUMBER}CON_TMWDIS_MASK</#if>);
+    </#if>
     /* Clear counter */
     TMR${TMR_INSTANCE_NUMBER} = 0x0UL;
 
@@ -71,22 +71,28 @@ void TMR${TMR_INSTANCE_NUMBER}_Initialize(void)
     PR${TMR_INSTANCE_NUMBER} = 0x${TIMER_PERIOD}UL; /* Decimal Equivalent ${PERIOD_REG_COMMENT} */
 
     <#if TMR_INTERRUPT_MODE == true>
+    tmr${TMR_INSTANCE_NUMBER}Obj.tickCounter = 0;
+    tmr${TMR_INSTANCE_NUMBER}Obj.callback_fn = NULL;
+
     /* Setup TMR1 Interrupt */
     TMR${TMR_INSTANCE_NUMBER}_InterruptEnable();  /* Enable interrupt on the way out */
+    </#if>
+    <#if TMR_AUTOSTART == true>
+    TMR${TMR_INSTANCE_NUMBER}_Start();
     </#if>
 }
 
 void TMR${TMR_INSTANCE_NUMBER}_Deinitialize(void)
 {
-	/* Stopping the timer */
-	TMR${TMR_INSTANCE_NUMBER}_Stop();
-	
-	/* Deinitializing the registers to POR values */
-	T${TMR_INSTANCE_NUMBER}CON = ${TCON_REG_POR};
-	TMR${TMR_INSTANCE_NUMBER}  = ${TMR_REG_POR};
-	PR${TMR_INSTANCE_NUMBER}   = ${PR_REG_POR};
+    /* Stopping the timer */
+    TMR${TMR_INSTANCE_NUMBER}_Stop();
+
+    /* Deinitializing the registers to POR values */
+    T${TMR_INSTANCE_NUMBER}CON = ${TCON_REG_POR};
+    TMR${TMR_INSTANCE_NUMBER}  = ${TMR_REG_POR};
+    PR${TMR_INSTANCE_NUMBER}   = ${PR_REG_POR};
 }
-	
+
 void TMR${TMR_INSTANCE_NUMBER}_Start (void)
 {
     T${TMR_INSTANCE_NUMBER}CONbits.ON = 1;
@@ -121,10 +127,40 @@ uint32_t TMR${TMR_INSTANCE_NUMBER}_FrequencyGet(void)
 }
 
 <#if TMR_INTERRUPT_MODE == true>
+uint32_t TMR${TMR_INSTANCE_NUMBER}_GetTickCounter(void)
+{
+    return tmr${TMR_INSTANCE_NUMBER}Obj.tickCounter;
+}
+
+void TMR${TMR_INSTANCE_NUMBER}_StartTimeOut (TMR_TIMEOUT* timeout, uint32_t delay_ms)
+{
+    timeout->start = TMR${TMR_INSTANCE_NUMBER}_GetTickCounter();
+    timeout->count = (delay_ms * 1000U)/TMR_INTERRUPT_PERIOD_IN_US;
+}
+
+void TMR${TMR_INSTANCE_NUMBER}_ResetTimeOut (TMR_TIMEOUT* timeout)
+{
+    timeout->start = TMR${TMR_INSTANCE_NUMBER}_GetTickCounter();
+}
+
+bool TMR${TMR_INSTANCE_NUMBER}_IsTimeoutReached (TMR_TIMEOUT* timeout)
+{
+    bool valTimeout  = true;
+    if ((tmr${TMR_INSTANCE_NUMBER}Obj.tickCounter - timeout->start) < timeout->count)
+    {
+        valTimeout = false;
+    }
+
+    return valTimeout;
+
+}
+
 void __attribute__((used)) ${TMR_INTERRUPT_HANDLER} (void)
 {
     uint32_t status = _T${TMR_INSTANCE_NUMBER}IF;
     _T${TMR_INSTANCE_NUMBER}IF = 0;
+
+    tmr${TMR_INSTANCE_NUMBER}Obj.tickCounter++;
 
     if((tmr${TMR_INSTANCE_NUMBER}Obj.callback_fn != NULL))
     {
@@ -155,12 +191,12 @@ void TMR${TMR_INSTANCE_NUMBER}_CallbackRegister( TMR_CALLBACK callback_fn, uintp
 <#else>
 bool TMR${TMR_INSTANCE_NUMBER}_PeriodHasExpired(void)
 {
-	bool status = false;
-	if(_T${TMR_INSTANCE_NUMBER}IF == 1U){
-		status = true;
-		_T${TMR_INSTANCE_NUMBER}IF = 0;
-	}
-	
-	return status;
+    bool status = false;
+    if(_T${TMR_INSTANCE_NUMBER}IF == 1U){
+        status = true;
+        _T${TMR_INSTANCE_NUMBER}IF = 0;
+    }
+
+    return status;
 }
 </#if>
