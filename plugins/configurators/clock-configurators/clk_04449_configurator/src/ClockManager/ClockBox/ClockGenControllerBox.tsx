@@ -134,7 +134,7 @@ const ClockGenControllerBox = (props: {
                 className={props.cx('clkGen' + '1' + '_Settings')}
                 symbolArray={clkGenSymbols}
                 dialogWidth='50rem'
-                dialogHeight='40rem'
+                dialogHeight='18rem'
             />
             <ResetSymbolsIcon
                 tooltip={'Reset Clock Generator ' + '1' + ' Settings to default value'}
@@ -160,7 +160,7 @@ const ClockGenControllerBox = (props: {
                 header='Auto Calculate System Clock frequency'
                 visible={dialogStatus}
                 maximizable={true}
-                style={{ width: '55rem', height: '45rem' }}
+                style={{ width: '55rem', height: '30rem' }}
                 onHide={() => {
                     dialogClosed(false);
                 }}>

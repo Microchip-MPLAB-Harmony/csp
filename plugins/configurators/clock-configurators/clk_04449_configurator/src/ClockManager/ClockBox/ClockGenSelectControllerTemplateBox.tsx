@@ -227,7 +227,7 @@ const ClockGenSelectControllerTemplateBox = (props: {
                 symbolArray={clkGenSymbols}
                 disabled={!isClkGenEnabled.value}
                 dialogWidth='50rem'
-                dialogHeight='40rem'
+                dialogHeight='18rem'
             />
             <ResetSymbolsIcon
                 tooltip={'Reset Clock Generator ' + props.index + ' Settings to default value'}
@@ -248,7 +248,7 @@ const ClockGenSelectControllerTemplateBox = (props: {
                 header={'Auto Calculate Clock Generator ' + props.index + ' Output frequency'}
                 visible={dialogStatus}
                 maximizable={true}
-                style={{ width: '55rem', height: '45rem' }}
+                style={{ width: '55rem', height: '30rem' }}
                 onHide={() => {
                     dialogClosed(false);
                 }}>

@@ -68,11 +68,11 @@ const ClockGen2and3ControllerBox = (props: {
             />
             <PlainLabel
                 className = {props.cx('clkGen2ClkSrc')}
-                disPlayText='FRC Oscillator'
+                disPlayText='FRC'
             />
             <PlainLabel
                 className = {props.cx('clkGen3ClkSrc')}
-                disPlayText='BFRC Oscillator'
+                disPlayText='BFRC'
             />
         </div>
     );

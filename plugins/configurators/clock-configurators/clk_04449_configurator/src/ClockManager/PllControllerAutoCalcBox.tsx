@@ -202,6 +202,7 @@ const PLLControllerAutoCalcBox = (props: {
                 <Button
                     label={'Accept'}
                     onClick={accept}
+                    disabled={!isChecked1 && !isChecked2}
                 />
                 <Button
                     label={'Cancel'}

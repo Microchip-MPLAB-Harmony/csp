@@ -112,7 +112,7 @@ const PLLControllerBox = (props: {
                 className={props.cx('pll' + props.index + 'Clk_Settings')}
                 symbolArray={pllSymbols}
                 dialogWidth='50rem'
-                dialogHeight='40rem'
+                dialogHeight='18rem'
                 disabled={!pllEnable.value}
             />
             <CheckBoxDefault
