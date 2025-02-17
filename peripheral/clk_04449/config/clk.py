@@ -2118,7 +2118,8 @@ for i in range(1, totalPllCount+1):
         + ";comp:clk_04449;register:PLLxCON"
     )
     
-    if pllClkMenu:
+    if pllClkMenu.getValue() == True :
+        pllVcoPfdFreq.setValue(calcPllVcoPfdFreq(pllVcoPfdFreq.getComponent(),i))
         pllVcoDivFreq.setValue(calcPllVcoDivFreq(pllVcoDivFreq.getComponent(),i))
         plloFreq.setValue(calcPlloFreq(plloFreq.getComponent(),i))
     clkPllEnable(pllClkMenu.getComponent(),pllClkMenu,i)
