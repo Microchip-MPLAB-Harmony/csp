@@ -413,10 +413,12 @@ def handleMessage(messageID, args):
         component = str(afecInstanceName.getValue()).lower()
         channel, isNegInput, enable = args['config']
 
-        res = Database.setSymbolValue(component, "AFEC_{}_CHER".format(channel), enable)
         if channel % 2 == 1 and isNegInput == True:
+            res = Database.setSymbolValue(component, "AFEC_{}_CHER".format(channel - 1), enable)
             res = Database.setSymbolValue(component, "AFEC_{}_NEG_INP".format(channel - 1), "AN{}".format(channel))
-        
+        else:
+            res = Database.setSymbolValue(component, "AFEC_{}_CHER".format(channel), enable)
+
         if res == True:
             dict = {"Result": "Success"}
         else:
