@@ -67,10 +67,8 @@ def setPinConfigurationValue(pinNumber, setting, value):
     pin_num = pad_map[pad]
     symbol = pinSymbolsDictionary.get(pin_num).get(setting)
     if symbol:
-        symbol.setReadOnly(False)
         symbol.clearValue()
         symbol.setValue(value)
-        symbol.setReadOnly(True)
 
     if setting == 'function':
         symbol = pinSymbolsDictionary.get(pin_num).get('peripheralfunction')
@@ -89,7 +87,6 @@ def setPinConfigurationValue(pinNumber, setting, value):
                 
             symbol.clearValue()
             symbol.setValue(periphFnValue)
-            symbol.setReadOnly(True)
 
 def getPinConfigurationValue(pinNumber, setting):
     global pad_map
@@ -109,12 +106,14 @@ def clearPinConfigurationValue(pinNumber, setting):
     pin_num = pad_map[pad]
     symbol = pinSymbolsDictionary.get(pin_num).get(setting)
     if symbol:
+        symbol.setReadOnly(True)
         symbol.setReadOnly(False)
         symbol.clearValue()
 
     if setting == 'function':
         symbol = pinSymbolsDictionary.get(pin_num).get('peripheralfunction')
         if symbol:
+            symbol.setReadOnly(True)
             symbol.setReadOnly(False)
             symbol.clearValue()
 

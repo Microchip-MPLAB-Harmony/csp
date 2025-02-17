@@ -90,10 +90,8 @@ def setPinConfigurationValue(pinNumber, setting, value):
     else:
         symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
         if symbol:
-            symbol.setReadOnly(False)
             symbol.clearValue()
             symbol.setValue(value)
-            symbol.setReadOnly(True)
 
         if setting == 'function':
             symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
@@ -122,7 +120,6 @@ def setPinConfigurationValue(pinNumber, setting, value):
                     
                 symbol.clearValue()
                 symbol.setValue(periphFnValue)
-                symbol.setReadOnly(True)
 
         elif setting == 'pull up':
             if value == "True":
@@ -143,8 +140,6 @@ def setPinConfigurationValue(pinNumber, setting, value):
             else:
                 symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
                 symbol.clearValue()
-            
-        
 
 def getPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
@@ -189,32 +184,42 @@ def clearPinConfigurationValue(pinNumber, setting):
         symbol.clearValue()
         symbol = pinSymbolsDictionary.get(pinNumber).get('peripheralfunction')
         if symbol != None:
+            symbol.setReadOnly(True)
             symbol.setReadOnly(False)
             symbol.clearValue()
         
         symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
         if symbol != None:
+            symbol.setReadOnly(True)
             symbol.setReadOnly(False)
             symbol.clearValue()
 
     elif setting == 'pull up' or setting == 'pull down':
         symbol = pinSymbolsDictionary.get(pinNumber).get('pullen')
+        symbol.setReadOnly(True)
+        symbol.setReadOnly(False)
         symbol.clearValue()
         symbol = pinSymbolsDictionary.get(pinNumber).get('latch')
+        symbol.setReadOnly(True)
+        symbol.setReadOnly(False)
         symbol.clearValue()
 
     elif setting == "direction":
         symbol = pinSymbolsDictionary.get(pinNumber).get("input")
+        symbol.setReadOnly(True)
+        symbol.setReadOnly(False)
         symbol.clearValue()
         symbol = pinSymbolsDictionary.get(pinNumber).get("direction")
+        symbol.setReadOnly(True)
+        symbol.setReadOnly(False)
         symbol.clearValue()
         
     else:
         symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
         if symbol:
+            symbol.setReadOnly(True)
             symbol.setReadOnly(False)
             symbol.clearValue()
-        
         
     
 portSecAliasRegSpace = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/register-group@[name=\"PORT_SEC\"]")

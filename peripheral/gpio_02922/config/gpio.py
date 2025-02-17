@@ -108,10 +108,8 @@ def setPinConfigurationValue(pinNumber, setting, value):
 
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
-        symbol.setReadOnly(False)
         symbol.clearValue()
         symbol.setValue(value)
-        symbol.setReadOnly(True)
 
     if setting == 'function':
         symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
@@ -174,6 +172,7 @@ def getPinConfigurationValue(pinNumber, setting):
 def clearPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
+        symbol.setReadOnly(True)
         symbol.setReadOnly(False)
         symbol.clearValue()
         
