@@ -188,7 +188,6 @@ def fuseConfigCb(symbol, event):
 
 node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]/register-group")
 register = node.getChildren() # these are <register > fields for fuse config section
-codeGenerationList = coreComponent.createListEntrySymbol("config_code", None)
 for reg_index in range(len(register)):
     porValue = register[reg_index].getAttribute('initval')
     # print( " porValue %x = ", porValue)
