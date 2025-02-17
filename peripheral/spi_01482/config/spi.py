@@ -526,11 +526,9 @@ def setCoreInterruptSymbols(value):
 
 
 def interruptEnableChange(symbol, event):
-    if event["id"] == SPI_CON1__MSTEN :
-        symbol.setValue(True)
-        setCoreInterruptSymbols(True)
-    else:
+    if event["id"] == INTERRUPT_MODE:
         setCoreInterruptSymbols(bool(event["value"]))
+
     updateIntReadOnlyAttr(symbol, event)
 
 
@@ -637,7 +635,7 @@ def getIFSRegister(instance):
     return "IFS1"
    elif instance == 2 or instance == 3 :  # SPI instance 2
     return "IFS2"
-   return None 
+   return None
 
 def instantiateComponent(spiComponent):
 
@@ -672,7 +670,7 @@ def instantiateComponent(spiComponent):
     spiInterruptMode.setDependencies(interruptEnableChange, [SPI_CON1__MSTEN,INTERRUPT_MODE])
     spiInstanceNumber = int(spiComponent.getID().upper().replace(SPI, ""))
      # Determine the IFS register for the channel
-    ifsRegister = getIFSRegister(spiInstanceNumber) 
+    ifsRegister = getIFSRegister(spiInstanceNumber)
     if ifsRegister is None:
         Log.writeInfoMessage("No IFS register mapping found for instance {}, channel {}. Skipping.".format(spiInstanceNumber))
         return
