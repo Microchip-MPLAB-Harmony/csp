@@ -110,8 +110,12 @@ ccpSym_PERIOD_MS.setLabel("Time")
 ccpSym_PERIOD_MS.setDefaultValue(0.3)
 ccpSym_PERIOD_MS.setMin(0.0)
 ccpSym_PERIOD_MS.setMax(max)
-ccpSym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + ccpInstanceName.getValue() + "_CLOCK_FREQUENCY", "CCP_CLOCK_FREQ",
+if isPic32aDspic33aPresent():
+    ccpSym_PERIOD_MS.setDependencies(timerMaxValue, ["CCP_CLOCK_FREQ",
     "CCP_CCPCON1_T32", "CCP_UNIT", "core.stdSpeedClkFreq", "core." + clkGenFreqSym])
+else:
+    ccpSym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + ccpInstanceName.getValue() + "_CLOCK_FREQUENCY", "CCP_CLOCK_FREQ",
+    "CCP_CCPCON1_T32", "CCP_UNIT"])
 
 if clock != 0:
     period = (ccpSym_PERIOD_MS.getValue() / resolution) - 1

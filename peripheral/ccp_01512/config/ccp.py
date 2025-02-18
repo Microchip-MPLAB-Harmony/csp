@@ -540,8 +540,12 @@ def instantiateComponent(ccpComponent):
     ccpSym_CLOCK_FREQ.setLabel("CCP Clock Frequency")
     ccpSym_CLOCK_FREQ.setReadOnly(True)
     ccpSym_CLOCK_FREQ.setDefaultValue(defaultClkFreq)
-    ccpSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + ccpInstanceName.getValue() + "_CLOCK_FREQUENCY","CCP_PRESCALER_VALUE",
+    if isPic32aDspic33aPresent():
+        ccpSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["CCP_PRESCALER_VALUE",
         "CCP_CCPCON1_CLKSEL", "CCP_EXT_CLOCK_FREQ", "core.stdSpeedClkFreq", "core." + clkGenFreqSym])
+    else:
+        ccpSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + ccpInstanceName.getValue() + "_CLOCK_FREQUENCY","CCP_PRESCALER_VALUE",
+        "CCP_CCPCON1_CLKSEL", "CCP_EXT_CLOCK_FREQ"])
 
      #32 bit timer mode selection bits
     ccpSym_CCPCON1_T32 = ccpComponent.createBooleanSymbol("CCP_CCPCON1_T32", None)
@@ -799,7 +803,10 @@ def instantiateComponent(ccpComponent):
     ccpSym_ClkEnComment = ccpComponent.createCommentSymbol("CCP_CLOCK_ENABLE_COMMENT", None)
     ccpSym_ClkEnComment.setVisible(False)
     ccpSym_ClkEnComment.setLabel("Warning!!! " + ccpInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
-    ccpSym_ClkEnComment.setDependencies(updateTMRClockWarningStatus, ["core." + ccpInstanceName.getValue() + "_CLOCK_ENABLE", "CCP_CCPCON1_CLKSEL", "core." + clkGenEnableSym])
+    if isPic32aDspic33aPresent():
+        ccpSym_ClkEnComment.setDependencies(updateTMRClockWarningStatus, ["CCP_CCPCON1_CLKSEL", "core." + clkGenEnableSym])
+    else:
+        ccpSym_ClkEnComment.setDependencies(updateTMRClockWarningStatus, ["core." + ccpInstanceName.getValue() + "_CLOCK_ENABLE", "CCP_CCPCON1_CLKSEL"])
 
     irqEnumName_Sym = ccpComponent.createStringSymbol("IRQ_ENUM_NAME", None)
     irqEnumName_Sym.setVisible(False)
