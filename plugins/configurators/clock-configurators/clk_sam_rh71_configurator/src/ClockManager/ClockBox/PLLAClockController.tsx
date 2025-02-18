@@ -61,12 +61,12 @@ const PLLAClockController = (props: {
         cx={props.cx}
       />
       <PlainLabel
-        disPlayText={pllaMulLbl.value +1+ ""}
+        disPlayText={`(${pllaMulLbl.value} + 1)`}
         className={props.cx("pllaMulLbl")}
         booldStatus
       />
       <PlainLabel
-        disPlayText={pllaDivLbl.value + 1+ ""}
+        disPlayText={pllaDivLbl.value+''}
         className={props.cx("pllaDivLbl")}
         booldStatus
       />

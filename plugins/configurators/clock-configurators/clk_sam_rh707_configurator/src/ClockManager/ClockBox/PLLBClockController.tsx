@@ -5,17 +5,10 @@ import LoadDynamicComponents from "clock-common/lib/Components/Dynamic/LoadDynam
 import PlainLabel from "clock-common/lib/Components/LabelComponent/PlainLabel";
 import { useContext, useState } from "react";
 import {
-  CheckBox,
-  DropDown,
-  InputNumber,
-  KeyValueSetRadio,
   PluginConfigContext,
-  useBooleanSymbol,
   useIntegerSymbol,
-  useKeyValueSetSymbol,
 } from "@mplab_harmony/harmony-plugin-client-lib";
 import {
-    getAllSymbolsFromJSON,
     getDynamicLabelsFromJSON,
     getDynamicSymbolsFromJSON
   } from 'clock-common/lib/Tools/ClockJSONTools';
@@ -33,7 +26,6 @@ const PLLBClockController = (props: {
   cx: (...classNames: string[]) => string;
 }) => {
   const { componentId = "core" } = useContext(PluginConfigContext);
-  const [allJsonSymbols] = useState<string[]>(getAllSymbolsFromJSON(props.clockController));
 
   const [dynamicSymbolInfo] = useState(() => getDynamicSymbolsFromJSON(props.clockController));
   const [dynamicSymbolLabelInfo] = useState(() => getDynamicLabelsFromJSON(props.clockController));
@@ -60,15 +52,14 @@ const PLLBClockController = (props: {
         cx={props.cx}
       />
       <PlainLabel
-        disPlayText={pllbMulLbl.value +1+ ""}
+        disPlayText={`(${pllbMulLbl.value} + 1)`}
         className={props.cx("pllbMulLbl")}
         booldStatus
       />
       <PlainLabel
-        disPlayText={pllbDivLbl.value + 1+ ""}
+        disPlayText={pllbDivLbl.value+''}
         className={props.cx("pllbDivLbl")}
         booldStatus
-
       />
       <SettingsDialog
         tooltip="Advanced Settings"

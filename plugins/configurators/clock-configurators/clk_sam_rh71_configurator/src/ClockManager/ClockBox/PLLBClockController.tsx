@@ -60,15 +60,14 @@ const PLLBClockController = (props: {
         cx={props.cx}
       />
       <PlainLabel
-        disPlayText={pllbMulLbl.value +1+ ""}
+        disPlayText={`(${pllbMulLbl.value} + 1)`}
         className={props.cx("pllbMulLbl")}
         booldStatus
       />
       <PlainLabel
-        disPlayText={pllbDivLbl.value + 1+ ""}
+        disPlayText={pllbDivLbl.value+''}
         className={props.cx("pllbDivLbl")}
         booldStatus
-
       />
       <SettingsDialog
         tooltip="Advanced Settings"

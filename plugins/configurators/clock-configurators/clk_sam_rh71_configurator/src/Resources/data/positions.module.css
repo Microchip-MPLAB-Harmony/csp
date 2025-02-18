@@ -19,8 +19,8 @@
     position: absolute;
     width: 100px;
     height: 20px;
-    left: 425px;
-    top: 215px
+    left: 479px;
+    top: 131px
     }
 .slck_oscbypass_en {
     position: absolute;
@@ -98,26 +98,26 @@
 .clk_plla_mul {
     position: absolute;
     width: 50px;
-    top: 732px;
-    left: 343px
+    left: 447px;
+    top: 732px
     }
 .clk_plla_div {
     position: absolute;
     width: 50px;
-    left: 447px;
-    top: 732px
+    left: 348px;
+    top: 731px
     }
 .pllaMulLbl {
     position: absolute;
     height: 20px;
-    left: 363px;
-    top: 693px
+    left: 454px;
+    top: 695px
     }
 .pllaDivLbl {
     position: absolute;
-    left: 463px;
     height: 20px;
-    top: 693px
+    top: 693px;
+    left: 361px
     }
 .pllaClkFrq {
     position: absolute;
@@ -137,31 +137,31 @@
     position: absolute;
     width: 200px;
     left: 258px;
-    top: 923px
+    top: 922px
     }
 .pllbMulLbl {
     position: absolute;
-    left: 374px;
     height: 20px;
-    top: 854px
+    top: 854px;
+    left: 455px
     }
 .pllbDivLbl {
     position: absolute;
-    left: 463px;
     height: 20px;
-    top: 853px
+    top: 853px;
+    left: 372px
     }
 .clk_pllb_mul {
     position: absolute;
     width: 80px;
-    left: 355px;
+    left: 438px;
     top: 890px
     }
 .clk_pllb_div {
     position: absolute;
     width: 80px;
-    left: 449px;
-    top: 889px
+    left: 345px;
+    top: 890px
     }
 .clk_mck_css0 {
     position: absolute;
@@ -180,24 +180,24 @@
     }
 .masterClkSlowLabeL {
     position: absolute;
-    width: 100px;
     height: 20px;
     top: 66px;
-    left: 737px
+    left: 737px;
+    width: 80px
     }
 .masterClkMainLabel {
     position: absolute;
-    width: 100px;
     height: 20px;
     top: 110px;
-    left: 737px
+    left: 737px;
+    width: 80px
     }
 .masterClkPllaLabel {
     position: absolute;
     top: 153px;
-    width: 100px;
     height: 20px;
-    left: 736px
+    left: 736px;
+    width: 80px
     }
 .processorPresLabel {
     position: absolute;

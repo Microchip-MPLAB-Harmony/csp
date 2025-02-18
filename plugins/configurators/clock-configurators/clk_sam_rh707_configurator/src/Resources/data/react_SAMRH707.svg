@@ -331,18 +331,18 @@
 		</g>
 		<g id="shape368-235" transform="translate(162.5,-258.728)">
 			
-			<desc>x</desc>
+			<desc>÷</desc>
 			<path d="M4.77 922.06 L42.97 922.06 A4.77455 4.77455 -180 0 0 47.75 917.29 L47.75 895.01 A4.77455 4.77455 -180 0 0 42.97
 						 890.23 L4.77 890.23 A4.77455 4.77455 -180 0 0 0 895.01 L0 917.29 A4.77455 4.77455 -180 0 0 4.77 922.06 Z"
 					style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
-			<text x="10.78" y="909.15" style="fill:#000000;font-family:Calibri;font-size:0.833336em">x</text>		</g>
+			<text x="4" y="909.18" style="fill:#000000;font-family:Times New Roman;font-size:0.833336em">÷ </text>		</g>
 		<g id="shape369-238" transform="translate(252.65,-258.088)">
 			
-			<desc>÷</desc>
-			<path d="M4.77 922.06 L42.97 922.06 A4.77455 4.77455 -180 0 0 47.75 917.29 L47.75 894.85 A4.77455 4.77455 -180 0 0 42.97
-						 890.07 L4.77 890.07 A4.77455 4.77455 -180 0 0 0 894.85 L0 917.29 A4.77455 4.77455 -180 0 0 4.77 922.06 Z"
+			<desc>x</desc>
+			<path d="M5.89 922.06 L53.02 922.06 A5.89115 5.89115 -180 0 0 58.91 916.17 L58.91 895.96 A5.89115 5.89115 -180 0 0 53.02
+						 890.07 L5.89 890.07 A5.89115 5.89115 -180 0 0 0 895.96 L0 916.17 A5.89115 5.89115 -180 0 0 5.89 922.06 Z"
 					style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
-			<text x="11.5" y="909.11" style="fill:#000000;font-family:Times New Roman;font-size:0.833336em">÷ </text>		</g>
+			<text x="4" y="909.07" style="fill:#000000;font-family:Calibri;font-size:0.833336em">x</text>		</g>
 		<g id="shape375-241" transform="translate(210.2,-283.55)">
 			
 			<path d="M0 930.88 L34.96 931.19" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
@@ -461,18 +461,18 @@
 		</g>
 		<g id="shape530-334" transform="translate(172.25,-110.938)">
 			
-			<desc>x</desc>
+			<desc>÷</desc>
 			<path d="M4.77 922.06 L42.97 922.06 A4.77455 4.77455 -180 0 0 47.75 917.29 L47.75 895.01 A4.77455 4.77455 -180 0 0 42.97
 						 890.23 L4.77 890.23 A4.77455 4.77455 -180 0 0 0 895.01 L0 917.29 A4.77455 4.77455 -180 0 0 4.77 922.06 Z"
 					style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
-			<text x="10.78" y="909.15" style="fill:#000000;font-family:Calibri;font-size:0.833336em">x</text>		</g>
+			<text x="4" y="909.18" style="fill:#000000;font-family:Times New Roman;font-size:0.833336em">÷</text>		</g>
 		<g id="shape531-337" transform="translate(254,-110.563)">
 			
-			<desc>÷</desc>
-			<path d="M4.77 922.06 L42.97 922.06 A4.77455 4.77455 -180 0 0 47.75 917.29 L47.75 894.85 A4.77455 4.77455 -180 0 0 42.97
-						 890.07 L4.77 890.07 A4.77455 4.77455 -180 0 0 0 894.85 L0 917.29 A4.77455 4.77455 -180 0 0 4.77 922.06 Z"
+			<desc>x</desc>
+			<path d="M5.59 922.06 L50.29 922.06 A5.58741 5.58741 -180 0 0 55.87 916.48 L55.87 895.66 A5.58741 5.58741 -180 0 0 50.29
+						 890.07 L5.59 890.07 A5.58741 5.58741 -180 0 0 0 895.66 L0 916.48 A5.58741 5.58741 -180 0 0 5.59 922.06 Z"
 					style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
-			<text x="11.5" y="909.11" style="fill:#000000;font-family:Times New Roman;font-size:0.833336em">÷ </text>		</g>
+			<text x="6.26" y="909.07" style="fill:#000000;font-family:Calibri;font-size:0.833336em">x</text>		</g>
 		<g id="shape532-340" transform="translate(219.5,-116.938)">
 			
 			<path d="M0 913.06 L27.84 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
@@ -494,17 +494,17 @@
 			
 			<path d="M0 922.06 L0 1063.53 L60.74 1063.53" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape538-359" transform="translate(300.312,-267.5)">
+		<g id="shape538-359" transform="translate(311.562,-286.297)">
 			
-			<path d="M0 913.06 L163.69 913.06" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
+			<path d="M0 930.27 L152.44 931.86" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
 		<g id="shape539-362" transform="translate(484.438,-262.8)">
 			
 			<path d="M0 919.8 A2.26121 2.26121 0 0 1 4.52 919.8 A2.26121 2.26121 0 1 1 0 919.8 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 		</g>
-		<g id="shape540-364" transform="translate(302,-117.031)">
+		<g id="shape540-364" transform="translate(310.156,-135.125)">
 			
-			<path d="M0 913.06 L184.5 913.06" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
+			<path d="M0 930.97 L176.34 931.16" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
 		<g id="shape548-367" transform="translate(43.0455,-272.579)">
 			
@@ -522,262 +522,268 @@
 			</g>
 			<g id="shape21-378" transform="translate(77.625,-117.088)">
 				
-				<desc>Slow RC Oscillator</desc>
+				<desc>Slow RC Oscillator 32.000 KHz</desc>
 				<path d="M7.41 922.06 L66.66 922.06 A7.40613 7.40613 -180 0 0 74.06 914.66 L74.06 879.85 A7.40613 7.40613 -180 0
 							 0 66.66 872.44 L7.41 872.44 A7.40613 7.40613 -180 0 0 0 879.85 L0 914.66 A7.40613 7.40613 -180 0 0 7.41
 							 922.06 Z" style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
-				<text x="20.86" y="894.25" style="fill:#000000;font-family:Calibri;font-size:0.833336em">Slow RC <tspan x="17.76" dy="1.2em" style="font-size:1em">Oscillator</tspan></text>			</g>
-			<g id="shape25-382" transform="translate(1174.73,762.427) rotate(90)">
+				<text x="20.86" y="888.25" style="fill:#000000;font-family:Calibri;font-size:0.833336em">Slow RC <tspan x="17.76" dy="1.2em" style="font-size:1em">Oscillator </tspan><tspan
+							x="14.28" dy="1.2em" style="font-size:1em">32.000 KHz</tspan></text>			</g>
+			<g id="shape25-383" transform="translate(1174.73,762.427) rotate(90)">
 				
 				<path d="M0 922.06 L104.61 922.06 L87.18 897.98 L17.44 897.98 L0 922.06 Z" style="fill:#dae8fc;stroke:#6c8ebf;stroke-width:2.25"/>
 			</g>
-			<g id="shape189-384" transform="translate(36.2376,-85.1541)">
+			<g id="shape189-385" transform="translate(36.2376,-85.1541)">
 				
 				<rect x="0" y="914.346" width="9.04485" height="7.71614" style="fill:#ffffff;stroke:#000000;stroke-width:0.25"/>
 			</g>
-			<g id="shape190-386" transform="translate(-611.216,189.179) rotate(-45)">
+			<g id="shape190-387" transform="translate(-611.216,189.179) rotate(-45)">
 				
 				<path d="M0 916.3 L5.73 916.3 L5.73 922.06 L5.73 916.3 L11.46 916.3 L5.73 916.3 L5.73 910.54 L5.73 916.3 L0 916.3
 							 Z" style="fill:#000000;stroke:#000000;stroke-width:0.25"/>
 			</g>
-			<g id="shape253-388" transform="translate(393.906,-25.5748)">
+			<g id="shape253-389" transform="translate(393.906,-25.5748)">
 				
 				<path d="M0 920.13 A2.26121 1.92903 0 0 1 4.52 920.13 A2.26121 1.92903 0 1 1 0 920.13 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 			</g>
-			<g id="shape346-390" transform="translate(45,-81.6081)">
+			<g id="shape346-391" transform="translate(45,-81.6081)">
 				
 				<path d="M0 914.05 L200.16 912.15" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 			</g>
-			<g id="shape381-395" transform="translate(189.562,-12.9375)">
+			<g id="shape381-396" transform="translate(189.562,-12.9375)">
 				
 				<desc>Monitoring Domain Slow Clock (MD_SLCK)</desc>
 				<rect x="0" y="907.438" width="205.875" height="14.625" style="fill:none;stroke:none;stroke-width:0.5"/>
 				<text x="6.52" y="917.83" style="fill:#231f20;font-family:Arial;font-size:0.833336em">Monitoring Domain Slow Clock (MD_SLCK)</text>			</g>
-			<g id="shape461-398" transform="translate(0,-79.9779)">
+			<g id="shape461-399" transform="translate(0,-79.9779)">
 				
 				<desc>XIN32</desc>
 				<rect x="0" y="904.916" width="37.555" height="17.147" style="fill:none;stroke:none;stroke-width:0.5"/>
 				<text x="4.2" y="917.09" style="fill:#000000;font-family:Calibri;font-size:1.00001em">XIN32</text>			</g>
-			<g id="shape796-401" transform="translate(193.775,-141.15)">
+			<g id="shape796-402" transform="translate(193.775,-141.15)">
 				
 				<path d="M9 922.06 L9 1035.7" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 			</g>
-			<g id="shape798-404" transform="translate(277.875,-100.962)">
+			<g id="shape798-405" transform="translate(277.875,-100.962)">
 				
 				<path d="M0 913.15 L69.69 912.99" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 			</g>
-			<g id="shape799-409" transform="translate(271.125,-93.9375)">
+			<g id="shape799-410" transform="translate(271.125,-91.6875)">
 				
 				<desc>RTT , RTC</desc>
 				<rect x="0" y="905.225" width="75.375" height="16.8376" style="fill:none;stroke:none;stroke-width:0.5"/>
 				<text x="13.52" y="916.72" style="fill:#231f20;font-family:Arial;font-size:0.833336em">RTT , RTC</text>			</g>
-			<g id="shape800-412" transform="translate(200.75,-138.842)">
+			<g id="shape800-413" transform="translate(200.75,-138.842)">
 				
 				<path d="M0 920.13 A2.26121 1.92903 0 0 1 4.52 920.13 A2.26121 1.92903 0 1 1 0 920.13 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 			</g>
 		</g>
-		<g id="shape802-414" transform="translate(397.4,-854.188)">
+		<g id="shape802-415" transform="translate(397.4,-854.188)">
 			
 			<path d="M0 913.06 L199.06 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape803-419" transform="translate(406.437,-356.563)">
+		<g id="shape803-420" transform="translate(406.437,-356.563)">
 			
 			<path d="M-8.81 922.06 L-9.19 415.59" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape823-422" transform="translate(543.29,-354.875)">
+		<g id="shape823-423" transform="translate(543.29,-354.875)">
 			
 			<desc>MD_SLCK</desc>
 			<rect x="0" y="901.963" width="61.71" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="10.9" y="915.61" style="fill:#000000;font-family:Calibri;font-size:1.00001em">MD_SLCK</text>		</g>
-		<g id="shape824-425" transform="translate(555.688,-324.54)">
+		<g id="shape824-426" transform="translate(555.688,-324.54)">
 			
 			<desc>MAINCK</desc>
 			<rect x="0" y="901.963" width="49.125" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="4.52" y="915.61" style="fill:#000000;font-family:Calibri;font-size:1.00001em">MAINCK</text>		</g>
-		<g id="shape825-428" transform="translate(538.25,-292.04)">
+		<g id="shape825-429" transform="translate(538.25,-292.04)">
 			
 			<desc>PLLACK</desc>
 			<rect x="0" y="901.963" width="65.01" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="25.14" y="915.61" style="fill:#000000;font-family:Calibri;font-size:1.00001em">PLLACK</text>		</g>
-		<g id="shape826-431" transform="translate(555.312,-259.602)">
+		<g id="shape826-432" transform="translate(555.312,-259.602)">
 			
 			<desc>PLLBCK</desc>
 			<rect x="0" y="901.963" width="49.125" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="9.68" y="915.61" style="fill:#000000;font-family:Calibri;font-size:1.00001em">PLLBCK</text>		</g>
-		<g id="shape827-434" transform="translate(567.312,-225.477)">
+		<g id="shape827-435" transform="translate(567.312,-225.477)">
 			
 			<desc>MCK</desc>
 			<rect x="0" y="901.963" width="37.125" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="10.23" y="915.61" style="fill:#000000;font-family:Calibri;font-size:1.00001em">MCK</text>		</g>
-		<g id="shape828-437" transform="translate(688.25,-303.688)">
+		<g id="shape828-438" transform="translate(688.25,-303.688)">
 			
 			<desc>÷</desc>
 			<path d="M4.77 922.06 L42.97 922.06 A4.77455 4.77455 -180 0 0 47.75 917.29 L47.75 894.85 A4.77455 4.77455 -180 0 0 42.97
 						 890.07 L4.77 890.07 A4.77455 4.77455 -180 0 0 0 894.85 L0 917.29 A4.77455 4.77455 -180 0 0 4.77 922.06 Z"
 					style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
 			<text x="11.5" y="909.11" style="fill:#000000;font-family:Times New Roman;font-size:0.833336em">÷ </text>		</g>
-		<g id="shape829-440" transform="translate(1687.56,592.275) rotate(90)">
+		<g id="shape829-441" transform="translate(1687.56,592.275) rotate(90)">
 			
 			<path d="M19.95 922.06 L9.98 904.77 L0 922.06 L19.95 922.06 Z" style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
 		</g>
-		<g id="shape830-442" transform="translate(509.75,-221.937)">
+		<g id="shape830-443" transform="translate(509.75,-221.937)">
 			
 			<path d="M0 913.06 L91.96 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape831-447" transform="translate(486.8,-256.062)">
+		<g id="shape831-448" transform="translate(486.8,-256.062)">
 			
 			<path d="M0 913.06 L114.16 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape832-452" transform="translate(463.7,-288.312)">
+		<g id="shape832-453" transform="translate(463.7,-288.312)">
 			
 			<path d="M0 913.06 L136.66 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape833-457" transform="translate(431.375,-320.862)">
+		<g id="shape833-458" transform="translate(431.375,-320.862)">
 			
 			<path d="M0 913.06 L169.29 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape834-462" transform="translate(397.1,-348.912)">
+		<g id="shape834-463" transform="translate(397.1,-348.912)">
 			
 			<path d="M0 913.06 L204.61 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape837-467" transform="translate(1531.56,499.125) rotate(90)">
+		<g id="shape837-468" transform="translate(1531.56,499.125) rotate(90)">
 			
 			<path d="M0 922.06 L230.62 922.06 L192.19 894.31 L38.44 894.31 L0 922.06 Z" style="fill:#dae8fc;stroke:#6c8ebf;stroke-width:2.25"/>
 		</g>
-		<g id="shape839-469" transform="translate(119.75,-436.438)">
+		<g id="shape839-470" transform="translate(119.75,-436.438)">
 			
 			<desc>2nd Fast RC Oscillator</desc>
 			<path d="M13.95 922.06 L125.55 922.06 A13.9498 13.9498 -180 0 0 139.5 908.11 L139.5 883.84 A13.9498 13.9498 -180 0 0
 						 125.55 869.89 L13.95 869.89 A13.9498 13.9498 -180 0 0 -0 883.84 L0 908.11 A13.9498 13.9498 -180 0 0 13.95
 						 922.06 Z" style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
 			<text x="23.1" y="892.68" style="fill:#000000;font-family:Calibri;font-size:0.916672em">2<tspan dy="0.049em" style="baseline-shift:33.3496%;font-size:0.666991em">nd</tspan><tspan dy="-0.033em" style="font-size:1em"> </tspan>Fast RC Oscillator</text>		</g>
-		<g id="shape840-474" transform="translate(172.524,-418.438)">
+		<g id="shape840-475" transform="translate(172.524,-418.438)">
 			
 			<path d="M9 922.06 L9 904.06" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape842-477" transform="translate(152,-371.188)">
+		<g id="shape842-478" transform="translate(152,-371.188)">
 			
 			<desc>FREQSEL</desc>
 			<rect x="0" y="901.963" width="56" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="6.81" y="908.41" style="fill:#000000;font-family:Calibri;font-size:1.00001em">FREQSEL</text>		</g>
-		<g id="shape844-480" transform="translate(372.875,-462.125)">
+		<g id="shape844-481" transform="translate(372.875,-462.125)">
 			
 			<path d="M0 922.06 L0 1032.35 L-345.38 1032.35" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape845-483" transform="translate(27.5,-351.838)">
+		<g id="shape845-484" transform="translate(27.5,-351.838)">
 			
 			<path d="M0 922.06 L0 1163.34 L78.46 1163.34" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape846-488" transform="translate(45.2375,-275.937)">
+		<g id="shape846-489" transform="translate(45.2375,-275.937)">
 			
 			<path d="M0 922.06 L0 868.06 L389.29 868.06" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape847-491" transform="translate(372.2,-385.25)">
+		<g id="shape847-492" transform="translate(372.2,-385.25)">
 			
 			<path d="M0 913.06 L229.51 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape848-496" transform="translate(543.2,-389.075)">
+		<g id="shape848-497" transform="translate(543.2,-389.075)">
 			
 			<desc>RC2CK</desc>
 			<rect x="0" y="901.963" width="61.71" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="26.08" y="915.61" style="fill:#000000;font-family:Calibri;font-size:1.00001em">RC2CK</text>		</g>
-		<g id="shape849-499" transform="translate(268.85,-461.188)">
+		<g id="shape849-500" transform="translate(268.85,-461.188)">
 			
 			<desc>RC2CK</desc>
 			<rect x="0" y="901.963" width="41.355" height="20.0997" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="5.73" y="915.61" style="fill:#000000;font-family:Calibri;font-size:1.00001em">RC2CK</text>		</g>
-		<g id="shape850-502" transform="translate(1037.31,771.75) rotate(90)">
+		<g id="shape850-503" transform="translate(1037.31,771.75) rotate(90)">
 			
 			<path d="M0 922.06 L50.62 922.06 L42.19 908.67 L8.44 908.67 L0 922.06 Z" style="fill:#dae8fc;stroke:#6c8ebf;stroke-width:2.25"/>
 		</g>
-		<g id="shape851-504" transform="translate(113,-72.3125)">
+		<g id="shape851-505" transform="translate(113,-72.3125)">
 			
 			<path d="M9 922.06 L9 890.34" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape853-507" transform="translate(129.875,-117.313)">
+		<g id="shape853-508" transform="translate(129.875,-117.313)">
 			
 			<path d="M0 913.06 L35.48 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape855-512" transform="translate(636.125,-328.906)">
+		<g id="shape855-513" transform="translate(636.125,-328.906)">
 			
 			<path d="M0 930.97 L45.84 931.13" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape856-517" transform="translate(736.25,-310.963)">
+		<g id="shape856-518" transform="translate(736.25,-310.963)">
 			
 			<path d="M0 913.06 L22.21 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape857-522" transform="translate(783.5,-310.738)">
+		<g id="shape857-523" transform="translate(783.5,-310.738)">
 			
 			<path d="M0 913.06 L152.56 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape858-527" transform="translate(764.9,-294.838)">
+		<g id="shape858-528" transform="translate(764.9,-294.838)">
 			
 			<path d="M9 922.06 L9 902.42" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape859-530" transform="translate(508.625,-171.5)">
+		<g id="shape859-531" transform="translate(508.625,-171.5)">
 			
 			<path d="M0 913.06 L162.46 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape860-535" transform="translate(1600.77,731.325) rotate(90)">
+		<g id="shape860-536" transform="translate(1600.77,731.325) rotate(90)">
 			
 			<path d="M19.95 922.06 L9.98 904.77 L0 922.06 L19.95 922.06 Z" style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
 		</g>
-		<g id="shape861-537" transform="translate(676.05,-187.763)">
+		<g id="shape861-538" transform="translate(676.05,-187.763)">
 			
 			<path d="M9 922.06 L9 902.42" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape862-540" transform="translate(671,-209.038)">
+		<g id="shape862-541" transform="translate(671,-209.038)">
 			
 			<desc>ON</desc>
 			<rect x="0" y="909.487" width="26.9963" height="12.5751" style="fill:none;stroke:none;stroke-width:0.5"/>
 			<text x="5.65" y="919.38" style="fill:#000000;font-family:Calibri;font-size:1.00001em">ON</text>		</g>
-		<g id="shape863-543" transform="translate(696.5,-172.138)">
+		<g id="shape863-544" transform="translate(696.5,-172.138)">
 			
 			<path d="M0 913.06 L238.36 913.06" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape864-548" transform="translate(44.9,-265.663)">
+		<g id="shape864-549" transform="translate(44.9,-265.663)">
 			
 			<path d="M0 913.06 L117.79 913.06" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape865-551" transform="translate(395.6,-651.088)">
+		<g id="shape865-552" transform="translate(395.6,-651.088)">
 			
 			<desc>`</desc>
 			<path d="M0 919.8 A2.26121 2.26121 0 0 1 4.52 919.8 A2.26121 2.26121 0 1 1 0 919.8 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 			<text x="4.28" y="922.8" style="fill:#feffff;font-family:Calibri;font-size:0.833336em">`</text>		</g>
-		<g id="shape866-554" transform="translate(259.4,-462.5)">
+		<g id="shape866-555" transform="translate(259.4,-462.5)">
 			
 			<path d="M0 922.06 L113.51 922.06" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape868-557" transform="translate(370.7,-391.738)">
+		<g id="shape868-558" transform="translate(370.7,-391.738)">
 			
 			<path d="M0 919.8 A2.26121 2.26121 0 0 1 4.52 919.8 A2.26121 2.26121 0 1 1 0 919.8 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 		</g>
-		<g id="shape869-559" transform="translate(430.7,-327.837)">
+		<g id="shape869-560" transform="translate(430.7,-327.837)">
 			
 			<path d="M0 919.8 A2.26121 2.26121 0 0 1 4.52 919.8 A2.26121 2.26121 0 1 1 0 919.8 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 		</g>
-		<g id="shape870-561" transform="translate(461.78,-294.957)">
+		<g id="shape870-562" transform="translate(461.78,-294.957)">
 			
 			<path d="M0 919.8 A2.26121 2.26121 0 0 1 4.52 919.8 A2.26121 2.26121 0 1 1 0 919.8 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 		</g>
-		<g id="shape871-563" transform="translate(507.039,-228.226)">
+		<g id="shape871-564" transform="translate(507.039,-228.226)">
 			
 			<path d="M0 919.8 A2.26121 2.26121 0 0 1 4.52 919.8 A2.26121 2.26121 0 1 1 0 919.8 Z" style="fill:#000000;stroke:none;stroke-width:0.25"/>
 		</g>
-		<g id="shape872-565" transform="translate(747.875,-760.438)">
+		<g id="shape872-566" transform="translate(747.875,-760.438)">
 			
 			<desc>÷</desc>
 			<path d="M4.77 922.06 L42.97 922.06 A4.77455 4.77455 -180 0 0 47.75 917.29 L47.75 894.85 A4.77455 4.77455 -180 0 0 42.97
 						 890.07 L4.77 890.07 A4.77455 4.77455 -180 0 0 0 894.85 L0 917.29 A4.77455 4.77455 -180 0 0 4.77 922.06 Z"
 					style="fill:#d5e8d4;stroke:#82b366;stroke-width:1"/>
 			<text x="11.5" y="909.11" style="fill:#000000;font-family:Times New Roman;font-size:0.833336em">÷  </text>		</g>
-		<g id="shape873-568" transform="translate(700.438,-828.5)">
+		<g id="shape873-569" transform="translate(700.438,-828.5)">
 			
 			<path d="M0 922.06 L0 974.38 L39.46 974.38" style="marker-end:url(#mrkr4-131);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
-		<g id="shape874-573" transform="translate(762.5,-760.438)">
+		<g id="shape874-574" transform="translate(762.5,-760.438)">
 			
 			<path d="M9 922.06 L9 944.94" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1"/>
 		</g>
+		<g id="shape875-577" transform="translate(259.25,-803.187)">
+			
+			<desc>(TD_SLCK)</desc>
+			<rect x="0" y="907.438" width="205.875" height="14.625" style="fill:none;stroke:none;stroke-width:0.5"/>
+			<text x="77.1" y="917.83" style="fill:#231f20;font-family:Arial;font-size:0.833336em">(TD_SLCK)</text>		</g>
 	</g>
 </svg>
