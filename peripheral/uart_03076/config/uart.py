@@ -195,8 +195,9 @@ def clockSourceSystemFreq(symbol, event):
     elif clockSelSym.getSelectedKey() == STANDARD_SPEED_PERIPHERAL_CLOCK and clkEventName == SYSTEM_FREQ_SYM:
         coreClkSymName = SYSTEM_FREQ_SYM
     elif clockSelSym.getSelectedKey() == CLOCK_GENERATOR  and clkEventName == CLK_GEN_FREQ_SYM:
-        coreClkSymName = CLK_GEN_FREQ_SYM
-    symbol.setValue(int(Database.getSymbolValue(CORE_COMPONENT, coreClkSymName)))
+        coreClkSymName = CLK_GEN_FREQ_SYM   
+    if coreClkSymName != "":
+        symbol.setValue(int(Database.getSymbolValue(CORE_COMPONENT, coreClkSymName)))
 
 def setCoreInterruptSymbols(value):
     for int in interruptEnableList:
@@ -314,18 +315,18 @@ def getBaudParams(clkFreq,reqBaudrate):
     minFracBrg = 16
     calcBaud = 0
     baudError = 0
-    if((clkFreq > 0)  and (reqBaudrate > 0)):
-        brg = round(float(clkFreq) / reqBaudrate)
-        if(brg < minFracBrg or brg > brgMax):
-            brg_4Div = min(round((clkFreq/(4*reqBaudrate))-1),brgMax)
+    if clkFreq > 0 and reqBaudrate > 0:
+        brg = int(round(float(clkFreq) / reqBaudrate))
+        if brg < minFracBrg or brg > brgMax:
+            brg_4Div = min(int(round((float(clkFreq)/(4*reqBaudrate))-1)),brgMax)
             brg_4Div = brg_4Div if brg_4Div >0 else 0
-            calcBaud_4DiV = clkFreq/(4*(brg_4Div+1))
-            brg_16Div = min(round((clkFreq/(16*reqBaudrate))-1),brgMax)
+            calcBaud_4DiV = float(clkFreq) / (4 * (brg_4Div + 1))
+            brg_16Div = min(int(round((float(clkFreq)/(16*reqBaudrate))-1)),brgMax)
             brg_16Div = brg_16Div if brg_16Div >0 else 0
-            calcBaud_16DiV = clkFreq/(16*(brg_16Div+1))
+            calcBaud_16DiV = float(clkFreq) / (16 * (brg_16Div + 1))
             baudError_4Div = abs(reqBaudrate - calcBaud_4DiV)
             baudError_16Div = abs(reqBaudrate - calcBaud_16DiV)
-            if(baudError_4Div <=  baudError_16Div):
+            if baudError_4Div <=  baudError_16Div:
                 brgs = 1
                 calcBaud = calcBaud_4DiV
                 baudError = baudError_4Div
@@ -336,13 +337,13 @@ def getBaudParams(clkFreq,reqBaudrate):
                 brg= brg_16Div
             clkMod = 0
         else:
-          calcBaud = clkFreq/brg
-          baudError = abs(reqBaudrate - calcBaud)
+            calcBaud = float(clkFreq) / brg if brg > 0 else 0
+            baudError = abs(reqBaudrate - calcBaud)
 
     return {
         "brg" : hex(int(brg)),
         "calcBaud" : round(calcBaud,3),
-        "baudError" :  round((baudError*100)/reqBaudrate,2),
+        "baudError" :  round((baudError*100)/reqBaudrate,4) if reqBaudrate else 0,
         "clkMod" : clkMod,
         "brgs" : brgs
     }
@@ -528,7 +529,7 @@ def instantiateComponent(uartComponent):
     
     # UART Clock Frequency
     uartClkValue = uartComponent.createIntegerSymbol(CLK_FREQ_KEY, None)
-    uartClkValue.setLabel("Clock Frequency(In Hz)")
+    uartClkValue.setLabel("Clock Frequency(Hz)")
     uartClkValue.setReadOnly(True)
     uartClkValue.setDefaultValue(int(Database.getSymbolValue(CORE_COMPONENT, SYSTEM_FREQ_SYM)))
     uartClkValue.setDependencies(clockSourceSystemFreq, [U_CON_CLKSEL_KEY,CORE_COMPONENT+"."+SYSTEM_FREQ_SYM,CORE_COMPONENT+"."+CLK_GEN_FREQ_SYM])
