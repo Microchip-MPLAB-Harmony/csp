@@ -248,7 +248,7 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
 
     ${txInterruptEnableBit} = 0U;
 
-    if (wrSize > ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE)
+    if (wrSize > (uint32_t)${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE)
     {
         wrSize = ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
     }
@@ -427,7 +427,7 @@ void __attribute__((used)) ${rxIsrHandlerName} (void)
 
     while (!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK))
     {
-        if (rdInIndex < ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
+        if (rdInIndex < (uint32_t)${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
         {
             /* Receive buffer is not empty. Read the received data. */
             ${SPI_INSTANCE_NAME}_ReadBuffer[rdInIndex] = ${SPI_INSTANCE_NAME}BUF;

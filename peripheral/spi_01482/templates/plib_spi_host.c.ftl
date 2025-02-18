@@ -490,7 +490,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
 void __attribute__((used)) ${rxIsrHandlerName} (void)
 {
-    uint32_t nRxPending = 0U;
+    uint32_t nRxPending;
 
     /* Check Receive Buffer Element Count for watermark interrupt */
     if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_RXELM_MASK) != 0U)

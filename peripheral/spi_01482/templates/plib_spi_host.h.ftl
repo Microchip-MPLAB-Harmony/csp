@@ -165,7 +165,7 @@ void ${SPI_INSTANCE_NAME}_Deinitialize ( void );
  *
  * @b Non-blocking Mode:
  * @code
- * // Example of SPIx_WriteRead() in interrupt mode with a callback function.
+ * - Example of SPIx_WriteRead() in interrupt mode with a callback function.
  *
  * uint8_t txBuffer[4];
  * uint8_t rxBuffer[10];
@@ -174,7 +174,7 @@ void ${SPI_INSTANCE_NAME}_Deinitialize ( void );
  *
  * void APP_SPITransferHandler(uintptr_t context)
  * {
- *     // Transfer completed without error; take appropriate action.
+ *     - Transfer completed without error; take appropriate action.
  * }
  *
  * SPI1_Initialize();
@@ -192,7 +192,7 @@ void ${SPI_INSTANCE_NAME}_Deinitialize ( void );
  *
  * @b Blocking Mode:
  * @code
- * // Example of SPIx_WriteRead() in blocking mode (non-interrupt).
+ * - Example of SPIx_WriteRead() in blocking mode (non-interrupt).
  *
  * uint8_t txBuffer[4];
  * uint8_t rxBuffer[10];
