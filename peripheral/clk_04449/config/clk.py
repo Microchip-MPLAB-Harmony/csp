@@ -944,11 +944,14 @@ def poscmdCb(symbol,event):
     if(extClkSrc != NONE):
         if(extClkSrc == "Primary Oscillator"):
             clkSrcFreq = symbol.getComponent().getSymbolValue(EXT_CLK_SRC_FREQ)
-            if(clkSrcFreq > 10000000):
+            if(clkSrcFreq >= 10000000):
                 value =2
+            else:
+                value =1    
         else:
             value =0
     symbol.setValue(value)    
+    
 global poscFreqCb
 def poscFreqCb(symbol,event):
     extClkSrc = symbol.getComponent().getSymbolValue(EXT_CLK_SRC_SEL)
@@ -1143,8 +1146,11 @@ def useClkMonCb(symbol,event):
 global MICRO_FACTOR
 MICRO_FACTOR = 1000000  
 
+global NANO_FACTOR
+NANO_FACTOR = 1000000000
 
-global getCalcTimerWindowPeriodInUs
+
+global getCalcTimerWindowPeriodInNs
 global getCalcTimerWindowPeriod
 global getMonClkSrcFreq
 global extClkSrcSelCb
@@ -1187,11 +1193,11 @@ def calcTmrWindow(symbol):
     clkMonNo = symbol.getID()[2]
     clkSrcFreq = symbol.getComponent().getSymbolValue(CLK_MON_REF_CLK_SRC_FREQ.format(clkMonNo))
     winpr = symbol.getComponent().getSymbolValue(CLK_MON_ACCUMULATION_WINDOW.format(clkMonNo))
-    symbol.setValue(str(getCalcTimerWindowPeriodInUs(clkSrcFreq,winpr)) + " us")
+    symbol.setValue(str(getCalcTimerWindowPeriodInNs(clkSrcFreq,winpr)) + " ns")
 
-def getCalcTimerWindowPeriodInUs(clkSrcFreq, windowPeriod):
+def getCalcTimerWindowPeriodInNs(clkSrcFreq, windowPeriod):
     if clkSrcFreq:
-        return round(((windowPeriod + 1) * MICRO_FACTOR) / clkSrcFreq, 6)
+        return round(((windowPeriod + 1) * NANO_FACTOR) / (clkSrcFreq*1.0), 9)
     return 0
 
 def getCalcTimerWindowPeriod(clkSrcFreq, windowPeriod):
@@ -1212,7 +1218,9 @@ def updateClkMonBufCount(symbol):
     refClkFreq = symbol.getComponent().getSymbolValue(CLK_MON_REF_CLK_SRC_FREQ.format(clkMonNo))
     winpr = symbol.getComponent().getSymbolValue(CLK_MON_ACCUMULATION_WINDOW.format(clkMonNo))
     monClkFreq = symbol.getComponent().getSymbolValue(CLK_MON_CLK_SRC_FREQ.format(clkMonNo))
-    bufCountVal = hex(int(round(((winpr+1)*monClkFreq)/refClkFreq))) if refClkFreq != 0 else 0
+    bufCountVal = int(round(((winpr + 1) * monClkFreq) / refClkFreq)) if refClkFreq != 0 else 0
+    bufCountVal = min(bufCountVal, 0xFFFFFFFF) 
+    bufCountVal = hex(bufCountVal).rstrip("L")
     symbol.setValue(str(bufCountVal))  
     
 
@@ -1638,7 +1646,7 @@ def getPlloFreqParams(pllNo,clkSrcFreq, reqPlloOutFreq, pll_mul_div_ranges, pll_
                 div_factor = round((clkSrcFreq * fbdiv) / (reqPlloOutFreq *pllpre))
                 for postdiv1 in range(postdiv1_max, 0, -1):  # Iterate in reverse
                     postdiv2 = 1
-                    val = round(float(div_factor) / postdiv1)
+                    val = int(round(float(div_factor) / postdiv1))
                     if val >= postdiv1:
                         postdiv2 = postdiv1
                     elif val <= 1:
@@ -1694,7 +1702,7 @@ def getPllVcoDivParams(pllNo,clkSrcFreq, reqVcoDivFreq, pll_mul_div_ranges, pll_
             if min_vco_interim_freq <= interim_freq <= max_vco_interim_freq:
                 vcoDiv = 0
                 if (reqVcoDivFreq < (interim_freq * 3) / 4) :
-                    vcoDiv = round((clkSrcFreq * fbdiv) / (reqVcoDivFreq *pllpre*2))
+                    vcoDiv = int(round((clkSrcFreq * fbdiv) / (reqVcoDivFreq *pllpre*2)))
                     if vcoDiv > vcodiv_max:
                         vcoDiv = vcodiv_max
                 divideFactor = vcoDiv*2 if  vcoDiv > 0 else 1       
@@ -1724,7 +1732,7 @@ global getVcodivFactor
 def getVcodivFactor(maxVcodiv,reqVcodivfreq,clkSrcFreq,vcoFreq,pllpre,fbdiv):
     vcoDiv = 0
     if (reqVcodivfreq < (vcoFreq * 3) / 4) :
-        vcoDiv = round((clkSrcFreq * fbdiv) / (reqVcodivfreq *pllpre*2))
+        vcoDiv = int(round((clkSrcFreq * fbdiv) / (reqVcodivfreq *pllpre*2)))
         if vcoDiv > maxVcodiv:
             vcoDiv = maxVcodiv
     divideFactor = vcoDiv*2 if  vcoDiv > 0 else 1       
@@ -1767,7 +1775,7 @@ def get_clk_gen_output_freq_params(clkGenNo,input_clk_freq,req_clk_freq,max_int_
     return {
         CLK_GEN_INTDIV.format(clkGenNo): integer_div,
         CLK_GEN_FRACDIV.format(clkGenNo): fractional_div,
-        'calcClkGenFreq': (input_clk_freq/(2*(integer_div + float(fractional_div)/ float(max_frac_div))))
+        'calcClkGenFreq': (input_clk_freq/(2*(integer_div + float(fractional_div)/ float(frac_div_cycle_count))))
     }
      
 global getPlloandVcoFreqParams
@@ -1801,7 +1809,7 @@ def getPlloandVcoFreqParams(pllNo,clkSrcFreq, plloOutFreq, vcoDivFreq, pll_mul_d
                 div_factor = round((clkSrcFreq * fbdiv) / (plloOutFreq *pllpre))
                 for postdiv1 in range(postdiv1_max, 0, -1):  # Iterate in reverse
                     postdiv2 = 1
-                    val = round(float(div_factor) / postdiv1)
+                    val = int(round(float(div_factor) / postdiv1))
                     if val >= postdiv1:
                         postdiv2 = postdiv1
                     elif val <= 1:
@@ -1917,7 +1925,7 @@ clkOutputPin.setHelp(
 )
 
 poscmdValue = coreComponent.createIntegerSymbol("poscmdValue",clkSourceMenu)
-poscmdValue.setDefaultValue(1) # should this be read from ATDF
+poscmdValue.setDefaultValue(3) # should this be read from ATDF
 poscmdValue.setVisible(False)
 poscmdValue.setDependencies(poscmdCb,[EXT_CLK_SRC_SEL,EXT_CLK_SRC_FREQ])
 poscmdValue.setHelp(
@@ -2419,7 +2427,7 @@ for i in range(1, totalClkMonitorCount+1):
     )
     
     clkMonWarningFreqRange = createClkMonStrSymbol(coreComponent,CLK_MON_WARN_FREQ_RANGE.format(i),clkMonWarningEnableInt,"Monitor Clock Warning Frequency Range","Range",True)
-    clkMonWarningFreqRange.setDependencies(clkMonWarningRangeCb,[CLK_MON_WARN_ENABLE_INT.format(i),CLK_MON_WARN_LOW_COUNT.format(i),CLK_MON_WARN_HIGH_COUNT.format(i),CLK_MON_REF_CLK_SRC_FREQ.format(i), CLK_MON_ACCUMULATION_WINDOW.format(i)])
+    #clkMonWarningFreqRange.setDependencies(clkMonWarningRangeCb,[CLK_MON_WARN_ENABLE_INT.format(i),CLK_MON_WARN_LOW_COUNT.format(i),CLK_MON_WARN_HIGH_COUNT.format(i),CLK_MON_REF_CLK_SRC_FREQ.format(i), CLK_MON_ACCUMULATION_WINDOW.format(i)])
 
     
     clkMonThresholdEnableInt = createClkBooleanSymbol(coreComponent,CLK_MON_THRESHOLD_ENABLE_INT.format(i), clkMonMenu,"Enable Clock Threshold Interrupt",False)
@@ -2448,7 +2456,7 @@ for i in range(1, totalClkMonitorCount+1):
     )
     
     clkMonThresholdFreqRange = createClkMonStrSymbol(coreComponent,CLK_MON_THRESHOLD_FREQ_RANGE .format(i),clkMonThresholdEnableInt,"Monitor Clock Fail Threshold Frequency Range","Range",True)
-    clkMonThresholdFreqRange.setDependencies(clkMonThresholdRangeCb,[CLK_MON_THRESHOLD_ENABLE_INT.format(i),CLK_MON_THRESHOLD_LOW_COUNT.format(i),CLK_MON_THRESHOLD_HIGH_COUNT.format(i),CLK_MON_REF_CLK_SRC_FREQ.format(i), CLK_MON_ACCUMULATION_WINDOW.format(i)])   
+    #clkMonThresholdFreqRange.setDependencies(clkMonThresholdRangeCb,[CLK_MON_THRESHOLD_ENABLE_INT.format(i),CLK_MON_THRESHOLD_LOW_COUNT.format(i),CLK_MON_THRESHOLD_HIGH_COUNT.format(i),CLK_MON_REF_CLK_SRC_FREQ.format(i), CLK_MON_ACCUMULATION_WINDOW.format(i)])   
 
     # Interrupt Symbols from ATDF for Code Generation 
     compPrefix = "C"
