@@ -54,6 +54,13 @@
     </#if>
 </#list>
 
+<#list 0..MAX_EXTERNAL_INT_COUNT as i>
+    <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
+    <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
+void INT${i}_InterruptHandler(void);
+    </#if>
+</#list>
+
 void ${moduleNameUpperCase}_Initialize( void )
 {
 <#if getInterruptPriorityData != "">
