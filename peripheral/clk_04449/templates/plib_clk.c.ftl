@@ -220,10 +220,8 @@ void CLOCK_Initialize(void)
         </#list>
 
     */
-    <#if primaryClockUsed>
     //Primary oscillator settings 
     OSCCFGbits.POSCMD = ${poscmdValue}U;
-    </#if>
     <#if clkoUsed>
     OSCCFGbits.POSCIOFNC = 1U;
     </#if>
