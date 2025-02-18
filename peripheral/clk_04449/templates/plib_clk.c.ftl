@@ -106,11 +106,9 @@
 </#list>
 <#list clkgenClockSources as options>
 <#if options != "">
-<#if .vars["clkGen"+i+"CON__FSCMEN"]?number == 1>
 
 //CLOCK CLKxCON BOSC options
 <#break>
-</#if>
 </#if>
 </#list>
 <#list clkgenClockSources as options>
@@ -234,12 +232,12 @@ void CLOCK_Initialize(void)
     while(OSCCTRLbits.POSCRDY == 0U){};
     </#if>
     
-    //If CLK GEN 1 (system clock) is using a PLL, switch to FRC to avoid risk of overclocking the CPU while changing PLL settings
+    //If CLK GEN 1 (system clock) is using a PLL, switch to FRC to avoid risk of over-clocking the CPU while changing PLL settings
     if((CLK1CONbits.COSC >= PLL1FOUT_SOURCE) && (CLK1CONbits.COSC <= PLL2VCODIV_SOURCE))
     {
         CLK1CONbits.NOSC = 1U; //FRC as source 
         CLK1CONbits.OSWEN = 1U;
-        while(CLK1CONbits.OSWEN);
+        while(CLK1CONbits.OSWEN == 1U){};
     }
     
     <#list 1..maxPllGen as i>
@@ -328,7 +326,6 @@ void CLOCK_Initialize(void)
     CM${i}HWARN = 0x${.vars["cm"+i+"HWARNValue"]}UL;
     CM${i}LWARN = 0x${.vars["cm"+i+"LWARNValue"]}UL;
     CM${i}SAT = 0x${.vars["cm"+i+"SATValue"]}UL;
-    CM${i}BUF = ${.vars["cm"+i+"BUFValue"]}UL;
     CM${i}SEL = (CM${i}SEL_CNTSEL_${clkmonClockSources[.vars["CM"+i+"SEL__CNTSEL"]?number]}
                 |CM${i}SEL_WINSEL_${clkmonClockSources[.vars["CM"+i+"SEL__WINSEL"]?number]});
     CM${i}CON = CM${i}CON_CNTDIV_${clkmonCntDivOptions[.vars["CM"+i+"CON__CNTDIV"]?number]};
