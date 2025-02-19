@@ -256,7 +256,7 @@ SENT_RECEIVE_STATUS SENT${SENT_INSTANCE}_ReceiveStatusGet(void);
  * @code
  *	SENT_ERROR_CODE errorCode = ReceiveErrorGet();
  * 	if (errorCode != NO_ERROR) {
- *     // Handle the error accordingly
+ *     
  * }
  * @endcode
  *
