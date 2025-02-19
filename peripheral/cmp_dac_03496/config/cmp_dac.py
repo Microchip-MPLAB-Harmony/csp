@@ -364,40 +364,44 @@ def setDacModeDependency(symbol, event):
     component.setSymbolValue(DAC_SLPCON__TWME, False)
     component.setSymbolValue(DAC_SLPCON__SLOPEN, False)
 
-    if event["value"] == "Hysteretic-Mode" and symbolID == DAC_SLPCON__HME:
-        symbol.setValue(True)
+    if event["value"] == "Hysteretic-Mode":
+        component.setSymbolValue(DAC_SLPCON__HME, True)
+        component.setSymbolValue(DAC_SLPCON__SLOPEN, True)
 
-    elif event["value"] == "Triangle-Wave-Mode" and symbolID == DAC_SLPCON__TWME:
-        symbol.setValue(True)
+    if event["value"] == "Triangle-Wave-Mode":
+        component.setSymbolValue(DAC_SLPCON__TWME, True)
+        component.setSymbolValue(DAC_SLPCON__SLOPEN, True)
 
-    elif event["value"] == "Slope-Mode" and symbolID == DAC_SLPCON__SLOPEN:
-        symbol.setValue(True)
+    if event["value"] == "Slope-Mode":
+        component.setSymbolValue(DAC_SLPCON__SLOPEN, True)
+
 
 def handleMessage(messageID, args):
     retDict = {}
-    if (messageID == "CMPDAC_CONFIG_HW_IO"):
+    if messageID == "CMPDAC_CONFIG_HW_IO":
         component = cmpInstanceName.getValue().lower()
-        setting, enable = args['config']
+        setting, enable = args["config"]
 
         if setting[-1].isalpha():
             if enable == False:
                 res = cmpPosInpConfig.setValue(0)
             else:
                 res = cmpPosInpConfig.setSelectedKey(setting.upper())
-            
+
             if res == True:
                 retDict = {"Result": "Success"}
             else:
                 retDict = {"Result": "Fail"}
-            
+
     else:
-        retDict= {"Result": "CMP_DAC UnImplemented Command"}
-    
+        retDict = {"Result": "CMP_DAC UnImplemented Command"}
+
     return retDict
+
 
 def instantiateComponent(cmpdacComponent):
     global cmpInstanceName
-    cmpInstanceName = cmpdacComponent.createStringSymbol(CMP_DAC_INST_NAME, None)  
+    cmpInstanceName = cmpdacComponent.createStringSymbol(CMP_DAC_INST_NAME, None)
     cmpInstanceName.setVisible(False)
     cmpInstanceName.setDefaultValue(cmpdacComponent.getID().upper())
     Log.writeInfoMessage("Running " + cmpInstanceName.getValue())
