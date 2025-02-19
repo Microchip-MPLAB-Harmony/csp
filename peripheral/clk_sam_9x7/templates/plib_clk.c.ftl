@@ -380,14 +380,18 @@ static void initUSBClk ( void )
 }
 </#if>
 
-<#if CLK_GENERATOR_CODE && CLK_DDR_ENABLE>
+<#if CLK_GENERATOR_CODE>
 
 /*********************************************************************************
 Initialize DDR Clock
 *********************************************************************************/
 static void initDDRClk(void)
 {
+<#if CLK_DDR_ENABLE>
     PMC_REGS->PMC_SCER |= PMC_SCER_DDRCK_Msk;
+<#else>
+    PMC_REGS->PMC_SCDR |= PMC_SCDR_DDRCK_Msk;
+</#if>
 }
 </#if>
 
@@ -447,7 +451,7 @@ void CLK_Initialize( void )
 
     /* Initialize Peripheral clock */
     initPeriphClk();
-    <#if CLK_GENERATOR_CODE && CLK_DDR_ENABLE>
+    <#if CLK_GENERATOR_CODE>
 
     /* Initialize DDR Clock */
     initDDRClk();
