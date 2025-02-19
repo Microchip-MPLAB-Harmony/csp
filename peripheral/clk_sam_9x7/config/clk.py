@@ -146,10 +146,12 @@ def update_mck_freq(symbol, event):
     cpu_mdiv = event['source'].getSymbolByID("CLK_CPU_CKR_MDIV")
     input_freq = cpu_clk.getValue()
     div = 0
-    if cpu_mdiv.getValue() != 3:
-        div = pow(2,cpu_mdiv.getValue())
-    else:
+    if cpu_mdiv.getSelectedKey() == "PCK_DIV3":
         div = 3
+    elif cpu_mdiv.getSelectedKey() == "PCK_DIV5":
+        div = 5
+    else:
+        div = pow(2,cpu_mdiv.getValue())
     symbol.setValue(input_freq / div, 0)
 
 def update_pck_freq(symbol, event):
@@ -811,10 +813,12 @@ mck = coreComponent.createIntegerSymbol("MCK_FREQUENCY", cpu_menu)
 mck.setVisible(False)
 input_freq = cpu_clk.getValue()
 div = 0
-if cpu_mdiv.getValue() != 3:
-    div = pow(2,cpu_mdiv.getValue())
-else:
+if cpu_mdiv.getSelectedKey() == "PCK_DIV3":
     div = 3
+elif cpu_mdiv.getSelectedKey() == "PCK_DIV5":
+    div = 5
+else:
+    div = pow(2,cpu_mdiv.getValue())
 mck.setDefaultValue(input_freq / div)
 mck.setDependencies(update_mck_freq, ['CPU_CLOCK_FREQUENCY', 'CLK_CPU_CKR_MDIV'])
 
