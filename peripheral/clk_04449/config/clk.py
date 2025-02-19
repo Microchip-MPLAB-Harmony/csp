@@ -144,9 +144,9 @@ def handleClockSettingsMessage(messageID, args):
         requestedPllVcoDivider = args.get('reqPllVcoDivFreq')
         pllNo = args.get('pllNo')
         val = {}
-        if requestedPllFout is not None and requestedPllVcoDivider is not None:
+        if requestedPllFout is not None and requestedPllVcoDivider is not None and requestedPllFout > 0 and requestedPllVcoDivider > 0:
             val = getPlloandVcoFreqParams(pllNo, pllClkSrcFreq, requestedPllFout, requestedPllVcoDivider, pll_mul_div_ranges, pll_freq_ranges)
-        elif requestedPllFout is not None:
+        elif requestedPllFout is not None and requestedPllFout > 0:
             val = getPlloFreqParams(pllNo, pllClkSrcFreq, requestedPllFout, pll_mul_div_ranges, pll_freq_ranges)
             intdiv = Database.getSymbolValue("core",PLL_INTDIV.format(pllNo))
             vcoFreq = getCalcVcoFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],intdiv)
@@ -156,7 +156,7 @@ def handleClockSettingsMessage(messageID, args):
             else:
                 val["calcPllVcoDivFreq"] = getCalcVcoFreq(pllClkSrcFreq, val[PLLPRE.format(pllNo)],val[PLLFBD.format(pllNo)],intdiv)     
             
-        elif requestedPllVcoDivider is not None:
+        elif requestedPllVcoDivider is not None and requestedPllVcoDivider > 0:
             val = getPllVcoDivParams(pllNo, pllClkSrcFreq, requestedPllVcoDivider, pll_mul_div_ranges, pll_freq_ranges)
             postdiv1 = int(Database.getSymbolValue("core",POSTDIV1.format(pllNo)))
             postdiv2 = int(Database.getSymbolValue("core",POSTDIV2.format(pllNo)))
@@ -1380,13 +1380,13 @@ def clkDivBasedCb(symbol, event):
 def clkGenFreqCb(symbol, event):
     component = symbol.getComponent()
     clkGenNo = getClkGenNo(symbol.getID())
-    if(component.getSymbolValue(CLK_GEN_ENABLE.format(clkGenNo))):
-        if(event["id"] == CLK_GEN_CALCULATED_FREQ.format(clkGenNo)):
-            clkSrc = "Clock Generator " + clkGenNo
-            clkFreq = event["value"]
-            updateClkGenBasedClkSrcFreq(symbol.getComponent(),clkSrc,clkFreq)  
-        else:
-            symbol.setValue(calcClkGenFreq(component, clkGenNo))
+    if(event["id"] == CLK_GEN_CALCULATED_FREQ.format(clkGenNo)):
+        clkSrc = "Clock Generator " + clkGenNo
+        clkFreq = event["value"]
+        updateClkGenBasedClkSrcFreq(symbol.getComponent(),clkSrc,clkFreq)  
+    elif(component.getSymbolValue(CLK_GEN_ENABLE.format(clkGenNo))):
+        symbol.setValue(calcClkGenFreq(component, clkGenNo))
+         
  
 global clkGenFreqCmntCb
 def clkGenFreqCmntCb(symbol, event): 
@@ -1732,7 +1732,7 @@ global getVcodivFactor
 def getVcodivFactor(maxVcodiv,reqVcodivfreq,clkSrcFreq,vcoFreq,pllpre,fbdiv):
     vcoDiv = 0
     if (reqVcodivfreq < (vcoFreq * 3) / 4) :
-        vcoDiv = int(round((clkSrcFreq * fbdiv) / (reqVcodivfreq *pllpre*2)))
+        vcoDiv = int(round((clkSrcFreq * fbdiv) / (reqVcodivfreq *pllpre*2))) if reqVcodivfreq > 0  else 0
         if vcoDiv > maxVcodiv:
             vcoDiv = maxVcodiv
     divideFactor = vcoDiv*2 if  vcoDiv > 0 else 1       
@@ -1916,14 +1916,6 @@ calcExtClkSrcFreq.setVisible(False)
 calcExtClkSrcFreq.setDefaultValue(0)
 calcExtClkSrcFreq.setDependencies(calcExtClkSrcFreqCb,[EXT_CLK_SRC_FREQ,CALC_EXT_CLK_SRC_FREQ])
 
-clkOutputPin = coreComponent.createBooleanSymbol("clockOutputPin", extInputSrcMenu)
-clkOutputPin.setLabel("Enable Clock output pin")
-clkOutputPin.setDefaultValue(False)
-clkOutputPin.setDependencies(clockOutputPinCb,[EXT_CLK_SRC_SEL])
-clkOutputPin.setHelp(
-    "atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_04449;register:OSCCFG"
-)
-
 poscmdValue = coreComponent.createIntegerSymbol("poscmdValue",clkSourceMenu)
 poscmdValue.setDefaultValue(3) # should this be read from ATDF
 poscmdValue.setVisible(False)
@@ -2063,7 +2055,7 @@ for i in range(1, totalPllCount+1):
     pllVcoFreqInMhz.setValue(convertToMHz(pllVcoDivFreq.getValue()))
     
 
-    pllPostDiv1 = coreComponent.createComboSymbol(POSTDIV1.format(i).format(i),pllClkMenu,pllPostDiv1Options) 
+    pllPostDiv1 = coreComponent.createComboSymbol(POSTDIV1.format(i),pllClkMenu,pllPostDiv1Options) 
     pllPostDiv1.setLabel("Post Divider 1(POSTDIV1)")
     pllPostDiv1.setHelp(
         "atmel;device:"
@@ -2073,7 +2065,7 @@ for i in range(1, totalPllCount+1):
     pllPostDiv1.setValue("4")
   
 
-    pllPostDiv2 = coreComponent.createComboSymbol(POSTDIV2.format(i).format(i),pllClkMenu,pllPostDiv2Options) 
+    pllPostDiv2 = coreComponent.createComboSymbol(POSTDIV2.format(i),pllClkMenu,pllPostDiv2Options) 
     pllPostDiv2.setLabel("Post Divider 2(POSTDIV2)")
     pllPostDiv2.setHelp(
         "atmel;device:"
@@ -2210,14 +2202,7 @@ for i in range(1, totalClkGenCount+1):
         fracDiv = coreComponent.createIntegerSymbol(CLK_GEN_FRACDIV.format(i), enableClkDiv)
         fracDiv.setDefaultValue(0)
         fracDiv.setVisible(False)
-
-        
-    clkGenFreqCmnt = coreComponent.createCommentSymbol(CLK_GEN_CALCULATED_FREQ_CMNT.format(i), clkGenMenu)
-    paramName = "CLK_GEN_"+str(i)
-    clkGenDescription = "Clock Generator" if i!= 1 else "System Clock"  
-    paramCaption = getAtdfParameterCaption(INTERNAL_OSCILLATOR,CLOCK,paramName)
-    clkGenFreqCmnt.setLabel("Info : {} frequency limit is {}MHz".format(clkGenDescription,paramCaption)) 
-    clkGenFreqCmnt.setDependencies(clkGenFreqCmntCb,[CLK_GEN_CALCULATED_FREQ.format(i)])   
+   
     
     clkGenFreq = coreComponent.createIntegerSymbol(CLK_GEN_CALCULATED_FREQ.format(i),clkGenMenu)
     clkGenFreq.setLabel("Clock Generator Frequency")
@@ -2225,24 +2210,34 @@ for i in range(1, totalClkGenCount+1):
     clkGenFreq.setDependencies( clkGenFreqCb,[CLK_GEN_CALCULATED_FREQ.format(i),CLK_GEN_CLK_SRC_FREQ.format(i),CLK_GEN_DIVIDER_ENABLE.format(i),CLK_GEN_INTDIV.format(i), CLK_GEN_FRACDIV.format(i)])
     clkGenFreq.setVisible(True)
     
+    clkGenFreqCmnt = coreComponent.createCommentSymbol(CLK_GEN_CALCULATED_FREQ_CMNT.format(i), clkGenMenu)
+    paramName = "CLK_GEN_"+str(i)
+    clkGenDescription = "Clock Generator" if i!= 1 else "System Clock"  
+    paramCaption = getAtdfParameterCaption(INTERNAL_OSCILLATOR,CLOCK,paramName)
+    clkGenFreqCmnt.setLabel("Info : {} frequency limit is {}MHz".format(clkGenDescription,paramCaption)) 
+    clkGenFreqCmnt.setDependencies(clkGenFreqCmntCb,[CLK_GEN_CALCULATED_FREQ.format(i)]) 
+    
     clkGenFreqInMhz = coreComponent.createStringSymbol(CLK_GEN_CALCULATED_FREQ_MHZ.format(i),clkGenMenu)
     clkGenFreqInMhz.setReadOnly(True)
     clkGenFreqInMhz.setVisible(False)
-    clkGenFreqInMhz.setDependencies(clkGenFreqInMhzCb,[CLK_GEN_CALCULATED_FREQ.format(i)])
-    
-    
+    clkGenFreqInMhz.setDependencies(clkGenFreqInMhzCb,[CLK_GEN_CALCULATED_FREQ.format(i)])  
     
     if i==1: 
         clkGenMenu.setLabel("System Clock (Clock Generator 1)")
         clkGenClkSrc.setLabel("System Clock Source")
-        clkGenClkSrc.setSelectedKey("PLL1 FOUT")
-        
+        clkGenClkSrc.setSelectedKey("PLL1 FOUT")  
         clkGenFreq.setLabel("System Clock Frequency")
         
         systemClkFreq = coreComponent.createIntegerSymbol("sysClockFrequency",clkGenMenu)
         systemClkFreq.setVisible(False)
         systemClkFreq.setDefaultValue(clkGenFreq.getValue())
         systemClkFreq.setDependencies(systemClkCb,[CLK_GEN_CALCULATED_FREQ.format(i)]) 
+        
+        clkOutputPin = coreComponent.createBooleanSymbol("clockOutputPin", clkGenMenu)
+        clkOutputPin.setLabel("Enable Clock output pin")
+        clkOutputPin.setDefaultValue(False)
+        clkOutputPin.setDependencies(clockOutputPinCb,[EXT_CLK_SRC_SEL])
+        clkOutputPin.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_04449;register:OSCCFG")
         
         stdSpeedClkFreq = coreComponent.createIntegerSymbol("stdSpeedClkFreq",clkGenMenu)
         stdSpeedClkFreq.setLabel("Standard Speed Peripheral Clock (System Clock/2)")
@@ -2281,10 +2276,13 @@ for i in range(1, totalClkGenCount+1):
         + Variables.get("__PROCESSOR")
         + ";comp:clk_04449;register:CLKxCON"
     )
-    if(i == 1):
-        enableFailSafeClk.setDefaultValue(True)
+    
 
     failSafeEnableBit = createKeyValueSettingSymbol(coreComponent,CLK_GEN_FSCMEN.format(i),INTERNAL_OSCILLATOR,CLK_CON_REG_GROUP,CLK_CON_REG,"FSCMEN",clkGenMenu)
+    
+    if(i == 1):
+        enableFailSafeClk.setDefaultValue(True)
+        failSafeEnableBit.setSelectedKey("enabled")
     
     defaultBackupClkSrc = BACKUP_FRC_OSCILLATOR if i != 3 else FRC_OSCILLATOR  #clk gen3 has BFRC as default clk src
     backUpClkSrc = createKeyValueSettingBoscSymbol(coreComponent,CLK_GEN_BOSC.format(i),INTERNAL_OSCILLATOR,CLK_CON_REG_GROUP,CLK_CON_REG,BOSC,enableFailSafeClk,defaultBackupClkSrc)

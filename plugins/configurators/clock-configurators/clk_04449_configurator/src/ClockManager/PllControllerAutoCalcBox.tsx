@@ -130,6 +130,7 @@ const PLLControllerAutoCalcBox = (props: {
                             placeholder="Enter Frequency(Hz)"
                             showButtons={false}
                             max={maxPlloFreq}
+                            min = {1}
                         />
                         <label>
                         {'Hz <=800 MHz'}
@@ -155,6 +156,7 @@ const PLLControllerAutoCalcBox = (props: {
                             placeholder="Enter Frequency(Hz)"
                             showButtons={false}
                             max={maxPllVcoFreq}
+                            min ={1}
                         />
                         <label>
                         {'Hz <=800 MHz'}

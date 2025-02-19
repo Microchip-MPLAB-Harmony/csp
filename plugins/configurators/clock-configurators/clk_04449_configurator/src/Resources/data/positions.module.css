@@ -428,72 +428,72 @@
 .ClkGenRadioName0 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 45px
+    top: 45px;
+    width: 89.99px
     }
 .ClkGenRadioName1 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 69px
+    top: 69px;
+    width: 88.95px
     }
 .ClkGenRadioName2 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 94px
+    top: 94px;
+    width: 88.95px
     }
 .ClkGenRadioName3 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 120px
+    top: 120px;
+    width: 88.95px
     }
 .ClkGenRadioName4 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 145px
+    top: 145px;
+    width: 88.95px
     }
 .ClkGenRadioName5 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 169px
+    top: 169px;
+    width: 88.95px
     }
 .ClkGenRadioName6 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 196px
+    top: 196px;
+    width: 88.95px
     }
 .ClkGenRadioName7 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
-    left: 608px;
-    top: 224px
+    top: 224px;
+    width: 88.95px;
+    left: 608.06px
     }
 .ClkGenRadioName8 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 246px
+    top: 246px;
+    width: 88.95px
     }
 .ClkGenRadioName9 {
     position: absolute;
     height: 19.84px;
-    width: 84.07px;
     left: 607px;
-    top: 274px
+    top: 274px;
+    width: 88.95px
     }
 .ClkGenFreqLabel0 {
     position: absolute;
@@ -680,72 +680,72 @@
 .ClockGenRadioName0 {
     position: absolute;
     height: 20px;
+    left: 606px;
     top: 594px;
-    width: 84px;
-    left: 606px
+    width: 90.92px
     }
 .ClockGenRadioName1 {
     position: absolute;
     height: 20px;
     top: 617px;
-    left: 607px;
-    width: 84px
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenRadioName2 {
     position: absolute;
     height: 20px;
     top: 643px;
-    left: 607px;
-    width: 83.6px
+    width: 90.48px;
+    left: 607.08px
     }
 .ClockGenRadioName3 {
     position: absolute;
     height: 20px;
-    left: 607px;
-    width: 84px;
-    top: 671px
+    top: 671px;
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenRadioName4 {
     position: absolute;
     height: 20px;
-    left: 607px;
-    width: 84px;
-    top: 694px
+    top: 694px;
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenRadioName5 {
     position: absolute;
     height: 20px;
-    left: 607px;
-    width: 84px;
-    top: 718px
+    top: 718px;
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenRadioName6 {
     position: absolute;
     height: 20px;
-    left: 607px;
-    width: 84px;
-    top: 744px
+    top: 744px;
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenRadioName7 {
     position: absolute;
     height: 20px;
     top: 771px;
-    left: 607px;
-    width: 84px
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenRadioName8 {
     position: absolute;
     height: 20px;
     top: 796px;
-    left: 607px;
-    width: 84px
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenRadioName9 {
     position: absolute;
     height: 20px;
-    left: 607px;
-    width: 84px;
-    top: 823px
+    top: 823px;
+    width: 90.92px;
+    left: 607.08px
     }
 .ClockGenFreqLabel0 {
     position: absolute;
@@ -933,8 +933,8 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    left: 905px;
-    top: 538px
+    top: 539px;
+    left: 900px
     }
 .clkGen2ClkSrc {
     position: absolute;
@@ -1138,4 +1138,11 @@
     width: 385px;
     left: 601px;
     top: 6px
+    }
+.clkFailIntComment {
+    position: absolute;
+    left: 264px;
+    height: 20px;
+    top: 270px;
+    width: 200px
     }
