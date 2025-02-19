@@ -95,13 +95,21 @@ def handleMessage(messageID, args):
 
     elif messageID == "TMR1_TIMER_CONFIG":
         if "isTmrIntEn" in args:
-            Database.setSymbolValue(timePeriodMs.getComponent().getID().lower(), TMR_INTERRUPT_MODE, args["isTmrIntEn"])
+            Database.setSymbolValue(
+                timePeriodMs.getComponent().getID().lower(),
+                TMR_INTERRUPT_MODE,
+                args["isTmrIntEn"],
+            )
             if args["isTmrIntEn"] == True:
                 timerUnit.setValue("millisecond")
             else:
                 timerUnit.clearValue()
         if "isTmrAutoStart" in args:
-            Database.setSymbolValue(timePeriodMs.getComponent().getID().lower(), TMR_AUTOSTART, args["isTmrAutoStart"])
+            Database.setSymbolValue(
+                timePeriodMs.getComponent().getID().lower(),
+                TMR_AUTOSTART,
+                args["isTmrAutoStart"],
+            )
 
     return dummy_dict
 
@@ -186,7 +194,7 @@ def isTmrTGATECommentVisible(symbol, event):
 
 def periodRegCommentDependency(symbol, event):
 
-    symbol.setValue(int(event["value"]))
+    symbol.setValue((event["value"]))
 
 
 def isTmrExtClkSrcVisible(symbol, event):
@@ -254,6 +262,7 @@ def timePeriodCalc(symbol, event):
     elif timerUnitName == "nanosecond":
         timerPeriodUS.setValue(int(round(symbol.getValue() / 1000.0)))
 
+
 def periodRegCalc(symbol, event):
 
     component = symbol.getComponent()
@@ -294,11 +303,19 @@ def handleInterruptControl(instNum, intMode):
     intIndex = getVectorIndex("T{}Interrupt".format(instNum))
 
     if intMode == True:
-        Database.sendMessage("core", "INTC_{}_ENABLE".format(intIndex), {"isEnabled":True})
-        Database.sendMessage("core", "INTC_{}_HANDLER_LOCK".format(intIndex), {"isEnabled":True})
+        Database.sendMessage(
+            "core", "INTC_{}_ENABLE".format(intIndex), {"isEnabled": True}
+        )
+        Database.sendMessage(
+            "core", "INTC_{}_HANDLER_LOCK".format(intIndex), {"isEnabled": True}
+        )
     else:
-        Database.sendMessage("core", "INTC_{}_ENABLE".format(intIndex), {"isEnabled":False})
-        Database.sendMessage("core", "INTC_{}_HANDLER_LOCK".format(intIndex), {"isEnabled":False})
+        Database.sendMessage(
+            "core", "INTC_{}_ENABLE".format(intIndex), {"isEnabled": False}
+        )
+        Database.sendMessage(
+            "core", "INTC_{}_HANDLER_LOCK".format(intIndex), {"isEnabled": False}
+        )
 
 
 def defaultInterruptControl(component):
@@ -704,9 +721,7 @@ def instantiateComponent(tmrComponent):
         ],
     )
 
-    periodRegComment = tmrComponent.createIntegerSymbol(
-        "PERIOD_REG_COMMENT", timePeriodMs
-    )
+    periodRegComment = tmrComponent.createLongSymbol("PERIOD_REG_COMMENT", timePeriodMs)
     periodRegComment.setDefaultValue(
         int(timePeriodMs.getValue() / resolution - 1) if clkFreq else 0
     )
