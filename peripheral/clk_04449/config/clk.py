@@ -1393,6 +1393,8 @@ def clkGenFreqCmntCb(symbol, event):
     MHz_Factor =1000000 
     clkGenNo = getClkGenNo(symbol.getID())
     maxAllowableFreq = getAtdfParameterCaption(INTERNAL_OSCILLATOR,CLOCK,"CLK_GEN_"+clkGenNo)
+    if clkGenNo == "4":
+        maxAllowableFreq = "200"
     clkGenDescription = "Clock Generator" if clkGenNo!= "1" else "System Clock"       
     clkGenFreq = symbol.getComponent().getSymbolValue(CLK_GEN_CALCULATED_FREQ.format(clkGenNo))
     if((int(maxAllowableFreq)*MHz_Factor) < clkGenFreq):
@@ -1938,6 +1940,7 @@ for i in range(1, totalRefInputSrcCount+1):
     refInputFreq.setDefaultValue(REF_INPUT_DEFAULT_FREQ)
     refInputFreq.setLabel("Reference Input" + str(i) + " Frequency")
     refInputFreq.setVisible(False)
+    refInputFreq.setMin(0)
     refInputFreq.setMax(REF_INPUT_MAX_FREQ)
     refInputFreq.setDependencies(referenceInputFreqCb,[REF_INPUT_PIN_FREQ+str(i)])
     refInputDisplayFreq = coreComponent.createIntegerSymbol("REFI{}_FREQ".format(str(i)),refInpPinEnable)
@@ -2214,6 +2217,8 @@ for i in range(1, totalClkGenCount+1):
     paramName = "CLK_GEN_"+str(i)
     clkGenDescription = "Clock Generator" if i!= 1 else "System Clock"  
     paramCaption = getAtdfParameterCaption(INTERNAL_OSCILLATOR,CLOCK,paramName)
+    if i == 4:
+        paramCaption = "200"
     clkGenFreqCmnt.setLabel("Info : {} frequency limit is {}MHz".format(clkGenDescription,paramCaption)) 
     clkGenFreqCmnt.setDependencies(clkGenFreqCmntCb,[CLK_GEN_CALCULATED_FREQ.format(i)]) 
     

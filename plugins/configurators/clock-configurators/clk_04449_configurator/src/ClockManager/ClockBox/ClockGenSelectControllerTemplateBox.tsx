@@ -91,7 +91,7 @@ const ClockGenSelectControllerTemplateBox = (props: {
         "CLKGEN1": 200000000,
         "CLKGEN2": 8000000,
         "CLKGEN3": 8000000,
-        "CLKGEN4": 100000000,
+        "CLKGEN4": 200000000,
         "CLKGEN5": 400000000,
         "CLKGEN6": 320000000,
         "CLKGEN7": 500000000,
