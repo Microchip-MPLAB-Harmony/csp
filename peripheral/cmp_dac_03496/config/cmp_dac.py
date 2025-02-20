@@ -364,16 +364,15 @@ def setDacModeDependency(symbol, event):
     component.setSymbolValue(DAC_SLPCON__TWME, False)
     component.setSymbolValue(DAC_SLPCON__SLOPEN, False)
 
-    if event["value"] == "Hysteretic-Mode":
-        component.setSymbolValue(DAC_SLPCON__HME, True)
-        component.setSymbolValue(DAC_SLPCON__SLOPEN, True)
+    modeSettings = {
+        "Hysteretic-Mode": {DAC_SLPCON__HME: True, DAC_SLPCON__SLOPEN: True},
+        "Triangle-Wave-Mode": {DAC_SLPCON__TWME: True, DAC_SLPCON__SLOPEN: True},
+        "Slope-Mode": {DAC_SLPCON__SLOPEN: True},
+    }
 
-    if event["value"] == "Triangle-Wave-Mode":
-        component.setSymbolValue(DAC_SLPCON__TWME, True)
-        component.setSymbolValue(DAC_SLPCON__SLOPEN, True)
-
-    if event["value"] == "Slope-Mode":
-        component.setSymbolValue(DAC_SLPCON__SLOPEN, True)
+    if event["value"] in modeSettings:
+        for key, value in modeSettings[event["value"]].items():
+            component.setSymbolValue(key, value)
 
 
 def handleMessage(messageID, args):
