@@ -241,6 +241,9 @@ cacheAlign.setDefaultValue(64)
 # load dwdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_44149/config/dwdt.py")
 
+#load MMU with default 1:1 mapping so we can use cache
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
+
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a7d65/config/clk.py")
 coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_SAMA7D6_MANAGER", {"componentId": "core","plugin_name": "Clock Configuration", "main_html_path": "csp/plugins/configurators/clock-configurators/clk_sam_a7d65_configurator/build/index.html"})
@@ -248,9 +251,6 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CL
 # load GIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gic/config/gic.py")
 coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_GIC_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/gic_interrupt_configuration/build/index.html"})
-
-#load MMU with default 1:1 mapping so we can use cache
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
 #load Matrix -- default all peripherals to non-secure
 #execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_6342/config/matrix.py")

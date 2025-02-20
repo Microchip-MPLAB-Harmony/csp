@@ -238,6 +238,9 @@ cacheAlign.setDefaultValue(64)
 # load dwdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_44149/config/dwdt.py")
 
+#load MMU with default 1:1 mapping so we can use cache
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
+
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a7g5/config/clk.py")
 coreComponent.addPlugin("../peripheral/clk_sam_a7g5/plugin/clk_sam_a7g5.jar")
@@ -245,9 +248,6 @@ coreComponent.addPlugin("../peripheral/clk_sam_a7g5/plugin/clk_sam_a7g5.jar")
 # load GIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gic/config/gic.py")
 coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_GIC_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/gic_interrupt_configuration/build/index.html"})
-
-#load MMU with default 1:1 mapping so we can use cache
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
