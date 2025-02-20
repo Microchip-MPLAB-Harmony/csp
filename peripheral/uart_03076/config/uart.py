@@ -538,6 +538,8 @@ def instantiateComponent(uartComponent):
     uartBaud = uartComponent.createIntegerSymbol(BAUD_RATE_KEY, None)
     uartBaud.setLabel("Baud Rate")
     uartBaud.setDefaultValue(115200)
+    uartBaud.setMin(0)
+    uartBaud.setMax(50000000)
     uartBaud.setDependencies(baudRateTrigger,[BAUD_RATE_KEY,CLK_FREQ_KEY])
     uartBaud.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_03076;register:UxBRG")
     
