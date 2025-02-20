@@ -116,7 +116,7 @@ const SummaryPage = () => {
         {GetLabelAndValue('PRES', 'CLK_CPU_CKR_PRES')}
         {GetLabelAndValue('MDIV', 'CLK_CPU_CKR_MDIV')}
         {GetLabelAndValue('DDR Enable', 'CLK_DDR_ENABLE')}
-        {GetLabelAndValue('QSPICLK Enable', 'CLK_QSPICLK_ENABLE')}
+        {/* {GetLabelAndValue('QSPICLK Enable', 'CLK_QSPICLK_ENABLE')} */}
         {GetLabelAndValue('CPU clock Frequency', 'CPU_CLOCK_FREQUENCY', ' Hz')}
         {GetLabelAndValue('DDR clock Frequency', 'DDRCLK_FREQUENCY', ' Hz')}
         {GetLabelAndValue('QSPI clock Frequency', 'QSPI_CLOCK_FREQUENCY', ' Hz')}

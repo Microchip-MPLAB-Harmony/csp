@@ -34,7 +34,8 @@ const dynamicSymbolsIgnoreList = [
   'CLK_PCK0_PRES',
   'CLK_PCK0_EN',
   'CLK_PCK0_FREQUENCY',
-  'QSPI_CLOCK_FREQUENCY'
+  'QSPI_CLOCK_FREQUENCY',
+  'CLK_QSPICLK_ENABLE'
 ];
 
 (window as any).SymbolValueChanged = (value: any) => {
@@ -48,7 +49,6 @@ const dynamicSymbolsIgnoreList = [
     readOnly: convertToBoolean(symbolData[2]),
     visible: convertToBoolean(symbolData[3])
   };
-
   SymbolChanged(symbol);
 
   ChangeComponentState(symbol.symbolID, symbol.value, symbol.readOnly, symbol.visible);

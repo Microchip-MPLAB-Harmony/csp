@@ -2,6 +2,10 @@ import { component_id } from './MainBlock';
 import { AddPlainLabel, AddInputFormatSymbolLabel } from '../clock-common/utils/ClockLabelUtils';
 import CPUCLKCSSController from './BoldLabelController/CPUCLKCSSController';
 import CLKUSBUSBSController from './BoldLabelController/CLKUSBUSBSController';
+import StateLabel from '@mplab_harmony/harmony-plugin-ui/build/components/StateLabel';
+import { GetSymbolValue } from '@mplab_harmony/harmony-plugin-core-service';
+import { GetStyle } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
+import { ChangeCustomLabelComponentState } from '@mplab_harmony/harmony-plugin-ui/build/utils/ComponentStateChangeUtils';
 
 export function AddCustomLabels() {
   try {
@@ -15,13 +19,19 @@ export function AddCustomLabels() {
           'CLK_CPU_CKR_PRES',
           GetDiVAddedText
         )}
-        {AddInputFormatSymbolLabel(
-          'label_pclkMdiv',
+        {/* {AddInputFormatSymbolLabel('label_pclkMdiv', component_id, 'CLK_CPU_CKR_MDIV', GetMDIVText)} */}
+        <StateLabel
+          labelId={'label_pclkMdiv'}
+          labelDisplayText={GetMDIVText(GetSymbolValue(component_id, 'CLK_CPU_CKR_MDIV'))}
+          labelStyle={GetStyle('label_pclkMdiv')}
+          className={'label_pclkMdiv'}
+        />
+        {AddInputFormatSymbolLabel_Custom(
+          'label_pclk_1',
           component_id,
           'CLK_CPU_CKR_MDIV',
-          GetDiVAddedText
+          AddMDivType
         )}
-        {AddInputFormatSymbolLabel('label_pclk_1', component_id, 'CLK_CPU_CKR_MDIV', AddMDivType)}
 
         {AddInputFormatSymbolLabel('label_usbdivVal', component_id, 'CLK_USB_USBDIV', AddDivioType)}
 
@@ -64,6 +74,49 @@ function GetDiVAddedText(text: any) {
     let divValue = RemoveDiv(text);
     divValue = divValue.replace('CLK', '');
     divValue = divValue.replace('DIV', '');
+    return '/ ' + divValue;
+  } catch (err) {}
+}
+
+function AddInputFormatSymbolLabel_Custom(
+  id: string,
+  component_id: string,
+  symbolId: string,
+  InputFormat: (arg0: any) => void,
+  className?: any
+) {
+  function customLabelConfigOnSymbolChange(symbolId: any, value: any) {
+    ChangeCustomLabelComponentState(symbolId, InputFormat(value), null, null, null);
+
+    const label = document.getElementById('label_pclkMdiv');
+    if (label) {
+      label.textContent = GetMDIVText(value) ?? '';
+    }
+  }
+  try {
+    return (
+      <div>
+        <StateLabel
+          labelId={id}
+          labelDisplayText={InputFormat(GetSymbolValue(component_id, symbolId))}
+          labelStyle={GetStyle(id)}
+          symbolListeners={[symbolId]}
+          className={className}
+          customLabelConfigOnSymbolChange={customLabelConfigOnSymbolChange}
+        />
+      </div>
+    );
+  } catch (err) {
+    /* empty */
+  }
+}
+
+function GetMDIVText(text: any) {
+  try {
+    let divValue = text.replace('PCK_DIV', '');
+    divValue = divValue.replace('DIV', '');
+    divValue = divValue.replace('CLK', '');
+    divValue = divValue === 'EQ_PCK' ? '1' : divValue;
     return '/ ' + divValue;
   } catch (err) {}
 }
