@@ -86,9 +86,16 @@ def handleMessage(messageID, args):
 
 def instantiateComponent(cbgComponent):
 
+    atdfPath = '/avr-tools-device-file/devices/device'
+    deviceNode = ATDF.getNode(atdfPath)
+    deviceName = deviceNode.getAttribute("name")
+
     current_quantity = cbgComponent.createIntegerSymbol("CURRENT_QUANTITY", None)
     current_quantity.setLabel("Number of Currents")
-    current_quantity.setDefaultValue(4)
+    if deviceName.endswith("36"):
+        current_quantity.setDefaultValue(3)
+    else:
+        current_quantity.setDefaultValue(4)
     current_quantity.setVisible(False)
 
     for i in range(current_quantity.getValue()):
