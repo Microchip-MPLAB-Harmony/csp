@@ -191,7 +191,6 @@ def setSysClkFreq(symbol, event):
         clockFreq = systemClockFreq / 1
 
     symbol.setValue(clockFreq)
-    symbol.setVisible(symbol.getComponent().getSymbolValue(SENT_CON1__RCVEN) == TRANSMITTER)
 
 def getTickTime(tickTime, clkFreq):
 
@@ -213,8 +212,7 @@ def getTickPeriodCalculation(tickTime, clkFreq):
     if clkFreq == 0:
         return 0
     
-    freq = clkFreq / MICRO_SECONDS
-    calTickPeriod = (tickTime+1) / freq
+    calTickPeriod = ((tickTime + 1) * MICRO_SECONDS) / clkFreq
     return calTickPeriod
 
 def updateTickPeriodCalculated(symbol, event):
@@ -419,7 +417,6 @@ def instantiateComponent(sentComponent):
     preScaler = sentComponent.createComboSymbol(SENT_CON1__PS, messageSettings, preScalerList)
     preScaler.setLabel("Prescaler")
     preScaler.setDefaultValue(preScalerList[-1])
-    preScaler.setDependencies(transmitModeVisibility, [SENT_CON1__RCVEN])
     preScaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sent_02359;register:SENTxCON1")
 
     # Clock Source
