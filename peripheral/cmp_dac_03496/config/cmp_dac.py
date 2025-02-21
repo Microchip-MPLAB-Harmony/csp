@@ -365,7 +365,7 @@ def setDacModeDependency(symbol, event):
     component.setSymbolValue(DAC_SLPCON__SLOPEN, False)
 
     modeSettings = {
-        "Hysteretic-Mode": {DAC_SLPCON__HME: True, DAC_SLPCON__SLOPEN: True},
+        "Hysteretic-Mode": {DAC_SLPCON__HME: True},
         "Triangle-Wave-Mode": {DAC_SLPCON__TWME: True, DAC_SLPCON__SLOPEN: True},
         "Slope-Mode": {DAC_SLPCON__SLOPEN: True},
     }
@@ -550,7 +550,7 @@ def instantiateComponent(cmpdacComponent):
     )
 
     dacdatahReg = cmpdacComponent.createHexSymbol(DACDATAH, dacMenu)
-    dacdatahReg.setLabel(DACDATAH)
+    dacdatahReg.setLabel("DACDATAH")
     dacdatahReg.setDefaultValue(DACDATA_MAX_VALUE)
     dacdatahReg.setMin(DACDATA_MIN_VALUE)
     dacdatahReg.setMax(DACDATA_MAX_VALUE)
@@ -561,7 +561,7 @@ def instantiateComponent(cmpdacComponent):
     )
 
     dacdatalReg = cmpdacComponent.createHexSymbol(DACDATAL, dacMenu)
-    dacdatalReg.setLabel(DACDATAL)
+    dacdatalReg.setLabel("DACDATAL")
     dacdatalReg.setDefaultValue(DACDATA_MIN_VALUE)
     dacdatalReg.setMin(DACDATA_MIN_VALUE)
     dacdatalReg.setMax(DACDATA_MAX_VALUE)

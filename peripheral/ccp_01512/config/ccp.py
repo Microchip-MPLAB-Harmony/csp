@@ -681,7 +681,7 @@ def instantiateComponent(ccpComponent):
     _get_bitfield_names(getValueGroup(moduleName, getValueGroupName(moduleName, "CCP", "CCP1CON1", "OPS")), postscale)
     ccpSym_CCPCON1_OPS = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_OPS", None)
     ccpSym_CCPCON1_OPS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:CCP1CON1")
-    ccpSym_CCPCON1_OPS.setLabel("Select Interrupt Output Postscale")
+    ccpSym_CCPCON1_OPS.setLabel("Select Interrupt Output Postscaler")
     ccpSym_CCPCON1_OPS.setOutputMode( "Value" )
     ccpSym_CCPCON1_OPS.setDisplayMode( "Description" )
     if int(postscale[0]['value'], 0) != 0:
