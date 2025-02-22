@@ -117,19 +117,6 @@ typedef enum {
 static uint16_t ${moduleName}_TriggerSourceValueGet(${moduleName}_PWM_INSTANCE pwmInstance, ADC_PWM_TRIGGERS triggerNumber);
 </#if>
 
-// Section: ISR declaration
-
-<#list 0..maxChannel as i>
-<#if (.vars["ch"+i+"channelUsed"]??) && (.vars["ch"+i+"channelUsed"] == true)>
-void ${.vars["ch"+i+"IsrHandlerName"]}(void);
-</#if>
-</#list>
-<#list 0..maxChannel as i>
-<#if (.vars["ch"+i+"cmpUsed"]??) && (.vars["ch"+i+"cmpUsed"] == true)>
-void ${.vars["cmp"+i+"IsrHandlerName"]}(void);
-</#if>
-</#list>
-
 // Section: ${moduleName} Implementation
 
 void ${moduleName}_Initialize(void)
@@ -224,18 +211,20 @@ static uint16_t ${moduleName}_TriggerSourceValueGet(${moduleName}_PWM_INSTANCE p
         case ${moduleName}_PWM${x}:
                 if(triggerNumber == ADC_PWM_TRIGGER_1)
                 {
-                    adcTriggerSourceValue = PWM${x}_TRIGGER1;
+                    adcTriggerSourceValue = (uint16_t)PWM${x}_TRIGGER1;
                 }
                 else if(triggerNumber == ADC_PWM_TRIGGER_2)
                 {
-                    adcTriggerSourceValue = PWM${x}_TRIGGER2;
+                    adcTriggerSourceValue = (uint16_t)PWM${x}_TRIGGER2;
                 }
                 else
                 {
+                    /*Do Nothing*/
                 }
                 break;
     </#list>
          default:
+                /*Do Nothing*/
                 break;
     }
     return adcTriggerSourceValue;
@@ -250,11 +239,12 @@ void ${moduleName}_PWMTriggerSourceSet(ADC${instance}_CHANNEL channel, ${moduleN
         <#list 0..maxChannel as i>
         <#if (.vars["ch"+i+"channelUsed"]??) && (.vars["ch"+i+"channelUsed"] == true)>
         case ADC${instance}_CHANNEL${i}:
-                AD${instance}CH${i}CONbits.TRG1SRC = adcTriggerValue;
+                AD${instance}CH${i}CONbits.TRG1SRC = (uint8_t)adcTriggerValue;
                 break;
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
 }

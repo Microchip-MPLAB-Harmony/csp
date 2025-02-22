@@ -178,6 +178,7 @@ inline static void ${moduleName}_ChannelSoftwareTriggerEnable(${moduleName}_CHAN
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
 }
@@ -206,6 +207,7 @@ inline static uint16_t ${moduleName}_SampleCountGet(${moduleName}_CHANNEL channe
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
     return count;
@@ -234,6 +236,7 @@ inline static uint16_t ${moduleName}_SampleCountStatusGet(${moduleName}_CHANNEL 
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
     return countStatus;
@@ -264,6 +267,7 @@ inline static uint32_t ${moduleName}_ChannelResultGet(${moduleName}_CHANNEL chan
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
     return result;
@@ -297,6 +301,7 @@ inline static uint32_t ${moduleName}_SecondaryAccumulatorGet(${moduleName}_CHANN
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
     return result;
@@ -324,11 +329,12 @@ inline static bool ${moduleName}_ChannelResultIsReady(${moduleName}_CHANNEL chan
         <#list 0..maxChannel as i>
         <#if (.vars["ch"+i+"channelUsed"]??) && (.vars["ch"+i+"channelUsed"] == true)>
         case ADC${instance}_CHANNEL${i}:
-                status = AD${instance}STATbits.CH${i}RDY;
+                status = AD${instance}STATbits.CH${i}RDY == 1U;
                 break;
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
     return status;
@@ -353,6 +359,7 @@ inline static void ${moduleName}_ChannelResultInterruptEnable(${moduleName}_CHAN
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
 }
@@ -376,6 +383,7 @@ inline static void ${moduleName}_ChannelResultInterruptDisable(${moduleName}_CHA
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
 }
@@ -402,6 +410,7 @@ inline static void ${moduleName}_ChannelResultFlagClear(${moduleName}_CHANNEL ch
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
 }
@@ -416,13 +425,13 @@ inline static void ${moduleName}_ChannelResultFlagClear(${moduleName}_CHANNEL ch
 </#if>
 inline static bool ${moduleName}_CompareStatusGet(${moduleName}_CHANNEL channel)
 {
-    bool status;
+    bool status = false;
     switch(channel)
     {
         <#list 0..maxChannel as i>
         <#if (.vars["ch"+i+"channelUsed"]??) && (.vars["ch"+i+"channelUsed"] == true)>
         case ADC${instance}_CHANNEL${i}:
-                status = AD${instance}CMPSTATbits.CH${i}CMP;
+                status = AD${instance}CMPSTATbits.CH${i}CMP == 1U;
                 //Clear status flag
                 AD${instance}CMPSTATbits.CH${i}CMP = 0U;
                 //clear the CMP ${i} interrupt flag
@@ -431,6 +440,7 @@ inline static bool ${moduleName}_CompareStatusGet(${moduleName}_CHANNEL channel)
         </#if>
         </#list>
         default:
+                /*Do Nothing*/
                 break;
     }
     return status;
@@ -451,11 +461,12 @@ inline static void ${moduleName}_IndividualChannelInterruptPrioritySet(${moduleN
 		<#list 0..maxChannel as i>
         <#if (.vars["ch"+i+"channelUsed"]??) && (.vars["ch"+i+"channelUsed"] == true)>
 		case ADC${instance}_CHANNEL${i}:
-				_AD${instance}CH${i}IP = priorityValue;
+				_AD${instance}CH${i}IP = (uint8_t)priorityValue;
 				break;
 		</#if>
         </#list>
 		default:
+                /*Do Nothing*/
 				break;
 	}
 }
