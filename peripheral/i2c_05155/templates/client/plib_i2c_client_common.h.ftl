@@ -91,6 +91,15 @@ typedef enum
  *                  Enum of this type is returned by the I2Cx_LastByteAckStatusGet() function.
  * @remarks         None
  */
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 5.2 deviated: Deviation record ID -  H3_MISRAC_2012_R_5_2_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+    #pragma coverity compliance block deviate "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_DR_1"
+</#if>
 typedef enum
 {
     
@@ -98,6 +107,14 @@ typedef enum
     I2C_CLIENT_ACK_STATUS_RECEIVED_NAK,
     
 } I2C_CLIENT_ACK_STATUS;
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+
+    #pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic pop
+    </#if>
+</#if>
+  /* MISRAC 2012 deviation block end */
 
 /**  
  * @summary         I2C Client Transfer Event Enums

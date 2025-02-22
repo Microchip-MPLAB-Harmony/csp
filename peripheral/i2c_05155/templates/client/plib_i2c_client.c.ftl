@@ -65,8 +65,6 @@
 // Section: Global Data
 
 volatile static I2C_CLIENT_OBJ ${moduleName?lower_case}Obj;
-void ${i2cErrorInterruptHandler}(void);
-void ${i2cCommonInterruptHandler}(void);
 
 void ${moduleName}_Initialize(void)
 {
@@ -257,11 +255,8 @@ static void ${moduleName}_TransferSM(void)
         }
     }
     // Release clock stretch on 9th bit
-    if(I2C${instance}CON1bits.STREN == 1U || I2C${instance}CON1bits.SCLREL == 0U)
-    {
-        // Clock stretch release
-        I2C${instance}CON1bits.SCLREL = 1U;
-    }
+    I2C${instance}CON1bits.SCLREL = 1U;
+
 }
 
 void ${moduleName}_CallbackRegister(I2C_CLIENT_CALLBACK callback, uintptr_t contextHandle)

@@ -163,7 +163,6 @@ typedef enum
     SERCOM_I2C_SLAVE_TRANSFER_EVENT_ERROR,
 </#if>
 }SERCOM_I2C_SLAVE_TRANSFER_EVENT;
-
 <#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
 
     #pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"

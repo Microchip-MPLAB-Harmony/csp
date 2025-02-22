@@ -68,8 +68,6 @@
 
 #define NOP asm(" NOP")
 volatile static I2C_HOST_OBJ ${moduleName?lower_case}Obj;
-void ${i2cErrorInterruptHandler}(void);
-void ${i2cCommonInterruptHandler}(void);
 
 void ${moduleName}_Initialize(void)
 {
