@@ -165,24 +165,6 @@
 #define PLL1FOUT_SOURCE         5U
 #define PLL2VCODIV_SOURCE       8U 
 
-// Section: ISR declaration
-<#if clockFailIntEnable == true>
-void ${clkfailIsrHandlerName}(void);
-</#if>
-<#if useClockMonitor>
-<#list monIntTypes as type>
-<#list 1..maxClockMon as i>
-<#if (.vars["cm"+i+"Enable"]??) && (.vars["cm"+i+"Enable"] == true)>
-<#if (.vars["cm"+i+type+"IntEnable"]??) && (.vars["cm"+i+type+"IntEnable"] == true)>
-<#if (.vars["c"+i+type+"IsrHandlerName"]??) && (.vars["c"+i+type+"InterruptFlagBit"]??)>
-void ${.vars["c"+i+type+"IsrHandlerName"]}(void);
-</#if>
-</#if>
-</#if>
-</#list>
-</#list>
-</#if>
-
 // Section: Static Variables
 
 <#if useClockMonitor>
@@ -231,7 +213,8 @@ void CLOCK_Initialize(void)
     </#if>
     
     //If CLK GEN 1 (system clock) is using a PLL, switch to FRC to avoid risk of over-clocking the CPU while changing PLL settings
-    if((CLK1CONbits.COSC >= PLL1FOUT_SOURCE) && (CLK1CONbits.COSC <= PLL2VCODIV_SOURCE))
+    uint32_t currentSysClock = CLK1CONbits.COSC;
+    if((currentSysClock >= PLL1FOUT_SOURCE) && (currentSysClock <= PLL2VCODIV_SOURCE))
     {
         CLK1CONbits.NOSC = 1U; //FRC as source 
         CLK1CONbits.OSWEN = 1U;
@@ -389,6 +372,7 @@ void CLOCK_Monitor${type?capitalize}CallbackRegister(CLOCK_MONITOR monitor, CLOC
         </#if>
         </#list>
         default:
+            /*Do Nothing*/
             break;
     }
 }  
@@ -402,9 +386,11 @@ void CLOCK_Monitor${type?capitalize}CallbackRegister(CLOCK_MONITOR monitor, CLOC
 <#if clockFailIntEnable == true>
 void ${clkfailIsrHandlerName}(void)
 {
+    
     if(NULL != clkGenObj.callback)
     {
-        (*clkGenObj.callback)(clkGenObj.context);
+        uintptr_t context = clkGenObj.context;
+        (*clkGenObj.callback)(context);
     } 
     // clear clock fail status  
     CLKFAIL =  0x0U;
@@ -423,7 +409,8 @@ void ${.vars["c"+i+type+"IsrHandlerName"]}(void)
 {
     if(NULL != cm${type}Obj[${i-1}].callback)
     {
-        (*cm${type}Obj[${i-1}].callback)(cm${type}Obj[${i-1}].context);
+        uintptr_t context = cm${type}Obj[${i-1}].context;
+        (*cm${type}Obj[${i-1}].callback)(context);
     }
     ${.vars["c"+i+type+"InterruptFlagBit"]} = 0U;
 }

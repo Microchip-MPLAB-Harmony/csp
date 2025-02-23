@@ -94,7 +94,8 @@ inline static uint32_t CLOCK_GeneratorFrequencyGet(CLOCK_GENERATOR generator)
         </#if>
         </#list>
         default:
-                break;
+            /*Do Nothing*/
+            break;
     }
     return genFrequency;
 }
@@ -137,6 +138,7 @@ inline static void CLOCK_MonitorEnable(CLOCK_MONITOR monitor)
         </#if>
         </#list>
         default:
+            /*Do Nothing*/
             break;
     }
 }
@@ -161,6 +163,7 @@ inline static void CLOCK_MonitorDisable(CLOCK_MONITOR monitor)
         </#if>
         </#list>
         default:
+            /*Do Nothing*/
             break;
     }
 }
@@ -188,6 +191,7 @@ inline static bool CLOCK_MonitorIsReady(CLOCK_MONITOR monitor)
         </#if>
         </#list>
         default:
+            /*Do Nothing*/
             break;
     }
     return status;
@@ -214,6 +218,7 @@ inline static uint32_t CLOCK_MonitorAccumulatedCountGet(CLOCK_MONITOR monitor)
         </#if>
         </#list>
         default:
+            /*Do Nothing*/
             break;
     }
     return capturedValue;
