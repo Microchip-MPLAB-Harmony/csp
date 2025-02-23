@@ -51,10 +51,6 @@
 #include "interrupts.h"
 #include "plib_${moduleName?lower_case}.h"
 
-void ${errorIsrHandlerName}(void);
-void ${rxIsrHandlerName}(void);
-void ${txIsrHandlerName}(void);
-
 // Section: ${moduleName} Implementation
 
 volatile static UART_RING_BUFFER_OBJECT ${moduleName?lower_case}Obj;
@@ -236,16 +232,16 @@ bool ${moduleName}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
         if(setup->dataWidth == UART_DATA_8_BIT)
         {
             /* Configure ${moduleName} mode with parity if mode is 8 bit */
-            U${instanceNumber}CONbits.MODE = setup->parity;
+            U${instanceNumber}CONbits.MODE = (uint8_t)setup->parity;
         }
         else
         {
             /* Configure ${moduleName} mode to 7 bit */
-            U${instanceNumber}CONbits.MODE = setup->dataWidth;
+            U${instanceNumber}CONbits.MODE = (uint8_t)setup->dataWidth;
         }
 
         /* Configure ${moduleName} mode */
-        U${instanceNumber}CONbits.STP = setup->stopBits;
+        U${instanceNumber}CONbits.STP = (uint8_t)setup->stopBits;
         
         /* Configure ${moduleName} Baud Rate */
         U${instanceNumber}BRG = uxbrg;
