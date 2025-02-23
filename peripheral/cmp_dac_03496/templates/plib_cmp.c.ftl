@@ -111,7 +111,7 @@ void ${moduleName}_Initialize(void)
     DACCTRL2 = (DACCTRL2_SSTIME_SET(0x${DACCTRL_CTRL2__SSTIME}UL)
                 |DACCTRL2_TMODTIME_SET(0x${DACCTRL_CTRL2__TMODTIME}UL));
     </#if>
-    DAC${instance}CON =  (DAC${instance}CON_TMCB_SET(${.vars["DAC_CON__TMCB"]?number})
+    DAC${instance}CON =  (DAC${instance}CON_TMCB_SET(0x${.vars["DAC_CON__TMCB"]?number}U)
               |DAC${instance}CON_IRQM_${dacconIrqmOptions[.vars["DAC_CON__IRQM"]?number]}<#if DAC_CON__CBE>
               |_DAC${instance}CON_CBE_MASK</#if><#if DAC_CON__DACOEN>
               |_DAC${instance}CON_DACOEN_MASK</#if><#if DAC_CON__FLTREN>
@@ -170,9 +170,11 @@ void ${moduleName}_Deinitialize(void)
 void ${moduleName}_Calibrate(void)
 {
     uint32_t *fpdmdac = (uint32_t*)CMP_FPDMDAC_ADDRESS;
-    DACCTRL1bits.POSINLADJ = (uint8_t)((*fpdmdac) & _DACCTRL1_POSINLADJ_MASK) >> _DACCTRL1_POSINLADJ_POSITION;
-    DACCTRL1bits.NEGINLADJ = (uint8_t)((*fpdmdac) & _DACCTRL1_NEGINLADJ_MASK) >> _DACCTRL1_NEGINLADJ_POSITION;
-    DACCTRL1bits.DNLADJ = (uint8_t)((*fpdmdac) & _DACCTRL1_DNLADJ_MASK) >> _DACCTRL1_DNLADJ_POSITION;
+    uint32_t fpdmdac_value = *fpdmdac;
+
+    DACCTRL1bits.POSINLADJ = (uint8_t)((fpdmdac_value & _DACCTRL1_POSINLADJ_MASK) >> _DACCTRL1_POSINLADJ_POSITION);
+    DACCTRL1bits.NEGINLADJ = (uint8_t)((fpdmdac_value & _DACCTRL1_NEGINLADJ_MASK) >> _DACCTRL1_NEGINLADJ_POSITION);
+    DACCTRL1bits.DNLADJ = (uint8_t)((fpdmdac_value & _DACCTRL1_DNLADJ_MASK) >> _DACCTRL1_DNLADJ_POSITION);
     DACCTRL1bits.RREN = 1U;
 }
 
