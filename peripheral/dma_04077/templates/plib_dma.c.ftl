@@ -68,28 +68,18 @@
 
 // DMAxCH Source Address Mode Selection Options
 <#list sourceAddressModeBits as options>
-#define DMA${i}CH_SAMODE_${options}          ((uint16_t)(_DMA${i}CH_SAMODE_MASK & ((uint16_t)(${options_index}) << _DMA${i}CH_SAMODE_POSITION)))
+#define DMA${i}CH_SAMODE_${options}          ((uint32_t)(_DMA${i}CH_SAMODE_MASK & ((uint32_t)(${options_index}) << _DMA${i}CH_SAMODE_POSITION)))
 </#list>
 
 // DMAxCH Destination Address Mode Selection Options
 <#list destinationAddressModeBits as options>
-#define DMA${i}CH_DAMODE_${options}          ((uint16_t)(_DMA${i}CH_DAMODE_MASK & ((uint16_t)(${options_index}) << _DMA${i}CH_DAMODE_POSITION)))
+#define DMA${i}CH_DAMODE_${options}          ((uint32_t)(_DMA${i}CH_DAMODE_MASK & ((uint32_t)(${options_index}) << _DMA${i}CH_DAMODE_POSITION)))
 </#list>
 
     </#if>
 </#list>
 
 // Section: Global Data
-
-<#if dmaIntEnabled == true>
-<#list 0..MAX_CHANNEL_COUNT as i>
-    <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
-    <#assign DMA_CH_INT_ENABLE = "DMA" + i + "_CH__DONEEN">
-    <#if .vars[DMA_CH_INT_ENABLE]?has_content && .vars[DMA_CH_INT_ENABLE] == true && .vars[DMA_CH_INT_ENABLE]?has_content && .vars[DMA_CH_INT_ENABLE] == true >
-void DMA${i}_InterruptHandler (void);
-    </#if>
-</#list>
-</#if>
 
 volatile static ${dmaModuleName}_CHANNEL_OBJECT  dmaChannelObj[${dmaModuleName}_NUMBER_OF_CHANNELS];
 
@@ -107,7 +97,7 @@ void ${dmaModuleName}_Initialize( void )
     <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
             <#lt>    dmaChannelObj[${dmaModuleName}_CHANNEL_${i}].inUse      =    false;
             <#lt>    dmaChannelObj[${dmaModuleName}_CHANNEL_${i}].callback   =    NULL;
-            <#lt>    dmaChannelObj[${dmaModuleName}_CHANNEL_${i}].context    =    (uintptr_t)NULL;
+            <#lt>    dmaChannelObj[${dmaModuleName}_CHANNEL_${i}].context    =    0U;
 
     </#if>
 </#list>
@@ -130,7 +120,7 @@ void ${dmaModuleName}_Initialize( void )
          | _DMA${i}CH_DONEEN_MASK</#if><#if .vars["DMA"+i+"_CH__HALFEN"] == true>
          | _DMA${i}CH_HALFEN_MASK</#if>);
 
-    DMA${i}SEL = (uint32_t)(0x${.vars["DMA"+i+"_SEL__CHSEL"]} << _DMA${i}SEL_CHSEL_POSITION);
+    DMA${i}SEL = (uint32_t)0x${.vars["DMA"+i+"_SEL__CHSEL"]} << _DMA${i}SEL_CHSEL_POSITION;
     </#if>
 </#list>
 
@@ -206,7 +196,9 @@ bool ${dmaModuleName}_ChannelTransfer(${dmaModuleName}_CHANNEL channel, const vo
 
             </#if>
         </#list>
-            default:break;
+            default:
+                /* Invalid channel, do nothing */ 
+                break;
         }
     }
 
@@ -230,7 +222,9 @@ void ${dmaModuleName}_ChannelPatternMatchSetup(${dmaModuleName}_CHANNEL channel,
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
 }
 
@@ -248,7 +242,9 @@ void ${dmaModuleName}_ChannelEnable(${dmaModuleName}_CHANNEL channel)
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
 }
 
@@ -266,7 +262,9 @@ void ${dmaModuleName}_ChannelDisable (${dmaModuleName}_CHANNEL channel)
 
         </#if>
     </#list>
-        default: break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
 }
 
@@ -283,7 +281,9 @@ void ${dmaModuleName}_ChannelPatternMatchEnable(${dmaModuleName}_CHANNEL channel
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
 }
 
@@ -300,7 +300,9 @@ void ${dmaModuleName}_ChannelPatternMatchDisable(${dmaModuleName}_CHANNEL channe
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
 }
 
@@ -313,12 +315,14 @@ bool ${dmaModuleName}_IsSoftwareRequestPending(${dmaModuleName}_CHANNEL channel)
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
         <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
         case ${dmaModuleName}_CHANNEL_${i}:
-                status = DMA${i}CHbits.CHREQ;
+                status = (DMA${i}CHbits.CHREQ != 0U);
                 break;
 
         </#if>
     </#list>
-        default: break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
     return status;
 }
@@ -336,7 +340,9 @@ void ${dmaModuleName}_ChannelSoftwareTriggerEnable(${dmaModuleName}_CHANNEL chan
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
 }
 
@@ -354,7 +360,9 @@ uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL ch
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
     return count;
 }
@@ -368,15 +376,19 @@ bool ${dmaModuleName}_ChannelIsBusy (${dmaModuleName}_CHANNEL channel)
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
         <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
         case ${dmaModuleName}_CHANNEL_${i}:
-            if ((DMA${i}STATbits.DONE == 0) && (dmaChannelObj[${i}].inUse == true))
+            if (DMA${i}STATbits.DONE == 0U)  
             {
-                busy_check = true;
+                if (dmaChannelObj[${i}].inUse) 
+                {
+                    busy_check = true;
+                }
             }
             break;
 
         </#if>
     </#list>
         default:
+            /* Invalid channel, do nothing */ 
             break;
     }
     return busy_check;
@@ -396,7 +408,9 @@ DMA_CHANNEL_CONFIG ${dmaModuleName}_ChannelSettingsGet(${dmaModuleName}_CHANNEL 
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
     return setting;
 }
@@ -417,7 +431,9 @@ bool ${dmaModuleName}_ChannelSettingsSet(${dmaModuleName}_CHANNEL channel, DMA_C
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */ 
+            break;
     }
     return status;
 }
