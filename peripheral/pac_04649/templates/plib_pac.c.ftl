@@ -96,35 +96,37 @@ void PAC_PeripheralProtectSetup(PAC_PERIPHERAL peripheral, PAC_PROTECTION operat
     uint32_t lockBitMask;
     uint32_t writeEnableBitMask;
 
-    if (peripheral < 16U) 
+    if (peripheral < 16U)
     {
-        PACCONx = (volatile uint32_t *)((uint32_t)&PACCON1);
-        periMask = (uint32_t)peripheral;
-    } 
-    else 
-    {
-        PACCONx = (volatile uint32_t *)((uint32_t)&PACCON2);
-        periMask = (uint32_t)peripheral - 16U; 
+        PACCONx = &PACCON1;
+        periMask = (uint32_t)(peripheral); /* Ensure periMask stays within range */
     }
-    lockBitMask = periMask;        
-    writeEnableBitMask = periMask + 16U; 
+    else
+    {
+        PACCONx = &PACCON2;
+        periMask = (uint32_t)(peripheral - 16U);
+    }
+
+    lockBitMask = periMask;
+    writeEnableBitMask = (uint32_t)(periMask + 16U); /* Explicit cast ensures correct type */
 
     switch (operation)
     {
         case PAC_PROTECTION_SET:
-            *PACCONx &= ~(1U << writeEnableBitMask);
+            *PACCONx &= ~((uint32_t)1 << writeEnableBitMask);
             break;
 
         case PAC_PROTECTION_SET_AND_LOCK:
-            *PACCONx |= (1U << lockBitMask); 
-            *PACCONx &= ~(1U << writeEnableBitMask); 
+            *PACCONx |= ((uint32_t)1 << lockBitMask);
+            *PACCONx &= ~((uint32_t)1 << writeEnableBitMask);
             break;
 
         case PAC_PROTECTION_CLEAR:
-            *PACCONx |= (1U << writeEnableBitMask);
+            *PACCONx |= ((uint32_t)1 << writeEnableBitMask);
             break;
 
         default:
+            /* Do nothing */
             break;
     }
 }
