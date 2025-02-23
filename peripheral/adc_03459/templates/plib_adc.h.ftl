@@ -484,6 +484,9 @@ inline static void ${moduleName}_IndividualChannelInterruptPrioritySet(${moduleN
 </#if>
 void ${moduleName}_ChannelCallbackRegister(${moduleName}_CHANNEL channel,ADC_CHANNEL_CALLBACK callback,uintptr_t context);
 
+<#list 0..maxChannel as i>
+<#if (.vars["ch"+i+"cmpUsed"]??) && (.vars["ch"+i+"cmpUsed"] == true)>
+<#if (.vars["cmp"+i+"IntEnable"]) == true>
 <#if generateDoxygen>
 /**
  * @brief      This function can be used to define custom callback for ${moduleName} Comparator event
@@ -496,15 +499,10 @@ void ${moduleName}_ChannelCallbackRegister(${moduleName}_CHANNEL channel,ADC_CHA
 </#if>
 void ${moduleName}_ComparatorCallbackRegister(${moduleName}_CHANNEL channel,ADC_CMP_CALLBACK callback,uintptr_t context);
 
-<#if generateDoxygen>
-/**
- * @brief    Calibrates the ${moduleName} Core
- * @pre      none 
- * @param    none
- * @return   none  
- */
+<#break>
 </#if>
-void ${moduleName}_SharedCoreCalibration(void);
+</#if>
+</#list>
 
 <#if generateDoxygen>
 /**

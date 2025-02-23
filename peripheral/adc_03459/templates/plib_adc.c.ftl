@@ -194,14 +194,6 @@ ${regPorSet}
 }
 
 <#if isChannelSelected == true>
-void ${moduleName}_SharedCoreCalibration (void) 
-{
-    AD${instance}CONbits.CALREQ = 1U;    
-    while(AD${instance}CONbits.CALRDY == 0U)
-    {
-    }  
-}
-
 static uint16_t ${moduleName}_TriggerSourceValueGet(${moduleName}_PWM_INSTANCE pwmInstance, ADC_PWM_TRIGGERS triggerNumber)
 {
     uint16_t adcTriggerSourceValue = 0x0U;
@@ -255,11 +247,18 @@ void ${moduleName}_ChannelCallbackRegister(ADC${instance}_CHANNEL channel,ADC_CH
     ${moduleName?lower_case}ChannelObj[channel].context = context;
 } 
 
+<#list 0..maxChannel as i>
+<#if (.vars["ch"+i+"cmpUsed"]??) && (.vars["ch"+i+"cmpUsed"] == true)>
+<#if (.vars["cmp"+i+"IntEnable"]) == true>
 void ${moduleName}_ComparatorCallbackRegister(ADC${instance}_CHANNEL channel,ADC_CMP_CALLBACK callback,uintptr_t context)
 {
     ${moduleName?lower_case}CmpObj[channel].callback = callback;
     ${moduleName?lower_case}CmpObj[channel].context = context;
 }
+<#break>
+</#if>
+</#if>
+</#list>
 
 <#list 0..maxChannel as i>
 <#if (.vars["ch"+i+"channelUsed"]??) && (.vars["ch"+i+"channelUsed"] == true)>
@@ -282,6 +281,7 @@ void ${.vars["ch"+i+"IsrHandlerName"]}(void)
 </#list>
 <#list 0..maxChannel as i>
 <#if (.vars["ch"+i+"cmpUsed"]??) && (.vars["ch"+i+"cmpUsed"] == true)>
+<#if (.vars["cmp"+i+"IntEnable"]) == true>
 void ${.vars["cmp"+i+"IsrHandlerName"]}(void)
 {
     if(${moduleName?lower_case}CmpObj[${i}].callback != NULL)
@@ -294,6 +294,7 @@ void ${.vars["cmp"+i+"IsrHandlerName"]}(void)
     //clear the CMP ${i} interrupt flag
     ${.vars["cmp"+i+"InterruptFlagBit"]} = 0U;
 }
+</#if>
 </#if>
 </#list>
 
