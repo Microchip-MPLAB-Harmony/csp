@@ -436,6 +436,7 @@ def instantiateComponent(i2cComponent):
     i2cHostCommonHeaderFile.setDestPath("peripheral/i2c/host")
     i2cHostCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/host")
     i2cHostCommonHeaderFile.setType("HEADER")
+    i2cHostCommonHeaderFile.setMarkup(True)
     i2cHostCommonHeaderFile.setEnabled(True)
     i2cHostCommonHeaderFile.setDependencies(hostFilesGeneration, [OPERATING_MODE])
 
@@ -465,6 +466,7 @@ def instantiateComponent(i2cComponent):
     i2cClientCommonHeaderFile.setDestPath("peripheral/i2c/client")
     i2cClientCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/client")
     i2cClientCommonHeaderFile.setType("HEADER")
+    i2cClientCommonHeaderFile.setMarkup(True)
     i2cClientCommonHeaderFile.setEnabled(False)
     i2cClientCommonHeaderFile.setDependencies(clientFilesGeneration, [OPERATING_MODE])
 

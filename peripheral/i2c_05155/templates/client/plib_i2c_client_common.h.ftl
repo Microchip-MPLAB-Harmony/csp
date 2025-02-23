@@ -114,7 +114,7 @@ typedef enum
     #pragma GCC diagnostic pop
     </#if>
 </#if>
-  /* MISRAC 2012 deviation block end */
+ /* MISRAC 2012 deviation block end */
 
 /**  
  * @summary         I2C Client Transfer Event Enums
