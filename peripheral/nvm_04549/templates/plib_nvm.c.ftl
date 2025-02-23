@@ -77,7 +77,6 @@ typedef enum
 
 <#if INTERRUPT_ENABLE == true>
 volatile static nvmCallbackObjType ${NVM_INSTANCE_NAME?lower_case}CallbackObj;
-void __attribute__((used)) ${NVM_INSTANCE_NAME}_InterruptHandler( void );
 </#if>
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -129,7 +128,7 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
      *    write-protected
      **************************************************************************/
 
-    NVMCON = operation;
+    NVMCON = (uint32_t)operation;
 
 <#if INTERRUPT_ENABLE == true>
     //Enable interrupt just before initiating the write
