@@ -124,10 +124,6 @@ volatile static SPI_CLIENT_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 /* Forward declarations */
 static void ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context);
 
-void ${rxIsrHandlerName} (void);
-void ${errorIsrHandlerName} (void);
-void ${txIsrHandlerName} (void);
-
 static void mem_copy(volatile void* pDst, volatile void* pSrc, uint32_t nBytes)
 {
     volatile uint8_t* pSource = (volatile uint8_t*)pSrc;
@@ -421,16 +417,20 @@ void __attribute__((used)) ${txIsrHandlerName} (void)
 
 void __attribute__((used)) ${rxIsrHandlerName} (void)
 {
+    uint32_t receivedData = 0;
+
     ${SPI_INSTANCE_NAME?lower_case}Obj.rxInterruptActive = true;
 
     size_t rdInIndex = ${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex;
 
     while (!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK))
     {
+        /* Receive buffer is not empty. Read the received data. */
+        receivedData = ${SPI_INSTANCE_NAME}BUF;
+
         if (rdInIndex < (uint32_t)${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
         {
-            /* Receive buffer is not empty. Read the received data. */
-            ${SPI_INSTANCE_NAME}_ReadBuffer[rdInIndex] = ${SPI_INSTANCE_NAME}BUF;
+            ${SPI_INSTANCE_NAME}_ReadBuffer[rdInIndex] = (uint8_t)receivedData;
             rdInIndex++;
         }
     }

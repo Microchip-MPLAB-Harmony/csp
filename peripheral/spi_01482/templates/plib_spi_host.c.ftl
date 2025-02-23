@@ -51,10 +51,6 @@
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save SPI Exchange related data */
 volatile static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
-
-void ${rxIsrHandlerName} (void);
-void ${errorIsrHandlerName} (void);
-void ${txIsrHandlerName} (void);
 </#if>
 
 // *****************************************************************************
@@ -229,6 +225,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
     size_t rxCount = 0U;
     size_t dummySize = 0U;
     size_t dummyRxCntr = 0U;
+    size_t receivedData;
     bool isSuccess = false;
 
     /* Verify the request */
@@ -288,10 +285,12 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 /* If data is read, wait for the Receiver Data the data to become available */
                 if (${SPI_INSTANCE_NAME}STATbits.SPIRBE == false)
                 {
+                    /* We have data waiting in the SPI buffer */
+                    receivedData = ${SPI_INSTANCE_NAME}BUF;
                     if (rxCount < rxSize)
                     {
                         /* We have data waiting in the SPI buffer */
-                        ((uint8_t*)pReceiveData)[rxCount]  = ${SPI_INSTANCE_NAME}BUF;
+                        ((uint8_t*)pReceiveData)[rxCount]  = (uint8_t)receivedData;
                         rxCount++;
                     }
                 }
@@ -302,7 +301,10 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         {
             if (${SPI_INSTANCE_NAME}STATbits.SPIRBE == false)
             {
-                ((uint8_t*)pReceiveData)[rxCount]  = ${SPI_INSTANCE_NAME}BUF;
+                /* We have data waiting in the SPI buffer */
+                receivedData = ${SPI_INSTANCE_NAME}BUF;
+
+                ((uint8_t*)pReceiveData)[rxCount]  = (uint8_t)receivedData;
                 rxCount++;
             }
         }
@@ -348,12 +350,18 @@ static void SPI_FIFO_Fill(void)
 {
     uint8_t nDataCopiedToFIFO = 0U;
 
-    while ((nDataCopiedToFIFO < ${SPI_INSTANCE_NAME}_FIFO_SIZE) && (${SPI_INSTANCE_NAME}STATbits.SPITBF == 0U))
+    size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
+
+    while (nDataCopiedToFIFO < ${SPI_INSTANCE_NAME}_FIFO_SIZE)
     {
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        if(${SPI_INSTANCE_NAME}STATbits.SPITBF != 0U)
         {
-            ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
-            ${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+            break;     /* Exit loop if buffer is full */
+        }
+        if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        {
+            ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+            txCount++;
         }
         else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
         {
@@ -366,6 +374,7 @@ static void SPI_FIFO_Fill(void)
         }
         nDataCopiedToFIFO++;
     }
+    ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
 }
 
 bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
@@ -449,7 +458,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         {
             if(rxSize < ${SPI_INSTANCE_NAME}_FIFO_SIZE)
             {
-                ${SPI_INSTANCE_NAME}IMSKbits.RXMSK = rxSize;
+                ${SPI_INSTANCE_NAME}IMSKbits.RXMSK = (uint8_t)rxSize;
             }
             else
             {
@@ -490,7 +499,8 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
 void __attribute__((used)) ${rxIsrHandlerName} (void)
 {
-    uint32_t nRxPending;
+    uint32_t nRxPending = 0;
+    uint32_t receivedData = 0;
 
     /* Check Receive Buffer Element Count for watermark interrupt */
     if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_RXELM_MASK) != 0U)
@@ -502,7 +512,9 @@ void __attribute__((used)) ${rxIsrHandlerName} (void)
             if (rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
             {
                 /* Receive buffer is not empty. Read the received data. */
-                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = ${SPI_INSTANCE_NAME}BUF;
+                receivedData = ${SPI_INSTANCE_NAME}BUF;
+
+                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = (uint8_t)receivedData;
                 rxCount++;
 
                 ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxCount;
@@ -537,7 +549,7 @@ void __attribute__((used)) ${rxIsrHandlerName} (void)
 
             if(nRxPending <= ${SPI_INSTANCE_NAME}_FIFO_SIZE)
             {
-                ${SPI_INSTANCE_NAME}IMSKbits.RXMSK = nRxPending;
+                ${SPI_INSTANCE_NAME}IMSKbits.RXMSK = (uint8_t)nRxPending;
             }
             else
             {
@@ -608,8 +620,12 @@ void __attribute__((used)) ${txIsrHandlerName} (void)
     {
         size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
 
-        while ((txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (!${SPI_INSTANCE_NAME}STATbits.SPITBF))
+        while (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
         {
+            if(${SPI_INSTANCE_NAME}STATbits.SPITBF != 0U)
+            {
+                break;     /* Exit loop if buffer is full */
+            }
             ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
             txCount++;
 
