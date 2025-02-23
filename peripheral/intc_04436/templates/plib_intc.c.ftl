@@ -54,13 +54,6 @@
     </#if>
 </#list>
 
-<#list 0..MAX_EXTERNAL_INT_COUNT as i>
-    <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
-    <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
-void INT${i}_InterruptHandler(void);
-    </#if>
-</#list>
-
 void ${moduleNameUpperCase}_Initialize( void )
 {
 <#if getInterruptPriorityData != "">
@@ -124,7 +117,7 @@ void ${moduleNameUpperCase}_SourceStatusClear( INT_SOURCE source )
 
 void ${moduleNameUpperCase}_Enable( void )
 {
-    __builtin_enable_interrupts();
+    (void)__builtin_enable_interrupts();
 }
 
 bool ${moduleNameUpperCase}_Disable( void )
@@ -132,9 +125,9 @@ bool ${moduleNameUpperCase}_Disable( void )
     bool processorStatus;
     
     /* Save the current processor status and then Disable the global interrupt */
-    processorStatus = ${GIEStatusbit};
+    processorStatus = (${GIEStatusbit} != 0U);
             
-    __builtin_disable_interrupts();
+    (void)__builtin_disable_interrupts();
 
     /* return the processor status */
     return processorStatus;
@@ -145,7 +138,7 @@ void ${moduleNameUpperCase}_Restore( bool state )
     if (state)
     {
         /* restore the state of Global Interrupts before the disable occurred */
-       __builtin_enable_interrupts();
+       (void)__builtin_enable_interrupts();
     }
 }
 
