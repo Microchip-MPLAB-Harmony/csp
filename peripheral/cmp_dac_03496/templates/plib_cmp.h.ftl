@@ -234,7 +234,7 @@ inline static void ${moduleName}_DACSlopeWrite(uint16_t slopeRate)
 </#if>
 inline static void ${moduleName}_DACSlopeUpdateMode(CMP_DAC_SLOPE_UPDATE_MODE updateMode)
 {
-    DAC${instance}CONbits.EXTUPD = updateMode;
+    DAC${instance}CONbits.EXTUPD = (uint8_t)updateMode;
 }
 
 </#if>

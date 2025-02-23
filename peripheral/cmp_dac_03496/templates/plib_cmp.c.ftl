@@ -98,8 +98,7 @@
 // Section: Global Data
 
 <#if cmpIntEnable>
-volatile static CMP_OBJECT ${moduleName?lower_case}Obj;
-void ${cmpIsrHandlerName}(void);
+static volatile CMP_OBJECT ${moduleName?lower_case}Obj;
 
 </#if>
 // Section: ${moduleName} Module APIs
@@ -171,9 +170,9 @@ void ${moduleName}_Deinitialize(void)
 void ${moduleName}_Calibrate(void)
 {
     uint32_t *fpdmdac = (uint32_t*)CMP_FPDMDAC_ADDRESS;
-    DACCTRL1bits.POSINLADJ = ((*fpdmdac) & _DACCTRL1_POSINLADJ_MASK) >> _DACCTRL1_POSINLADJ_POSITION;
-    DACCTRL1bits.NEGINLADJ = ((*fpdmdac) & _DACCTRL1_NEGINLADJ_MASK) >> _DACCTRL1_NEGINLADJ_POSITION;
-    DACCTRL1bits.DNLADJ = ((*fpdmdac) & _DACCTRL1_DNLADJ_MASK) >> _DACCTRL1_DNLADJ_POSITION;
+    DACCTRL1bits.POSINLADJ = (uint8_t)((*fpdmdac) & _DACCTRL1_POSINLADJ_MASK) >> _DACCTRL1_POSINLADJ_POSITION;
+    DACCTRL1bits.NEGINLADJ = (uint8_t)((*fpdmdac) & _DACCTRL1_NEGINLADJ_MASK) >> _DACCTRL1_NEGINLADJ_POSITION;
+    DACCTRL1bits.DNLADJ = (uint8_t)((*fpdmdac) & _DACCTRL1_DNLADJ_MASK) >> _DACCTRL1_DNLADJ_POSITION;
     DACCTRL1bits.RREN = 1U;
 }
 
@@ -189,7 +188,8 @@ void ${cmpIsrHandlerName}(void)
     // ${moduleName} callback function 
     if(${moduleName?lower_case}Obj.callback != NULL)
     {
-      ${moduleName?lower_case}Obj.callback(${moduleName?lower_case}Obj.context);
+        uintptr_t context = ${moduleName?lower_case}Obj.context;
+        ${moduleName?lower_case}Obj.callback(context);
     } 
     
     // clear the ${moduleName} interrupt flag
