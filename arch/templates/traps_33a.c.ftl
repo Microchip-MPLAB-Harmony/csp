@@ -37,9 +37,18 @@
 *******************************************************************************/
 
 // Section: Included Files
-#include <xc.h>
+#include <device.h>
+#include <stdbool.h>
 #include "traps.h"
 
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+
+/* Following MISRA-C rules are deviated in the below code block */
+/* MISRA C-2012 Rule 21.2 - Deviation record ID - H3_MISRAC_2012_R_21_2_DR_1 */
+#pragma coverity compliance block deviate "MISRA C-2012 Rule 21.2"  "H3_MISRAC_2012_R_21_2_DR_1"
+</#if>
 <#if busErrorTrapAvailable == true>
 void _BusErrorTrap(void);
 </#if>
@@ -57,6 +66,9 @@ void _StackErrorTrap(void);
 </#if>
 <#if illegalInstructionTrapAvailable == true>
 void _IllegalInstructionTrap(void);
+</#if>
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
 </#if>
 
 #define ERROR_HANDLER __attribute__((weak,interrupt,no_auto_psv))
@@ -78,7 +90,7 @@ void __attribute__((weak)) ${trapsFileUpperCase}_halt_on_error(uint16_t code)  /
     
     exception_address = PCTRAP;
     
-    while(1)
+    while(true)
     {
         #ifdef __DEBUG
         /* If we are in debug mode, cause a software breakpoint in the debugger */
@@ -88,30 +100,26 @@ void __attribute__((weak)) ${trapsFileUpperCase}_halt_on_error(uint16_t code)  /
 }
 
 <#if stackErrorTrapAvailable == true>
+#define SET_STACK_POINTER(stack) __asm__ volatile ("mov %0, W15" : : "r"(stack))
+
 inline static void use_failsafe_stack(void)
 {
     static uint8_t failsafe_stack[FAILSAFE_STACK_SIZE];
-    asm volatile (
-        "   mov    %[pstack], W15\n"
-        :
-        : [pstack]"r"(failsafe_stack)
-    );
 
+    SET_STACK_POINTER(failsafe_stack);  
+    
     /* Controls where the stack pointer limit is, relative to the end of the
-     * failsafe stack
-     */
-    <#if supressMisraWarning == true>
-    /* cppcheck-suppress misra-c2012-11.4
-    * Assigning stack pointer address location
+    * failsafe stack
     */
-    /* cppcheck-suppress misra-c2012-18.4
-    * Assigning stack pointer address location
-    */
-    </#if>
-    SPLIM = (uint32_t)(((uint8_t *)failsafe_stack) + sizeof(failsafe_stack) - (uint32_t) FAILSAFE_STACK_GUARDSIZE);
+    SPLIM = (uint32_t)(failsafe_stack + sizeof(failsafe_stack) - (uint32_t)FAILSAFE_STACK_GUARDSIZE);
 }
 </#if>
 
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+/* Following MISRA-C rules are deviated in the below code block */
+/* MISRA C-2012 Rule 21.2 - Deviation record ID - H3_MISRAC_2012_R_21_2_DR_1 */
+#pragma coverity compliance block deviate "MISRA C-2012 Rule 21.2"  "H3_MISRAC_2012_R_21_2_DR_1"
+</#if>
 <#if busErrorTrapAvailable == true>
 /** Bus error.**/
 void ERROR_HANDLER _BusErrorTrap(void)
@@ -140,7 +148,7 @@ void ERROR_HANDLER _BusErrorTrap(void)
       TRAPS_halt_on_error(TRAPS_BUS_CPU_INSTR_ERR);
     }
 
-    while(1)
+    while(true)
     {
     }
 }
@@ -182,7 +190,7 @@ void ERROR_HANDLER _GeneralTrap(void)
       TRAPS_halt_on_error(TRAPS_WDT_ERR); 
     }
     </#if>
-    while(1)
+    while(true)
     {
     }
 }
@@ -219,4 +227,7 @@ void ERROR_HANDLER _IllegalInstructionTrap(void)
     ${illegalInstructionTrapStatusBit} = 0;  //Clear the trap flag   
     TRAPS_halt_on_error(TRAPS_ILLEGAL_INSTRUCTION); 
 }
+</#if>
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
 </#if>
