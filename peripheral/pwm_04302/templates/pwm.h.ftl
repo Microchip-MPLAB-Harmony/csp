@@ -59,65 +59,65 @@
 
 <#if generateDoxygen>
 /**
- @enum     ${moduleNameUpperCase}_GENERATOR
  @brief    Defines the PWM generators that are selected from the MCC Harmony User 
            Interface for the PWM output controls.
- @details  The `PWM_GENERATOR` enum represents the different PWM generators available for configuration 
+ @details  These macro's represents the different PWM generators available for configuration 
            through the MCC Harmony User Interface. These values correspond to specific hardware PWM generators 
            that can be used for generating PWM outputs. The generated list in the help documentation may not represent 
-           all the channels but is based on the user's configuration in the MCC Harmony tool.
+           all the generators but is based on the user's configuration in the MCC Harmony tool.
            The user should configure the PWM generators according to their application requirements.
            The generated enum list may vary depending on the specific PWM Generators are enabled in User Interface.
 */
 </#if>
-typedef enum
-{
 <#list 1..MAX_GENERATOR_COUNT as i>
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
-            <#lt>    PWM_GENERATOR_${i} = ${i},      /**< PWM generator ${i}*/
+            <#lt>#define    PWM_GENERATOR_${i}      ${i}U      /**< PWM generator ${i}*/
     </#if>
 </#list>
-    PWM_MAX_GENERATOR
-}${moduleNameUpperCase}_GENERATOR;
+
+typedef uint32_t ${moduleNameUpperCase}_GENERATOR;
 
 <#if generateDoxygen>
 /**
- @enum     ${moduleNameUpperCase}_GENERATOR_INTERRUPT
  @brief    Defines the PWM generator interrupts that are available for the module to use.
  @details  Defines the PWM generator interrupts that are available for the module to use.
 */
 </#if>
-typedef enum 
-{
-    PWM_GENERATOR_INTERRUPT_FAULT         =  1,      /**< PWM Generator Fault Interrupt */ 
-    PWM_GENERATOR_INTERRUPT_CURRENT_LIMIT =  2,      /**< PWM Generator Current Limit Interrupt */
-    PWM_GENERATOR_INTERRUPT_FEED_FORWARD  =  3,      /**< PWM Generator Feed Forward Interrupt */
-    PWM_GENERATOR_INTERRUPT_SYNC          =  4,      /**< PWM Generator Sync Interrupt */
-}${moduleNameUpperCase}_GENERATOR_INTERRUPT;
+#define    PWM_GENERATOR_INTERRUPT_FAULT           1U      /**< PWM Generator Fault Interrupt */ 
+#define    PWM_GENERATOR_INTERRUPT_CURRENT_LIMIT   2U      /**< PWM Generator Current Limit Interrupt */
+#define    PWM_GENERATOR_INTERRUPT_FEED_FORWARD    3U      /**< PWM Generator Feed Forward Interrupt */
+#define    PWM_GENERATOR_INTERRUPT_SYNC            4U      /**< PWM Generator Sync Interrupt */
+
+typedef uint32_t ${moduleNameUpperCase}_GENERATOR_INTERRUPT;
 
 <#if generateDoxygen>
 /**
- @enum     ${moduleNameUpperCase}_TRIGGER_COMPARE
  @brief    Defines the ${moduleNameUpperCase} generator Trigger Compare registers 
            that are available for the module to use.
- @details  This enum defines the registers used to trigger compare events for the PWM generator. 
+ @details  These macro's defines the registers used to trigger compare events for the PWM generator. 
            The trigger compare registers (A, B, C) are used to set the conditions for when the PWM generator should update or trigger an event.
            These registers are essential for controlling the timing and synchronization of the PWM signals and the system's response to those signals.
 */
 </#if>
-typedef enum 
-{
-    PWM_TRIGGER_COMPARE_A = 1,         /**< PWM Trigger Compare A Register */
-    PWM_TRIGGER_COMPARE_B = 2,         /**< PWM Trigger Compare B Register */
-    PWM_TRIGGER_COMPARE_C = 3,         /**< PWM Trigger Compare C Register */
-}${moduleNameUpperCase}_TRIGGER_COMPARE;
+#define    PWM_TRIGGER_COMPARE_A    1U         /**< PWM Trigger Compare A Register */
+#define    PWM_TRIGGER_COMPARE_B    2U         /**< PWM Trigger Compare B Register */
+#define    PWM_TRIGGER_COMPARE_C    3U         /**< PWM Trigger Compare C Register */
+
+typedef uint32_t ${moduleNameUpperCase}_TRIGGER_COMPARE;
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+
+/* Following MISRA-C rules are deviated in the below code block */
+/* MISRA C-2012 Rule 5.4 - Deviation record ID - H3_MISRAC_2012_R_5_4_DR_1 */
+#pragma coverity compliance block deviate "MISRA C-2012 Rule 5.4"  "H3_MISRAC_2012_R_5_4_DR_1"
+</#if>
 
 <#if generateDoxygen>
 /**
- @enum     ${moduleNameUpperCase}_MODES
  @brief    Defines the PWM generator operating modes that are available.
- @details  The `PWM_MODES` enum specifies various operating modes for the PWM generator. 
+ @details  These macro's specifies various operating modes for the PWM generator. 
            These modes control how the PWM signal is generated, including independent edge modes, 
            center-aligned modes, and dual-edge modes. 
            Each mode provides different timing characteristics for the PWM signal, 
@@ -125,46 +125,45 @@ typedef enum
            The modes available in this enum can be selected based on the specific requirements of the application.
 */
 </#if>
-typedef enum 
-{
-    PWM_MODE_INDEPENDENT_EDGE =  0x0,       /**< Independent Edge mode*/
-    PWM_MODE_VARIABLE_PHASE =  0x1,       /**< Variable Phase mode*/
-    PWM_MODE_INDEPENDENT_EDGE_DUAL_OUTPUT =  0x2,       /**< Independent Edge, dual output mode*/
-    PWM_MODE_CENTER_ALIGNED =  0x4,       /**< Center-Aligned mode*/
-    PWM_MODE_DOUBLE_UPDATE_CENTER_ALIGNED =  0x5,       /**< Double-Update Center-Aligned mode*/
-    PWM_MODE_DUAL_EDGE_CENTER_ALIGNED_ONE_UPDATE_CYCLE =  0x6,       /**< Dual Edge Center-Aligned;one update/cycle mode*/
-    PWM_MODE_DUAL_EDGE_CENTER_ALIGNED_TWO_UPDATES_CYCLE =  0x7,       /**< Dual Edge Center-Aligned;two updates/cycle mode*/
-}${moduleNameUpperCase}_MODES;
+#define    PWM_MODE_INDEPENDENT_EDGE                          0x0U       /**< Independent Edge mode*/
+#define    PWM_MODE_VARIABLE_PHASE                            0x1U       /**< Variable Phase mode*/
+#define    PWM_MODE_INDEPENDENT_EDGE_DUAL_OUTPUT              0x2U       /**< Independent Edge, dual output mode*/
+#define    PWM_MODE_CENTER_ALIGNED                            0x4U       /**< Center-Aligned mode*/
+#define    PWM_MODE_DOUBLE_UPDATE_CENTER_ALIGNED              0x5U       /**< Double-Update Center-Aligned mode*/
+#define    PWM_MODE_DUAL_EDGE_CENTER_ALIGNED_ONE_UPDATE_CYCLE     0x6U       /**< Dual Edge Center-Aligned;one update/cycle mode*/
+#define    PWM_MODE_DUAL_EDGE_CENTER_ALIGNED_TWO_UPDATES_CYCLE    0x7U       /**< Dual Edge Center-Aligned;two updates/cycle mode*/
+
+typedef uint32_t ${moduleNameUpperCase}_MODES;
+
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.4"
+</#if>
 
 <#if generateDoxygen>
 /**
- @enum     ${moduleNameUpperCase}_OUTPUT_MODES
  @brief    Defines the PWM generator output modes that are available.
- @details  The `PWM_HS_OUTPUT_MODES` enum defines the different output configurations for the PWM generator. 
+ @details  These macro's defines the different output configurations for the PWM generator. 
            The output modes control whether the PWM signals are generated in complementary, independent, or push-pull mode. 
            These output modes are essential for driving external devices or circuits, and the choice of output mode 
            depends on the hardware and the requirements of the system being controlled.
 */
 </#if>
-typedef enum 
-{
-    COMPLEMENTARY_OUTPUT_MODE = 0x0,         /**< Complementary mode output mode*/
-    INDEPENDENT_OUTPUT_MODE = 0x1,           /**< Independent mode output mode*/
-    PUSH_PULL_OUTPUT_MODE = 0x2,             /**< Push-Pull mode output mode*/
-}${moduleNameUpperCase}_OUTPUT_MODES;
+#define    COMPLEMENTARY_OUTPUT_MODE   0x0U         /**< Complementary mode output mode*/
+#define    INDEPENDENT_OUTPUT_MODE     0x1U         /**< Independent mode output mode*/
+#define    PUSH_PULL_OUTPUT_MODE       0x2U         /**< Push-Pull mode output mode*/
+
+typedef uint32_t ${moduleNameUpperCase}_OUTPUT_MODES;
 
 <#if generateDoxygen>
-/**
- @enum     ${moduleNameUpperCase}_SOURCE_SELECT    
+/**    
  @brief    Defines the PWM generator Master or Independent source selection.
- @details  The `PWM_SOURCE_SELECT` enum allows the user to select whether the PWM generator will operate in a master or independent source. 
+ @details  These macro's allows the user to select whether the PWM generator will operate in a master or independent source. 
 */
 </#if>
-typedef enum 
-{
-    PWM_SOURCE_SELECT_INDEPENDENT = 0,         /**< PWM select Independent PWM as source */
-    PWM_SOURCE_SELECT_MASTER = 1,             /**< PWM select Master as source */
-}${moduleNameUpperCase}_SOURCE_SELECT;
+#define    PWM_SOURCE_SELECT_INDEPENDENT   0U         /**< PWM select Independent PWM as source */
+#define    PWM_SOURCE_SELECT_MASTER        1U         /**< PWM select Master as source */
+
+typedef uint32_t ${moduleNameUpperCase}_SOURCE_SELECT;
 
 <#if generateDoxygen>
 /**
@@ -187,11 +186,11 @@ typedef enum
  *      
  * }
  * 
- * PWM_GENERATOR_EOC_EVENT_CALLBACK callback = my_callback;
+ * PWM_GEN_EOC_EVENT_CALLBACK callback = my_callback;
  * @endcode
  */
 </#if>
-typedef  void (*PWM_GENERATOR_EOC_EVENT_CALLBACK) (${moduleNameUpperCase}_GENERATOR genNum, uintptr_t context);
+typedef  void (*PWM_GEN_EOC_EVENT_CALLBACK) (${moduleNameUpperCase}_GENERATOR genNum, uintptr_t context);
 
 <#if generateDoxygen>
 /**
@@ -202,11 +201,11 @@ typedef  void (*PWM_GENERATOR_EOC_EVENT_CALLBACK) (${moduleNameUpperCase}_GENERA
 </#if>
 typedef struct
 {
-    PWM_GENERATOR_EOC_EVENT_CALLBACK            callback;
+    PWM_GEN_EOC_EVENT_CALLBACK            callback;
     
     uintptr_t                                   context;
     
-}PWM_GENERATOR_EOC_EVENT_CALLBACK_OBJ;
+}PWM_GEN_EOC_EVENT_CALLBACK_OBJ;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -291,7 +290,9 @@ inline static void ${moduleNameUpperCase}_GeneratorEnable(${moduleNameUpperCase}
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }     
 }
 
@@ -322,7 +323,9 @@ inline static void ${moduleNameUpperCase}_GeneratorDisable(${moduleNameUpperCase
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }     
 }
 
@@ -351,11 +354,13 @@ inline static void ${moduleNameUpperCase}_ModeSet(${moduleNameUpperCase}_GENERAT
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
         case PWM_GENERATOR_${i}:
-                PG${i}CONbits.MODSEL = mode; 
+                PG${i}CONbits.MODSEL = (uint8_t)mode; 
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }     
 }
 
@@ -384,11 +389,13 @@ inline static void ${moduleNameUpperCase}_OutputModeSet(${moduleNameUpperCase}_G
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
         case PWM_GENERATOR_${i}:
-                PG${i}IOCONbits.PMOD = outputMode; 
+                PG${i}IOCONbits.PMOD = (uint8_t)outputMode; 
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }     
 }
 
@@ -573,7 +580,9 @@ inline static void ${moduleNameUpperCase}_PeriodSet(${moduleNameUpperCase}_GENER
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }     
 }
 
@@ -615,7 +624,9 @@ inline static void ${moduleNameUpperCase}_DutyCycleSet(${moduleNameUpperCase}_GE
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }     
 }
 
@@ -644,11 +655,13 @@ inline static void ${moduleNameUpperCase}_PhaseSelect(${moduleNameUpperCase}_GEN
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
         case PWM_GENERATOR_${i}:
-                PG${i}CONbits.MPHSEL = source;
+                PG${i}CONbits.MPHSEL = (uint8_t)source;
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -690,7 +703,9 @@ inline static void ${moduleNameUpperCase}_PhaseSet(${moduleNameUpperCase}_GENERA
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }     
 }
 
@@ -723,11 +738,13 @@ inline static void ${moduleNameUpperCase}_OverrideDataSet(${moduleNameUpperCase}
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
         case PWM_GENERATOR_${i}:
-                PG${i}IOCONbits.OVRDAT = overrideData;
+                PG${i}IOCONbits.OVRDAT = (uint8_t)overrideData;
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -760,11 +777,13 @@ inline static void ${moduleNameUpperCase}_OverrideDataHighSet(${moduleNameUpperC
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
         case PWM_GENERATOR_${i}:
-                PG${i}IOCONbits.OVRDAT = (PG${i}IOCONbits.OVRDAT & 0x1) | ((uint8_t)overrideDataHigh << 0x1);
+                PG${i}IOCONbits.OVRDAT = (uint8_t)((PG${i}IOCONbits.OVRDAT & 0x1U) | ((uint8_t)overrideDataHigh << 0x1U));
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -796,11 +815,13 @@ inline static void ${moduleNameUpperCase}_OverrideDataLowSet(${moduleNameUpperCa
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
         case PWM_GENERATOR_${i}:
-                PG${i}IOCONbits.OVRDAT = (PG${i}IOCONbits.OVRDAT & 0x2) | overrideDataLow;
+                PG${i}IOCONbits.OVRDAT = (uint8_t)((PG${i}IOCONbits.OVRDAT & 0x2U) | overrideDataLow);
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -839,7 +860,9 @@ inline static uint16_t ${moduleNameUpperCase}_OverrideDataGet(${moduleNameUpperC
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
     return overrideData;
 }
@@ -872,7 +895,9 @@ inline static void ${moduleNameUpperCase}_OverrideHighEnable(${moduleNameUpperCa
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -904,7 +929,9 @@ inline static void ${moduleNameUpperCase}_OverrideLowEnable(${moduleNameUpperCas
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -936,7 +963,9 @@ inline static void ${moduleNameUpperCase}_OverrideHighDisable(${moduleNameUpperC
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -968,7 +997,9 @@ inline static void ${moduleNameUpperCase}_OverrideLowDisable(${moduleNameUpperCa
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1005,7 +1036,9 @@ inline static void ${moduleNameUpperCase}_DeadTimeLowSet(${moduleNameUpperCase}_
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1042,7 +1075,9 @@ inline static void ${moduleNameUpperCase}_DeadTimeHighSet(${moduleNameUpperCase}
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1079,7 +1114,9 @@ inline static void ${moduleNameUpperCase}_DeadTimeSet(${moduleNameUpperCase}_GEN
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1124,7 +1161,9 @@ inline static void ${moduleNameUpperCase}_TriggerCompareValueSet(${moduleNameUpp
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1169,12 +1208,16 @@ inline static void ${moduleNameUpperCase}_GeneratorInterruptEnable(${moduleNameU
                         case ${moduleNameUpperCase}_GENERATOR_INTERRUPT_SYNC:
                                         ${.vars["pg"+i+"intSyncEnableBit"]} = 1U;
                                         break;                                                        
-                        default:break;  
+                        default:
+                            /* Invalid Interrupt type, do nothing */  
+                            break;  
                 }
                 break;   
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1219,12 +1262,16 @@ inline static void ${moduleNameUpperCase}_GeneratorInterruptDisable(${moduleName
                         case ${moduleNameUpperCase}_GENERATOR_INTERRUPT_SYNC:
                                         ${.vars["pg"+i+"intSyncEnableBit"]} = 0U;
                                         break;                                                        
-                        default:break;  
+                        default:
+                            /* Invalid Interrupt type, do nothing */ 
+                            break;  
                 }
                 break;   
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1269,12 +1316,16 @@ inline static void ${moduleNameUpperCase}_GeneratorEventStatusClear(${moduleName
                         case ${moduleNameUpperCase}_GENERATOR_INTERRUPT_SYNC:
                                         ${.vars["pg"+i+"intSyncStatusBit"]} = 0U;
                                         break;
-                        default:break;  
+                        default:
+                            /* Invalid Interrupt type, do nothing */  
+                            break;  
                 }              
                 break; 
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1311,23 +1362,27 @@ inline static bool ${moduleNameUpperCase}_GeneratorEventStatusGet(${moduleNameUp
         case PWM_GENERATOR_${i}:
                 switch(interrupt) { 
                         case ${moduleNameUpperCase}_GENERATOR_INTERRUPT_FAULT:
-                                        status = ${.vars["pg"+i+"intFaultStatusBit"]};
+                                        status = (${.vars["pg"+i+"intFaultStatusBit"]} != 0U);
                                         break;
                         case ${moduleNameUpperCase}_GENERATOR_INTERRUPT_CURRENT_LIMIT:
-                                        status = ${.vars["pg"+i+"intCurrentLimitStatusBit"]};
+                                        status = (${.vars["pg"+i+"intCurrentLimitStatusBit"]} != 0U);
                                         break;
                         case ${moduleNameUpperCase}_GENERATOR_INTERRUPT_FEED_FORWARD:
-                                        status = ${.vars["pg"+i+"intFeedForwardStatusBit"]};
+                                        status = (${.vars["pg"+i+"intFeedForwardStatusBit"]} != 0U);
                                         break;
                         case ${moduleNameUpperCase}_GENERATOR_INTERRUPT_SYNC:
-                                        status = ${.vars["pg"+i+"intSyncStatusBit"]};
+                                        status = (${.vars["pg"+i+"intSyncStatusBit"]} != 0U);
                                         break;
-                        default:break;  
+                        default:
+                            /* Invalid Interrupt type, do nothing */ 
+                            break;  
                 }              
                 break; 
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
     return status;
 }
@@ -1363,7 +1418,9 @@ inline static void ${moduleNameUpperCase}_SoftwareUpdateRequest(${moduleNameUppe
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 
 }
@@ -1398,11 +1455,13 @@ inline static bool ${moduleNameUpperCase}_SoftwareUpdatePending(${moduleNameUppe
    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true>
         case PWM_GENERATOR_${i}:
-                status = ${.vars["pg"+i+"softwareUpdateReqStatusBit"]};
+                status = (${.vars["pg"+i+"softwareUpdateReqStatusBit"]} != 0U);
                 break;       
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
     return status;
 }
@@ -1447,7 +1506,9 @@ inline static void ${moduleNameUpperCase}_TriggerACompareValueSet(${moduleNameUp
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1493,7 +1554,9 @@ inline static void ${moduleNameUpperCase}_TriggerBCompareValueSet(${moduleNameUp
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1539,7 +1602,9 @@ inline static void ${moduleNameUpperCase}_TriggerCCompareValueSet(${moduleNameUp
                 break;
     </#if>
 </#list>
-        default:break;
+        default:
+            /* Invalid PWM Generator, do nothing */ 
+            break;
     }
 }
 
@@ -1578,7 +1643,7 @@ inline static void ${moduleNameUpperCase}_TriggerCCompareValueSet(${moduleNameUp
 </#if>
 bool ${moduleNameUpperCase}_EOCEventCallbackRegister(
     PWM_GENERATOR genNum,
-    const PWM_GENERATOR_EOC_EVENT_CALLBACK callback,
+    const PWM_GEN_EOC_EVENT_CALLBACK callback,
     uintptr_t context );
 </#if>
 

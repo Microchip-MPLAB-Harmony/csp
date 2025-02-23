@@ -5,9 +5,9 @@
 <#assign pgxMSTENOptions = ["DISABLED","ENABLED"]>
 <#assign pgxPWMDataRegisterUpdateModeOptions  = ["SOC","IMMEDIATE","CLIENT_SOC","CLIENT_IMMEDIATE"]>
 <#assign pgxtriggerModeSelectionOptions  = ["SINGLE_TRIGGER_MODE","RETRIGGRERABLE_MODE"]>
-<#assign pgxPWMStartofCycleSelectionbitOptions  = ["LOCAL_EOC","TRIG_OUTPUT_SEL_BY_PG1_OR_PG5","TRIG_OUTPUT_SEL_BY_PG2_OR_PG6","TRIG_OUTPUT_SEL_BY_PG3_OR_PG7","TRIG_OUTPUT_SEL_BY_PG4_OR_PG8","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","TRIG_BIT_OR_PCI_SYNC_FN_ONLY"]>
+<#assign pgxPWMStartofCycleSelectionbitOptions  = ["LOCAL_EOC","TRIG_OP_BY_PG1_OR_PG5","TRIG_OP_BY_PG2_OR_PG6","TRIG_OP_BY_PG3_OR_PG7","TRIG_OP_BY_PG4_OR_PG8","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","RESERVED","TRIG_BIT_OR_PCI_SYNC_FN_ONLY"]>
 <#assign pgxPWMCLKSELbitOptions = ["NO_CLOCK", "MASTER_CLOCK_BY_MCLKSEL", "MASTER_CLOCK_DIVIDER", "MASTER_CLOCK_FREQ_SCALING"]>
-<#assign pgxPWMMODSELbitOptions = ["INDEPENDENT_EDGE_PWM_MODE","VARIABLE_PHASE_PWM_MODE","INDEPENDENT_EDGE_PWM_MODE_DUAL_OUTPUT","RESERVED","CENTER_ALIGNED_PWM_MODE","DOUBLE_UPDATE_CENTER_ALIGNED_PWM_MODE","DUAL_EDGE_CENTER_ALIGNED_PWM_MODE_ONE_UPDATE_CYCLE","DUAL_EDGE_CENTER_ALIGNED_PWM_MODE_TWO_UPDATE_CYCLE"]>
+<#assign pgxPWMMODSELbitOptions = ["INDEPENDENT_EDGE","VARIABLE_PHASE","INDEPENDENT_EDGE_DUAL_OUTPUT","RESERVED","CENTER_ALIGNED","DOUBLE_UPDATE_CENTER_ALIGNED","DUALEDGE_CA_ONE_UPDATE_CYCLE","DUALEDGE_CA_TWO_UPDATE_CYCLE"]>
 <#assign pgxPWMPMODbitOptions = ["COMPLEMENTARY_MODE","INDEPENDENT_MODE","PUSH_PULL_MODE","RESERVED"]>
 <#assign pgxPWMPOLHOptions = ["ACTIVE_HIGH","ACTIVE_LOW"]>
 <#assign pgxPWMPOLLOptions = ["ACTIVE_HIGH","ACTIVE_LOW"]>
@@ -230,15 +230,7 @@
     <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
     <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
     <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
-        <#lt>volatile static PWM_GENERATOR_EOC_EVENT_CALLBACK_OBJ pwmGen${i}CbObj;
-    </#if>
-</#list>
-
-<#list 1..MAX_GENERATOR_COUNT as i>
-    <#assign PWM_GEN_ENABLE = "PG" + i + "_ENABLE">
-    <#assign PWM_GEN_INT_ENABLE = "PG" + i + "_intEnabled">
-    <#if .vars[PWM_GEN_ENABLE]?has_content && .vars[PWM_GEN_ENABLE] == true && .vars[PWM_GEN_INT_ENABLE]?has_content && .vars[PWM_GEN_INT_ENABLE] == true>
-void PWM${i}_InterruptHandler(void);
+        <#lt>volatile static PWM_GEN_EOC_EVENT_CALLBACK_OBJ pwmGen${i}CbObj;
     </#if>
 </#list>
 
@@ -268,15 +260,15 @@ void ${moduleNameUpperCase}_Initialize (void)
             |PG${i}IOCON_SWAP_${pgxPWMSWAPOptions[.vars["PG"+i+"_PG_IOCON__SWAP"]?number]}
             |PG${i}IOCON_OVRENH_${pgxPWMOVRENHOptions[.vars["PG"+i+"_PG_IOCON__OVRENH"]?number]}
             |PG${i}IOCON_OVRENL_${pgxPWMOVRENLOptions[.vars["PG"+i+"_PG_IOCON__OVRENL"]?number]}
-            |(uint32_t)(0x${.vars["PG"+i+"_PG_IOCON__OVRDAT"]} << _PG${i}IOCON_OVRDAT_POSITION)
+            |(uint32_t)0x${.vars["PG"+i+"_PG_IOCON__OVRDAT"]} << _PG${i}IOCON_OVRDAT_POSITION
             |PG${i}IOCON_OSYNC_${pgxPWMOSYNCOptions[.vars["PG"+i+"_PG_IOCON__OSYNC"]?number]}
-            |(uint32_t)(0x${.vars["PG"+i+"_PG_IOCON__FLTDAT"]} << _PG${i}IOCON_FLTDAT_POSITION));
+            |(uint32_t)0x${.vars["PG"+i+"_PG_IOCON__FLTDAT"]} << _PG${i}IOCON_FLTDAT_POSITION);
             
     PG${i}EVT = (PG${i}EVT_ADTR2EN3_${pgxADTR2EN3Options[.vars["PG"+i+"_PG_EVT__ADTR2EN3"]?number]}
             |PG${i}EVT_ADTR2EN2_${pgxADTR2EN2Options[.vars["PG"+i+"_PG_EVT__ADTR2EN2"]?number]}
             |PG${i}EVT_ADTR2EN1_${pgxADTR2EN1Options[.vars["PG"+i+"_PG_EVT__ADTR2EN1"]?number]}
-            |(uint32_t)(0x${.vars["PG"+i+"_ADTR1OFS"]} << _PG${i}EVT_ADTR1OFS_POSITION)
-            |(uint32_t)(0x${.vars["PG"+i+"_ADTR1PS"]} << _PG${i}EVT_ADTR1PS_POSITION)
+            |(uint32_t)0x${.vars["PG"+i+"_ADTR1OFS"]} << _PG${i}EVT_ADTR1OFS_POSITION
+            |(uint32_t)0x${.vars["PG"+i+"_ADTR1PS"]} << _PG${i}EVT_ADTR1PS_POSITION
             |PG${i}EVT_ADTR1EN3_${pgxADTR1EN3Options[.vars["PG"+i+"_PG_EVT__ADTR1EN3"]?number]}
             |PG${i}EVT_ADTR1EN2_${pgxADTR1EN2Options[.vars["PG"+i+"_PG_EVT__ADTR1EN2"]?number]}
             |PG${i}EVT_ADTR1EN1_${pgxADTR1EN1Options[.vars["PG"+i+"_PG_EVT__ADTR1EN1"]?number]}
@@ -292,7 +284,7 @@ void ${moduleNameUpperCase}_Initialize (void)
     
     PG${i}DT = 0x${.vars["PG"+i+"_PG_DT"]}UL;
     
-    PG${i}FPCI = PG${i}FPCI_PPS_${pgxPCIPolaritySelectOptions[.vars["PG"+i+"_PG_FPCI__PPS"]?number]} | (uint32_t)(0x${.vars["PG"+i+"_PG_FPCI__PSS_HEX"]} << _PG${i}FPCI_PSS_POSITION);
+    PG${i}FPCI = PG${i}FPCI_PPS_${pgxPCIPolaritySelectOptions[.vars["PG"+i+"_PG_FPCI__PPS"]?number]} | (uint32_t)0x${.vars["PG"+i+"_PG_FPCI__PSS_HEX"]} << _PG${i}FPCI_PSS_POSITION;
     
     PG${i}TRIGA = 0x${.vars["PG"+i+"_PG_TRIGA"]}UL;
     
@@ -363,7 +355,7 @@ ${regPorSet}
 <#if intEnabled == true>
 bool ${moduleNameUpperCase}_EOCEventCallbackRegister(
     PWM_GENERATOR genNum,
-    const PWM_GENERATOR_EOC_EVENT_CALLBACK callback,
+    const PWM_GEN_EOC_EVENT_CALLBACK callback,
     uintptr_t context
 )
 {
