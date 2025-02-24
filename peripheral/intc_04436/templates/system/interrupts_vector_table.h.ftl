@@ -57,5 +57,6 @@ void _${.vars[INT_HANDLER]} (void);
 </#list>
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+#pragma GCC diagnostic pop
 </#if>
 </#if>
