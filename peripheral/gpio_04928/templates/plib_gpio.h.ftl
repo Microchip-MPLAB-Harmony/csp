@@ -421,7 +421,7 @@ static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
  */
 static inline bool GPIO_PinRead(GPIO_PIN pin)
 {
-    return (((GPIO_PortRead((GPIO_PORT)(pin>>4))) >> (pin & 0xFU)) & 0x1U);
+    return ((((GPIO_PortRead((GPIO_PORT)(pin>>4))) >> (pin & 0xFU)) & 0x1U) != 0U);
 }
 
 /**
@@ -442,7 +442,7 @@ static inline bool GPIO_PinRead(GPIO_PIN pin)
  */
 static inline bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
-    return ((GPIO_PortLatchRead((GPIO_PORT)(pin>>4)) >> (pin & 0xFU)) & 0x1U);
+    return (((GPIO_PortLatchRead((GPIO_PORT)(pin>>4)) >> (pin & 0xFU)) & 0x1U) != 0U);
 }
 
 /**

@@ -116,18 +116,6 @@
 </#if>
 
 
-
-<#list 0..GPIO_CHANNEL_TOTAL-1 as i>
-    <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
-    <#assign channelIfs = "GPIO_CHANNEL_" + i + "_IFS">
-    <#if .vars[channel]?has_content>
-		<#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
-void CN${.vars[channel]}_InterruptHandler(void);
-</#if>
-</#if>
-</#list>
-
-
 void GPIO_Initialize ( void )
 {
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
