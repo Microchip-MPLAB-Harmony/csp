@@ -52,10 +52,7 @@
 static volatile bool bDataReceived = false;
 
 <#if SENT_INTERRUPT_MODE == true>
-void ${moduleName}_InterruptHandler( void );
-volatile static SENT_RECEIVE_COMPLETE_CALLBACK_OBJECT rxCompleteObj;
-
-void ${moduleName}E_InterruptHandler( void );
+volatile static SENT_RECEIVE_COMPLETE_OBJECT rxCompleteObj;
 volatile static SENT_ERROR_OBJECT rxErrorObj;
 </#if>
 
@@ -191,7 +188,7 @@ bool SENT${SENT_INSTANCE}_IsDataReceived(void)
 
 SENT_RECEIVE_STATUS SENT${SENT_INSTANCE}_ReceiveStatusGet(void)
 {
-    return (SENT${SENT_INSTANCE}STAT);
+    return (SENT_RECEIVE_STATUS)SENT${SENT_INSTANCE}STAT;
 }
 
 SENT_ERROR_CODE ReceiveErrorGet(void)

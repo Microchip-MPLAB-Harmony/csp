@@ -53,9 +53,7 @@
 static volatile bool bDataTransmitted = true;
 
 <#if SENT_INTERRUPT_MODE == true>
-/*ISR for SENT Tx interrupt*/
-void ${moduleName}_InterruptHandler( void );
-volatile static SENT_TRANSMIT_COMPLETE_CALLBACK_OBJECT txCompleteObj;
+volatile static SENT_TRANSMIT_COMPLETE_OBJECT txCompleteObj;
 </#if> 
 
 <#list nibbleLengthOptions as options>
@@ -132,7 +130,7 @@ void SENT${SENT_INSTANCE}_Disable(void)
 
 void SENT${SENT_INSTANCE}_TransmitModeSet(SENT_TRANSMIT_MODE mode)
 {
-  SENT${SENT_INSTANCE}CON1bits.TXM = mode;
+  SENT${SENT_INSTANCE}CON1bits.TXM = (uint8_t)mode;
 }
 
 void SENT${SENT_INSTANCE}_Transmit(const SENT_DATA_TRANSMIT *sentData)
@@ -201,7 +199,7 @@ bool SENT${SENT_INSTANCE}_IsTransmissionComplete(void)
 
 SENT_TRANSMIT_STATUS SENT${SENT_INSTANCE}_TransmitStatusGet(void)
 {
-    return (SENT${SENT_INSTANCE}STAT);
+    return (SENT_TRANSMIT_STATUS)SENT${SENT_INSTANCE}STAT;
 }
 
 <#if SENT_INTERRUPT_MODE == true>

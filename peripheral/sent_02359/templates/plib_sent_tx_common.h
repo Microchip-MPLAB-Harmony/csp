@@ -60,14 +60,14 @@
 
 typedef struct 
 {  
-    uint8_t crc:4;     /**< Defines the CRC field */
-    uint8_t data1:4;   /**< Defines the first data nibble field */       
-    uint8_t data2:4;   /**< Defines the second data nibble field */
-    uint8_t data3:4;   /**< Defines the third data nibble field */
-    uint8_t data4:4;   /**< Defines the fourth data nibble field */
-    uint8_t data5:4;   /**< Defines the fifth data nibble field */
-    uint8_t data6:4;   /**< Defines the sixth data nibble field */
-    uint8_t status:4;  /**< Defines the status field */
+    unsigned int crc:4;     /**< Defines the CRC field */
+    unsigned int data1:4;   /**< Defines the first data nibble field */       
+    unsigned int data2:4;   /**< Defines the second data nibble field */
+    unsigned int data3:4;   /**< Defines the third data nibble field */
+    unsigned int data4:4;   /**< Defines the fourth data nibble field */
+    unsigned int data5:4;   /**< Defines the fifth data nibble field */
+    unsigned int data6:4;   /**< Defines the sixth data nibble field */
+    unsigned int status:4;  /**< Defines the status field */
 }SENT_DATA_TRANSMIT;
 
 // Section: Enum Declarations
@@ -115,7 +115,7 @@ typedef struct
 	SENT_TRANSMIT_COMPLETE_CALLBACK callback_fn;
 	//Context 
     uintptr_t context;
-}SENT_TRANSMIT_COMPLETE_CALLBACK_OBJECT;
+}SENT_TRANSMIT_COMPLETE_OBJECT;
 </#if>
 
 /* Provide C++ Compatibility */
