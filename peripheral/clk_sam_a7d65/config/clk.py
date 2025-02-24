@@ -384,11 +384,8 @@ def update_flexcomm_clock_frequency(symbol, event):
         # Source clock is bus clock
         if source_clock == 0:
             frequency = mck.getValue()
-        # Source clock is bus clock / 8
-        elif source_clock == 1:
-            frequency = mck.getValue() / 8
         # Source clock is GCLK
-        elif source_clock == 2:
+        elif source_clock == 1:
             frequency = gclk.getValue()
         # Source clock is external, set the internal frequency to zero
         else:
