@@ -103,7 +103,7 @@ inline static void OPA${OPAMP_INSTANCE}_Disable( void )
  */
 inline static void OPA${OPAMP_INSTANCE}_UnityGainEnable( bool enable )
 {
-    AMP${OPAMP_INSTANCE}CON1bits.UGE = enable;     
+    AMP${OPAMP_INSTANCE}CON1bits.UGE = (uint8_t)enable;     
 }
 
 /**
@@ -117,7 +117,7 @@ inline static void OPA${OPAMP_INSTANCE}_UnityGainEnable( bool enable )
  */
 inline static void OPA${OPAMP_INSTANCE}_HighPowerModeEnable( bool enable )
 {
-    AMP${OPAMP_INSTANCE}CON1bits.HPEN = enable;     
+    AMP${OPAMP_INSTANCE}CON1bits.HPEN = (uint8_t)enable;     
 }
 
 <#if OPA_IOMONITOR_AVAILABLE?? && OPA_IOMONITOR_AVAILABLE == true>
@@ -133,7 +133,7 @@ inline static void OPA${OPAMP_INSTANCE}_HighPowerModeEnable( bool enable )
  */
 inline static void OPA${OPAMP_INSTANCE}_OutputMonitorEnable( bool enable )
 {
-    AMP${OPAMP_INSTANCE}CON1bits.OMONEN = enable;     
+    AMP${OPAMP_INSTANCE}CON1bits.OMONEN = (uint8_t)enable;     
 }
 </#if>
 
@@ -148,7 +148,7 @@ inline static void OPA${OPAMP_INSTANCE}_OutputMonitorEnable( bool enable )
  */
 inline static void OPA${OPAMP_INSTANCE}_DifferentialInputModeSet(OPA_DIFFERENTIAL_INPUT_MODE input)
 {
-    AMP${OPAMP_INSTANCE}CON1bits.DIFFCON = input;     
+    AMP${OPAMP_INSTANCE}CON1bits.DIFFCON = (uint8_t)input;     
 }
 
 /**
@@ -163,22 +163,23 @@ inline static void OPA${OPAMP_INSTANCE}_OffsetCorrection(OPA_OFFSET_INPUT_TYPE i
      switch(inputType)
     {
         case OPA_PMOS_OFFSET_IN_HIGH_POWER_MODE:
-            AMP${OPAMP_INSTANCE}CON2bits.POFFSETHP = unitVoltage;
+            AMP${OPAMP_INSTANCE}CON2bits.POFFSETHP = (uint8_t)unitVoltage;
             break;
             
         case OPA_NMOS_OFFSET_IN_HIGH_POWER_MODE:
-            AMP${OPAMP_INSTANCE}CON2bits.NOFFSETLP = unitVoltage;
+            AMP${OPAMP_INSTANCE}CON2bits.NOFFSETLP = (uint8_t)unitVoltage;
             break;
             
         case OPA_PMOS_OFFSET_IN_LOW_POWER_MODE:
-            AMP${OPAMP_INSTANCE}CON2bits.POFFSETHP  = unitVoltage;
+            AMP${OPAMP_INSTANCE}CON2bits.POFFSETHP  = (uint8_t)unitVoltage;
             break;
             
         case OPA_NMOS_OFFSET_IN_LOW_POWER_MODE:
-            AMP${OPAMP_INSTANCE}CON2bits.NOFFSETLP  = unitVoltage;
+            AMP${OPAMP_INSTANCE}CON2bits.NOFFSETLP  = (uint8_t)unitVoltage;
             break;
             
         default:
+            /*Do Nothing*/
             break;
     }
 }
