@@ -26,7 +26,6 @@
     <#assign INT_HANDLER  = "INTC_" + i + "_HANDLER">
     <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
 	  <#if !((FREERTOS_ENABLED) && (.vars[INT_HANDLER] == "T1Interrupt"))>
-      <#assign ANY_INTERRUPT_ENABLED = true>
 void _${.vars[INT_HANDLER]} (void);
       </#if>
     </#if>
