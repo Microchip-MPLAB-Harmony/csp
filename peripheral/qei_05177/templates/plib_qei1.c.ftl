@@ -85,10 +85,10 @@ void ${moduleName}_Initialize(void)
 			  |QEI1CON_PIMOD_${PCInitMode[QEI_CON__PIMOD?number]});
 								 
     ${moduleName}IOC = (QEI1IOC_QFDIV_1_${PrescalarOptions[QEI_IOC__QFDIV?number]}<#if QEI_IOC__FLTREN == true>
-              |_QEI1IOC_FLTREN_MASK</#if><#if QEI_IOC__IDXPOL == true>
-              |_QEI1IOC_IDXPOL_MASK</#if><#if QEI_IOC__HOMPOL == true>
-              |_QEI1IOC_HOMPOL_MASK</#if><#if QEI_IOC__QCAPEN == true>
-              |_QEI1IOC_QCAPEN_MASK</#if><#if QEI_IOC__HCAPEN == true>
+              |_QEI1IOC_FLTREN_MASK</#if><#if QEI_IOC__IDXPOL == true && IS_INDEX_PULSE_ENABLED == true>
+              |_QEI1IOC_IDXPOL_MASK</#if><#if QEI_IOC__HOMPOL == true && IS_HOME_SIGNAL_ENABLED == true>
+              |_QEI1IOC_HOMPOL_MASK</#if><#if QEI_IOC__QCAPEN == true && IS_INDEX_PULSE_ENABLED == true>
+              |_QEI1IOC_QCAPEN_MASK</#if><#if QEI_IOC__HCAPEN == true && IS_HOME_SIGNAL_ENABLED == true>
               |_QEI1IOC_HCAPEN_MASK</#if>);
 			                     
     ${moduleName}STAT = 0x0UL;
