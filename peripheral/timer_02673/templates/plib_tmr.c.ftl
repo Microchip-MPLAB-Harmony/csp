@@ -35,7 +35,6 @@
 
 <#if TMR_INTERRUPT_MODE == true>
 volatile static TIMER_OBJECT tmr${TMR_INSTANCE_NUMBER}Obj;
-void T${TMR_INSTANCE_NUMBER}_InterruptHandler (void);
 </#if>
 
 // Section: Macro Definitions
