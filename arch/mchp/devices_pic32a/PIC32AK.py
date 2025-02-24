@@ -175,7 +175,7 @@ def fuseConfigCb(symbol, event):
              bitfieldValue = symbol.getComponent().getSymbolValue("CONFIG_"+bitfieldName)
              if re.match(hexConfigBitPattern, bitfieldName):
                 desc = bitfieldNode[bitfield_index].getAttribute('caption')
-                fuseCodeGenValue += "#pragma config {} = {}            // {}\n".format(bitfieldName, hex(int(bitfieldValue)).rstrip('L'),desc)
+                fuseCodeGenValue += "#pragma config {} = {}            // {}\n".format(bitfieldName, hex(int(bitfieldValue)).rstrip('L')+"UL",desc)
              else:
                 desc = ""
                 if re.match(invalidConfigBitCaptionPattern, bitfieldName):
@@ -244,7 +244,7 @@ for reg_index in range(len(register)):
 
 
         if re.match(hexConfigBitPattern, bitfieldName):
-            fuseCodeGenVal += "#pragma config {} = {}            // {}\n".format(bitfieldName, hex(int(bitfielditem.getValue())).rstrip('L'),description)
+            fuseCodeGenVal += "#pragma config {} = {}            // {}\n".format(bitfieldName, hex(int(bitfielditem.getValue())).rstrip('L') +"UL",description)
         else:
             if re.match(invalidConfigBitCaptionPattern, bitfieldName) is None:
                 description = getConfigBitCaptionValue(bitfieldName, bitfielditem.getValue())
