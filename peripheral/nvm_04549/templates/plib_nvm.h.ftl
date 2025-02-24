@@ -108,7 +108,24 @@ typedef struct
 }nvmCallbackObjType;
 </#if>
 
-typedef uint32_t NVM_ERROR;
+typedef enum
+{
+    /* No error */
+    NVM_ERROR_NONE = 0x0,
+
+    /* NVM write error */
+    NVM_ERROR_WRITE = _NVMCON_WRERR_MASK,
+
+    /* NVM Error reported by Flash panel control logic */
+    NVM_ERROR_CONTROL_LOGIC = 0x30000,
+    
+    /* NVM System bus error during row program operation */
+    NVM_ERROR_SYSTEM_BUS =  0x40000,
+
+    /* NVM Row programming operation not completed due to warm Reset */
+    NVM_ERROR_ROW_PROGRAM = 0x50000
+
+} NVM_ERROR;
 
 <#if generateDoxygen>
 /**
