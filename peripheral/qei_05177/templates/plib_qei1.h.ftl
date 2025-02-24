@@ -257,7 +257,7 @@ inline static void ${moduleName}_ModuloRangeSet(uint32_t countsPerRevolution)
  */
 inline static bool ${moduleName}_PhaseInputSwappedGet(void)
 {
-    return ${moduleName}IOCbits.SWPAB;
+    return (bool)${moduleName}IOCbits.SWPAB;
 }
 
 /**
@@ -441,7 +441,7 @@ inline static void ${moduleName}_PositionCaptureSet(uint32_t initValue)
  */
 inline static void ${moduleName}_CounterModeSet(QEI_MODE mode)
 {
-    ${moduleName}CONbits.PIMOD = mode;
+    ${moduleName}CONbits.PIMOD = (uint8_t)mode;
 }
 
 /**
@@ -470,7 +470,7 @@ inline static void ${moduleName}_CounterModeSet(QEI_MODE mode)
  */
 inline static void ${moduleName}_IMVGatedValueSet(QEI_IMV_STATE state)
 {
-    ${moduleName}CONbits.IMV = state;
+    ${moduleName}CONbits.IMV = (uint8_t)state;
 }
 
 /** 
