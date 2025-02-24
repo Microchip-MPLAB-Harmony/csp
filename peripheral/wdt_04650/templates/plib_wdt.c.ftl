@@ -46,6 +46,8 @@
 
 // Section: ${WDT_INSTANCE_NAME} Implementation
 
+extern void __builtin_clrwdt(void);
+
 <#if (CONFIG_FWDT_WDTEN?? && CONFIG_FWDT_WDTEN == "SW")>
 void ${WDT_INSTANCE_NAME}_Enable( void )
 {
@@ -89,15 +91,12 @@ bool ${WDT_INSTANCE_NAME}_IsWindowEnabled( void )
 
 /* Following MISRA-C rules are deviated in the below code block */
 /* MISRA C-2012 Rule 8.6 - Deviation record ID - H3_MISRAC_2012_R_8_6_DR_1 */
-/* MISRA C-2012 Rule 17.3 - Deviation record ID - H3_MISRAC_2012_R_17_3_DR_1 */
 #pragma coverity compliance block deviate "MISRA C-2012 Rule 8.6"  "H3_MISRAC_2012_R_8_6_DR_1"
-#pragma coverity compliance block deviate "MISRA C-2012 Rule 17.3"  "H3_MISRAC_2012_R_17_3_DR_1"
 </#if>
 void ${WDT_INSTANCE_NAME}_Clear( void )
 {
-    (void)__builtin_clrwdt();
+  __builtin_clrwdt();
 }
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
-#pragma coverity compliance end_block "MISRA C-2012 Rule 17.3"
 </#if>
