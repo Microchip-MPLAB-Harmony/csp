@@ -67,7 +67,7 @@ typedef enum
 {
     
     I2C_CLIENT_ERROR_NONE,  /* No Error */
-    I2C_CLIENT_ERROR_BUS_COLLISION, /* Bus Collision Error */
+    I2C_CLIENT_ERROR_BUS_COLLISION  /* Bus Collision Error */
 
 } I2C_CLIENT_ERROR;
 
@@ -81,7 +81,7 @@ typedef enum
 {
     
     I2C_CLIENT_TRANSFER_DIR_WRITE = 0,      /* I2C Master is writing to client */
-    I2C_CLIENT_TRANSFER_DIR_READ  = 1,      /* I2C Master is reading from client */
+    I2C_CLIENT_TRANSFER_DIR_READ  = 1       /* I2C Master is reading from client */
     
 }I2C_CLIENT_TRANSFER_DIR;
 
@@ -91,30 +91,13 @@ typedef enum
  *                  Enum of this type is returned by the I2Cx_LastByteAckStatusGet() function.
  * @remarks         None
  */
-/* MISRAC 2012 deviation block start */
-/* MISRA C-2012 Rule 5.2 deviated: Deviation record ID -  H3_MISRAC_2012_R_5_2_DR_1 */
-<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
-    <#if core.COMPILER_CHOICE == "XC32">
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-    </#if>
-    #pragma coverity compliance block deviate "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_DR_1"
-</#if>
 typedef enum
 {
     
-    I2C_CLIENT_ACK_STATUS_RECEIVED_ACK = 0,
-    I2C_CLIENT_ACK_STATUS_RECEIVED_NAK,
+    I2C_CLIENT_ACK_STAT_RECEIVED_ACK = 0,
+    I2C_CLIENT_ACK_STAT_RECEIVED_NAK
     
 } I2C_CLIENT_ACK_STATUS;
-<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
-
-    #pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
-    <#if core.COMPILER_CHOICE == "XC32">
-    #pragma GCC diagnostic pop
-    </#if>
-</#if>
- /* MISRAC 2012 deviation block end */
 
 /**  
  * @summary         I2C Client Transfer Event Enums
@@ -130,7 +113,7 @@ typedef enum
     I2C_CLIENT_TRANSFER_EVENT_RX_READY,     /* Data sent by I2C Master is available */
     I2C_CLIENT_TRANSFER_EVENT_TX_READY,     /* I2C client can respond to data read request from I2C Master */
     I2C_CLIENT_TRANSFER_EVENT_STOP_BIT_RECEIVED,    /* I2C stop bit received */
-    I2C_CLIENT_TRANSFER_EVENT_ERROR,
+    I2C_CLIENT_TRANSFER_EVENT_ERROR
 
 } I2C_CLIENT_TRANSFER_EVENT;
 

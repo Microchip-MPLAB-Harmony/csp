@@ -110,12 +110,12 @@ void ${moduleName}_Initialize(void)
 
 void ${moduleName}_Deinitialize(void)
 {
-    /* Turn on the I2C module */
+    /* Turn off the I2C module */
     ${moduleName}CON1bits.ON = 0U;
     
-    /* Enable the I2C Bus collision interrupt */
+    /* Disable the I2C Bus collision interrupt */
     _I2C${instance}EIE = 0U;
-    /* Enable the I2C Client interrupt */
+    /* Disable the I2C Client interrupt */
     _I2C${instance}IE = 0U;
     
     I2C${instance}CON1 = (_I2C${instance}CON1_SCLREL_MASK);
@@ -294,7 +294,7 @@ I2C_CLIENT_TRANSFER_DIR ${moduleName}_TransferDirGet(void)
 
 I2C_CLIENT_ACK_STATUS ${moduleName}_LastByteAckStatusGet(void)
 {
-    return ((I2C${instance}STAT1 & _I2C${instance}STAT1_ACKSTAT_MASK) != 0U) ? I2C_CLIENT_ACK_STATUS_RECEIVED_NAK : I2C_CLIENT_ACK_STATUS_RECEIVED_ACK;
+    return ((I2C${instance}STAT1 & _I2C${instance}STAT1_ACKSTAT_MASK) != 0U) ? I2C_CLIENT_ACK_STAT_RECEIVED_NAK : I2C_CLIENT_ACK_STAT_RECEIVED_ACK;
 }
 
 I2C_CLIENT_ERROR ${moduleName}_ErrorGet(void)
