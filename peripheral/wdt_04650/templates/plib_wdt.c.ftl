@@ -42,7 +42,6 @@
 
 // Section: Included Files
 
-#include "device.h"
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 
 // Section: ${WDT_INSTANCE_NAME} Implementation
@@ -51,13 +50,13 @@
 void ${WDT_INSTANCE_NAME}_Enable( void )
 {
     /* ON = 1 */
-    WDTCONbits.ON = 1;
+    WDTCONbits.ON = 1U;
 }
 
 void ${WDT_INSTANCE_NAME}_Disable( void )
 {
     /* ON = 0 */
-    WDTCONbits.ON = 0;
+    WDTCONbits.ON = 0U;
 }
 
 </#if>
@@ -70,13 +69,13 @@ bool ${WDT_INSTANCE_NAME}_IsEnabled( void )
 void ${WDT_INSTANCE_NAME}_WindowEnable( void )
 {
     /* WINDIS = 0 */
-    WDTCONbits.WINDIS = 0;
+    WDTCONbits.WINDIS = 0U;
 }
 
 void ${WDT_INSTANCE_NAME}_WindowDisable( void )
 {
     /* WINDIS = 1 */
-    WDTCONbits.WINDIS = 1;
+    WDTCONbits.WINDIS = 1U;
 }
 </#if>
 
@@ -84,8 +83,21 @@ bool ${WDT_INSTANCE_NAME}_IsWindowEnabled( void )
 {
     return((bool)WDTCONbits.WINDIS);
 }
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 
+/* Following MISRA-C rules are deviated in the below code block */
+/* MISRA C-2012 Rule 8.6 - Deviation record ID - H3_MISRAC_2012_R_8_6_DR_1 */
+/* MISRA C-2012 Rule 17.3 - Deviation record ID - H3_MISRAC_2012_R_17_3_DR_1 */
+#pragma coverity compliance block deviate "MISRA C-2012 Rule 8.6"  "H3_MISRAC_2012_R_8_6_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2012 Rule 17.3"  "H3_MISRAC_2012_R_17_3_DR_1"
+</#if>
 void ${WDT_INSTANCE_NAME}_Clear( void )
 {
-    ClrWdt();
+    (void)__builtin_clrwdt();
 }
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
+#pragma coverity compliance end_block "MISRA C-2012 Rule 17.3"
+</#if>

@@ -45,6 +45,7 @@
 
 // Section: Included Files
 
+#include "device.h"
 #include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
