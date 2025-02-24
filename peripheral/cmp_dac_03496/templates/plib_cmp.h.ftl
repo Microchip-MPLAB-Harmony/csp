@@ -160,7 +160,7 @@ inline static void ${moduleName}_DACDisable(void)
 </#if>
 inline static void ${moduleName}_DACDataWrite(size_t value)
 {
-    DAC${instance}DATbits.DACDAT = value;
+    DAC${instance}DATbits.DACDAT = (uint16_t)value;
 }
 
 </#if>
