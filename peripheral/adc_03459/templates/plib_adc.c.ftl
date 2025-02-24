@@ -262,6 +262,7 @@ void ${moduleName}_ComparatorCallbackRegister(ADC${instance}_CHANNEL channel,ADC
 
 <#list 0..maxChannel as i>
 <#if (.vars["ch"+i+"channelUsed"]??) && (.vars["ch"+i+"channelUsed"] == true)>
+<#if (.vars["ch"+i+"IntEnable"]) == true>
 void ${.vars["ch"+i+"IsrHandlerName"]}(void)
 {
     uint32_t valChannel${i}Data;
@@ -277,6 +278,7 @@ void ${.vars["ch"+i+"IsrHandlerName"]}(void)
     ${.vars["ch"+i+"InterruptFlagBit"]} = 0U;
 }
 
+</#if>
 </#if>
 </#list>
 <#list 0..maxChannel as i>
