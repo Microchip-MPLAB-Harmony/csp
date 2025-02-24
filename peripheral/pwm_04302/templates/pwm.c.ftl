@@ -70,7 +70,7 @@
 
 
 #include "plib_${moduleNameLowerCase}.h"
-<#if CoreSysIntFile == true>
+<#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
 

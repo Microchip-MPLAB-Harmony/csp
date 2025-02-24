@@ -105,14 +105,6 @@ typedef uint32_t ${moduleNameUpperCase}_GENERATOR_INTERRUPT;
 #define    PWM_TRIGGER_COMPARE_C    3U         /**< PWM Trigger Compare C Register */
 
 typedef uint32_t ${moduleNameUpperCase}_TRIGGER_COMPARE;
-<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-
-/* Following MISRA-C rules are deviated in the below code block */
-/* MISRA C-2012 Rule 5.4 - Deviation record ID - H3_MISRAC_2012_R_5_4_DR_1 */
-#pragma coverity compliance block deviate "MISRA C-2012 Rule 5.4"  "H3_MISRAC_2012_R_5_4_DR_1"
-</#if>
 
 <#if generateDoxygen>
 /**
@@ -130,14 +122,10 @@ typedef uint32_t ${moduleNameUpperCase}_TRIGGER_COMPARE;
 #define    PWM_MODE_INDEPENDENT_EDGE_DUAL_OUTPUT              0x2U       /**< Independent Edge, dual output mode*/
 #define    PWM_MODE_CENTER_ALIGNED                            0x4U       /**< Center-Aligned mode*/
 #define    PWM_MODE_DOUBLE_UPDATE_CENTER_ALIGNED              0x5U       /**< Double-Update Center-Aligned mode*/
-#define    PWM_MODE_DUAL_EDGE_CENTER_ALIGNED_ONE_UPDATE_CYCLE     0x6U       /**< Dual Edge Center-Aligned;one update/cycle mode*/
-#define    PWM_MODE_DUAL_EDGE_CENTER_ALIGNED_TWO_UPDATES_CYCLE    0x7U       /**< Dual Edge Center-Aligned;two updates/cycle mode*/
+#define    PWM_MODE_DUALEDGE_CTR_ALIGNED_ONE_UPDATE_CYCLE     0x6U       /**< Dual Edge Center-Aligned;one update/cycle mode*/
+#define    PWM_MODE_DUALEDGE_CTR_ALIGNED_TWO_UPDATES_CYCLE    0x7U       /**< Dual Edge Center-Aligned;two updates/cycle mode*/
 
 typedef uint32_t ${moduleNameUpperCase}_MODES;
-
-<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
-#pragma coverity compliance end_block "MISRA C-2012 Rule 5.4"
-</#if>
 
 <#if generateDoxygen>
 /**
