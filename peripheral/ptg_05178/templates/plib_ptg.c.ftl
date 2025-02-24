@@ -102,7 +102,7 @@ void ${moduleNameUpperCase}_Initialize (void)
 
     <#list 0..maxStepSequence as j >
 	<#if (.vars["STEP"+j+"_COMMAND"]??) && (.vars["STEP"+j+"_OPTIONS"]??) &&(.vars["STEP"+j+"_OPTION_VALUE"]??)>
-	<#lt> PTG_STEP${j} = ${.vars["STEP"+j+"_COMMAND"]} | 0x${.vars["STEP" + j+ "_OPTION_VALUE"]}U; //${.vars["STEP" + j + "_OPTIONS"]}
+	<#lt> 	PTG_STEP${j} = ${.vars["STEP"+j+"_COMMAND"]} | 0x${.vars["STEP" + j+ "_OPTION_VALUE"]}U; //${.vars["STEP" + j + "_OPTIONS"]}
 	</#if>
 	</#list>
 
