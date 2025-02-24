@@ -64,23 +64,6 @@ volatile static PTG_EVENTS_CALLBACK_OBJECT trigger3Obj;
 volatile static PTG_EVENTS_CALLBACK_OBJECT triggerWdtObj;
 </#if>
 
-
-<#if PTG0Interrupt == true>
-void  ${zeroIsrHandlerName}(void);
-</#if>
-<#if  PTG1Interrupt == true>
-void  ${oneIsrHandlerName}(void);
-</#if>
-<#if  PTG2Interrupt == true>
-void  ${twoIsrHandlerName}(void);
-</#if>
-<#if  PTG3Interrupt == true>
-void  ${threeIsrHandlerName}(void);
-</#if>
-<#if PTGWDTInterrupt == true>
-void  ${wdtIsrHandlerName}(void);
-</#if>
-
 //Section: Macro Definitions
 
 <#list WdtTimeoutOptions as options>
@@ -205,7 +188,7 @@ void ${moduleNameUpperCase}_SoftwareTriggerClear (void)
 
 bool ${moduleNameUpperCase}_WatchdogTimeoutStatusGet (void)
 {
-    return( ${moduleNameUpperCase}CONbits.${moduleNameUpperCase}WDTO);
+    return (bool)${moduleNameUpperCase}CONbits.${moduleNameUpperCase}WDTO;
 }
 
 void ${moduleNameUpperCase}_StepSequenceStop (void)
@@ -235,6 +218,7 @@ void ${moduleNameUpperCase}_EventCallbackRegister(${moduleNameUpperCase}_EVENTS 
 		triggerWdtObj.context = context;
 		break;
 	default:
+		/* Nothing to process */
 		break;
 	}
 }
