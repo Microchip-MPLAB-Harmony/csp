@@ -197,7 +197,7 @@ bool ${dmaModuleName}_ChannelTransfer(${dmaModuleName}_CHANNEL channel, const vo
             </#if>
         </#list>
             default:
-                /* Invalid channel, do nothing */ 
+                /* Invalid channel, do nothing */
                 break;
         }
     }
@@ -223,7 +223,7 @@ void ${dmaModuleName}_ChannelPatternMatchSetup(${dmaModuleName}_CHANNEL channel,
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
 }
@@ -243,7 +243,7 @@ void ${dmaModuleName}_ChannelEnable(${dmaModuleName}_CHANNEL channel)
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
 }
@@ -263,7 +263,7 @@ void ${dmaModuleName}_ChannelDisable (${dmaModuleName}_CHANNEL channel)
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
 }
@@ -282,7 +282,7 @@ void ${dmaModuleName}_ChannelPatternMatchEnable(${dmaModuleName}_CHANNEL channel
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
 }
@@ -301,7 +301,7 @@ void ${dmaModuleName}_ChannelPatternMatchDisable(${dmaModuleName}_CHANNEL channe
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
 }
@@ -321,7 +321,7 @@ bool ${dmaModuleName}_IsSoftwareRequestPending(${dmaModuleName}_CHANNEL channel)
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
     return status;
@@ -341,7 +341,7 @@ void ${dmaModuleName}_ChannelSoftwareTriggerEnable(${dmaModuleName}_CHANNEL chan
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
 }
@@ -361,7 +361,7 @@ uint32_t ${dmaModuleName}_ChannelGetTransferredCount(${dmaModuleName}_CHANNEL ch
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
     return count;
@@ -376,9 +376,9 @@ bool ${dmaModuleName}_ChannelIsBusy (${dmaModuleName}_CHANNEL channel)
         <#assign DMA_CHANNEL_ENABLE = "DMA" + i + "_CH__CHEN">
         <#if .vars[DMA_CHANNEL_ENABLE]?has_content && .vars[DMA_CHANNEL_ENABLE] == true>
         case ${dmaModuleName}_CHANNEL_${i}:
-            if (DMA${i}STATbits.DONE == 0U)  
+            if (DMA${i}STATbits.DONE == 0U)
             {
-                if (dmaChannelObj[${i}].inUse) 
+                if (dmaChannelObj[${i}].inUse)
                 {
                     busy_check = true;
                 }
@@ -388,7 +388,7 @@ bool ${dmaModuleName}_ChannelIsBusy (${dmaModuleName}_CHANNEL channel)
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
     return busy_check;
@@ -409,7 +409,7 @@ DMA_CHANNEL_CONFIG ${dmaModuleName}_ChannelSettingsGet(${dmaModuleName}_CHANNEL 
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
     return setting;
@@ -432,7 +432,7 @@ bool ${dmaModuleName}_ChannelSettingsSet(${dmaModuleName}_CHANNEL channel, DMA_C
         </#if>
     </#list>
         default:
-            /* Invalid channel, do nothing */ 
+            /* Invalid channel, do nothing */
             break;
     }
     return status;
@@ -542,7 +542,9 @@ ${dmaModuleName}_TRANSFER_EVENT ${dmaModuleName}_ChannelTransferStatusGet(${dmaM
 
         </#if>
     </#list>
-        default:break;
+        default:
+            /* Invalid channel, do nothing */
+            break;
     }
     return dmaEvent;
 }
