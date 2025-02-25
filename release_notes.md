@@ -3,6 +3,42 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.22.0
+
+### New Features
+
+- **New part support**
+  - Added support for PIC32AK GC family of devices
+  - Added support for SAMA7D65, SAMA7G54 and SAM9X7 SOM devices
+ 
+- **New Features and Enhancements**
+  - None
+  
+- **Bug Fixes**
+  - Fix UI issues in SAM9X75 and SAM9X60 clock configurators
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+### Known Issues
+
+-  same as v3.21.0
+
+### Development Tools
+
+For PIC32AK-GC family of devices:
+- [MPLAB® X IDE v6.25](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v4.60](https://www.microchip.com/mplab/compilers) or higher
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.5.2 or higher
+
+For all other parts:
+ - Same as v3.21.0
+
+### Notes
+
+-  None
+
 ## CSP Release v3.21.0
 
 ### New Features
