@@ -225,6 +225,7 @@ void CLOCK_Initialize(void)
 	<#if (.vars["pll"+i+"Enable"]??) && (.vars["pll"+i+"Enable"])>
     //PLL ${i} settings
     PLL${i}CON = (_PLL${i}CON_ON_MASK
+                |_PLL${i}CON_OE_MASK
                 |PLL${i}CON_NOSC_${pllClockSources[.vars["pll"+i+"CON__NOSC"]?number]}
                 |PLL${i}CON_BOSC_${pllClockSources[.vars["pll"+i+"CON__BOSC"]?number]}<#if .vars["pll"+i+"CON__FSCMEN"]?number == 1>
                 |_PLL${i}CON_FSCMEN_MASK</#if>);
@@ -268,6 +269,7 @@ void CLOCK_Initialize(void)
     <#if (.vars["clkGen"+i+"Enable"]??) && (.vars["clkGen"+i+"Enable"] == true)>
     //Clock Generator ${i} settings
     CLK${i}CON = (_CLK${i}CON_ON_MASK
+                |_CLK${i}CON_OE_MASK
                 |CLK${i}CON_NOSC_${clkgenClockSources[.vars["clkGen"+i+"CON__NOSC"]?number]}
                 |CLK${i}CON_BOSC_${clkgenClockSources[.vars["clkGen"+i+"CON__BOSC"]?number]}<#if .vars["clkGen"+i+"CON__FSCMEN"]?number == 1>
                 |_CLK${i}CON_FSCMEN_MASK</#if>);
