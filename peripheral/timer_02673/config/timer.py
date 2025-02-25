@@ -888,3 +888,7 @@ def instantiateComponent(tmrComponent):
         "../peripheral/timer_02673/templates/system/definitions.h.ftl"
     )
     tmrSystemDefFile.setMarkup(True)
+
+
+def destroyComponent(dyingComponent):
+    handleInterruptControl(1, False)
