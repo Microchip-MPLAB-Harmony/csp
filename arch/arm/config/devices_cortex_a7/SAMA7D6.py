@@ -158,18 +158,18 @@ ddr_size = int(ddr_node.getAttribute("size"), 0)
 #Set 16MB as non-cacheable region and rest as cacheable region
 non_cacheable_size = 16 * pow(2, 20)
 
-if processor.endswith("1G"):
+if processor[:11].endswith("1G"):
     # 1 Gbit memory
     ddr_size = (1 * pow(2,30)) / 8
-elif processor.endswith("2G"):
+elif processor[:11].endswith("2G"):
     # 2 Gbit memory
     ddr_size = (2 * pow(2,30)) / 8
-elif processor.endswith("4G"):
+elif processor[:11].endswith("4G"):
     # 4 Gbit memory
     ddr_size = (4 * pow(2,30)) / 8
     #increase the non cacheable region to 32 MB
     non_cacheable_size = 32 * pow(2, 20)
-elif processor.endswith("5M"):
+elif processor[:11].endswith("5M"):
     #512 Mbit memory
     ddr_size = (512 * pow(2,20)) / 8
     #reduce the non cacheable region to 8 MB
