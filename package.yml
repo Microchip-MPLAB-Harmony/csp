@@ -108,7 +108,7 @@ package:
       version: "1.11.228"
     - name: "SAMA7G5_DFP"
       type: "dfp"
-      version: "1.5.222"
+      version: "1.8.235"
     - name: "SAMA7D65_DFP"
       type: "dfp"
       version: "1.3.52"
