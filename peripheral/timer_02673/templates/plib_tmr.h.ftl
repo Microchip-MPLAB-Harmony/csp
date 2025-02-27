@@ -51,7 +51,7 @@
 #define TIMER_CLOCK_FREQUENCY          ${TIMER_CLOCK_FREQ}
 
 <#if TMR_INTERRUPT_MODE == true>
-#define TMR_INTERRUPT_PERIOD_IN_US     ${TIMER_PERIOD_US}
+#define TMR_INTERRUPT_PERIOD_IN_NS     ${TIMER_PERIOD_NS}
 typedef struct
 {
     uint32_t start;

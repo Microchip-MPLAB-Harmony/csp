@@ -242,8 +242,6 @@ def prescalerStrtoInt(prescalerStr):
 
 
 def timePeriodCalc(symbol, event):
-    global timerPeriodUS
-
     component = symbol.getComponent()
     clock = component.getSymbolValue(TIMER_CLOCK_FREQ)
     timerUnitName = component.getSymbolValue(TIMER_UNIT)
@@ -255,17 +253,12 @@ def timePeriodCalc(symbol, event):
 
     symbol.setLabel("Time in {}".format(timerUnitName))
 
-    if timerUnitName == "millisecond":
-        timerPeriodUS.setValue(int(round(symbol.getValue() * 1000.0)))
-    elif timerUnitName == "microsecond":
-        timerPeriodUS.setValue(int(round(symbol.getValue())))
-    elif timerUnitName == "nanosecond":
-        timerPeriodUS.setValue(int(round(symbol.getValue() / 1000.0)))
-
 
 def periodRegCalc(symbol, event):
+    global timerPeriodNS
 
     component = symbol.getComponent()
+    timerUnitName = component.getSymbolValue(TIMER_UNIT)
     clkFreq = component.getSymbolValue(TIMER_CLOCK_FREQ)
     unit = timeUnitsToSeconds[component.getSymbolValue(TIMER_UNIT)]
 
@@ -274,6 +267,13 @@ def periodRegCalc(symbol, event):
         symbol.setValue(int(period))
     else:
         symbol.setValue(0)
+
+    if timerUnitName == "millisecond":
+        timerPeriodNS.setValue(int(round(component.getSymbolValue(TIME_PERIOD_MS) * 1000000.0)))
+    elif timerUnitName == "microsecond":
+        timerPeriodNS.setValue(int(round(component.getSymbolValue(TIME_PERIOD_MS) * 1000.0)))
+    elif timerUnitName == "nanosecond":
+        timerPeriodNS.setValue(int(round(component.getSymbolValue(TIME_PERIOD_MS))))
 
     calcAchievableFreq()
 
@@ -686,16 +686,15 @@ def instantiateComponent(tmrComponent):
         [
             "core." + STD_SPEED_CLK_FREQ,
             TIMER_CLOCK_FREQ,
-            TIMER_UNIT,
-            TIME_PERIOD_MS
+            TIMER_UNIT
         ],
     )
 
-    global timerPeriodUS
-    timerPeriodUS = tmrComponent.createIntegerSymbol("TIMER_PERIOD_US", None)
-    timerPeriodUS.setVisible(False)
-    timerPeriodUS.setDefaultValue(int(round(timePeriodMs.getValue() * 1000)))
-    timerPeriodUS.setMin(0)
+    global timerPeriodNS
+    timerPeriodNS = tmrComponent.createLongSymbol("TIMER_PERIOD_NS", None)
+    timerPeriodNS.setVisible(False)
+    timerPeriodNS.setDefaultValue(int(round(timePeriodMs.getValue() * 1000000)))
+    timerPeriodNS.setMin(0)
 
     global periodReg
     periodReg = tmrComponent.createHexSymbol(TIMER_PERIOD, timePeriodMs)

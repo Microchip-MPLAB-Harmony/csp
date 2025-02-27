@@ -153,7 +153,7 @@ uint32_t TMR${TMR_INSTANCE_NUMBER}_GetTickCounter(void)
 void TMR${TMR_INSTANCE_NUMBER}_StartTimeOut (TMR_TIMEOUT* timeout, uint32_t delay_ms)
 {
     timeout->start = TMR${TMR_INSTANCE_NUMBER}_GetTickCounter();
-    timeout->count = (delay_ms * 1000U)/TMR_INTERRUPT_PERIOD_IN_US;
+    timeout->count = (delay_ms * 1000000U)/TMR_INTERRUPT_PERIOD_IN_NS;
 }
 
 void TMR${TMR_INSTANCE_NUMBER}_ResetTimeOut (TMR_TIMEOUT* timeout)
