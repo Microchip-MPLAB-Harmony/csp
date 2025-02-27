@@ -64,7 +64,7 @@ def handleMessage(messageID, args):
     retDict = {}
     if (messageID == "EIC_CONFIG_HW_IO"):
         component = eic_instance_name.getValue().lower()
-        channel, enable = args['config']
+        channel, intMode, enable = args['config']
         symbolId = "EIC_SRC{}_ACTIVATE".format(int(channel))
         if enable == True:
             res = Database.setSymbolValue(component, symbolId, enable)

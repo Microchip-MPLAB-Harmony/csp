@@ -147,7 +147,7 @@ def handleMessage(messageID, args):
     retDict = {}
     if (messageID == "EIC_CONFIG_HW_IO"):
         component = eicInstanceName.getValue().lower()
-        channel, enable = args['config']
+        channel, intMode, enable = args['config']
         if channel == "NMI":
             symbolId = "NMI_CTRL"
         else:
@@ -164,6 +164,18 @@ def handleMessage(messageID, args):
                 res = Database.setSymbolValue(component, symbolId, enable)
             else:
                 res = Database.clearSymbolValue(component, symbolId)
+
+            if intMode is not None:
+                symbolId = "EIC_CONFIG_SENSE_{}".format(int(channel))
+                eicComponent = Database.getComponentByID(component)
+                symbol = eicComponent.getSymbolByID(symbolId)
+                if symbol is not None:
+                    keyCount = symbol.getKeyCount()
+                    for index in range(0, keyCount):
+                        descr = symbol.getKeyDescription(index)
+                        if intMode.lower() in descr.lower():
+                            symbol.setValue(index)
+                            break
                 
             if res == True:
                 retDict = {"Result": "Success"}
