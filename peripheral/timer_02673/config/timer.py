@@ -687,6 +687,7 @@ def instantiateComponent(tmrComponent):
             "core." + STD_SPEED_CLK_FREQ,
             TIMER_CLOCK_FREQ,
             TIMER_UNIT,
+            TIME_PERIOD_MS
         ],
     )
 
