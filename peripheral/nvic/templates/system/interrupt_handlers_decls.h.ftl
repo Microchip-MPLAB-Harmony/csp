@@ -1,4 +1,5 @@
 <#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
+<#assign FREERTOS = (((HarmonyCore.SELECT_RTOS)??) && HarmonyCore.SELECT_RTOS == "FreeRTOS")>
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#compress>
     <#assign INTERRUPT_HANDLERS = ",">
@@ -48,7 +49,7 @@ void ${INTERRUPT_HANDLER} (void);
             <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_0_ENABLE">
             <#assign NVIC_VECTOR_HANDLER = "NVIC_" + i + "_0_HANDLER">
                 <#if .vars[NVIC_VECTOR_ENABLE]?? && .vars[NVIC_VECTOR_ENABLE] && !(INTERRUPT_HANDLERS?contains("," + .vars[NVIC_VECTOR_HANDLER] +","))>
-                <#if !([-5, -2]?seq_contains(i) && (CoreArchitecture?matches("CORTEX-M[2|3]3") || CoreArchitecture == "CORTEX-M0PLUS" || BARE_METAL))>
+                <#if !([-5, -2]?seq_contains(i) && (CoreArchitecture?matches("CORTEX-M[2|3]3") || (CoreArchitecture == "CORTEX-M0PLUS" && FREERTOS) || BARE_METAL))>
                 <#assign INTERRUPT_HANDLERS = INTERRUPT_HANDLERS + .vars[NVIC_VECTOR_HANDLER] + "," >
                 </#if>
                 </#if>
