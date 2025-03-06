@@ -2,10 +2,13 @@
 <pinfile>
     <packages>
         <package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="LQFP144" />
+        <package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="TQFP144" />
+        <package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="ETQFP144" />
         <package diagram="JEDEC_MS_026D_BCD_LQFP64" id="2" name="LQFP64" />
         <package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="LFBGA144" />
         <package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="TFBGA144" />
         <package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="UFBGA144" />
+        <package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="BGA144" />
         <package diagram="MX_64_QFN" id="4" name="QFN64" />
         <package diagram="JEDEC_MS_026D_BED_LQFP100" id="5" name="LQFP100" />
         <package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="6" name="TFBGA100" />
@@ -18,5 +21,7 @@
         <package diagram="BGA240_BGA243" id="13" name="BGA240" />
         <package diagram="SAM9X75D_BGA243" id="14" name="BGA243" />
         <package diagram="BGA240_BGA243" id="15" name="TFBGA240" />
+        <package diagram="ETQFP100" id="16" name="ETQFP100" />
+        <package diagram="ETQFP064" id="17" name="ETQFP064" />
     </packages>
 </pinfile>

@@ -419,6 +419,11 @@ def packageChange(pinoutSymbol, pinout):
     global pinChannel
     global pinBitPosition
 
+    if pinoutSymbol.getValue() not in package:
+        pinoutSymbol.setReadOnly(False)
+        pinoutSymbol.setReadOnly(True)
+        return
+
     ### No need to process if the device has only one pinout but multiple packages eg: TQFP, LQFP and QFN
     if uniquePinout > 1:
 
