@@ -193,6 +193,18 @@ def symbolISO7816Visible(symbol, event):
     else :
         symbol.setVisible(False)
 
+def symbolLINNoVisible(symbol, event):
+    value  = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
+        if value == "LIN_SLAVE"  or value == "LIN_MASTER":
+            symbol.setVisible(False)
+        else :
+            symbol.setVisible(True)
+    else :
+        symbol.setVisible(False)
+
+
 def fifoOptionsVisible(symbol, event):
    usartMode = flexcomSym_UsartMode.getSelectedKey()
    fifoEnable = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE").getValue()
@@ -345,7 +357,7 @@ for index in range(len(flexcomSym_UsartMode_Values)):
     flexcomSym_UsartMode_Key_Name = flexcomSym_UsartMode_Values[index].getAttribute("name")
     flexcomSym_UsartMode_Key_Value = flexcomSym_UsartMode_Values[index].getAttribute("value")
     flexcomSym_UsartMode_Key_Description = flexcomSym_UsartMode_Values[index].getAttribute("caption")
-    if flexcomSym_UsartMode_Key_Name == "NORMAL" or flexcomSym_UsartMode_Key_Name == "RS485" or flexcomSym_UsartMode_Key_Name == "HW_HANDSHAKING" or flexcomSym_UsartMode_Key_Name == "IRDA" or flexcomSym_UsartMode_Key_Name == "IS07816_T_0":
+    if flexcomSym_UsartMode_Key_Name == "NORMAL" or flexcomSym_UsartMode_Key_Name == "RS485" or flexcomSym_UsartMode_Key_Name == "HW_HANDSHAKING" or flexcomSym_UsartMode_Key_Name == "IRDA" or flexcomSym_UsartMode_Key_Name == "IS07816_T_0" or flexcomSym_UsartMode_Key_Name == "LIN_SLAVE" or flexcomSym_UsartMode_Key_Name == "LIN_MASTER" or flexcomSym_UsartMode_Key_Name == "LON":
         flexcomSym_UsartMode.addKey(flexcomSym_UsartMode_Key_Name, flexcomSym_UsartMode_Key_Value, flexcomSym_UsartMode_Key_Description)
 flexcomSym_UsartMode.setDisplayMode("Key")
 flexcomSym_UsartMode.setOutputMode("Key")
@@ -470,7 +482,7 @@ flexcomSym_TimeGuardValue.setDefaultValue(0)
 flexcomSym_TimeGuardValue.setMin(0)
 flexcomSym_TimeGuardValue.setMax(255)
 flexcomSym_TimeGuardValue.setVisible(False)
-flexcomSym_TimeGuardValue.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+flexcomSym_TimeGuardValue.setDependencies(symbolLINNoVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_UsartClkSrc = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USCLKS", flexcomSym_OperatingMode)
 flexcomSym_UsartClkSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_US_MR")
@@ -698,3 +710,134 @@ flexcomSym_Usart_DataBits = flexcomComponent.createStringSymbol("USART_DATA_BITS
 flexcomSym_Usart_DataBits.setDefaultValue(dataBitsDict[flexcomSym_Usart_MR_CHRL.getSelectedKey()])
 flexcomSym_Usart_DataBits.setVisible(False)
 flexcomSym_Usart_DataBits.setDependencies(updateUSARTDataBits, ["FLEX_USART_MR_CHRL"])
+
+
+#### LIN ####
+
+def flexcomLinInterruptVisibility(symbol, event):
+    value = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
+        if flexcomSym_UsartOperatingMode.getSelectedKey() == "NON_BLOCKING" or flexcomSym_UsartOperatingMode.getSelectedKey() == "NON_BLOCKING_FIFO" or flexcomSym_UsartOperatingMode.getSelectedKey() == "RING_BUFFER" or flexcomSym_UsartOperatingMode.getSelectedKey() == "RING_BUFFER_FIFO":
+            if value == "LIN_SLAVE"  or value == "LIN_MASTER":
+                symbol.setVisible(True)
+            else :
+                symbol.setVisible(False)
+        else :
+            symbol.setVisible(False)
+
+def symbolLinVisible(symbol, event):
+    value  = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
+        if value == "LIN_SLAVE"  or value == "LIN_MASTER":
+            symbol.setVisible(True)
+        else :
+            symbol.setVisible(False)
+    else :
+        symbol.setVisible(False)
+
+flexcomLINSym_Menu = flexcomComponent.createMenuSymbol("USART_LIN_MENU", None)
+flexcomLINSym_Menu.setLabel ("LIN Configurations")
+flexcomLINSym_Menu.setVisible(False)
+flexcomLINSym_Menu.setDependencies(symbolLinVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
+
+flexcomLINSym_LINMR_PARDIS = flexcomComponent.createBooleanSymbol("USART_LIN_LINMR_PARDIS", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_PARDIS.setLabel("Identifier Parity Disable")
+flexcomLINSym_LINMR_PARDIS.setDefaultValue(False)
+flexcomLINSym_LINMR_PARDIS.setVisible(True)
+
+flexcomLINSym_LINMR_CHKDIS = flexcomComponent.createBooleanSymbol("USART_LIN_LINMR_CHKDIS", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_CHKDIS.setLabel("Checksum Disable")
+flexcomLINSym_LINMR_CHKDIS.setDefaultValue(False)
+flexcomLINSym_LINMR_CHKDIS.setVisible(True)
+
+flexcomLINSym_LINMR_CHKTYP = flexcomComponent.createKeyValueSetSymbol("USART_LIN_LINMR_CHKTYP", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_CHKTYP.setLabel("Select Checksum Type")
+flexcomLINSym_LINMR_CHKTYP.addKey("ENHANCED", "0x0", "LIN 2.0 Enhanced Checksum")
+flexcomLINSym_LINMR_CHKTYP.addKey("CLASSIC", "0x1", "LIN 1.3 Classic Checksum")
+flexcomLINSym_LINMR_CHKTYP.setOutputMode("Value")
+flexcomLINSym_LINMR_CHKTYP.setDisplayMode("Description")
+flexcomLINSym_LINMR_CHKTYP.setDefaultValue(0)
+flexcomLINSym_LINMR_CHKTYP.setVisible(True)
+
+flexcomLINSym_LINMR_DLM = flexcomComponent.createKeyValueSetSymbol("USART_LIN_LINMR_DLM", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_DLM.setLabel("Select Data Length Mode")
+flexcomLINSym_LINMR_DLM.addKey("DLC", "0x0", "Data length is defined by DLC")
+flexcomLINSym_LINMR_DLM.addKey("IDCHR", "0x1", "Data length is defined by bits 5 and 6 of the identifier")
+flexcomLINSym_LINMR_DLM.setOutputMode("Value")
+flexcomLINSym_LINMR_DLM.setDisplayMode("Description")
+flexcomLINSym_LINMR_DLM.setDefaultValue(0)
+flexcomLINSym_LINMR_DLM.setVisible(True)
+
+flexcomLINSym_LINMR_DLC = flexcomComponent.createIntegerSymbol("USART_LIN_LINMR_DLC", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_DLC.setLabel("Response Data Length (bytes)")
+flexcomLINSym_LINMR_DLC.setDefaultValue(8)
+flexcomLINSym_LINMR_DLC.setMin(0)
+flexcomLINSym_LINMR_DLC.setMax(255)
+flexcomLINSym_LINMR_DLC.setVisible(False)
+
+
+def flexcomLinSymVisibility(symbol,event):
+    value  = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+    if symbol.getID() == "USART_LIN_LINMR_FSDIS":
+        if value == "LIN_MASTER":
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    elif symbol.getID() == "USART_LIN_LINMR_SYNCDIS":
+        if value == "LIN_SLAVE":
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+
+# LIN master only
+flexcomLINSym_LINMR_FSDIS = flexcomComponent.createBooleanSymbol("USART_LIN_LINMR_FSDIS", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_FSDIS.setLabel("Frame Slot Mode Disable")
+flexcomLINSym_LINMR_FSDIS.setDefaultValue(False)
+flexcomLINSym_LINMR_FSDIS.setVisible(True)
+flexcomLINSym_LINMR_FSDIS.setDependencies(flexcomLinSymVisibility, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
+
+# LIN slave only
+flexcomLINSym_LINMR_SYNCDIS = flexcomComponent.createBooleanSymbol("USART_LIN_LINMR_SYNCDIS", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_SYNCDIS.setLabel("Synchronization Disable")
+flexcomLINSym_LINMR_SYNCDIS.setDefaultValue(False)
+flexcomLINSym_LINMR_SYNCDIS.setVisible(True)
+flexcomLINSym_LINMR_SYNCDIS.setDependencies(flexcomLinSymVisibility, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
+
+flexcomLINSym_LINMR_WKUPTYP = flexcomComponent.createKeyValueSetSymbol("USART_LIN_LINMR_WKUPTYP", flexcomLINSym_Menu)
+flexcomLINSym_LINMR_WKUPTYP.setLabel("Select Wakeup Signal Type")
+flexcomLINSym_LINMR_WKUPTYP.addKey("LIN2_0", "0x0", "LIN 2.0 Wakeup Signal")
+flexcomLINSym_LINMR_WKUPTYP.addKey("LIN1_3", "0x1", "LIN 1.3 Wakeup Signal")
+flexcomLINSym_LINMR_WKUPTYP.setOutputMode("Value")
+flexcomLINSym_LINMR_WKUPTYP.setDisplayMode("Description")
+flexcomLINSym_LINMR_WKUPTYP.setDefaultValue(0)
+flexcomLINSym_LINMR_WKUPTYP.setVisible(True) 
+
+# LIN Interrupt Menu
+
+flexcomLINSym_LIN_INTERRUPT_Menu = flexcomComponent.createMenuSymbol("USART_LIN_INTERRUPT_MENU", flexcomLINSym_Menu)
+flexcomLINSym_LIN_INTERRUPT_Menu.setLabel ("LIN Interrupt Configurations")
+flexcomLINSym_LIN_INTERRUPT_Menu.setVisible(True)
+flexcomLINSym_LIN_INTERRUPT_Menu.setDependencies(flexcomLinInterruptVisibility, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE", "FLEXCOM_USART_OPERATING_MODE"])
+
+flexcomLINSym_LINIER_LINID_INTERRUPT_ENABLE = flexcomComponent.createBooleanSymbol("USART_LIN_LINID_INTERRUPT_ENABLE", flexcomLINSym_LIN_INTERRUPT_Menu)
+flexcomLINSym_LINIER_LINID_INTERRUPT_ENABLE.setLabel("LIN ID Receive/Transmit Interrupt")
+flexcomLINSym_LINIER_LINID_INTERRUPT_ENABLE.setDefaultValue(False)
+flexcomLINSym_LINIER_LINID_INTERRUPT_ENABLE.setVisible(True)
+
+flexcomLINSym_LINIER_LINTC_INTERRUPT_ENABLE = flexcomComponent.createBooleanSymbol("USART_LIN_LINTC_INTERRUPT_ENABLE", flexcomLINSym_LIN_INTERRUPT_Menu)
+flexcomLINSym_LINIER_LINTC_INTERRUPT_ENABLE.setLabel("LIN Data Transfer Complete Interrupt")
+flexcomLINSym_LINIER_LINTC_INTERRUPT_ENABLE.setDefaultValue(False)
+flexcomLINSym_LINIER_LINTC_INTERRUPT_ENABLE.setVisible(True)
+
+flexcomLINSym_LINIER_LINBK_INTERRUPT_ENABLE = flexcomComponent.createBooleanSymbol("USART_LIN_LINBK_INTERRUPT_ENABLE", flexcomLINSym_LIN_INTERRUPT_Menu)
+flexcomLINSym_LINIER_LINBK_INTERRUPT_ENABLE.setLabel("LIN Header-Break Receive/Transmit Interrupt")
+flexcomLINSym_LINIER_LINBK_INTERRUPT_ENABLE.setDefaultValue(False)
+flexcomLINSym_LINIER_LINBK_INTERRUPT_ENABLE.setVisible(True)
+
+#### end LIN ####
+
+
+
+
+

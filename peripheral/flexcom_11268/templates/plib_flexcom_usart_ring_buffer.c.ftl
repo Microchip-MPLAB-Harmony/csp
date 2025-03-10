@@ -60,11 +60,34 @@
 #define FLEXCOM_USART_THR_9BIT_REG      (*(volatile uint16_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_US_THR_REG_OFST)))
 <#if FLEXCOM_USART_FIFO_ENABLE == false>
 
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER" || FLEXCOM_USART_MR_USART_MODE == "LIN_SLAVE">
+#ifndef FLEX_US_IER_LIN_FRAME_Msk
+#define FLEX_US_IER_LIN_FRAME_Msk   FLEX_US_IER_FRAME_Msk
+#define FLEX_US_IER_LIN_PARE_Msk    FLEX_US_IER_PARE_Msk
+#define FLEX_US_IER_LIN_TIMEOUT_Msk FLEX_US_IER_TIMEOUT_Msk
+#define FLEX_US_IDR_LIN_FRAME_Msk   FLEX_US_IDR_FRAME_Msk
+#define FLEX_US_IDR_LIN_PARE_Msk    FLEX_US_IDR_PARE_Msk
+#define FLEX_US_IDR_LIN_TIMEOUT_Msk FLEX_US_IDR_TIMEOUT_Msk
+#define FLEX_US_CSR_LIN_FRAME_Msk   FLEX_US_CSR_FRAME_Msk
+#define FLEX_US_CSR_LIN_PARE_Msk    FLEX_US_CSR_PARE_Msk
+#endif
+
+/* Disable Read, Overrun, Parity and Framing error interrupts */
+#define ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE()      ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk |  FLEX_US_IDR_OVRE_Msk | FLEX_US_IDR_LIN_FRAME_Msk | FLEX_US_IDR_LIN_PARE_Msk | FLEX_US_IDR_LIN_TIMEOUT_Msk \
+                                                            | FLEX_US_IDR_LIN_LINBE_Msk | FLEX_US_IDR_LIN_LINISFE_Msk | FLEX_US_IDR_LIN_LINIPE_Msk \
+                                                            | FLEX_US_IDR_LIN_LINCE_Msk | FLEX_US_IDR_LIN_LINSNRE_Msk | FLEX_US_IDR_LIN_LINSTE_Msk | FLEX_US_IDR_LIN_LINHTE_Msk)
+
+/* Enable Read, Overrun, Parity and Framing error interrupts */
+#define ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE()       ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = (FLEX_US_IER_RXRDY_Msk | FLEX_US_IER_OVRE_Msk | FLEX_US_IER_LIN_FRAME_Msk | FLEX_US_IER_LIN_PARE_Msk | FLEX_US_IER_LIN_TIMEOUT_Msk \
+                                                            | FLEX_US_IER_LIN_LINBE_Msk | FLEX_US_IER_LIN_LINISFE_Msk | FLEX_US_IER_LIN_LINIPE_Msk \
+                                                            | FLEX_US_IER_LIN_LINCE_Msk | FLEX_US_IER_LIN_LINSNRE_Msk | FLEX_US_IER_LIN_LINSTE_Msk | FLEX_US_IER_LIN_LINHTE_Msk)
+<#else>
 /* Disable Read, Overrun, Parity and Framing error interrupts */
 #define ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE()      ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk)
 
 /* Enable Read, Overrun, Parity and Framing error interrupts */
 #define ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE()       ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = (FLEX_US_IER_RXRDY_Msk | FLEX_US_IER_FRAME_Msk | FLEX_US_IER_PARE_Msk | FLEX_US_IER_OVRE_Msk)
+</#if>
 
 #define ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE()      ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXRDY_Msk
 #define ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE()       ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk
@@ -106,6 +129,20 @@ ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIER = (FLEX_US_FIER_TXFTHF_Msk); \
 static volatile uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE];
 static volatile uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE];
 
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER" || FLEXCOM_USART_MR_USART_MODE == "LIN_SLAVE">
+/* LIN related Interrupts */
+#define ${FLEXCOM_INSTANCE_NAME}_LIN_LINTC_INT_DISABLE()      ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_LIN_LINTC_Msk
+#define ${FLEXCOM_INSTANCE_NAME}_LIN_LINTC_INT_ENABLE()       ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_LIN_LINTC_Msk
+
+#define ${FLEXCOM_INSTANCE_NAME}_LIN_LINID_INT_DISABLE()      ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_LIN_LINID_Msk
+#define ${FLEXCOM_INSTANCE_NAME}_LIN_LINID_INT_ENABLE()       ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_LIN_LINID_Msk
+
+#define ${FLEXCOM_INSTANCE_NAME}_LIN_LINBK_INT_DISABLE()      ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_LIN_LINBK_Msk
+#define ${FLEXCOM_INSTANCE_NAME}_LIN_LINBK_INT_ENABLE()       ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_LIN_LINBK_Msk
+
+static volatile FLEXCOM_LIN_CALLBACK_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj;
+
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${FLEXCOM_INSTANCE_NAME} ${FLEXCOM_MODE} Ring Buffer Implementation
@@ -126,19 +163,41 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_FIFOEN_Msk;
 
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES) | FLEX_US_FMR_TXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_TX_FIFO_THRES)<#if FLEXCOM_USART_MR_USART_MODE == "HW_HANDSHAKING"> | FLEX_US_FMR_FRTSC_Msk </#if>;
-</#if>
 
+</#if>
+<#if FLEXCOM_USART_MR_USART_MODE != "LIN_MASTER" && FLEXCOM_USART_MR_USART_MODE != "LIN_SLAVE">
+    /* Setup transmitter timeguard register */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_TTGR = ${FLEXCOM_USART_TTGR};
 
+</#if>
     /* Enable ${FLEXCOM_INSTANCE_NAME} USART */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = (FLEX_US_CR_TXEN_Msk | FLEX_US_CR_RXEN_Msk);
 
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER" || FLEXCOM_USART_MR_USART_MODE == "LIN_SLAVE">
+    /* Configure ${FLEXCOM_INSTANCE_NAME} USART ${FLEXCOM_USART_MR_USART_MODE} mode */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR = (FLEX_US_MR_USCLKS_${FLEXCOM_USART_MR_USCLKS} ${(FLEX_USART_MR_MODE9 == true)?then('| FLEX_US_MR_MODE9_Msk', '| FLEX_US_MR_CHRL_${FLEX_USART_MR_CHRL}')} | FLEX_US_MR_PAR_${FLEX_USART_MR_PAR} | FLEX_US_MR_NBSTOP_${FLEX_USART_MR_NBSTOP} | FLEX_US_MR_OVER(${FLEXCOM_USART_MR_OVER}));
+
+    /* Write FLEX_US_MR.USART_MODE to select the LIN mode and the client node configuration. */
+    /* LIN client node (USART_MODE = 0xB) */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR |= FLEX_US_MR_USART_MODE_${FLEXCOM_USART_MR_USART_MODE};
+
+    /* CHKTYP: Checksum Type: 0 LIN 2.0 enhanced checksum
+     * DLM: Data Length Mode: The response data length is defined by the DLC field of this register.
+     * DLC: Data Length Control: Defines the response data length if DLM = 0, in that case the response data length is equal to DLC+1 bytes.
+     * WKUPTYP: Wake-up Signal Type: Setting the LINWKUP bit in the control register sends a LIN 2.0 wake-up signal. */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR = FLEX_US_LINMR_CHKTYP(${USART_LIN_LINMR_CHKTYP}U) | FLEX_US_LINMR_DLM(${USART_LIN_LINMR_DLM}U) | FLEX_US_LINMR_DLC(${USART_LIN_LINMR_DLC}U) | FLEX_US_LINMR_WKUPTYP(${USART_LIN_LINMR_WKUPTYP}U);
+
+    /* Write FLEX_US_BRGR.CD and FLEX_US_BRGR.FP to configure the baud rate. */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_BRGR = FLEX_US_BRGR_CD(${BRG_VALUE}) | FLEX_US_BRGR_FP(${FP_VALUE});
+
+<#else>
     /* Configure ${FLEXCOM_INSTANCE_NAME} USART mode */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR = ( FLEX_US_MR_USART_MODE_${FLEXCOM_USART_MR_USART_MODE} | FLEX_US_MR_USCLKS_${FLEXCOM_USART_MR_USCLKS} ${(FLEX_USART_MR_MODE9 == true)?then('| FLEX_US_MR_MODE9_Msk', '| FLEX_US_MR_CHRL_${FLEX_USART_MR_CHRL}')} | FLEX_US_MR_PAR_${FLEX_USART_MR_PAR} | FLEX_US_MR_NBSTOP_${FLEX_USART_MR_NBSTOP} | (${FLEXCOM_USART_MR_OVER}UL << FLEX_US_MR_OVER_Pos));
 
     /* Configure ${FLEXCOM_INSTANCE_NAME} USART Baud Rate */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_BRGR = FLEX_US_BRGR_CD(${BRG_VALUE}) | FLEX_US_BRGR_FP(${FP_VALUE});
 
+</#if>
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback = NULL;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex = 0;
@@ -169,7 +228,19 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
         ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrBufferSize = ${FLEXCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE;
     }
 
+    /* Enable Read, Overrun, Parity and Framing error interrupts */
     ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE();
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER" || FLEXCOM_USART_MR_USART_MODE == "LIN_SLAVE">
+
+    /* Enable LIN ID interrupt */
+    ${FLEXCOM_INSTANCE_NAME}_LIN_LINID_INT_ENABLE();
+
+    /* Enable LIN Transfer Complete interrupt */
+    ${FLEXCOM_INSTANCE_NAME}_LIN_LINTC_INT_ENABLE();
+
+    /* Enable LIN Break interrupt */
+    ${FLEXCOM_INSTANCE_NAME}_LIN_LINBK_INT_ENABLE();
+</#if>
 }
 
 static void ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
@@ -840,14 +911,14 @@ static void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler(
         }
         else
         {
-            /* Nothing to transmit. Disable the data register empty/fifo Threshold interrupt. */
+            /* Nothing to transmit. Disable the data register empty interrupt. */
             ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE();
             break;
         }
     }
 
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
-    /* At this point, either FIFO is completly full or all bytes are transmitted (copied in FIFO). If FIFO is full, then threshold interrupt
+    /* At this point, either FIFO is completely full or all bytes are transmitted (copied in FIFO). If FIFO is full, then threshold interrupt
     *  will be generated. If all bytes are transmitted then interrupts are disabled as interrupt generation is not needed in ring buffer mode
     */
 
@@ -862,7 +933,13 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     uint32_t channelStatus = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR;
 
     /* Error status */
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER" || FLEXCOM_USART_MR_USART_MODE == "LIN_SLAVE">
+    uint32_t errorStatus = (channelStatus & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_LIN_FRAME_Msk | FLEX_US_CSR_LIN_PARE_Msk | FLEX_US_CSR_LIN_TIMEOUT_Msk
+                                           | FLEX_US_CSR_LIN_LINBE_Msk | FLEX_US_CSR_LIN_LINISFE_Msk | FLEX_US_CSR_LIN_LINIPE_Msk
+                                           | FLEX_US_CSR_LIN_LINCE_Msk | FLEX_US_CSR_LIN_LINSNRE_Msk | FLEX_US_CSR_LIN_LINSTE_Msk | FLEX_US_CSR_LIN_LINHTE_Msk));
+<#else>
     uint32_t errorStatus = (channelStatus & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk));
+</#if>
 
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isInterruptActive = true;
@@ -907,4 +984,186 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
     }
 </#if>
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER" || FLEXCOM_USART_MR_USART_MODE == "LIN_SLAVE">
+
+    /* LIN Break Detected */
+    if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_LIN_LINBK_Msk) != 0U)
+    {
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
+
+        if( ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.breakCallback != NULL)
+        {
+            uintptr_t breakContext = ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.breakContext;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.breakCallback(breakContext);
+        }
+    }
+
+    /* LIN ID Receive */
+    if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_LIN_LINID_Msk) != 0U)
+    {
+        /* Clear the status register */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
+
+        /* Check if the ID callback function is set */
+        if( ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.idCallback != NULL)
+        {
+            /* Retrieve the context for the ID callback */
+            uintptr_t idContext = ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.idContext;
+            /* Check if the ID callback function is set */
+            ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.idCallback(idContext);
+        }
+    }
+
+    /* LIN Transfer Complete */
+    if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_LIN_LINTC_Msk) != 0U)
+    {
+        /* Clear the status register */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
+
+        /* Check if the transfer callback function is set */
+        if( ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.tranferCallback != NULL)
+        {
+            /* Retrieve the context for the transfer callback */
+            uintptr_t transferContext = ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.tranferContext;
+            /* Call the transfer callback function with the context */
+            ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.tranferCallback(transferContext);
+        }
+    }
+</#if>
 }
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER" || FLEXCOM_USART_MR_USART_MODE == "LIN_SLAVE">
+
+/* Sets the LIN (Local Interconnect Network) node action for ${FLEXCOM_INSTANCE_NAME}. */
+void ${FLEXCOM_INSTANCE_NAME}_LIN_NodeActionSet( FLEXCOM_LIN_NACT action )
+{
+    /* Clear the current node action bits in the LIN Mode Register (LINMR). */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR &= ~(FLEX_US_LINMR_NACT_Msk);
+    /* Set the new node action by applying the provided action value. */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR |= FLEX_US_LINMR_NACT(action);
+}
+
+/* Writes an identifier to the LIN Identifier Register (LINIR) of ${FLEXCOM_INSTANCE_NAME}. */
+bool ${FLEXCOM_INSTANCE_NAME}_LIN_IdentifierWrite( uint8_t id)
+{
+    bool status = false;
+
+    /* Reset the status bits in the Control Register (CR). */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
+
+    /* Check if the Transmit Ready (TXRDY) flag is set in the Channel Status Register (CSR). */
+    if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk) != 0U)
+    {
+        /* If TXRDY is set, write the identifier to the LIN Identifier Register (LINIR). */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINIR = id;
+        /* Set the status to true indicating the identifier was successfully written. */
+        status = true;
+    }
+
+    return status;
+}
+
+/* Reads and returns the LIN identifier from the ${FLEXCOM_INSTANCE_NAME} register. */
+uint8_t ${FLEXCOM_INSTANCE_NAME}_LIN_IdentifierRead(void)
+{
+    return (uint8_t)(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINIR);
+}
+
+/* Enables or disables the parity check for LIN communication. */
+void ${FLEXCOM_INSTANCE_NAME}_LIN_ParityEnable(bool parityEnable)
+{
+    if(parityEnable == true)
+    {
+        /* Clear the PARDIS bit to enable parity. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR &= ~FLEX_US_LINMR_PARDIS_Msk;
+    }
+    else
+    {
+        /* Set the PARDIS bit to disable parity. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR |= FLEX_US_LINMR_PARDIS_Msk;
+    }
+}
+
+/* Enables or disables the checksum for LIN communication. */
+void ${FLEXCOM_INSTANCE_NAME}_LIN_ChecksumEnable(bool checksumEnable)
+{
+    if(checksumEnable == true)
+    {
+        /* Clear the CHKDIS bit to enable checksum. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR &= ~FLEX_US_LINMR_CHKDIS_Msk;
+    }
+    else
+    {
+        /* Set the CHKDIS bit to disable checksum. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR |= FLEX_US_LINMR_CHKDIS_Msk;
+    }
+}
+
+/* Sets the type of checksum to be used in LIN communication. */
+void ${FLEXCOM_INSTANCE_NAME}_LIN_ChecksumTypeSet(FLEXCOM_LIN_CHECKSUM_TYPE checksumType)
+{
+    /* Clear Existing Checksum Type */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR &= ~FLEX_US_LINMR_CHKTYP_Msk;
+    /* Set New Checksum Type */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR |= (uint32_t)checksumType;
+}
+
+<#if FLEXCOM_USART_MR_USART_MODE == "LIN_MASTER">
+/* Enables or disables the frame slot for LIN communication. */
+void ${FLEXCOM_INSTANCE_NAME}_LIN_FrameSlotEnable(bool frameSlotEnable)
+{
+    if(frameSlotEnable == true)
+    {
+        /* Clear the FSDIS bit to enable frame slot. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR &= ~FLEX_US_LINMR_FSDIS_Msk;
+    }
+    else
+    {
+        /* Set the FSDIS bit to disable frame slot. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR |= FLEX_US_LINMR_FSDIS_Msk;
+    }
+}
+
+</#if>
+/* Sets the data length mode for LIN communication. */
+void ${FLEXCOM_INSTANCE_NAME}_LIN_DataLenModeSet(FLEXCOM_LIN_DATA_LEN dataLenMode)
+{
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR &= ~FLEX_US_LINMR_DLM_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR |= (uint32_t)dataLenMode;
+}
+
+/* Sets the response data length for LIN communication. */
+void ${FLEXCOM_INSTANCE_NAME}_LIN_ResponseDataLenSet(uint8_t len)
+{
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR &= ~FLEX_US_LINMR_DLC_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_LINMR |= FLEX_US_LINMR_DLC((uint32_t)len-1U);
+}
+
+/* Checks if the LIN transfer is complete and returns the status. */
+/* If a LIN transfer has completed, it returns 1; otherwise, it returns 0. */
+uint8_t ${FLEXCOM_INSTANCE_NAME}_LIN_TransferComplete(void)
+{
+    /* Check if the LIN transfer complete status bit is set in the status register */
+    return (uint8_t)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_LIN_LINTC_Msk) > 0U);
+}
+
+/* Registers a callback for LIN identifier events. */
+void ${FLEXCOM_INSTANCE_NAME}_LINIdCallbackRegister(FLEXCOM_LIN_CALLBACK callback, uintptr_t context)
+{
+    ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.idCallback = callback;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.idContext = context;
+}
+
+/* Registers a callback for LIN transfer complete events. */
+void ${FLEXCOM_INSTANCE_NAME}_LINTcCallbackRegister(FLEXCOM_LIN_CALLBACK callback, uintptr_t context)
+{
+    ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.tranferCallback = callback;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.tranferContext = context;
+}
+
+/* Registers a callback for LIN break events. */
+void ${FLEXCOM_INSTANCE_NAME}_LINBreakCallbackRegister(FLEXCOM_LIN_CALLBACK callback, uintptr_t context)
+{
+    ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.breakCallback = callback;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}LinObj.breakContext = context;
+}
+</#if>
