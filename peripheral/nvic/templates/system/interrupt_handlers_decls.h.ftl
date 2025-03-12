@@ -1,5 +1,6 @@
 <#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
 <#assign FREERTOS = (((HarmonyCore.SELECT_RTOS)??) && HarmonyCore.SELECT_RTOS == "FreeRTOS")>
+<#assign THREADX = (((HarmonyCore.SELECT_RTOS)??) && HarmonyCore.SELECT_RTOS == "ThreadX")>
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#compress>
     <#assign INTERRUPT_HANDLERS = ",">
@@ -56,7 +57,27 @@ void ${INTERRUPT_HANDLER} (void);
         </#if>
     </#list>
 </#compress>
+<#if THREADX>
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.2 deviated 3 times. Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_1 */
+/* MISRA C-2012 Rule 8.6 deviated 3 times.  Deviation record ID -  H3_MISRAC_2012_R_8_6_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block \
+(deviate:3 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_1")\
+(deviate:3 "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_DR_1")
+</#if>
+</#if>
 <#list INTERRUPT_HANDLERS?remove_beginning(",")?remove_ending(",")?split(",") as INTERRUPT_HANDLER>
 void ${INTERRUPT_HANDLER} (void);
 </#list>
+<#if THREADX>
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+#pragma GCC diagnostic pop
+</#if>
+/* MISRAC 2012 deviation block end */
+</#if>
 </#if>
