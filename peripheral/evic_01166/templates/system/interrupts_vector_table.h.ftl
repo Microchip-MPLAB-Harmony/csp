@@ -1,4 +1,5 @@
 <#assign FREERTOS_ENABLED = ((HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS") || ((FreeRTOS.SET_RTOS)?? && FreeRTOS.SET_RTOS == "FreeRTOS")>
+<#assign THREADX_ENABLED = ((HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "ThreadX")>
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Interrupt Vector declarations
@@ -20,7 +21,9 @@ void ${.vars[INT_NAME]}_Handler (void);
             <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
             <#assign INT_NAME = "EVIC_" + i + "_NAME">
             <#if (!FREERTOS_ENABLED) || !((.vars[INT_ENABLE_GENERATE]??) && (!.vars[INT_ENABLE_GENERATE]))>
+			<#if !(THREADX_ENABLED && (.vars[INT_NAME] == "TIMER_1"))>
 void ${.vars[INT_NAME]}_Handler (void);
+            </#if>
             </#if>
         </#if>
     </#if>
