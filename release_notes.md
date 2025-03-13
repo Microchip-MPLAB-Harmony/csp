@@ -3,6 +3,19 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.22.1
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed MISRA-C required rule violations in NVIC and EVIC PLIBs
+
+### Development Tools
+- Same as v3.22.0
+
 ## CSP Release v3.22.0
 
 ### New Features
