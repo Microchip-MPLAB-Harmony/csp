@@ -24,6 +24,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useContext } from 'react';
 import {
+  configSymbolApi,
   InputNumberDefault,
   PluginConfigContext,
   useBooleanSymbol,
@@ -55,6 +56,9 @@ const PeripheralsConfiguration = () => {
       componentId,
       symbolId: 'GCLK_' + rowData.id + '_OUTPUTENABLE'
     });
+    if (gclkOutPutEnable.value) {
+      configSymbolApi.setValue(componentId, 'GCLK_IN_' + rowData.id + '_FREQ', 0);
+    }
     return (
       <div>
         <Button
@@ -62,11 +66,10 @@ const PeripheralsConfiguration = () => {
           style={{ width: '50px' }}
           onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
             const buttonText = event.currentTarget.textContent || event.currentTarget.innerText;
-            console.log(buttonText);
             if (buttonText === 'Out') {
-              gclkOutPutEnable.writeValue(false);
+              configSymbolApi.setValue(componentId, 'GCLK_' + rowData.id + '_OUTPUTENABLE', false);
             } else {
-              gclkOutPutEnable.writeValue(true);
+              configSymbolApi.setValue(componentId, 'GCLK_' + rowData.id + '_OUTPUTENABLE', true);
             }
           }}
         />
@@ -75,11 +78,16 @@ const PeripheralsConfiguration = () => {
   };
 
   const InFrequencyBodyTemplate = (rowData: any) => {
+    const gclkOutPutEnable = useBooleanSymbol({
+      componentId,
+      symbolId: 'GCLK_' + rowData.id + '_OUTPUTENABLE'
+    });
     return (
       <div>
         <InputNumberDefault
           componentId={componentId}
           symbolId={'GCLK_IN_' + rowData.id + '_FREQ'}
+          disabled={gclkOutPutEnable.value}
         />
       </div>
     );

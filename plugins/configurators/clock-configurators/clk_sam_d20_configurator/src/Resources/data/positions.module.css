@@ -9,8 +9,8 @@
     position: absolute;
     width: 1600px;
     height: 950px;
-    top: 0;
-    left: -1px
+    left: 0;
+    top: 0
     }
 .Internal8Mhz_oscillators_settings {
     position: absolute;
@@ -667,7 +667,7 @@
     height: 150px;
     top: 605px;
     left: 966px;
-    width: 60px
+    width: 70px
     }
 .periClockConfig {
     position: absolute;
@@ -681,7 +681,7 @@
     width: 160px;
     height: 40px;
     left: 1139px;
-    top: 738px
+    top: 731px
     }
 .osc32High32KHzEnable {
     position: absolute;
@@ -695,14 +695,14 @@
     width: 20px;
     height: 20px;
     left: 364px;
-    top: 388px
+    top: 418px
     }
 .dfllRefClockRadio1 {
     position: absolute;
     width: 20px;
     height: 20px;
-    left: 364px;
-    top: 419px
+    top: 388px;
+    left: 364px
     }
 .dfllChannelEnable {
     position: absolute;
@@ -759,4 +759,18 @@
     height: 40px;
     left: 284px;
     top: 514px
+    }
+.d20_dfllReset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 1278px;
+    top: 538px
+    }
+.gclkIOReset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 1278px;
+    top: 773px
     }

@@ -34,9 +34,9 @@ const GCKLClockControllerBoxTemplate = (props: {
     componentId,
     symbolId: 'GCLK_' + props.tabTitle + '_SRC'
   });
-  const gclkDiv = useIntegerSymbol({
+  const gclkDivValue = useIntegerSymbol({
     componentId,
-    symbolId: 'GCLK_' + props.tabTitle + '_DIV'
+    symbolId: 'GCLK_' + props.tabTitle + '_DIVIDER_VALUE'
   });
   const gclkEnable = useBooleanSymbol({
     componentId: componentId,
@@ -46,7 +46,7 @@ const GCKLClockControllerBoxTemplate = (props: {
   return (
     <div>
       <PlainLabel
-        disPlayText={gclkDiv.value + ''}
+        disPlayText={gclkDivValue.value + ''}
         className={props.cx(props.gclkDivLabelClassName)}
       />
       <InputNumberDefault

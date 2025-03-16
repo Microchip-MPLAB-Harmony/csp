@@ -9,8 +9,8 @@
     position: absolute;
     height: 1350px;
     width: 1800px;
-    top: 0;
-    left: 0
+    left: 0;
+    top: 1px
     }
 .Internal8Mhz_oscillators_settings {
     position: absolute;
@@ -246,8 +246,8 @@
     position: absolute;
     height: 30px;
     width: 70px;
-    left: 1101px;
-    top: 631px
+    top: 631px;
+    left: 1101px
     }
 .gclkGen0RadioName0 {
     position: absolute;
@@ -722,10 +722,10 @@
     }
 .gclkXgenTab {
     position: absolute;
-    width: 60px;
     top: 780px;
     height: 190px;
-    left: 1196px
+    left: 1196px;
+    width: 70px
     }
 .periClockConfig {
     position: absolute;
@@ -752,14 +752,14 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 723px;
+    top: 763px;
     left: 487px
     }
 .dfllRefClockRadio1 {
     position: absolute;
     width: 20px;
     height: 20px;
-    top: 763px;
+    top: 725px;
     left: 487px
     }
 .dfllChannelEnable {
@@ -950,4 +950,18 @@
     width: 65px;
     left: 928px;
     top: 314px
+    }
+.peripheral_dfllReset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 1542px;
+    top: 721px
+    }
+.gclkIOReset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 1540px;
+    top: 943px
     }

@@ -99,7 +99,6 @@ const Oscillators8MHzControllerBox = (props: {
       <LoadDynamicFreqencyLabels
         componentId={componentId}
         dynamicLabelSymbolsInfo={dynamicLabelSymbolInfo}
-        redColorForZeroFrequency={true}
         cx={props.cx}
       />
 

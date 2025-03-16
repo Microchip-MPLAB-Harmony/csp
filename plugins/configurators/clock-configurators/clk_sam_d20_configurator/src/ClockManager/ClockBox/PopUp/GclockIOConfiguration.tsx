@@ -56,6 +56,9 @@ const PeripheralsConfiguration = () => {
       componentId,
       symbolId: 'GCLK_' + rowData.id + '_OUTPUTENABLE'
     });
+    if (gclkOutPutEnable.value) {
+      configSymbolApi.setValue(componentId, 'GCLK_IN_' + rowData.id + '_FREQ', 0);
+    }
     return (
       <div>
         <Button

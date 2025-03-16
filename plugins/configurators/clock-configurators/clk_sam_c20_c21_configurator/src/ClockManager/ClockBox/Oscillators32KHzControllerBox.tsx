@@ -32,7 +32,6 @@ let crsytal32KhzOscillatorSymbolArray = [
   'XOSC32K_EN1K',
   'XOSC32K_EN32K',
   'XOSC32K_STARTUP',
-  'CONFIG_CLOCK_RTC_SRC',
   'XOSC32K_CFDEN'
 ];
 const Oscillators32KHzControllerBox = (props: {

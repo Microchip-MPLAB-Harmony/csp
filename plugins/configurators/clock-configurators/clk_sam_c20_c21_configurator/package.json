@@ -56,7 +56,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react-native": "^0.66.9",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",

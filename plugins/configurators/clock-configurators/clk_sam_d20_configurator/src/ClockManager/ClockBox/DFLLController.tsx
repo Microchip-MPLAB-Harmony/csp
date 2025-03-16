@@ -70,7 +70,7 @@ const DFLLController = (props: {
     }
     let nDesiredOutputFreq = 48000000;
     let nRefFrequency = GCLK_ID_0_FREQ.value;
-    let nMulValue = nDesiredOutputFreq / nRefFrequency;
+    let nMulValue = Math.floor(nDesiredOutputFreq / nRefFrequency);
     configSymbolApi.setValue(componentId, 'CONFIG_CLOCK_DFLL_MUL', Number(nMulValue));
   };
 
@@ -113,10 +113,10 @@ const DFLLController = (props: {
       />
       {dfllOperationMode.selectedOption === 'Closed' && (
         <GetButton
-          buttonDisplayText={'Auto Calculate'}
+          label={'Auto Calculate'}
           className={props.cx('dfll_AutoCalculate')}
-          toolTip={'DFLL Auto Settings Calculation'}
-          buttonClick={() => {
+          tooltip={'DFLL Auto Settings Calculation'}
+          onClick={() => {
             autoCalculateAction();
           }}
         />

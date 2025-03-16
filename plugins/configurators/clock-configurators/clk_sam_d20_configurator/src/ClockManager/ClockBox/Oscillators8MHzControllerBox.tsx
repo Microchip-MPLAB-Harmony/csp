@@ -88,7 +88,6 @@ const Oscillators8MHzControllerBox = (props: {
   //     </div>
   //   );
   // };
-  console.log(osc8mPres.selectedOption);
   return (
     <div>
       <LoadDynamicComponents

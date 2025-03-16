@@ -37,7 +37,7 @@ const GclkXControllerBox = (props: {
     });
     return (
       <div
-        style={{ fontSize: '10px' }}
+        style={{ fontSize: '11px' }}
         className={GCLKClocKEnable.value ? props.cx('enable') : props.cx('disable')}>
         {option.name}
       </div>

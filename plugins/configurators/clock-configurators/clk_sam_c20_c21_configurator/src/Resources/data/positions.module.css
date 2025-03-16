@@ -10,7 +10,7 @@
     height: 950px;
     top: 0;
     width: 1600px;
-    left: -1px
+    left: 0
     }
 .internalOsc48Settings {
     position: absolute;
@@ -157,9 +157,9 @@
 .dpll96MInputFreq {
     position: absolute;
     height: 20px;
+    left: 333px;
     width: 80px;
-    left: 330px;
-    top: 340px
+    top: 342px
     }
 .dpll_settings {
     position: absolute;
@@ -924,8 +924,8 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    left: 1359px;
-    top: 736px
+    left: 1357px;
+    top: 733px
     }
 .gclkGenXDiv {
     position: absolute;
@@ -988,8 +988,8 @@
     position: absolute;
     height: 20px;
     width: 70px;
-    top: 338px;
-    left: 516px
+    left: 519px;
+    top: 342px
     }
 .gclkXgenTab {
     position: absolute;
@@ -1007,16 +1007,22 @@
     }
 .gclkIOConfiguration {
     position: absolute;
-    width: 150px;
     height: 40px;
-    left: 1224px;
-    top: 889px
+    top: 889px;
+    width: 120px;
+    left: 1230px
     }
-.rtcSettings {
-    box-sizing: border-box;
+.peripheralClockSelectionReset {
     height: 30px;
     position: absolute;
     width: 30px;
-    left: 1328px;
-    top: 738px
+    left: 1359px;
+    top: 441px
+    }
+.gclkIOReset {
+    height: 30px;
+    position: absolute;
+    width: 30px;
+    left: 1357px;
+    top: 903px
     }

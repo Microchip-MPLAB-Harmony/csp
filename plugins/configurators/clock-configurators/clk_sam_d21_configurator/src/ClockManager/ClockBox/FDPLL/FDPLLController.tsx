@@ -233,10 +233,10 @@ const FDPLLController = (props: {
         resetSymbolsArray={symbols}
       />
       <GetButton
-        buttonDisplayText={'Auto Calculate'}
+        label={'Auto Calculate'}
         className={props.cx('fdpllAutoCalculate')}
-        toolTip={'Press this to Auto-Calculate FDPLL Frequency'}
-        buttonClick={() => {
+        tooltip={'Press this to Auto-Calculate FDPLL Frequency'}
+        onClick={() => {
           setDialogStatus(true);
         }}
       />

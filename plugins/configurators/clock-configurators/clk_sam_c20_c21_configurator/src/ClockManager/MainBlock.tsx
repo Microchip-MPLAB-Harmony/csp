@@ -1,9 +1,9 @@
-import ClockSAMC20C21 from '../Resources/data/react_SAMC21.svg';
+import { ReactComponent as ClockSAMC20C21 } from '../Resources/data/react_SAMC21.svg';
 import positions from '../Resources/data/positions.module.css';
 import styles from './block-diagram-view.module.css';
 import tabCss from '../Styles/tab.module.css';
 import ClockSamC20C21Json from '../Resources/data/controls.json';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import OscillatorsControllerBox from './ClockBox/Oscillators48MHzControllerBox';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import FDPLLController from './ClockBox/FDPLL/FDPLLController';
@@ -13,7 +13,6 @@ import MainClockController from './ClockBox/MainClockController';
 import { MenuItem } from 'primereact/menuitem';
 import {
   createClassResolver,
-  PluginConfigContext,
   PluginToolbar,
   usePannableContainer,
   useZoomableContainer
@@ -24,12 +23,11 @@ import Gclk0ControllerBox from './ClockBox/GCLK/Gclk0ControllerBox';
 import Gclk1ControllerBox from './ClockBox/GCLK/Gclk1ControllerBox';
 import GclkXControllerBox from './ClockBox/GCLK/GclkXControllerBox';
 import PeripheralClockControllerBox from './ClockBox/PopUp/PeripheralClockControllerBox';
+import { initializeSVG } from './Tools/SVGhandler';
 
 export let controlJsonData = ClockSamC20C21Json as ControlInterface[];
 export const cx = createClassResolver(positions, styles, tabCss);
 const MainBlock = () => {
-  const { componentId = 'core' } = useContext(PluginConfigContext);
-
   const [summaryDialogVisible, setSummaryDialogVisible] = useState(false);
 
   const zoomableContainer = useZoomableContainer();
@@ -40,6 +38,9 @@ const MainBlock = () => {
   useEffect(() => {
     console.log(height, width);
   }, [height, width]);
+  useEffect(() => {
+    initializeSVG(cx);
+  }, []);
 
   const items: MenuItem[] = [
     // {
@@ -90,11 +91,7 @@ const MainBlock = () => {
             className={cx('svg-container')}
             ref={zoomableContainer.ref}
             {...zoomableContainer.props}>
-            <img
-              src={ClockSAMC20C21}
-              alt='icon'
-              className={cx('main-block-diagram')}
-            />
+            <ClockSAMC20C21 id='clk_sam_c20_c21-main-image'></ClockSAMC20C21>
             <OscillatorsControllerBox
               oscillatorData={getBoxControlData('oscillatorsControllerBox')}
               cx={cx}

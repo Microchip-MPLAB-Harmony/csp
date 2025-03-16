@@ -49,10 +49,6 @@ const DFLLController = (props: {
     symbolId: 'CONFIG_CLOCK_DFLL_MUL'
   });
   const dfllEnable = useBooleanSymbol({ componentId, symbolId: 'CONFIG_CLOCK_DFLL_ENABLE' });
-  const dfllOperationMode = useKeyValueSetSymbol({
-    componentId,
-    symbolId: 'CONFIG_CLOCK_DFLL_OPMODE'
-  });
   const CONFIG_CLOCK_DFLL_USB = useBooleanSymbol({
     componentId,
     symbolId: 'CONFIG_CLOCK_DFLL_USB'
@@ -76,7 +72,7 @@ const DFLLController = (props: {
       return;
     }
     let nDesiredOutputFreq = 48000000;
-    if (dfllOperationMode.selectedOption === 'Closed') {
+    if (dfllOPMode.selectedOption === 'Closed') {
       if (CONFIG_CLOCK_DFLL_USB.value) {
         configSymbolApi.setValue(componentId, 'CONFIG_CLOCK_DFLL_MUL', nDesiredOutputFreq / 1000);
         return;
@@ -109,7 +105,6 @@ const DFLLController = (props: {
         classResolver={props.cx}
         classPrefix={'dfllRefClockRadio'}
       />
-
       <SettingsDialog
         tooltip='DFLL Configuration'
         componentId={componentId}
@@ -124,12 +119,12 @@ const DFLLController = (props: {
         componentId={componentId}
         resetSymbolsArray={symbols}
       />
-      {dfllOperationMode.selectedOption === 'Closed' && (
+      {dfllOPMode.selectedOption === 'Closed' && (
         <GetButton
-          buttonDisplayText={'Auto Calculate'}
+          label={'Auto Calculate'}
           className={props.cx('dfll_AutoCalculate')}
-          toolTip={'DFLL Auto Settings Calculation'}
-          buttonClick={() => {
+          tooltip={'DFLL Auto Settings Calculation'}
+          onClick={() => {
             autoCalculateAction();
           }}
         />

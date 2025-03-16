@@ -1,4 +1,4 @@
-import ClockSAMD21 from '../Resources/data/react_SAMD21.svg';
+import { ReactComponent as ClockSAMD21 } from '../Resources/data/react_SAMD21.svg';
 import ClockSamC20C21Json from '../Resources/data/controls.json';
 import { useContext, useEffect, useState } from 'react';
 import { ConfirmDialog } from 'primereact/confirmdialog';
@@ -25,6 +25,7 @@ import GclkXControllerBox from './ClockBox/GCLK/GclkXControllerBox';
 import MainClockController from './ClockBox/MainClockController';
 import PeripheralClockControllerBox from './ClockBox/PopUp/PeripheralClockControllerBox';
 import FDPLLController from './ClockBox/FDPLL/FDPLLController';
+import { initializeSVG } from './SVGhandler';
 export let controlJsonData = ClockSamC20C21Json as ControlInterface[];
 
 export const cx = createClassResolver(positions, styles, tabCss);
@@ -43,6 +44,9 @@ const MainBlock = () => {
     console.log(height, width);
   }, [height, width]);
 
+  useEffect(() => {
+    initializeSVG(cx);
+  }, []);
   function getBoxControlData(boxId: string) {
     return controlJsonData.filter((e) => e.box_id === boxId);
   }
@@ -92,11 +96,7 @@ const MainBlock = () => {
             className={cx('svg-container')}
             ref={zoomableContainer.ref}
             {...zoomableContainer.props}>
-            <img
-              src={ClockSAMD21}
-              alt='icon'
-              className={cx('main-block-diagram')}
-            />
+            <ClockSAMD21 id='clk_sam_d21-main-image'></ClockSAMD21>
             <Oscillators8MHzControllerBox
               oscillatorData={getBoxControlData('oscillators_8_MhzControllerBox')}
               cx={cx}
