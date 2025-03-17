@@ -30,11 +30,7 @@ import {
   InputNumberDefault,
   PluginConfigContext,
   symbolApi,
-  symbolUtilApi,
-  useBooleanSymbol,
-  useComboSymbol,
-  useStringSymbol,
-  useSymbol,
+  useComboSymbol
 } from "@mplab_harmony/harmony-plugin-client-lib";
 import FrequencyLabelComponent from "clock-common/lib/Components/LabelComponent/FrequencyLabelComponent";
 
@@ -57,10 +53,6 @@ const GenericClockConfiguration = () => {
   }
 
   const PeripheralBodyTemplate = (rowData: any) => {
-    // const stringSymbol = useStringSymbol({
-    //   componentId: componentId,
-    //   symbolId: channelPeripipheralMap[rowData.id]
-    // });
     return <div>{channelPeripipheralMap[rowData.id]}</div>;
   };
 

@@ -3,15 +3,16 @@ import { useRef } from 'react';
 import { GetIconButton } from './NodeType';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { symbolUtilApi } from '@mplab_harmony/harmony-plugin-client-lib';
-
-const ResetSymbolsIcon = (props: {
+import { ButtonProps } from 'primereact/button';
+interface ResetProps {
   tooltip: string;
   className: string;
   componentId: string;
   resetSymbolsArray: string[];
-}) => {
+}
+const ResetSymbolsIcon = (props: ResetProps & ButtonProps) => {
   const toastRef = useRef<any>();
-
+  const { componentId, resetSymbolsArray, ...expectProps } = props;
   function showToast() {
     toastRef.current.show({
       severity: 'success',
@@ -46,8 +47,7 @@ const ResetSymbolsIcon = (props: {
         ref={toastRef}
         position='bottom-right'></Toast>
       <GetIconButton
-        tooltip={props.tooltip}
-        className={props.className}
+        {...expectProps}
         onClick={ResetClick}
         icon={'pi pi-refresh'}
       />

@@ -1,42 +1,39 @@
-import { Button } from 'primereact/button';
+import { Button, ButtonProps } from 'primereact/button';
 
-export const GetIconButton = (props: {
+interface CustomIconProps {
   tooltip: string;
-  icon: string;
   className: string;
+  icon: string;
   onClick: () => void;
-}) => {
+}
+export const GetIconButton = (props: CustomIconProps & ButtonProps) => {
   const newClass =
     'p-button-rounded p-button-text p-button-plain p-button-lg p-mr-1 ' + props.className;
   return (
     <div>
       <Button
-        tooltip={props.tooltip}
         tooltipOptions={{ position: 'right' }}
-        icon={props.icon}
         style={{ color: 'black' }}
-        className={newClass}
         aria-label='Filter'
-        onClick={props.onClick}
+        {...props}
+        className={newClass}
       />
     </div>
   );
 };
-
-export function GetButton(props: {
-  buttonDisplayText: string;
+interface CustomProps {
+  label: string;
   className: string;
-  toolTip: string;
-  buttonClick: (arg0: any) => void;
-}) {
+  tooltip: string;
+  onClick: (arg0: any) => void;
+}
+export function GetButton(props: CustomProps & ButtonProps) {
   try {
     return (
       <Button
         aria-label='Filter'
-        tooltip={props.toolTip}
-        onClick={props.buttonClick}
-        label={props.buttonDisplayText}
-        className={props.className}
+        tooltipOptions={{ position: 'right' }}
+        {...props}
       />
     );
   } catch (err) {

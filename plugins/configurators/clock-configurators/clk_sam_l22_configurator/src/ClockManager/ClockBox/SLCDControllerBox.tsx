@@ -26,14 +26,14 @@ const SLCDControllerBox = (props: {
         labelClassPrefix='scld_sourceLabel'
         classResolver={props.cx}
       />
-      <SettingsDialog
+      {/* <SettingsDialog
         tooltip='Clock Settings Configuration'
         componentId={componentId}
         className={props.cx('scldClksettings')}
         symbolArray={['CONFIG_CLOCK_SLCD_SRC']}
         dialogWidth='50rem'
         dialogHeight='27rem'
-      />
+      /> */}
       <ResetSymbolsIcon
         tooltip='Reset Clock symbols to default value'
         className={props.cx('scldClkReset')}

@@ -1,12 +1,16 @@
-export declare const GetIconButton: (props: {
+import { ButtonProps } from 'primereact/button';
+interface CustomIconProps {
     tooltip: string;
+    className: string;
     icon: string;
-    className: string;
     onClick: () => void;
-}) => import("react/jsx-runtime").JSX.Element;
-export declare function GetButton(props: {
-    buttonDisplayText: string;
+}
+export declare const GetIconButton: (props: CustomIconProps & ButtonProps) => import("react/jsx-runtime").JSX.Element;
+interface CustomProps {
+    label: string;
     className: string;
-    toolTip: string;
-    buttonClick: (arg0: any) => void;
-}): import("react/jsx-runtime").JSX.Element;
+    tooltip: string;
+    onClick: (arg0: any) => void;
+}
+export declare function GetButton(props: CustomProps & ButtonProps): import("react/jsx-runtime").JSX.Element;
+export {};

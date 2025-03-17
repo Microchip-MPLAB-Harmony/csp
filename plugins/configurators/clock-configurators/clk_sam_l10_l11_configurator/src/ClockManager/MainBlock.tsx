@@ -24,6 +24,8 @@ import InternalOscillatorConfig from "./ClockBox/InternalOscillatorConfig";
 import DFLLControllerBox from "./ClockBox/DFLLControllerBox";
 import FDPLLControllerBox from "./ClockBox/FDPLLControllerBox";
 import Crstal32KhzOscialltorControllerBox from "./ClockBox/Crstal32KhzOscialltorControllerBox";
+import { ReactComponent as ADCBlockDiagram } from "../Resources/data/react_SAML10_L11.svg";
+import { initializeSVG } from "../SVGhandler";
 
 export let controlJsonData = ClockJson as ControlInterfac[];
 export function getBoxControlData(boxId: string) {
@@ -39,7 +41,9 @@ const MainBlock = () => {
 
   const zoomableContainer = useZoomableContainer();
   const pannableContainer = usePannableContainer();
-
+  useEffect(() => {
+    initializeSVG(componentId, cx);
+  }, []);
   useEffect(() => {}, []);
 
   const items: MenuItem[] = [
@@ -80,11 +84,12 @@ const MainBlock = () => {
           ref={zoomableContainer.ref}
           {...zoomableContainer.props}
         >
-          <img
+          {/* <img
             src={CLOCKSAMA7D6}
             alt='icon'
             className={cx('main-block-diagram')}
-          />
+          /> */}
+          <ADCBlockDiagram id="clk_sam_l10_l11-main-image"></ADCBlockDiagram>
            <InternalOscillatorConfig
             clockController={getBoxControlData('')}
             cx={cx}

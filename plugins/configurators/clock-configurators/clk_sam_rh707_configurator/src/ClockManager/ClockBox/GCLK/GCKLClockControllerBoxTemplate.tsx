@@ -42,6 +42,11 @@ const GCKLClockControllerBoxTemplate = (props: {
     componentId: componentId,
     symbolId: "CLK_PCK" + props.tabTitle + "_EN",
   });
+  const settingsArray = [
+    "CLK_PCK" + props.tabTitle + "_EN",
+    "CLK_PCK" + props.tabTitle + "_PRES",
+    "CLK_PCK" + props.tabTitle + "_CSS",
+  ];
  
   return (
     <div>
@@ -109,13 +114,13 @@ const GCKLClockControllerBoxTemplate = (props: {
         symbolArray={props.gclkSettingsSymbolArray}
         dialogWidth='47rem'
         dialogHeight='50rem'
-      />
-      <ResetSymbolsIcon
-        tooltip={'GCLK ' + props.tabTitle + ' symbols to default value'}
-        className={props.cx(props.gclkresetClassName)}
-        componentId={props.componentId}
-        resetSymbolsArray={props.gclkSettingsSymbolArray}
       /> */}
+      <ResetSymbolsIcon
+        tooltip={"PCK " + props.tabTitle + " symbols to default value"}
+        className={props.cx("pcReset")}
+        componentId={props.componentId}
+        resetSymbolsArray={settingsArray}
+      />
     </div>
   );
 };

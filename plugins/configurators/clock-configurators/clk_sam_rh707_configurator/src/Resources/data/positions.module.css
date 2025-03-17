@@ -405,3 +405,24 @@
     top: 932px;
     left: 565px
     }
+.mcReset {
+    height: 15px;
+    position: absolute;
+    top: 198px;
+    width: 15px;
+    left: 1047px
+    }
+.pcReset {
+    height: 15px;
+    position: absolute;
+    width: 15px;
+    top: 438px;
+    left: 1001px
+    }
+.perCReset {
+    height: 15px;
+    position: absolute;
+    top: 808px;
+    width: 15px;
+    left: 998px
+    }

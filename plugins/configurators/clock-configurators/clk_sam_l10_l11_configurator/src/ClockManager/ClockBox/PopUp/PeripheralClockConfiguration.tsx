@@ -28,35 +28,23 @@ import {
   CheckBoxDefault,
   DropDownDefault,
   PluginConfigContext,
-  useComboSymbol,
-  useStringSymbol
+  useBooleanSymbol,
+  useKeyValueSetSymbol
 } from '@mplab_harmony/harmony-plugin-client-lib';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
 
 const GenericClockConfiguration = () => {
   const { componentId = 'core' } = useContext(PluginConfigContext);
 
-  const gclk_ids = useComboSymbol({
+  const gclk_ids = useKeyValueSetSymbol({
     componentId,
     symbolId: 'GCLK_IO_CLOCK_CONFIG_UI'
   });
-  let channelPeripipheralMap = gclk_ids.options;
-  let customLabelsArray = createCustomLengthArray();
-
-  function createCustomLengthArray() {
-    let dataArr = [];
-    for (let i = 0; i < channelPeripipheralMap.length; i++) {
-      dataArr.push({ id: i });
-    }
-    return dataArr;
-  }
+  let channelPeripipheralMap = gclk_ids.optionPairs;
+  const sortedData = channelPeripipheralMap.sort((a:any, b:any) => a.value.localeCompare(b.value));
 
   const PeripheralBodyTemplate = (rowData: any) => {
-    const stringSymbol = useStringSymbol({
-      componentId: componentId,
-      symbolId: channelPeripipheralMap[rowData.id] + '_NAME'
-    });
-    return <div>{stringSymbol.value}</div>;
+    return <div>{rowData.value}</div>;
   };
 
   const EnableBodyTemplate = (rowData: any) => {
@@ -64,7 +52,7 @@ const GenericClockConfiguration = () => {
       <div>
         <CheckBoxDefault
           componentId={componentId}
-          symbolId={channelPeripipheralMap[rowData.id] + '_CHEN'}
+          symbolId={rowData.key + '_CHEN'}
         />
       </div>
     );
@@ -75,28 +63,36 @@ const GenericClockConfiguration = () => {
       <div>
         <DropDownDefault
           componentId={componentId}
-          symbolId={channelPeripipheralMap[rowData.id] + '_GENSEL'}
+          symbolId={rowData.key + '_GENSEL'}
         />
       </div>
     );
   };
-
   const FrequencyBodyTemplate = (rowData: any) => {
+    const enable = useBooleanSymbol({
+      componentId,
+      symbolId: rowData.key + '_CHEN'
+    });
     return (
       <div>
-        <FrequencyLabelComponent
-          componentId={componentId}
-          symbolId={channelPeripipheralMap[rowData.id] + '_FREQ'}
-          className={''}
-        />
+        {enable.value ? (
+          <FrequencyLabelComponent
+            componentId={componentId}
+            symbolId={rowData.key + '_FREQ'}
+            redColorForZeroFrequency={true}
+            className={''}
+          />
+        ) : (
+          '--'
+        )}
       </div>
     );
   };
-
+  
   return (
     <div>
       <DataTable
-        value={customLabelsArray}
+        value={sortedData}
         style={{ minWidth: '650px' }}>
         <Column
           field='peripheral'

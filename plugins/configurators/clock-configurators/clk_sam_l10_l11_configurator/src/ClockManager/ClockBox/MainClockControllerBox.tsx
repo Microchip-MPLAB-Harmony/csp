@@ -58,14 +58,6 @@ const MainClockControllerBox = (props: {
         classPrefix="cpuDivider"
         classResolver={props.cx}
       />
-      <SettingsDialog
-        tooltip='Clock Settings Configuration'
-        componentId={componentId}
-        className={props.cx('mainClksettings')}
-        symbolArray={allJsonSymbols}
-        dialogWidth='50rem'
-        dialogHeight='27rem'
-      />
       <ResetSymbolsIcon
         tooltip='Reset Clock symbols to default value'
         className={props.cx('mainClkReset')}

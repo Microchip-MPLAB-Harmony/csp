@@ -98,13 +98,22 @@ const GenericClockConfig = () => {
   };
 
   const FrequencyBodyTemplate = (rowData: any) => {
+    const enable = useBooleanSymbol({
+      componentId,
+      symbolId: "CLK_" + channelPeripipheralMap[rowData.id] + "_GCLKEN"
+    });
     return (
       <div>
-        <FrequencyLabelComponent
-          componentId={componentId}
-          symbolId={channelPeripipheralMap[rowData.id] + "_GCLK_FREQUENCY"}
-          className={""}
-        />
+        {enable.value ? (
+          <FrequencyLabelComponent
+            componentId={componentId}
+            symbolId={channelPeripipheralMap[rowData.id] +"_GCLK_FREQUENCY"}
+            redColorForZeroFrequency={true}
+            className={''}
+          />
+        ) : (
+          '--'
+        )}
       </div>
     );
   };

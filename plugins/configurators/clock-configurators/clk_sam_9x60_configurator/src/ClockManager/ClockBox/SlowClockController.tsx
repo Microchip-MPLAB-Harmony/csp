@@ -6,6 +6,7 @@ import {
   CheckBox,
   DropDown,
   InputNumber,
+  KeyValueSetRadio,
   PluginConfigContext,
   useBooleanSymbol,
   useIntegerSymbol,
@@ -39,6 +40,7 @@ const SlowClockController = (props: {
     componentId,
     symbolId: "CLK_OSC32BYP_FREQ",
   });
+  
   return (
     <div>
       <CheckBox
@@ -61,9 +63,10 @@ const SlowClockController = (props: {
         symbolId="TD_SLOW_CLOCK_FREQUENCY"
         redColorForZeroFrequency
       />
-      <DropDown
+      <KeyValueSetRadio
         keyValueSetSymbolHook={clk_td_oscsel}
-        className={props.cx("clk_td_oscsel")}
+        classPrefix="clk_td_oscsel"
+        classResolver={props.cx}
       />
       <InputNumber
         integerSymbolHook={clk_osc32byp_freq}

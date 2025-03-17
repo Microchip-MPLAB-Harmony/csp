@@ -6,6 +6,7 @@ import {
   CheckBox,
   DropDown,
   InputNumber,
+  KeyValueSetRadio,
   PluginConfigContext,
   useBooleanSymbol,
   useIntegerSymbol,
@@ -59,9 +60,10 @@ const MainClockController = (props: {
         symbolId="MAINCK_FREQUENCY"
         redColorForZeroFrequency
       />
-      <DropDown
+      <KeyValueSetRadio
         keyValueSetSymbolHook={clk_moscsel}
-        className={props.cx("clk_moscsel")}
+        classPrefix="clk_moscsel"
+        classResolver={props.cx}
       />
       <InputNumber
         integerSymbolHook={clk_moscxtst}

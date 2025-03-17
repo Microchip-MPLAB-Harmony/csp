@@ -25,28 +25,22 @@ const GetDivValue = (text) => {
 };
 exports.GetDivValue = GetDivValue;
 const GetClockDisplayFreqValue = (value) => {
-    let newfreqValue = '';
-    if (value === 0) {
-        newfreqValue = value.toString() + ' Hz';
-        return newfreqValue;
-    }
+    let newfreqValue;
     let freqValue = value / 1000000;
-    if (!Number.isInteger(freqValue)) {
+    function formatNumber(num, decimals) {
+        return num.toFixed(decimals).replace(/\.?0+$/, '');
+    }
+    if (freqValue < 1) {
+        freqValue = value / 1000;
         if (freqValue < 1) {
-            freqValue = value / 1000;
-            if (freqValue < 1) {
-                newfreqValue = value.toFixed(3) + ' Hz';
-            }
-            else {
-                newfreqValue = freqValue.toFixed(3) + ' KHz';
-            }
+            newfreqValue = formatNumber(value, 3) + ' Hz';
         }
         else {
-            newfreqValue = freqValue.toFixed(3) + ' MHz';
+            newfreqValue = formatNumber(freqValue, 3) + ' kHz';
         }
     }
     else {
-        newfreqValue = freqValue.toString() + ' MHz';
+        newfreqValue = formatNumber(freqValue, 6) + ' MHz';
     }
     return newfreqValue;
 };

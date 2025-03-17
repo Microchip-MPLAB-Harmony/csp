@@ -20,20 +20,6 @@ import FrequencyLabelComponent from "clock-common/lib/Components/LabelComponent/
 import LoadDynamicComponents from "clock-common/lib/Components/Dynamic/LoadDynamicComponents";
 import PlainLabel from "clock-common/lib/Components/LabelComponent/PlainLabel";
 
-const settingsArray = [
-  "CONF_CLOCK_XOSC32K_ENABLE",
-  "XOSC32K_OSCILLATOR_MODE",
-  "XOSC32K_FREQ_IN",
-  "XOSC32K_ONDEMAND",
-  "XOSC32K_CGM",
-  "XOSC32K_ENSL",
-  "XOSC32K_BOOST",
-  "XOSC32K_STARTUP",
-  "CONFIG_CLOCK_RTC_SRC",
-  "XOSC32K_CFDEN",
-  "XOSC32K_CFDPRESC",
-  "XOSC32K_SWBACK",
-];
 const internalOscSettingsArray = [
   "CONFIG_CLOCK_OSC16M_ENABLE",
   "CONFIG_CLOCK_OSC16M_ONDEMAND",
@@ -103,9 +89,10 @@ const InternalOscillatorConfig = (props: {
         booleanSymbolHook={crystalOSC}
         className={props.cx("crystalOSC")}
       />
-      <DropDown
+      <KeyValueSetRadio
         keyValueSetSymbolHook={externalOSCMode}
-        className={props.cx("externalOSCMode")}
+        classPrefix="externalOSCMode"
+        classResolver={props.cx}
       />
       <InputNumber
         integerSymbolHook={xoscFrequency}
@@ -127,22 +114,11 @@ const InternalOscillatorConfig = (props: {
         dialogWidth="50rem"
         dialogHeight="47rem"
       />
-      <PlainLabel
-        disPlayText={internalOSC48Div.selectedOptionPair?.key + ""}
-        className={props.cx("internalOSC16DivLabel")}
-        booldStatus
-      />
-      <ResetSymbolsIcon
-        tooltip="Reset Clock symbols to default value"
-        className={props.cx("internalOscReset")}
-        componentId={componentId}
-        resetSymbolsArray={internalOscSettingsArray}
-      />
       <ResetSymbolsIcon
         tooltip="Reset Clock symbols to default value"
         className={props.cx("crystalOscReset")}
         componentId={componentId}
-        resetSymbolsArray={crystalOscSettingsArray}
+        resetSymbolsArray={[...crystalOscSettingsArray,...internalOscSettingsArray]}
       />
     </div>
   );

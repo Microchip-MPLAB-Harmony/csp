@@ -10,16 +10,6 @@ import {
 import { getDynamicSymbolsFromJSON } from "clock-common/lib/Tools/ClockJSONTools";
 import FrequencyLabelComponent from "clock-common/lib/Components/LabelComponent/FrequencyLabelComponent";
 import LoadDynamicComponents from "clock-common/lib/Components/Dynamic/LoadDynamicComponents";
-
-const osc32K_settings = [
-  "CONF_CLOCK_OSC32K_ENABLE",
-  "OSC32K_RUNSTDBY",
-  "OSC32K_ONDEMAND",
-  "OSC32K_EN1K",
-  "OSC32K_EN32K",
-  "OSC32K_STARTUP",
-];
-
 const xosc32K_settings = [
   "CONF_CLOCK_XOSC32K_ENABLE",
   "XOSC32K_OSCILLATOR_MODE",
@@ -28,7 +18,6 @@ const xosc32K_settings = [
   "XOSC32K_EN1K",
   "XOSC32K_EN32K",
   "XOSC32K_STARTUP",
-  "CONFIG_CLOCK_RTC_SRC",
 ];
 
 const Crstal32KhzOscialltorControllerBox = (props: {

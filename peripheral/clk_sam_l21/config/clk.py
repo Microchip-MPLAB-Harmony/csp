@@ -1409,7 +1409,13 @@ for peripheral in atdfContent.iter("module"):
 
 
 channelMap = {}
-gclkIOConfiguration_UI = []
+#########################################################################
+#KeyValueSet symbol for UI to identify gclk IO configuration */
+gclk_io_clk_ui_list_sym = coreComponent.createKeyValueSetSymbol("GCLK_IO_CLOCK_CONFIG_UI", clkMenu)
+gclk_io_clk_ui_list_sym.setOutputMode("Key")
+gclk_io_clk_ui_list_sym.setDisplayMode("Key")
+gclk_io_clk_ui_list_sym.setVisible(False)
+#####################################################################
 for key in indexSymbolMap.keys():
     index=key.split("GCLK_ID_")[1]
     channelMap[int(index)]=key
@@ -1419,7 +1425,7 @@ for index in sorted(channelMap.iterkeys()):
     name = indexSymbolMap.get(key)
     name = " ".join(name)
     
-    gclkIOConfiguration_UI.append(key)
+    gclk_io_clk_ui_list_sym.addKey(key, name , str(index))
 
     #GCLK Peripheral Channel Enable
     clkSymPeripheral = coreComponent.createBooleanSymbol(key + "_CHEN", gclkPeriChannel_menu)
@@ -1433,7 +1439,6 @@ for index in sorted(channelMap.iterkeys()):
     gclkSym_PERCHANNEL_NAME.setLabel("Peripheral")
     gclkSym_PERCHANNEL_NAME.setReadOnly(True)
     gclkSym_PERCHANNEL_NAME.setDefaultValue(name)
-
     #GCLK Peripheral Channel Index
     gclkSym_PERCHANNEL_INDEX = coreComponent.createIntegerSymbol(key + "_INDEX", clkSymPeripheral)
     gclkSym_PERCHANNEL_INDEX.setVisible(False)
@@ -1502,11 +1507,7 @@ for name in peripheralList:
 
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
     
-#########################################################################
-#Combo symbol for UI to identify gclk IO configuration */
-gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
-gclk_io_clk_ui_list_sym.setVisible(False)
-#####################################################################    
+    
 
 
 clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
@@ -1851,7 +1852,6 @@ clockSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 clockSystemDefFile.setSourcePath("../peripheral/clk_sam_l21/templates/system/definitions.h.ftl")
 clockSystemDefFile.setMarkup(True)
 
-# coreComponent.addPlugin("../peripheral/clk_sam_l21/plugin/clk_sam_l21.jar")
 coreComponent.addPlugin(
         "../../harmony-services/plugins/generic_plugin.jar",
         "CLK_UI_MANAGER_ID_CLK_SAM_L21",

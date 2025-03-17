@@ -42,11 +42,15 @@ const GCKLClockControllerBoxTemplate = (props: {
     componentId: componentId,
     symbolId: 'GCLK_INST_NUM' + props.tabTitle
   });
+  const gclkDivValue = useIntegerSymbol({
+    componentId,
+    symbolId: "GCLK_" + props.tabTitle + "_DIVIDER_VALUE",
+  });
 
   return (
     <div>
       <PlainLabel
-        disPlayText={gclkDiv.value + ''}
+        disPlayText={gclkDivValue.value + ''}
         className={props.cx(props.gclkDivLabelClassName)}
         booldStatus={true}
       />

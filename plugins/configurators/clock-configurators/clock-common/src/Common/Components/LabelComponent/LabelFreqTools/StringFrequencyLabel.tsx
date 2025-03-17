@@ -5,6 +5,7 @@ import { LabelProps } from '../FrequencyLabelComponent';
 
 const StringFrequencyLabel = (props: SymbolProps & LabelProps) => {
   const clockFreq = useStringSymbol(props);
+  const formattedClockFreq = Number(clockFreq.value).toLocaleString();
   return (
     <div>
       <PlainLabel
@@ -14,7 +15,11 @@ const StringFrequencyLabel = (props: SymbolProps & LabelProps) => {
           props.minMaxOutofRangeRedColorStatus === true
         }
         booldStatus={props.boldLabelStatus}
-        toolTip={props.tooltip ? props.tooltip : clockFreq.value + ' Hz'}
+        toolTip={
+          props.tooltip
+            ? `${formattedClockFreq} Hz ( ${props.tooltip} )`
+            : `${formattedClockFreq} Hz`
+        }
         className={props.className}
       />
     </div>

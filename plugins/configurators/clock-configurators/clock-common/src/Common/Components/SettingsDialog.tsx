@@ -1,19 +1,19 @@
-import { Button } from 'primereact/button';
+import { Button, ButtonProps } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { GetIconButton } from './NodeType';
-import MultipleUIComponentsWithLabel from './MultipleUIComponentsWithLabel';
 import { useState } from 'react';
-
-const SettingsDialog = (props: {
+import MultipleUIComponentsWithLabel from './MultipleUIComponentsWithLabel';
+interface SettingsProps {
   tooltip: string;
   className: string;
   componentId: string;
   symbolArray: string[];
   dialogWidth: string;
   dialogHeight: string;
-}) => {
+}
+const SettingsDialog = (props: SettingsProps & ButtonProps) => {
   const [settingDialogStatus, setSettingDialogStatus] = useState(false);
-
+  const { componentId, symbolArray, dialogWidth, dialogHeight, ...expectProps } = props;
   const footer = (
     <div>
       <Button
@@ -27,10 +27,9 @@ const SettingsDialog = (props: {
   return (
     <div>
       <GetIconButton
-        tooltip={props.tooltip}
-        icon='pi pi-cog'
-        className={props.className}
+        {...expectProps}
         onClick={() => setSettingDialogStatus(true)}
+        icon='pi pi-cog'
       />
 
       <Dialog

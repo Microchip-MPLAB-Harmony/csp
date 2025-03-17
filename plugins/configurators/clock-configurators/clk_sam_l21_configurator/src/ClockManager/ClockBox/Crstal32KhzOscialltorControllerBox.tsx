@@ -28,7 +28,6 @@ const xosc32K_settings = [
   "XOSC32K_EN1K",
   "XOSC32K_EN32K",
   "XOSC32K_STARTUP",
-  "CONFIG_CLOCK_RTC_SRC",
 ];
 
 const Crstal32KhzOscialltorControllerBox = (props: {

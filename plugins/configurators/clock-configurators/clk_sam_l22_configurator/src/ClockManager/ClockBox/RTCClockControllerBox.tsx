@@ -42,14 +42,14 @@ const RTCClockControllerBox = (props: {
         labelClassPrefix='rtcClkRadioName'
         classResolver={props.cx}
       />
-      <SettingsDialog
+      {/* <SettingsDialog
         tooltip='Clock Settings Configuration'
         componentId={componentId}
         className={props.cx('rtkClksettings')}
         symbolArray={allJsonSymbols.concat('CONFIG_CLOCK_RTC_SRC')}
         dialogWidth='50rem'
         dialogHeight='27rem'
-      />
+      /> */}
       <ResetSymbolsIcon
         tooltip='Reset Clock symbols to default value'
         className={props.cx('rtcClkReset')}

@@ -4,7 +4,8 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import PeripheralClockConfiguration from './PeripheralClockConfiguration';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
-import { PluginConfigContext } from '@mplab_harmony/harmony-plugin-client-lib';
+import { PluginConfigContext, useComboSymbol } from '@mplab_harmony/harmony-plugin-client-lib';
+import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 
 const PeripheralClockControllerBox = (props: {
   clockController: ControlInterface[];
@@ -12,7 +13,21 @@ const PeripheralClockControllerBox = (props: {
 }) => {
   const { componentId = "core" } = useContext(PluginConfigContext);
   const [periPheralPopup, setPeriPheralPopup] = useState(false);
-
+  const gclk_ids = useComboSymbol({
+    componentId,
+    symbolId: 'GCLK_IO_CLOCK_CONFIG_UI'
+  });
+  let peripheralClockSymbolArray = createPeripheralSymbolsArray();
+  function createPeripheralSymbolsArray() {
+    let dataArr = [];
+    for (let i = 0; i < gclk_ids.options.length; i++) {
+      dataArr.push(gclk_ids.options[i] + "_CLOCK_ENABLE");
+      dataArr.push(gclk_ids.options[i] + '_GCLK_ENABLE');
+      dataArr.push(gclk_ids.options[i] + "_GCLK_CSS");
+      dataArr.push(gclk_ids.options[i] + "_GCLK_DIV");
+    }
+    return dataArr;
+  }
   return (
     <div>
       <FrequencyLabelComponent className={props.cx('rc2ck')} componentId={componentId} symbolId='CLK_RC2CK_FREQ'/>
@@ -36,6 +51,12 @@ const PeripheralClockControllerBox = (props: {
         }}>
         <PeripheralClockConfiguration />
       </Dialog>
+      <ResetSymbolsIcon
+        tooltip='Reset Peripheral symbols to default value'
+        className={props.cx('perCReset')}
+        componentId={componentId}
+        resetSymbolsArray={peripheralClockSymbolArray}
+      />
     </div>
   );
 };

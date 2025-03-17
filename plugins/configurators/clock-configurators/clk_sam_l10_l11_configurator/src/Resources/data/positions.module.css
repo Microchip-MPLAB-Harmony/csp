@@ -7,46 +7,46 @@
     }
 .internalOSC48 {
     position: absolute;
-    top: 22px;
-    left: 343px
+    top: 24px;
+    left: 393px
     }
 .internalOSC48Div {
     position: absolute;
     width: 100px;
-    left: 366px;
-    top: 81px
+    left: 308px;
+    top: 88px
     }
 .xoscFrequency {
     position: absolute;
     width: 100px;
-    left: 147px;
-    top: 159px
+    top: 159px;
+    left: 145px
     }
 .crystalOSC {
     position: absolute;
     top: 144px;
-    left: 375px
+    left: 374px
     }
 .externalOSCMode {
     position: absolute;
     height: 24px;
     width: 130px;
-    left: 363px;
-    top: 209px
+    left: 473px;
+    top: 179px
     }
 .internalOscSetting {
     position: absolute;
     width: 15px;
     height: 15px;
-    left: 320px;
-    top: 51px
+    left: 391px;
+    top: 53px
     }
 .crystalOscSetting {
     position: absolute;
     width: 15px;
     height: 15px;
-    left: 344px;
-    top: 176px
+    left: 373px;
+    top: 178px
     }
 .xosc48MFreq {
     position: absolute;
@@ -67,8 +67,8 @@
     height: 20px;
     font-weight: bold;
     font-size: large;
-    top: 35px;
-    left: 410px
+    left: 447px;
+    top: 15px
     }
 .oscDfllChannelEnable {
     position: absolute;
@@ -78,7 +78,7 @@
 .checkdfllEnable {
     position: absolute;
     top: 262px;
-    left: 492px
+    left: 491px
     }
 .mulValue {
     position: absolute;
@@ -123,7 +123,7 @@
 .fdpllEnable {
     position: absolute;
     top: 477px;
-    left: 521px
+    left: 520px
     }
 .dpllPrescalar {
     position: absolute;
@@ -173,8 +173,8 @@
     }
 .oscFdpllChannelEnable {
     position: absolute;
-    top: 601px;
-    left: 96px
+    top: 554px;
+    left: 109px
     }
 .dpllLdrLabel {
     position: absolute;
@@ -220,41 +220,41 @@
     position: absolute;
     width: 100px;
     height: 20px;
-    top: 542px;
-    left: 551px
+    left: 551px;
+    top: 539px
     }
 .dpllRefClockLabel0 {
     position: absolute;
     width: 100px;
     height: 20px;
-    top: 491px;
-    left: 129px
+    left: 129px;
+    top: 493px
     }
 .dpllRefClockLabel1 {
     position: absolute;
     width: 100px;
     height: 20px;
-    top: 557px;
-    left: 133px
+    top: 561px;
+    left: 149px
     }
 .dpllRefClockLabel2 {
     position: absolute;
     width: 100px;
     height: 20px;
-    top: 522px;
-    left: 126px
+    left: 126px;
+    top: 521px
     }
 .crystalOscReset {
     width: 10px;
     position: absolute;
-    top: 176px;
-    left: 369px
+    left: 484px;
+    top: 211px
     }
 .internalOscReset {
     width: 10px;
     position: absolute;
-    top: 51px;
-    left: 343px
+    left: 309px;
+    top: 20px
     }
 .osc32Crystal1KHzEnable {
     position: absolute;
@@ -284,14 +284,14 @@
 .xosc32KSettings {
     width: 10px;
     position: absolute;
-    left: 287px;
-    top: 948px
+    top: 948px;
+    left: 274px
     }
 .xosc32KReset {
     width: 10px;
     position: absolute;
-    left: 310px;
-    top: 948px
+    top: 948px;
+    left: 297px
     }
 .xosc32KFrequency {
     position: absolute;
@@ -370,7 +370,7 @@
 .gclkGen0Enable {
     position: absolute;
     top: 6px;
-    left: 794px
+    left: 793px
     }
 .gclkGen0DivLabel {
     position: absolute;
@@ -469,7 +469,7 @@
 .gclkGen1Enable {
     position: absolute;
     top: 299px;
-    left: 800px
+    left: 799px
     }
 .gclkGen1Div {
     position: absolute;
@@ -543,8 +543,8 @@
     width: 100px;
     height: 20px;
     text-align: right;
-    top: 550px;
-    left: 580px
+    left: 580px;
+    top: 550px
     }
 .gclkGen1SourceRadio1 {
     position: absolute;
@@ -718,7 +718,7 @@
     position: absolute;
     width: 20px;
     top: 679px;
-    left: 798px
+    left: 797px
     }
 .gclkGenXDiv {
     position: absolute;
@@ -826,9 +826,9 @@
     }
 .periClockConfig {
     position: absolute;
-    top: 334px;
     width: 120px;
-    left: 1077px
+    left: 1077px;
+    top: 327px
     }
 .rtcClkRadio0 {
     height: 20px;
@@ -863,28 +863,28 @@
     position: absolute;
     width: 82.2031px;
     left: 949px;
-    top: 485px
+    top: 489px
     }
 .rtcClkRadioName1 {
     height: 20px;
     position: absolute;
     width: 82.2031px;
     left: 950px;
-    top: 522px
+    top: 529px
     }
 .rtcClkRadioName2 {
     height: 20px;
     position: absolute;
     width: 82.2031px;
     left: 946px;
-    top: 561px
+    top: 567px
     }
 .rtcClkRadioName3 {
     height: 20px;
     position: absolute;
     width: 82.2031px;
     left: 946px;
-    top: 595px
+    top: 605px
     }
 .rtkClksettings {
     height: 30px;
@@ -938,4 +938,26 @@
     position: absolute;
     top: 91px;
     left: 1043px
+    }
+.externalOSCMode0 {
+    position: absolute;
+    left: 417px;
+    top: 124px
+    }
+.externalOSCMode1 {
+    position: absolute;
+    top: 161px;
+    left: 417px
+    }
+.peripheralClockSelectionReset {
+    display: block;
+    position: absolute;
+    top: 367px;
+    left: 1166px
+    }
+.gclkIOReset {
+    display: block;
+    position: absolute;
+    left: 1160px;
+    top: 723px
     }

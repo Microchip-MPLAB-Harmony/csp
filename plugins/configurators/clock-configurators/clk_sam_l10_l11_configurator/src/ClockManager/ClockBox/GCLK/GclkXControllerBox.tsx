@@ -1,10 +1,11 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 
 import { ListBox } from 'primereact/listbox';
 import { PluginConfigContext, useBooleanSymbol } from '@mplab_harmony/harmony-plugin-client-lib';
 import { getGclockSymbols } from './GclkSymbols';
 import GCKLClockControllerBoxTemplate from './GCKLClockControllerBoxTemplate';
+import { updateSVG } from '../../../SVGhandler';
 
 interface Tab {
   name: string;
@@ -25,13 +26,20 @@ const GclkXControllerBox = (props: {
   const { componentId = 'core' } = useContext(PluginConfigContext);
 
   const [value, setValue] = useState<Tab | null>(GCLKTabs[0]);
-
+  useEffect(() => {
+    if (value?.id == "4") {
+      updateSVG(true);
+    } else {
+      updateSVG(false);
+    }
+  }, [value]);
   const tabTemplate = (option: any) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const GCLKClocKEnable = useBooleanSymbol({
       componentId,
       symbolId: option.status
     });
+   
     return (
       <div
         style={{ fontSize: '10px' }}

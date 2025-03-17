@@ -237,7 +237,6 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_l10_l11/config/clock.py")
-# coreComponent.addPlugin("../peripheral/clk_sam_l10_l11/plugin/clk_sam_l10_l11.jar")
 coreComponent.addPlugin(
         "../../harmony-services/plugins/generic_plugin.jar",
         "CLK_UI_MANAGER_ID_CLK_SAM_L10_L11",

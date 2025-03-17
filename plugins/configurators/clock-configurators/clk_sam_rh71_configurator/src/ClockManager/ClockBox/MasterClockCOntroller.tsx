@@ -1,16 +1,10 @@
 import ResetSymbolsIcon from "clock-common/lib/Components/ResetSymbolsIcon";
 import ControlInterface from "clock-common/lib/Tools/ControlInterface";
-import SettingsDialog from "clock-common/lib/Components/SettingsDialog";
 import LoadDynamicComponents from "clock-common/lib/Components/Dynamic/LoadDynamicComponents";
 import { useContext, useState } from "react";
 import {
-  CheckBox,
-  DropDown,
-  InputNumber,
   KeyValueSetRadio,
   PluginConfigContext,
-  useBooleanSymbol,
-  useIntegerSymbol,
   useKeyValueSetSymbol,
 } from "@mplab_harmony/harmony-plugin-client-lib";
 import {
@@ -22,21 +16,7 @@ import LoadDynamicFreqencyLabels from "clock-common/lib/Components/Dynamic/LoadD
 import PlainLabel from "clock-common/lib/Components/LabelComponent/PlainLabel";
 import FrequencyLabelComponent from "clock-common/lib/Components/LabelComponent/FrequencyLabelComponent";
 
-const settingsArray = [
-  "CONFIG_CLOCK_DFLL_ENABLE",
-  "CONFIG_CLOCK_DFLL_OPMODE",
-  "CONFIG_CLOCK_DFLL_ONDEMAND",
-  "CONFIG_CLOCK_DFLL_RUNSTDY",
-  "CONFIG_CLOCK_DFLL_USB",
-  "CONFIG_CLOCK_DFLL_WAIT_LOCK",
-  "CONFIG_CLOCK_DFLL_BYPASS_COARSE",
-  "CONFIG_CLOCK_DFLL_QUICK_LOCK",
-  "CONFIG_CLOCK_DFLL_CHILL_CYCLE",
-  "CONFIG_CLOCK_DFLL_LLAW",
-  "CONFIG_CLOCK_DFLL_STABLE",
-  "CONFIG_CLOCK_DFLL_COARSE",
-  "CONFIG_CLOCK_DFLL_FINE",
-  "CONFIG_CLOCK_DFLL_MUL",
+const settingsArray = ['CLK_MCK_CSS','CLK_MCK_PRES','CLK_MCK_MDIV'
 ];
 
 const MasterClockBox = (props: {
@@ -113,15 +93,6 @@ const MasterClockBox = (props: {
         symbolId="CLK_PLLACK_FREQ"
         boldLabelStatus={clk_mck_css?.value===2}
       />
-      {/* <PlainLabel
-        disPlayText={masterClkPllaLabel.value + ""}
-        className={props.cx("masterClkPllaLabel")}
-        booldStatus
-      /> */}
-      {/* <InputNumber
-        integerSymbolHook={slck_ext_frq}
-        className={props.cx("slck_ext_frq")}
-      /> */}
       {/* <SettingsDialog
         tooltip="Advanced Settings"
         componentId={componentId}
@@ -129,13 +100,13 @@ const MasterClockBox = (props: {
         symbolArray={settingsArray}
         dialogWidth="50rem"
         dialogHeight="47rem"
-      />
+      />*/}
       <ResetSymbolsIcon
         tooltip="Reset Clock symbols to default value"
-        className={props.cx("dfllreset")}
+        className={props.cx("mcReset")}
         componentId={componentId}
         resetSymbolsArray={settingsArray}
-      /> */}
+      /> 
     </div>
   );
 };
