@@ -3,6 +3,24 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.22.2
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Added ETQFP064 and ETQFP100 pin diagram for PIC32CZ-CA70 and PIC32CZ-MC70 devices
+- Version dependencies for the following DFPs are updated
+  - PIC32CZ-CA70_DFP to version 1.1.27
+  - PIC32CZ-MC70_DFP to version 1.1.26
+  - PIC32CM-GC00_DFP to version 1.0.27
+  - PIC32CM-SG00_DFP to version 1.0.31
+
+### Development Tools
+- Same as v3.22.0
+
 ## CSP Release v3.22.1
 
 ### New Features
