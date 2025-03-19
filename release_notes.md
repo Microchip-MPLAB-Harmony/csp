@@ -12,6 +12,7 @@
 ### Bug fixes
 
 - Added ETQFP064 and ETQFP100 pin diagram for PIC32CZ-CA70 and PIC32CZ-MC70 devices
+- Fixed package pinout name issue in SUPC PLIB
 - Version dependencies for the following DFPs are updated
   - PIC32CZ-CA70_DFP to version 1.1.27
   - PIC32CZ-MC70_DFP to version 1.1.26
