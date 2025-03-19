@@ -103,10 +103,10 @@ def handleMessage(messageID, args):
             retDict = {"Result": "Success"}
         else:
             retDict = {"Result": "Fail"}
-        
+
     else:
         retDict= {"Result": "SUPC UnImplemented Command"}
-    
+
     return retDict
 
 ################################################################################
@@ -241,7 +241,12 @@ def instantiateComponent(supcComponent):
     signal = [False, False, False, False, False, False, False, False, False, False, False, False, False, False] #array to save available signals
 
     children = []
-    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(packageName)+"\"]")
+    pinout = ""
+    children = ATDF.getNode("/avr-tools-device-file/variants").getChildren()
+    for index in range(0, len(children)):
+        if packageName == children[index].getAttribute("package"):
+            pinout = children[index].getAttribute("pinout")
+    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(pinout)+"\"]")
     children = val.getChildren()
     for pad in range (0, len(children)):
         availablePins.append(children[pad].getAttribute("pad"))
