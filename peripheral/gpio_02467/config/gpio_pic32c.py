@@ -114,7 +114,7 @@ def setPinConfigurationValue(pinNumber, setting, value):
     
     symbolValue = value
     
-    if setting == 'function' and value != "GPIO":
+    if setting == 'function' and value != "GPIO" and "WBZ" not in Variables.get("__PROCESSOR"):
         symbolValue = symbolValue.replace(" (in)", "")
         symbolValue = symbolValue.replace(" (out)", "")
         symbolValue = symbolValue.replace(" (in/out)", "")
