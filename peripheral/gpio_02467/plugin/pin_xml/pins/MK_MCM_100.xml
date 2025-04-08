@@ -127,29 +127,32 @@
     <pin name="RG10">
        <number package="1" pin="17" />
       <function name="AN22" />
+      <function name="FLT9" />
       <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RE8">
        <number package="1" pin="18" />
       <function name="AN21" />
+      <function name="FLT10" />
     </pin>
     <pin name="RE9">
        <number package="1" pin="19" />
       <function name="AN20" />
+      <function name="FLT11" />
     </pin>
     <pin name="RA12">
        <number package="1" pin="20" />
       <function name="AN10" />
       <function name="RPA12" />
       <function name="USBOEN2" />
-      <function name="FLT13" />
+      <function name="FLT14" />
     </pin>
     <pin name="RA11">
        <number package="1" pin="21" />
       <function name="AN9" />
       <function name="RPA11" />
       <function name="USBOEN1" />
-      <function name="FLT14" />
+      <function name="FLT13" />
     </pin>
     <pin name="RA0">
        <number package="1" pin="22" />
@@ -549,7 +552,6 @@
       </modifiers>
       <number package="1" pin="84" />
       <function name="RPC9" />
-      <function name="FLT9" />
       <function name="PMD15" />
     </pin>
     <pin name="VSS">
@@ -582,7 +584,6 @@
       </modifiers>
       <number package="1" pin="89" />
       <function name="RPG1" />
-      <function name="FLT11" />
       <function name="PMD9" />
       <fixed-slew-rate name="Disable" />
     </pin>
@@ -592,7 +593,6 @@
       </modifiers>
       <number package="1" pin="90" />
       <function name="RPG0" />
-      <function name="FLT10" />
       <function name="PMD8" />
       <fixed-slew-rate name="Disable" />
     </pin>

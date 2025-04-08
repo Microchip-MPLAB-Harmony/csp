@@ -97,7 +97,7 @@
       <number package="2" pin="11" />
       <function name="AN10" />
       <function name="RPA12" />
-      <function name="FLT13" />
+      <function name="FLT14" />
     </pin>
     <pin name="RA11">
        <number package="1" pin="12" />
@@ -105,7 +105,7 @@
       <function name="AN9" />
       <function name="RPA11" />
       <function name="USBOEN1" />
-      <function name="FLT14" />
+      <function name="FLT13" />
     </pin>
     <pin name="RA0">
        <number package="1" pin="13" />
