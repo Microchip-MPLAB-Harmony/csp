@@ -1426,7 +1426,7 @@ for gclknumber in range(0, 12):
         gclkSym_GENCTRL_OOV[gclknumber].setOutputMode("Key")
         gclkSym_GENCTRL_OOV[gclknumber].setDisplayMode("Description")
 
-        gclkInFreq = coreComponent.createBooleanSymbol(
+        gclkInFreq = coreComponent.createIntegerSymbol(
             "GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
         gclkInFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d51_e51_e53_e54;register:GENCTRL")
         gclkInFreq.setLabel("Gclk Input Frequency")
@@ -1574,6 +1574,13 @@ for peripheral in atdfContent.iter("module"):
 
 
 channelMap = {}
+#########################################################################
+#KeyValueSet symbol for UI to identify gclk IO configuration */
+gclk_io_clk_ui_list_sym = coreComponent.createKeyValueSetSymbol("GCLK_IO_CLOCK_CONFIG_UI", clkMenu)
+gclk_io_clk_ui_list_sym.setOutputMode("Key")
+gclk_io_clk_ui_list_sym.setDisplayMode("Key")
+gclk_io_clk_ui_list_sym.setVisible(False)
+#####################################################################
 for key in indexSymbolMap.keys():
     index = key.split("GCLK_ID_")[1]
     channelMap[int(index)] = key
@@ -1582,6 +1589,8 @@ for index in sorted(channelMap.iterkeys()):
     key = channelMap[index]
     name = indexSymbolMap.get(key)
     name = " ".join(name)
+    
+    gclk_io_clk_ui_list_sym.addKey(key, name , str(index))
 
     # GCLK Peripheral Channel Enable
     clkSymPeripheral = coreComponent.createBooleanSymbol(
