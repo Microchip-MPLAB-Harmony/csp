@@ -544,15 +544,22 @@ bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, ui
     if (${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_MEM_WRITE, address))
     {
         /* Write to serial flash memory */
-        length_32bit = tx_data_length / 4U;
-        length_8bit= tx_data_length & 0x03U;
-
-        if(length_32bit != 0U)
+        if ((0x03U & (uint32_t) tx_data) == 0U)
         {
-            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(qspi_mem, tx_data, length_32bit);
+            length_32bit = tx_data_length / 4U;
+            length_8bit= tx_data_length & 0x03U;
+
+            if(length_32bit != 0U)
+            {
+                ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(qspi_mem, tx_data, length_32bit);
+            }
+            tx_data = tx_data + length_32bit;
+            qspi_mem = qspi_mem + length_32bit;
         }
-        tx_data = tx_data + length_32bit;
-        qspi_mem = qspi_mem + length_32bit;
+        else
+        {
+            length_8bit = tx_data_length;
+        }
 
         if(length_8bit != 0U)
         {
