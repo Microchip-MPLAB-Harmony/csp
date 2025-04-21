@@ -227,7 +227,15 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cz_ca/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_pic32cz_ca/plugin/clk_pic32cz_ca.jar")
+coreComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "CLK_UI_MANAGER_ID_CLK_PIC32CZ_CA",
+        {
+            "plugin_name": "Clock Configuration",
+            "main_html_path": "csp/plugins/configurators/clock-configurators/clk_pic32cz_ca_configurator/build/index.html",
+            "componentId": coreComponent.getID()
+        }
+    )
 
 # Cortex-M7 IP Configuration
 tcmMenu = coreComponent.createMenuSymbol("TCM_MENU", cortexMenu)

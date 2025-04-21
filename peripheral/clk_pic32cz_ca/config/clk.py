@@ -1412,6 +1412,13 @@ for peripheral in atdfContent.iter("module"):
 
 
 channelMap = {}
+#########################################################################
+#KeyValueSet symbol for UI to identify gclk IO configuration */
+gclk_io_clk_ui_list_sym = coreComponent.createKeyValueSetSymbol("GCLK_IO_CLOCK_CONFIG_UI", clkMenu)
+gclk_io_clk_ui_list_sym.setOutputMode("Key")
+gclk_io_clk_ui_list_sym.setDisplayMode("Key")
+gclk_io_clk_ui_list_sym.setVisible(False)
+#####################################################################
 for key in indexSymbolMap.keys():
     index = key.split("GCLK_ID_")[1]
     channelMap[int(index)] = key
@@ -1420,6 +1427,8 @@ for index in sorted(channelMap.iterkeys()):
     key = channelMap[index]
     name = indexSymbolMap.get(key)
     name = " ".join(name)
+    
+    gclk_io_clk_ui_list_sym.addKey(key, name , str(index))
 
     # GCLK Peripheral Channel Enable
     clkSymPeripheral = coreComponent.createBooleanSymbol(
