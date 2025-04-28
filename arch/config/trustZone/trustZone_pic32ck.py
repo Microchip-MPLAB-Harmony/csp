@@ -105,6 +105,8 @@ def calculateANSCSize(symbol, event):
     symbol.setValue("ANSC_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_ANSC_SIZE") * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
 def calculateRNSSize(symbol, event):
     symbol.setValue("RNS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_RNS_SIZE") * int(memoryGranularity["IDAU_RNS"]))).replace("L", ""))
+def calculateRSSize(symbol, event):
+    symbol.setValue("RS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_RS_SIZE") * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
 def calculateBootProtSize(symbol, event):
     symbol.setValue("BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE") * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 def calculateBNSCSize(symbol, event):
@@ -511,6 +513,15 @@ xc32LinkerMacro.setKey("preprocessor-macros")
 xc32LinkerMacro.setValue("RNS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_RNS_SIZE") * int(memoryGranularity["IDAU_RNS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
 xc32LinkerMacro.setDependencies(calculateRNSSize, ["IDAU_RNS_SIZE"])
+xc32LinkerMacro.setSecurity("SECURE")
+
+# set Linker Macros required for XC32
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE_SECURE", None)
+xc32LinkerMacro.setCategory("C32-LD")
+xc32LinkerMacro.setKey("preprocessor-macros")
+xc32LinkerMacro.setValue("RS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_RS_SIZE") * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
+xc32LinkerMacro.setAppend(True, ";=")
+xc32LinkerMacro.setDependencies(calculateRSSize, ["IDAU_RS_SIZE"])
 xc32LinkerMacro.setSecurity("SECURE")
 
 # set Linker Macros required for XC32
