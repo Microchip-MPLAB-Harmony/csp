@@ -196,6 +196,15 @@ void CLOCK_Initialize( void )
 
     // Set MISC[24]=0, CLKGEN_PLLRST = 0
     CFG_REGS->CFG_MISCSTAT  &= 0x00FFFFFFU;
+<#if PRODUCT_FAMILY?contains("PIC32CX_BZ3") || PRODUCT_FAMILY?contains("PIC32CX_BZ6")>
+    // Setting CPU QoS and FC QoS to same priority
+    <#if PRODUCT_FAMILY?contains("PIC32CX_BZ3")>
+        CFG_REGS->CFG_CFGPGQOS = (CFG_REGS->CFG_CFGPGQOS & ~(CFG_CFGPGQOS_FCQOS_Msk | CFG_CFGPGQOS_CPUQOS_Msk)) | ((0x03 << CFG_CFGPGQOS_FCQOS_Pos) | (0x03 << CFG_CFGPGQOS_CPUQOS_Pos));
+    <#elseif PRODUCT_FAMILY?contains("PIC32CX_BZ6")>
+        CFG_REGS->CFG_CFGPGQOS1 = (CFG_REGS->CFG_CFGPGQOS1 & ~(CFG_CFGPGQOS1_FCQOS_Msk | CFG_CFGPGQOS1_CPUQOS_Msk)) | ((0x03 << CFG_CFGPGQOS1_FCQOS_Pos) | (0x03 << CFG_CFGPGQOS1_CPUQOS_Pos));
+    </#if>
+</#if>
+
     //programming delay for pll lock - 500 us
     //32 us steps - check pll spec for final value
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 = ((BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 & ~BTZBSYS_SUBSYS_CNTRL_REG3_subsys_pll_ready_delay_Msk )
