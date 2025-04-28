@@ -111,6 +111,7 @@ def instantiateComponent(nvmComponent):
     global nvmInterruptHandler
     global nvmInterruptVectorUpdate
     global nvmInterruptEnable
+    global NVM_nameInATDF
 
     nvmInstanceName = nvmComponent.createStringSymbol("NVM_INSTANCE_NAME", None)
     nvmInstanceName.setVisible(False)
