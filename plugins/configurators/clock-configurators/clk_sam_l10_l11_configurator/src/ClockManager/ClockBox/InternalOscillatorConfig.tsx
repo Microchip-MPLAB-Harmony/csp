@@ -13,13 +13,13 @@ import {
   KeyValueSetRadio,
 } from "@mplab_harmony/harmony-plugin-client-lib";
 import FrequencyLabelComponent from "clock-common/lib/Components/LabelComponent/FrequencyLabelComponent";
-import PlainLabel from "clock-common/lib/Components/LabelComponent/PlainLabel";
 
 
 const internalOscSettingsArray = [
   "CONFIG_CLOCK_OSC16M_ENABLE",
   "CONFIG_CLOCK_OSC16M_ONDEMAND",
   "CONFIG_CLOCK_OSC16M_RUNSTDBY",
+  "CONFIG_CLOCK_OSC16M_FREQSEL"
 ];
 const crystalOscSettingsArray = [
   "CONFIG_CLOCK_XOSC_ENABLE",
