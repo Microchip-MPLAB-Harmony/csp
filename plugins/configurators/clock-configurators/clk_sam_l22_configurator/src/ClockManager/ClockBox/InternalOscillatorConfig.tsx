@@ -1,12 +1,9 @@
 import ResetSymbolsIcon from "clock-common/lib/Components/ResetSymbolsIcon";
 import ControlInterface from "clock-common/lib/Tools/ControlInterface";
 import SettingsDialog from "clock-common/lib/Components/SettingsDialog";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import {
-  ComboBox,
-  KeyValueSetCheckBox,
   KeyValueSetRadio,
-  KeyValueSetSymbol,
   InputNumber,
   CheckBox,
   DropDown,
@@ -15,15 +12,13 @@ import {
   useBooleanSymbol,
   useIntegerSymbol,
 } from "@mplab_harmony/harmony-plugin-client-lib";
-import { getDynamicSymbolsFromJSON } from "clock-common/lib/Tools/ClockJSONTools";
 import FrequencyLabelComponent from "clock-common/lib/Components/LabelComponent/FrequencyLabelComponent";
-import LoadDynamicComponents from "clock-common/lib/Components/Dynamic/LoadDynamicComponents";
-import PlainLabel from "clock-common/lib/Components/LabelComponent/PlainLabel";
 
 const internalOscSettingsArray = [
   "CONFIG_CLOCK_OSC16M_ENABLE",
   "CONFIG_CLOCK_OSC16M_ONDEMAND",
   "CONFIG_CLOCK_OSC16M_RUNSTDBY",
+  "CONFIG_CLOCK_OSC16M_FREQSEL"
 ];
 const crystalOscSettingsArray = [
   "CONFIG_CLOCK_XOSC_ENABLE",
