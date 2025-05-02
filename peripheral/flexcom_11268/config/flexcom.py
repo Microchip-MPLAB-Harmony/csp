@@ -160,8 +160,16 @@ def handleMessage(messageID, args):
         # To be implemented
 
     elif (messageID == "FLEXCOM_CONFIG_HW_IO"):
-        npcs, enable = args['config']
-        res = Database.setSymbolValue(deviceNamespace, "FLEXCOM_SPI_EN_{}".format(npcs.upper()), enable)
+        mode, npcs, enable = args['config']
+        res = False
+        if mode == "USART":
+            res = flexcomSym_OperatingMode.setSelectedKey("USART", 2)
+        elif mode == "SPI":
+            res = flexcomSym_OperatingMode.setSelectedKey("SPI", 2)
+            res = Database.setSymbolValue(deviceNamespace, "FLEXCOM_SPI_EN_{}".format(npcs.upper()), enable)
+        elif mode == "I2C":
+            res = flexcomSym_OperatingMode.setSelectedKey("TWI", 2)
+
         if res == True:
             result_dict = {"Result": "Success"}
         else:
