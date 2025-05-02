@@ -147,6 +147,9 @@ def getSERCOMSymbolValues(mode, signalId, padId):
                     if "DOonPAD[{}]".format(padId) in ctrlADOPO[index]:
                         symbolValue = index
                         break
+        elif signalId == 'cs':
+            symbolName = "SPI_MSSEN"
+            symbolValue = True
         else:
             symbolName = ""
             symbolValue = ""
@@ -279,6 +282,13 @@ def handleMessage(messageID, args):
 
         signalId = pinCtrl.get("signalId")
         padId = pinCtrl.get("padId")
+
+        if mode == "USART":
+            sercomSym_OperationMode.setSelectedKey("USART_INT", 2)
+        elif mode == "SPI":
+            sercomSym_OperationMode.setSelectedKey("SPIM", 2)
+        elif mode == "I2C":
+            sercomSym_OperationMode.setSelectedKey("I2CM", 2)
 
         (symbolName, symbolValue) = getSERCOMSymbolValues(mode, signalId, padId)
 
