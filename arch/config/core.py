@@ -120,11 +120,11 @@ def handleMessage(messageID, args):
         else:
             Database.setSymbolValue("core", "SYSTICK_PUBLISH_CAPABILITIES", False)
             Database.setSymbolValue("core", "SYSTICK_BUSY", False)
-            
+
     elif (messageID == "CONFIGURATOR_CLOCK_AUTO_CALCULATE_PLL_DIVIDERS" or messageID == "CONFIGURATOR_CLOCK_AUTO_CALCULATE_CLK_GEN_DIVIDERS"):
-        return handleClockSettingsMessage(messageID,args)  
-    
-          
+        return handleClockSettingsMessage(messageID,args)
+
+
 
     elif (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
         if Database.getSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID") != "":
@@ -566,8 +566,8 @@ def instantiateComponent( coreComponent ):
     coreSeries = coreComponent.createStringSymbol( "CoreSeries", None )
     archName = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
     seriesName = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" )
-   
-    
+
+
     if "33Axxx" in archName:
         if CORE_PIC32A in seriesName:
             coreArch.setDefaultValue(CORE_PIC32A)
@@ -578,7 +578,7 @@ def instantiateComponent( coreComponent ):
 
     coreArch.setReadOnly( True )
     coreArch.setVisible( False )
-    
+
     coreSeries.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" ) )
     coreSeries.setReadOnly( True )
     coreSeries.setVisible( False )
@@ -861,43 +861,43 @@ def instantiateComponent( coreComponent ):
                 xc32ISAMode.setLabel("Generate microMIPS Compressed Code")
             xc32ISAMode.setDefaultValue(False)
 
-    isBFMPresent, bfm_region = isBootFlashPresent()
+        isBFMPresent, bfm_region = isBootFlashPresent()
 
-    #Exception for BZ3/BZ6 series. For WBZ35 device, the VTABLE must be in PFM although it has Boot Flash Memory.
-    if any(ele in  Database.getSymbolValue("core", "CoreSeries") for ele in ["BZ3", "BZ6"]):
-        isBFMPresent = False
+        #Exception for BZ3/BZ6 series. For WBZ35 device, the VTABLE must be in PFM although it has Boot Flash Memory.
+        if any(ele in  Database.getSymbolValue("core", "CoreSeries") for ele in ["BZ3", "BZ6"]):
+            isBFMPresent = False
 
-    xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
-    xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
-    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and isBFMPresent == False:
-        xc32LdSymbolsMacrosMenu.setVisible(False)
+        xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
+        xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and isBFMPresent == False:
+            xc32LdSymbolsMacrosMenu.setVisible(False)
 
         xc32LdAppStartAddress = coreComponent.createStringSymbol("APP_START_ADDRESS", xc32LdSymbolsMacrosMenu)
         xc32LdAppStartAddress.setLabel("Application Start Address (Hex)")
         xc32LdAppStartAddress.setDefaultValue(str(hex(flash_start))[2:])
-    xc32LdAppStartAddress.setVisible(not(Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true"))
+        xc32LdAppStartAddress.setVisible(not(Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true"))
 
-    if isBFMPresent == True:
         if isBFMPresent == True:
             populateVtableMemRegionsList(bfm_region)
             xc32LdAppVtableMemRegion = coreComponent.createComboSymbol("VTABLE_MEM_REGION", xc32LdSymbolsMacrosMenu, vtableRegionList)
             xc32LdAppVtableMemRegion.setLabel("Place Vector Table in ")
             xc32LdAppVtableMemRegion.setDefaultValue(vtableRegionList[0])
 
-    # set XC32-LD option to Modify ROM Start address and length
-    xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
-    xc32LdPreprocessroMacroSym.setCategory("C32-LD")
-    xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
-    xc32LdMacorVal = ""
-    if isBFMPresent == True:
-        xc32LdMacorVal = getVtablePlacementParams(xc32LdAppVtableMemRegion.getValue())
-    xc32LdPreprocessroMacroSym.setValue(xc32LdMacorVal)
-    if not(Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true"):
-        xc32LdPreprocessroMacroSym.setAppend(True, ";=")
-        xc32LdPreprocessroMacroSym.setDependencies(updateAppPlacementParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
+        # set XC32-LD option to Modify ROM Start address and length
+        xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
+        xc32LdPreprocessroMacroSym.setCategory("C32-LD")
+        xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
+        xc32LdMacorVal = ""
+        if isBFMPresent == True:
+            xc32LdMacorVal = getVtablePlacementParams(xc32LdAppVtableMemRegion.getValue())
+        xc32LdPreprocessroMacroSym.setValue(xc32LdMacorVal)
 
-        xc32LdPreprocessroMacroSym.setAppend(True, ";=")
-        xc32LdPreprocessroMacroSym.setDependencies(updateAppPlacementParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
+        if not(Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true"):
+            xc32LdPreprocessroMacroSym.setAppend(True, ";=")
+            xc32LdPreprocessroMacroSym.setDependencies(updateAppPlacementParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
+
+            xc32LdPreprocessroMacroSym.setAppend(True, ";=")
+            xc32LdPreprocessroMacroSym.setDependencies(updateAppPlacementParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
 
         ## iar Tool Config
         iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
