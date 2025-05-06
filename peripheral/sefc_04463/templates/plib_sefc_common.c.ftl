@@ -78,7 +78,7 @@ SEFC_FLASH_PANEL SEFC_FlashPanelGet(uint32_t address)
 void SEFC_BankSwap(void)
 {
     bool isPanelSwap = ((SEFC_GpnvmBitRead() & FUSES_GPNVMBITS_PLANE_SELECTION_Msk) == FUSES_GPNVMBITS_PLANE_SELECTION_Msk);
-    isPanelSwap == true ? SEFC_GpnvmBitClear(FUSES_GPNVMBITS_PLANE_SELECTION_Pos) : SEFC_GpnvmBitSet(FUSES_GPNVMBITS_PLANE_SELECTION_Pos);
+    isPanelSwap == true ? SEFC_GpnvmBitClear((uint8_t)FUSES_GPNVMBITS_PLANE_SELECTION_Pos) : SEFC_GpnvmBitSet((uint8_t)FUSES_GPNVMBITS_PLANE_SELECTION_Pos);
 }
 
 bool SEFC_SectorErase( uint32_t address )
