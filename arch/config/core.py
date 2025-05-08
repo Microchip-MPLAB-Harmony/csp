@@ -54,10 +54,6 @@ for mem_idx in range(0, len(addr_space_children)):
         flash_start = int(addr_space_children[mem_idx].getAttribute("start"), 16)
         flash_size  = int(addr_space_children[mem_idx].getAttribute("size"), 16)
 
-if re.search(r"(?=.*PIC32CX)(?=.*MT)", Variables.get("__PROCESSOR")):
-    if ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"IFLASH1\"]") != None:
-        flash_size *= 2
-
 def getFlashParams(app_start):
 
     arch = Database.getSymbolValue("core", "CoreArchitecture")
