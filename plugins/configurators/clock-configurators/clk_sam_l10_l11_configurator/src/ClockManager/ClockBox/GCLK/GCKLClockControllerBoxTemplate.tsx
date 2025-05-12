@@ -54,7 +54,6 @@ const GCKLClockControllerBoxTemplate = (props: {
         updateSVG(false);
       }
     }, [gclkSel.optionPairs]);
-  console.log("keyValueSetSymbolHook",gclkSel)
 
   return (
     <div>

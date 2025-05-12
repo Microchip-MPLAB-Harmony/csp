@@ -50,7 +50,10 @@ const GclkXControllerBox = (props: {
           options={GCLKTabs}
           optionLabel='name'
           itemTemplate={tabTemplate}
-          onChange={(e) => setValue(e.value)}
+          onChange={(e) => {
+            if (e.value === null) return;
+            setValue(e.value);
+          }}
         />
       </div>
       <GCKLClockControllerBoxTemplate
