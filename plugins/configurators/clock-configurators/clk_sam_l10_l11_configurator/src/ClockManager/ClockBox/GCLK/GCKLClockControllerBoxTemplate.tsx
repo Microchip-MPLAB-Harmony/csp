@@ -12,7 +12,8 @@ import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
 import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { updateSVG } from '../../../SVGhandler';
 
 const GCKLClockControllerBoxTemplate = (props: {
   tabTitle: string;
@@ -46,6 +47,14 @@ const GCKLClockControllerBoxTemplate = (props: {
     componentId,
     symbolId: "GCLK_" + props.tabTitle + "_DIVIDER_VALUE",
   });
+  useEffect(() => {
+      if (gclkSel.optionPairs.length !== 8) {
+        updateSVG(true);
+      } else {
+        updateSVG(false);
+      }
+    }, [gclkSel.optionPairs]);
+  console.log("keyValueSetSymbolHook",gclkSel)
 
   return (
     <div>

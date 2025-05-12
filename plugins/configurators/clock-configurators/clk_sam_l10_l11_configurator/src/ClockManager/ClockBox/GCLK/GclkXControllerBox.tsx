@@ -26,13 +26,13 @@ const GclkXControllerBox = (props: {
   const { componentId = 'core' } = useContext(PluginConfigContext);
 
   const [value, setValue] = useState<Tab | null>(GCLKTabs[0]);
-  useEffect(() => {
-    if (value?.id == "4") {
-      updateSVG(true);
-    } else {
-      updateSVG(false);
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   if (value?.id == "4") {
+  //     updateSVG(true);
+  //   } else {
+  //     updateSVG(false);
+  //   }
+  // }, [value]);
   const tabTemplate = (option: any) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const GCLKClocKEnable = useBooleanSymbol({
