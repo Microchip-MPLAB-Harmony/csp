@@ -119,7 +119,7 @@ void ${FCW_INSTANCE_NAME}_PFM_PageWriteProtectRestore(uint32_t* pwp_region)
 {
     for (uint32_t region = 0; region < (uint32_t)FCW_PWP_REGIONS; region++)
     {
-        if (*pwp_region & ((uint32_t)1 << region))
+        if ((*pwp_region & ((uint32_t)1 << region)) != 0U)
         {
            ${FCW_INSTANCE_NAME}_PFM_WriteProtectEnable(region);
         }
@@ -136,7 +136,7 @@ bool ${FCW_INSTANCE_NAME}_PFM_PageWriteProtectDisable(uint32_t pageStartAddr, ui
 
     if ((pageStartAddr >= FCW_FLASH_START_ADDRESS) && (pageStartAddr < (FCW_FLASH_START_ADDRESS + FCW_FLASH_PFM_SIZE)))
     {
-        for (uint32_t region = 0; region < FCW_PWP_REGIONS; region++)
+        for (uint32_t region = 0; region < (uint32_t)FCW_PWP_REGIONS; region++)
         {
             if ((FCW_REGS->FCW_PWP[region] & FCW_PWP_PWPEN_Msk) != 0U)
             {
