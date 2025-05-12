@@ -54,6 +54,16 @@
 #include "plib_${FCW_INSTANCE_NAME?lower_case}.h"
 #include "device_cache.h"
 
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 10.3 deviated 2 times.  Deviation record ID -  H3_MISRAC_2012_R_10_3_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 10.3" "H3_MISRAC_2012_R_10_3_DR_1"
+</#if>
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: File Scope or Global Data                                         */
@@ -107,9 +117,9 @@ static volatile fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
 // *****************************************************************************
 void ${FCW_INSTANCE_NAME}_PFM_PageWriteProtectRestore(uint32_t* pwp_region)
 {
-    for (uint32_t region = 0; region < FCW_PWP_REGIONS; region++)
+    for (uint32_t region = 0; region < (uint32_t)FCW_PWP_REGIONS; region++)
     {
-        if (*pwp_region & (1 << region))
+        if (*pwp_region & ((uint32_t)1 << region))
         {
            ${FCW_INSTANCE_NAME}_PFM_WriteProtectEnable(region);
         }
@@ -128,20 +138,20 @@ bool ${FCW_INSTANCE_NAME}_PFM_PageWriteProtectDisable(uint32_t pageStartAddr, ui
     {
         for (uint32_t region = 0; region < FCW_PWP_REGIONS; region++)
         {
-            if (FCW_REGS->FCW_PWP[region] & FCW_PWP_PWPEN_Msk)
+            if ((FCW_REGS->FCW_PWP[region] & FCW_PWP_PWPEN_Msk) != 0U)
             {
                 region_start_addr = FCW_FLASH_START_ADDRESS;
                 region_start_addr += (FCW_REGS->FCW_PWP[region] & FCW_PWP_PWPBASE_Msk >> FCW_PWP_PWPBASE_Pos) << 12U;
 
                 region_end_addr = region_start_addr;
 
-                region_end_addr += ((FCW_REGS->FCW_PWP[region] & FCW_PWP_PWPSIZE_Msk) + 1) << 12U;
+                region_end_addr += ((FCW_REGS->FCW_PWP[region] & FCW_PWP_PWPSIZE_Msk) + 1U) << 12U;
 
                 if (pageStartAddr >= region_start_addr && pageStartAddr < region_end_addr)
                 {
                     ${FCW_INSTANCE_NAME}_PFM_WriteProtectDisable(region);
                     status = true;
-                    *pwp_region |= (1 << region);
+                    *pwp_region |= ((uint32_t)1 << region);
                 }
             }
         }
@@ -207,6 +217,14 @@ static void ${FCW_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  FCW
     ${FCW_INSTANCE_NAME}_REGS->FCW_CTRLOP = (FCW_CTRLOP_NVMOP_Msk & (((uint32_t)operation) << FCW_CTRLOP_NVMOP_Pos));
 </#if>
 }
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 10.3"
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+    </#if>
+</#if>
+/* MISRAC 2012 deviation block end */
 
 /* ************************************************************************** */
 /* ************************************************************************** */
