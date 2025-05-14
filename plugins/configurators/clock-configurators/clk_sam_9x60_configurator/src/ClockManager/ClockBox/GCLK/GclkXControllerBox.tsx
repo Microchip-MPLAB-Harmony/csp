@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useCallback } from 'react';
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
-
 import { ListBox } from 'primereact/listbox';
 import { PluginConfigContext } from '@mplab_harmony/harmony-plugin-client-lib';
 import GCKLClockControllerBoxTemplate from './GCKLClockControllerBoxTemplate';
@@ -11,54 +10,51 @@ interface Tab {
   status: string;
 }
 
-export const GCLKTabs: Tab[] = [
+const GCLKTabs: Tab[] = [
   { name: 'PCLK 0', id: '0', status: 'GCLK_INST_NUM2' },
   { name: 'PCLK 1', id: '1', status: 'GCLK_INST_NUM3' },
 ];
-export const getGclockSymbols = (index: string) => {
-  let symbols = [
-    "CLK_PCK" + index + "_CSS",
-    "CLK_PCK" + index + "_PRES",
-    "CLK_PCK" + index + "_EN"
-  ];
-  return symbols;
-};
-const GclkXControllerBox = (props: {
+
+const getGclockSymbols = (index: string) => [
+  `CLK_PCK${index}_CSS`,
+  `CLK_PCK${index}_PRES`,
+  `CLK_PCK${index}_EN`,
+];
+
+const GclkXControllerBox = ({ controller, cx }: {
   controller: ControlInterface[];
   cx: (...classNames: string[]) => string;
 }) => {
   const { componentId = 'core' } = useContext(PluginConfigContext);
-
   const [value, setValue] = useState<Tab>(GCLKTabs[0]);
 
-  const tabTemplate = (option: any) => {
-    return (
-      <div
-        style={{ fontSize: '10px' }}>
-        {option.name}
-      </div>
-    );
-  };
+  const handleTabChange = useCallback((e: any) => {
+    if (e.value !== null) setValue(e.value);
+  }, []);
+
+  const tabTemplate = useCallback((option: Tab) => (
+    <div style={{ fontSize: '10px' }}>{option.name}</div>
+  ), []);
+
   return (
     <div>
-      <div>
-        <ListBox
-          className={props.cx('pclkTabPane')}
-          value={value}
-          options={GCLKTabs}
-          optionLabel='name'
-          itemTemplate={tabTemplate}
-          onChange={(e) => setValue(e.value)}
-        />
-      </div>
+      <ListBox
+        className={cx('pclkTabPane')}
+        value={value}
+        options={GCLKTabs}
+        optionLabel="name"
+        itemTemplate={tabTemplate}
+        onChange={handleTabChange}
+      />
       <GCKLClockControllerBoxTemplate
         tabTitle={value?.name ? value.id : '0'}
         gclkSettingsSymbolArray={getGclockSymbols(value.id)}
-        gclkController={props.controller}
+        gclkController={controller}
         componentId={componentId}
-        cx={props.cx}
+        cx={cx}
       />
     </div>
   );
 };
+
 export default GclkXControllerBox;

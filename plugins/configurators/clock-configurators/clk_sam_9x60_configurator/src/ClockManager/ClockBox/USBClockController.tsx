@@ -55,8 +55,10 @@ const USBClockController = (props: {
         keyValueSetSymbolHook={clk_usb_usbs}
         classPrefix="clk_usb_usbs"
         classResolver={props.cx}
-        labelClassPrefix="clk_usb_usbs_l"
       />
+      <label style={{fontWeight:clk_usb_usbs.selectedOption==="PLLA"?'bold':''}} className={props.cx("clk_usb_usbs_l0")}>PLLACK</label>
+      <label style={{fontWeight:clk_usb_usbs.selectedOption==="UPLL"?'bold':''}} className={props.cx("clk_usb_usbs_l1")}>UPLLCK</label>
+      <label style={{fontWeight:clk_usb_usbs.selectedOption==="MAINXTAL"?'bold':''}} className={props.cx("clk_usb_usbs_l2")}>MAINXTALCK</label>
       <label className={props.cx("usbDivLabel")}>/ {`(${clk_usb_usbdiv.value} + 1)`}</label>
       <SettingsDialog
         tooltip="Advanced Settings"

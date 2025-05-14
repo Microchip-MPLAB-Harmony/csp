@@ -54,9 +54,15 @@ const GCKLClockControllerBoxTemplate = (props: {
       <KeyValueSetRadio
         keyValueSetSymbolHook={gclkSel}
         classPrefix={"clk_pckx_css"}
-        labelClassPrefix={"clk_pckx_css_l"}
         classResolver={props.cx}
       />
+      <label style={{fontWeight:gclkSel.value===0?'bold':''}} className={props.cx("clk_pckx_css_l0")}>MD_SLOW_CLK</label>
+      <label style={{fontWeight:gclkSel.value===1?'bold':''}} className={props.cx("clk_pckx_css_l1")}>TD_SLOW_CLOCK</label>
+      <label style={{fontWeight:gclkSel.value===2?'bold':''}} className={props.cx("clk_pckx_css_l2")}>MAINCK</label>
+      <label style={{fontWeight:gclkSel.value===3?'bold':''}} className={props.cx("clk_pckx_css_l3")}>MCK</label>
+      <label style={{fontWeight:gclkSel.value===4?'bold':''}} className={props.cx("clk_pckx_css_l4")}>PLLACK</label>
+      <label style={{fontWeight:gclkSel.value===5?'bold':''}} className={props.cx("clk_pckx_css_l5")}>UPLLCK</label>
+      
 
       <SettingsDialog
         tooltip={'PCLK ' + props.tabTitle + ' Settings Configuration'}
