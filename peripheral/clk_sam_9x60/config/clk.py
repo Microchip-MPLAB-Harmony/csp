@@ -911,13 +911,7 @@ for module_node in peripherals_node.getChildren():
                                           instance_name.lower() + "." + gclk_dependency_map[instance_name], instance_name + "_CLOCK_ENABLE"])
 
 
-#########################################################################
-#Combo symbol for UI to identify gclk IO configuration */
-pcrclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("PCRCLK_IO_CLOCK_CONFIG_UI", None, pcrclkIOConfiguration_UI)
-pcrclk_io_clk_ui_list_sym.setVisible(False)
-gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
-gclk_io_clk_ui_list_sym.setVisible(False)
-#####################################################################
+
 
 #Memory controllers all share one clock id 49
 memory_controllers = ['MPDDRC', 'SDRAMC', 'SMC']
@@ -925,11 +919,20 @@ for instance_name in memory_controllers:
     pcr_en = coreComponent.createBooleanSymbol(instance_name + "_CLOCK_ENABLE", pcr_menu)
     pcr_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_9x60;register:PMC_PCR")
     pcr_en.setLabel(instance_name)
+    pcrclkIOConfiguration_UI.append(instance_name)
 
     pcr_freq = coreComponent.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", pcr_menu)
     pcr_freq.setVisible(False)
     pcr_freq.setDefaultValue(mck.getValue())
     pcr_freq.setDependencies(lambda symbol, event: symbol.setValue(event['source'].getSymbolValue("MCK_FREQUENCY"),0), ['MCK_FREQUENCY'])
+
+#########################################################################
+#Combo symbol for UI to identify gclk IO configuration */
+pcrclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("PCRCLK_IO_CLOCK_CONFIG_UI", None, pcrclkIOConfiguration_UI)
+pcrclk_io_clk_ui_list_sym.setVisible(False)
+gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol("GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
+gclk_io_clk_ui_list_sym.setVisible(False)
+#####################################################################
 
 id_name_map = coreComponent.createStringSymbol("CLK_ID_NAME_49", pcr_menu)
 id_name_map.setVisible(False)
