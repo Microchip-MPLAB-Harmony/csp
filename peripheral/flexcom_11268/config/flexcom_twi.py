@@ -76,7 +76,8 @@ def showTwiDependencies(symbol, event):
 
     if symbol.getID() == "TWI_INTERRUPT_MODE":
         symbol.setReadOnly(twi_opmode == "MASTER")
-        symbol.setValue(True)
+        if (twi_opmode == "MASTER"):
+            symbol.setValue(True)
         symbol.setVisible(flexcom_mode == "TWI")
     else:
         symbol.setVisible(flexcom_mode == "TWI")
