@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*------------------------------------------------------------------------------
- *      Linker script for running in internal DDRAM on the SAMA5-MIURA
+ *      Linker script for running in internal SRAM on the SAMA5D2
  *----------------------------------------------------------------------------*/
 
 OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
@@ -33,9 +33,9 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-	ram        (RWX) : ORIGIN = 0x200000,   LENGTH = 128K /* sram */
-	dram         (!RWX) : ORIGIN = 0x21000000, LENGTH = 496M  /* ram */
-	dram_nocache  (!RWX) : ORIGIN = 0x20000000, LENGTH = 16M  /* ram (non-cached) */
+	sram        (LWX!R) : ORIGIN = 0x200000,   LENGTH = 128K /* sram */
+	ram         (W!RX) : ORIGIN = ${DDRAM_CACHE_START_ADDR}, LENGTH = ${DDRAM_CACHE_SIZE}  /* ram */
+	ram_nocache  (RWX) : ORIGIN = ${DDRAM_NO_CACHE_START_ADDR}, LENGTH = ${DDRAM_NO_CACHE_SIZE}  /* ram (non-cached) */
 }
 
 /* Sizes of the stacks used by the application. NOTE: you need to adjust */
@@ -51,17 +51,22 @@ FIQ_STACK_SIZE = ${FIQ_STACK_SIZE};
 SVC_STACK_SIZE = ${SVC_STACK_SIZE};
 ABT_STACK_SIZE = ${ABT_STACK_SIZE};
 UND_STACK_SIZE = ${UND_STACK_SIZE};
+HEAP_SIZE      = ${XC32_HEAP_SIZE};
 
 /* Section Definitions */
 SECTIONS
 {
-	.text ${APP_START_ADDRESS} :
+	.vectors :
 	{
 		. = ALIGN(4);
 		_sfixed = .;
 		KEEP(*(.vectors .vectors.*))
 		*(.textEntry)
+	} > sram
+	.fixed0 :
+	{
 		*(.text .text.* .gnu.linkonce.t.*)
+		*(.glue_7t) *(.glue_7)
 		*(.rodata .rodata* .gnu.linkonce.r.*)
 		*(.ARM.extab* .gnu.linkonce.armextab.*)
 
@@ -97,51 +102,53 @@ SECTIONS
 		KEEP(*(EXCLUDE_FILE (*crtend.o) .dtors))
 		KEEP(*(SORT(.dtors.*)))
 		KEEP(*crtend.o(.dtors))
-		*(.data .data.*);
 		. = ALIGN(4);
 		_efixed = .;            /* End of text section */
 
 		/* no relocation when running from sram */
 		_srelocate = .;
 		_erelocate = .;
-	} >ram
+	} >sram
+
+	.data : {
+		*(.data .data*);
+	} > sram
 
 	/* .ARM.exidx is sorted, so has to go in its own output section.  */
 	PROVIDE_HIDDEN (__exidx_start = .);
 	.ARM.exidx :
 	{
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
-	} >ram
+	} >sram
 	PROVIDE_HIDDEN (__exidx_end = .);
 
-	/* _etext must be just before .relocate section */
 	. = ALIGN(4);
 	_etext = .;
 
 	.region_cache_aligned_const :
 	{
 		. = ALIGN(32);
-		*(.region_cache_aligned_const)
+		*(.region_cache_aligned_const*)
 		. = ALIGN(32);
-	} >ram
+	} >sram
 
 	.region_sram (NOLOAD) :
 	{
 		. = ALIGN(4);
-		*(.region_sram)
+		*(.region_sram*)
 	} >sram
 
-	.region_ddr (NOLOAD) :
+	.region_ram (NOLOAD) :
 	{
 		. = ALIGN(4);
-		*(.region_ddr)
-	} >dram
+		*(.region_ram*)
+	} >ram
 
 	.region_nocache (NOLOAD) :
 	{
 		. = ALIGN(4);
-		*(.region_nocache .region_nocache.*)
-	} >dram_nocache
+		*(.region_nocache*)
+	} >ram_nocache
 
 	/* .bss section which is used for uninitialized data */
 	.bss (NOLOAD) :
@@ -152,21 +159,29 @@ SECTIONS
 		*(COMMON)
 		. = ALIGN(4);
 		_ezero = .;
-	} >ram
+	} >sram
 
 	.region_cache_aligned (NOLOAD) :
 	{
 		. = ALIGN(32);
-		*(.region_cache_aligned)
+		*(.region_cache_aligned*)
+		. = ALIGN(32);
+	} >sram
+
+	.region_ram_cache_aligned (NOLOAD) :
+	{
+		. = ALIGN(32);
+		*(.region_ram_cache_aligned*)
 		. = ALIGN(32);
 	} >ram
 
-	.region_ddr_cache_aligned (NOLOAD) :
+	.heap (NOLOAD) :
 	{
-		. = ALIGN(32);
-		*(.region_ddr_cache_aligned)
-		. = ALIGN(32);
-	} >ddr
+		. = ALIGN(4);
+		__heap_start__ = .;
+		. += HEAP_SIZE;
+		__heap_end__ = .;
+	} >sram
 
 	.stacks (NOLOAD) :
 	{
@@ -193,5 +208,5 @@ SECTIONS
 		. += C_STACK_SIZE;
 		. = ALIGN(8);
 		_cstack = .;
-	} >ram
+	} >sram
 }
