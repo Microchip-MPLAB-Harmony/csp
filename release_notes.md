@@ -3,6 +3,22 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.22.3
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Added arch support for PIC32CX_BZ36 and PIC32WM_BZ36 devices
+- Updated CLOCK and GPIO PLIB for PIC32CX_BZ36 and PIC32WM_BZ36 devices
+- Fixed dummy handler build issue
+- Updated PIC32CX-BZ3_DFP 1.3.216 version in package.yml
+
+### Development Tools
+- Same as v3.22.0
+
 ## CSP Release v3.22.2
 
 ### New Features
