@@ -136,7 +136,7 @@ const GenericClockConfig = () => {
           field="source"
           header="Source"
           body={SourceBodyTemplate}
-          style={{ textAlign: "center" }}
+          style={{ textAlign: "center",width:'200px' }}
         ></Column>
         <Column
           field="divisor"
@@ -149,7 +149,7 @@ const GenericClockConfig = () => {
           field="Frequency"
           header=" Frequency"
           body={FrequencyBodyTemplate}
-          style={{ textAlign: "center" }}
+          style={{ textAlign: "center",width:'200px' }}
         ></Column>
       </DataTable>
     </div>
