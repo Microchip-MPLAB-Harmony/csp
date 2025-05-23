@@ -86,6 +86,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t chanIntStatus;
     uint32_t channel;
+    XDMAC_TRANSFER_EVENT event = XDMAC_TRANSFER_NONE;
 
     /* Additional temporary variables used to prevent MISRA violations (Rule 13.x) */
     bool channelInUse;
@@ -94,6 +95,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     /* Iterate all channels */
     for (channel = 0U; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
     {
+        event = XDMAC_TRANSFER_NONE;
         channelInUse = xdmacChannelObj[channel].inUse;
         channelContext = xdmacChannelObj[channel].context;
 
@@ -105,22 +107,37 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 
             if ((chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk)) != 0U)
             {
-                xdmacChannelObj[channel].busyStatus = false;
-
                 /* It's an error interrupt */
-                if (NULL != xdmacChannelObj[channel].callback)
-                {
-                    xdmacChannelObj[channel].callback(XDMAC_TRANSFER_ERROR, channelContext);
-                }
+                event = XDMAC_TRANSFER_ERROR;
             }
             else if ((chanIntStatus & XDMAC_CIS_BIS_Msk) != 0U)
             {
-                xdmacChannelObj[channel].busyStatus = false;
-
                 /* It's a block transfer complete interrupt */
+                event = XDMAC_TRANSFER_COMPLETE;
+            }
+            else if ((chanIntStatus & XDMAC_CIS_LIS_Msk) != 0U)
+            {
+                /* It's an end of linked list interrupt */
+                event = XDMAC_TRANSFER_LINKED_LIST_END;
+            }
+            else if ((chanIntStatus & XDMAC_CIS_FIS_Msk) != 0U)
+            {
+                /* It's an end of flush operation interrupt */
+                event = XDMAC_TRANSFER_FLUSH_END;
+            }
+
+            if (event != XDMAC_TRANSFER_NONE) {
+                /* a flush event may occur while a DMA transfer is still running. Therefore don't 
+                 * reset the busyStatus in this case.
+                 */
+                if (event != XDMAC_TRANSFER_FLUSH_END)
+                {
+                    xdmacChannelObj[channel].busyStatus = false;
+                }
+
                 if (NULL != xdmacChannelObj[channel].callback)
                 {
-                    xdmacChannelObj[channel].callback(XDMAC_TRANSFER_COMPLETE, channelContext);
+                    xdmacChannelObj[channel].callback(event, channelContext);
                 }
             }
             else
@@ -137,6 +154,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
 {
     uint32_t chanIntStatus;
     uint32_t channel;
+    XDMAC_TRANSFER_EVENT event = XDMAC_TRANSFER_NONE;
 
     /* Additional temporary variables used to prevent MISRA violations (Rule 13.x) */
     bool channelInUse;
@@ -155,22 +173,37 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
 
             if ((chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk)) != 0U)
             {
-                xdmacChannelObj[channel].busyStatus = false;
-
                 /* It's an error interrupt */
-                if (NULL != xdmacChannelObj[channel].callback)
-                {
-                    xdmacChannelObj[channel].callback(XDMAC_TRANSFER_ERROR, channelContext);
-                }
+                event = XDMAC_TRANSFER_ERROR;
             }
             else if ((chanIntStatus & XDMAC_CIS_BIS_Msk) != 0U)
             {
-                xdmacChannelObj[channel].busyStatus = false;
-
                 /* It's a block transfer complete interrupt */
+                event = XDMAC_TRANSFER_COMPLETE;
+            }
+            else if ((chanIntStatus & XDMAC_CIS_LIS_Msk) != 0U)
+            {
+                /* It's an end of linked list interrupt */
+                event = XDMAC_TRANSFER_LINKED_LIST_END;
+            }
+            else if ((chanIntStatus & XDMAC_CIS_FIS_Msk) != 0U)
+            {
+                /* It's an end of flush operation interrupt */
+                event = XDMAC_TRANSFER_FLUSH_END;
+            }
+
+            if (event != XDMAC_TRANSFER_NONE) {
+                /* a flush event may occur while a DMA transfer is still running. Therefore don't 
+                 * reset the busyStatus in this case.
+                 */
+                if (event != XDMAC_TRANSFER_FLUSH_END)
+                {
+                    xdmacChannelObj[channel].busyStatus = false;
+                }
+
                 if (NULL != xdmacChannelObj[channel].callback)
                 {
-                    xdmacChannelObj[channel].callback(XDMAC_TRANSFER_COMPLETE, channelContext);
+                    xdmacChannelObj[channel].callback(event, channelContext);
                 }
             }
             else
