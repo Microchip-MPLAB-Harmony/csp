@@ -955,6 +955,7 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_CMR_TCCLKS[channelID] = tcComponent.createKeyValueSetSymbol("TC"+str(channelID)+"_CMR_TCCLKS", menu)
     tcSym_CH_CMR_TCCLKS[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_44162;register:TC_CMR")
     tcSym_CH_CMR_TCCLKS[channelID].setLabel("Select Clock Source")
+    clkSrcVal = 0
     tc_clock = []
     tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters")
     tc_clock = tc.getChildren()
@@ -962,11 +963,14 @@ def tcClockSymbols(tcComponent, channelID, menu):
         if ("TCCLKS" in tc_clock[clock].getAttribute("name")):
             name_split = tc_clock[clock].getAttribute("name").split("_")[1:]
             name = "_".join(name_split)
+            if tc_clock[clock].getAttribute("value") == "0" and (tc_clock[clock].getAttribute("name") != "TCCLKS_"):
+                tcSym_CH_CMR_TCCLKS[channelID].addKey("", "0", "MCK")
+                clkSrcVal = 1
             if ("TCCLKS_XC" in tc_clock[clock].getAttribute("name")):
                 if(extClock[int(tc_clock[clock].getAttribute("name")[-1])] == True):
-                    tcSym_CH_CMR_TCCLKS[channelID].addKey(name, tc_clock[clock].getAttribute("value"), tc_clock[clock].getAttribute("caption"))
+                    tcSym_CH_CMR_TCCLKS[channelID].addKey(name, str(int(tc_clock[clock].getAttribute("value"), 0) + clkSrcVal), tc_clock[clock].getAttribute("caption"))
             else:
-                tcSym_CH_CMR_TCCLKS[channelID].addKey(name, tc_clock[clock].getAttribute("value"), tc_clock[clock].getAttribute("caption"))
+                tcSym_CH_CMR_TCCLKS[channelID].addKey(name, str(int(tc_clock[clock].getAttribute("value"), 0) + clkSrcVal), tc_clock[clock].getAttribute("caption"))
     tcSym_CH_CMR_TCCLKS[channelID].setDefaultValue(0)
     tcSym_CH_CMR_TCCLKS[channelID].setOutputMode("Key")
     tcSym_CH_CMR_TCCLKS[channelID].setDisplayMode("Description")
