@@ -58,6 +58,8 @@
 /***************************** TRAM API *******************************/
 void ${TRAM_INSTANCE_NAME}_Initialize( void );
 
+bool ${TRAM_INSTANCE_NAME}_Enable(bool en);
+
 bool ${TRAM_INSTANCE_NAME}_RAMSet(uint32_t ramIndex, uint32_t data);
 
 bool ${TRAM_INSTANCE_NAME}_RAMGet(uint32_t ramIndex, uint32_t *data);
