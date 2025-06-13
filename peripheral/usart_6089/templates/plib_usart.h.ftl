@@ -72,6 +72,16 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 
 bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
+void ${USART_INSTANCE_NAME}_StartReadTimeoutNow(uint32_t nbitperiods);
+
+void ${USART_INSTANCE_NAME}_StartReadTimeoutAfterNextChar(uint32_t nbitperiods);
+
+void ${USART_INSTANCE_NAME}_RestartReadTimeoutNow( void );
+
+void ${USART_INSTANCE_NAME}_RestartReadTimeoutAfterNextChar( void );
+
+void ${USART_INSTANCE_NAME}_ClearReadTimeout( void );
+
 <#if USART_INTERRUPT_MODE_ENABLE == false>
 int ${USART_INSTANCE_NAME}_ReadByte( void );
 
@@ -96,6 +106,8 @@ bool ${USART_INSTANCE_NAME}_ReadAbort(void);
 void ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context );
 
 void ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );
+
+void ${USART_INSTANCE_NAME}_ReadTimeoutCallbackRegister( USART_CALLBACK callback, uintptr_t context );
 
 </#if>
 
