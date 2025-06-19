@@ -112,17 +112,10 @@ def setPinConfigurationValue(pinNumber, setting, value):
         value = value.replace("EIC_","")
         value = value.replace(" (in)", "")
     
-    symbolValue = value
-    
-    if setting == 'function' and value != "GPIO" and "WBZ" not in Variables.get("__PROCESSOR"):
-        symbolValue = symbolValue.replace(" (in)", "")
-        symbolValue = symbolValue.replace(" (out)", "")
-        symbolValue = symbolValue.replace(" (in/out)", "")
-
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
         symbol.clearValue()
-        symbol.setValue(symbolValue)
+        symbol.setValue(value)
 
     if setting == 'function':
         symbol = pinSymbolsDictionary.get(pinNumber).get('mode')
