@@ -258,5 +258,7 @@ for module in range (0, len(modules)):
                     hemcChipSelectCount = int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register-group@[name="HSMC_CS"]').getAttribute("count"))
                     for hemcChipSel in range(0, hemcChipSelectCount):
                         periphComponent.addCapability("hemc_cs"  + str(hemcChipSel), "HEMC_CS", "HEMC_CS"  + str(hemcChipSel), False)
+                if periphName == "MCSPI":
+                    periphComponent.addCapability("mcspi", "MCSPI", "MCSPI", True)
     else:
         print("CSP: Peripheral [" + periphName + " id=" + periphID + "] is not supported in MCC")
