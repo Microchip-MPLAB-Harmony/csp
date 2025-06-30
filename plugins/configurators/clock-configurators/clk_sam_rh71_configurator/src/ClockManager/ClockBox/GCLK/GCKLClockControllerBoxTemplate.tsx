@@ -38,10 +38,6 @@ const GCKLClockControllerBoxTemplate = (props: {
     componentId,
     symbolId: "CLK_PCK" + props.tabTitle + "_PRES",
   });
-  const gclkEnable = useBooleanSymbol({
-    componentId: componentId,
-    symbolId: "CLK_PCK" + props.tabTitle + "_EN",
-  });
   const settingsArray = [
     "CLK_PCK" + props.tabTitle + "_EN",
     "CLK_PCK" + props.tabTitle + "_PRES",
@@ -106,14 +102,6 @@ const GCKLClockControllerBoxTemplate = (props: {
         boldLabelStatus={gclkSel.value === 4}
         className={props.cx("programClkMckLbl")}
       />
-      {/* <SettingsDialog
-        tooltip={'GCLK ' + props.tabTitle + ' Settings Configuration'}
-        componentId={props.componentId}
-        className={props.cx(props.gclKsettingsClassName)}
-        symbolArray={props.gclkSettingsSymbolArray}
-        dialogWidth='47rem'
-        dialogHeight='50rem'
-      />*/}
       <ResetSymbolsIcon
         tooltip={"PCK " + props.tabTitle + " symbols to default value"}
         className={props.cx("pcReset")}

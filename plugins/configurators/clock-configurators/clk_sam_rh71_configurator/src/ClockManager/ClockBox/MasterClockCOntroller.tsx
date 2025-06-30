@@ -93,14 +93,6 @@ const MasterClockBox = (props: {
         symbolId="CLK_PLLACK_FREQ"
         boldLabelStatus={clk_mck_css?.value===2}
       />
-      {/* <SettingsDialog
-        tooltip="Advanced Settings"
-        componentId={componentId}
-        className={props.cx("dfllSetting")}
-        symbolArray={settingsArray}
-        dialogWidth="50rem"
-        dialogHeight="47rem"
-      />*/}
       <ResetSymbolsIcon
         tooltip="Reset Clock symbols to default value"
         className={props.cx("mcReset")}

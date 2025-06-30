@@ -5,14 +5,8 @@ import LoadDynamicComponents from "clock-common/lib/Components/Dynamic/LoadDynam
 import PlainLabel from "clock-common/lib/Components/LabelComponent/PlainLabel";
 import { useContext, useState } from "react";
 import {
-  CheckBox,
-  DropDown,
-  InputNumber,
-  KeyValueSetRadio,
   PluginConfigContext,
-  useBooleanSymbol,
   useIntegerSymbol,
-  useKeyValueSetSymbol,
 } from "@mplab_harmony/harmony-plugin-client-lib";
 import {
     getAllSymbolsFromJSON,
@@ -33,7 +27,6 @@ const PLLBClockController = (props: {
   cx: (...classNames: string[]) => string;
 }) => {
   const { componentId = "core" } = useContext(PluginConfigContext);
-  const [allJsonSymbols] = useState<string[]>(getAllSymbolsFromJSON(props.clockController));
 
   const [dynamicSymbolInfo] = useState(() => getDynamicSymbolsFromJSON(props.clockController));
   const [dynamicSymbolLabelInfo] = useState(() => getDynamicLabelsFromJSON(props.clockController));
