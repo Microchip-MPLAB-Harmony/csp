@@ -46,6 +46,9 @@ const MainClockController = (props: {
     if (clk_main_moscsel.selectedOptionPair?.value === "0" && !clk_moscrcen.value) {
       booleanSymbolApi.setValue(componentId, "CLK_MAINCK_MOSCRCEN", true);
     }
+     if (clk_main_moscsel.selectedOptionPair?.value === "1" && clk_moscrcen.value) {
+      booleanSymbolApi.setValue(componentId, "CLK_MAINCK_MOSCRCEN", false);
+    }
   }, [clk_main_moscsel.selectedOptionPair?.value]);
   const clk_moscxten = useBooleanSymbol({
     componentId,

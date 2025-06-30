@@ -1,9 +1,7 @@
-import ResetSymbolsIcon from "clock-common/lib/Components/ResetSymbolsIcon";
 import ControlInterface from "clock-common/lib/Tools/ControlInterface";
-import SettingsDialog from "clock-common/lib/Components/SettingsDialog";
-import LoadDynamicComponents from "clock-common/lib/Components/Dynamic/LoadDynamicComponents";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
+  booleanSymbolApi,
   CheckBox,
   DropDown,
   InputNumber,
@@ -17,11 +15,6 @@ import {
   getDynamicLabelsFromJSON,
 } from "clock-common/lib/Tools/ClockJSONTools";
 import LoadDynamicFreqencyLabels from "clock-common/lib/Components/Dynamic/LoadDynamicFreqencyLabels";
-import PeripheralClockControllerBox from "./PopUp/PeripheralClockControllerBox";
-
-const settingsArray = [
-  
-];
 
 const MainClockController = (props: {
   clockController: ControlInterface[];
@@ -50,6 +43,15 @@ const MainClockController = (props: {
     componentId,
     symbolId: "CLK_MAINCK_FREQ",
   });
+
+    useEffect(() => {
+    if (clk_main_moscsel.selectedOptionPair?.value === "0" && !clk_moscrcen.value) {
+      booleanSymbolApi.setValue(componentId, "CLK_MAINCK_MOSCRCEN", true);
+    }
+     if (clk_main_moscsel.selectedOptionPair?.value === "1" && clk_moscrcen.value) {
+      booleanSymbolApi.setValue(componentId, "CLK_MAINCK_MOSCRCEN", false);
+    }
+  }, [clk_main_moscsel.selectedOptionPair?.value]);
 
   return (
     <div>
@@ -80,20 +82,6 @@ const MainClockController = (props: {
         className={props.cx("clk_moscrcen")}
         disabled={clk_main_moscsel.selectedOptionPair?.value==='1'}
       />
-      {/* <SettingsDialog
-        tooltip="Advanced Settings"
-        componentId={componentId}
-        className={props.cx("dfllSetting")}
-        symbolArray={settingsArray}
-        dialogWidth="50rem"
-        dialogHeight="47rem"
-      />
-      <ResetSymbolsIcon
-        tooltip="Reset Clock symbols to default value"
-        className={props.cx("dfllreset")}
-        componentId={componentId}
-        resetSymbolsArray={settingsArray}
-      /> */}
     </div>
   );
 };
