@@ -10,6 +10,7 @@ import {
   KeyValueSetRadio,
   PluginConfigContext,
   symbolApi,
+  booleanSymbolApi,
   useBooleanSymbol,
   useIntegerSymbol,
   useKeyValueSetSymbol,
@@ -41,6 +42,11 @@ const MainClockController = (props: {
     componentId,
     symbolId: "CLK_MAINCK_MOSCRCEN",
   });
+   useEffect(() => {
+    if (clk_main_moscsel.selectedOptionPair?.value === "0" && !clk_moscrcen.value) {
+      booleanSymbolApi.setValue(componentId, "CLK_MAINCK_MOSCRCEN", true);
+    }
+  }, [clk_main_moscsel.selectedOptionPair?.value]);
   const clk_moscxten = useBooleanSymbol({
     componentId,
     symbolId: "CLK_MAINCK_MOSCXTEN",
@@ -118,7 +124,6 @@ const MainClockController = (props: {
         className={props.cx("clk_moscxtby")}
         disabled={clk_main_moscsel.selectedOptionPair?.value === "0"}
       />
-
       <PlainLabel
         className={props.cx("clk_moscxtst")}
         disPlayText="Start-Up Time:"
@@ -131,21 +136,6 @@ const MainClockController = (props: {
         disPlayText={"* 8 SCLK cycles = " + autoCal}
         className={props.cx("outputClass")}
       ></PlainLabel>
-
-      {/* <SettingsDialog
-        tooltip="Advanced Settings"
-        componentId={componentId}
-        className={props.cx("dfllSetting")}
-        symbolArray={settingsArray}
-        dialogWidth="50rem"
-        dialogHeight="47rem"
-      />
-      <ResetSymbolsIcon
-        tooltip="Reset Clock symbols to default value"
-        className={props.cx("dfllreset")}
-        componentId={componentId}
-        resetSymbolsArray={settingsArray}
-      /> */}
     </div>
   );
 };
