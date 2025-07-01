@@ -12,7 +12,8 @@ import SettingsDialog from "clock-common/lib/Components/SettingsDialog";
 import ResetSymbolsIcon from "clock-common/lib/Components/ResetSymbolsIcon";
 import PlainLabel from "clock-common/lib/Components/LabelComponent/PlainLabel";
 import FrequencyLabelComponent from "clock-common/lib/Components/LabelComponent/FrequencyLabelComponent";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Dialog } from "primereact/dialog";
 
 const GCKLClockControllerBoxTemplate = (props: {
   tabTitle: string;
@@ -46,6 +47,25 @@ const GCKLClockControllerBoxTemplate = (props: {
     componentId,
     symbolId: "GCLK_" + props.tabTitle + "_DIVIDER_VALUE",
   });
+  const circularDependency = useBooleanSymbol({
+    componentId,
+    symbolId: "GCLK_CYCLE_FORMED"
+  });
+  const [circularStatus, setCircularStatus] = useState(false);
+const prevValueRef = useRef<boolean>(false);
+ 
+useEffect(() => {
+  const currentValue = circularDependency.value;
+  const prevValue = prevValueRef.current;
+ 
+  // Show dialog only when value changes from false → true
+  if (!prevValue && currentValue) {
+    setCircularStatus(true);
+  }
+ 
+  // Update previous value for next comparison
+  prevValueRef.current = currentValue;
+}, [circularDependency]);
 
   return (
     <div>
@@ -92,6 +112,16 @@ const GCKLClockControllerBoxTemplate = (props: {
         componentId={props.componentId}
         resetSymbolsArray={props.gclkSettingsSymbolArray}
       />
+      <Dialog
+        header={'Circular Dependency'}
+        visible={circularStatus}
+        maximizable={false}
+        onHide={() => {
+         setCircularStatus(false)
+        }}
+      >
+        Circular dependency detected!
+      </Dialog>
     </div>
   );
 };
