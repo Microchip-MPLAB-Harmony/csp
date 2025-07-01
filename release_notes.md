@@ -3,6 +3,23 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.22.5
+
+### New Features
+
+- None
+
+### Bug fixes and Improvements
+
+- Clock UI improvements
+- Add ISO7816 and LIN support to Flexcom
+- Update SEFC, NVM and FCW flash controllers for bootloader support
+- Bug fixes in ARCH and Clock files
+
+### Development Tools
+
+- Same as v3.22.0
+
 ## CSP Release v3.22.4
 
 ### New Features
@@ -71,10 +88,10 @@
 - **New part support**
   - Added support for PIC32AK GC family of devices
   - Added support for SAMA7D65, SAMA7G54 and SAM9X7 SOM devices
- 
+
 - **New Features and Enhancements**
   - None
-  
+
 - **Bug Fixes**
   - Fix UI issues in SAM9X75 and SAM9X60 clock configurators
 
@@ -111,7 +128,7 @@ For all other parts:
 
 - **New Features and Enhancements**
   - None
-  
+
 - **Bug Fixes**
   - Fixed MISRA-C violation in FLEXCOM peripheral
   - Fixed clock related issue in PIC32CZCA-80/90, PIC32CXMTSH and PIC32CM-GC/SG family of microcontrollers
@@ -155,8 +172,8 @@ For all other parts:
 
 ### Known Issues
 
--  Applications created for PIC32CZ-CA80/CA90 using csp v3.19.2 or older will require reconfiguration of pins due to change in device package type. 
--  Applications created for SAM9X75 device (used in SAM9X75 Evaluation Board) using csp v3.19.7 or older will require reconfiguration of pins due to addition of a new device package type (BGA256). 
+-  Applications created for PIC32CZ-CA80/CA90 using csp v3.19.2 or older will require reconfiguration of pins due to change in device package type.
+-  Applications created for SAM9X75 device (used in SAM9X75 Evaluation Board) using csp v3.19.7 or older will require reconfiguration of pins due to addition of a new device package type (BGA256).
 
 ### Development Tools
 
