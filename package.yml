@@ -111,7 +111,7 @@ package:
       version: "1.8.235"
     - name: "SAMA7D65_DFP"
       type: "dfp"
-      version: "1.4.54"
+      version: "1.7.82"
     - name: "SAMC20_DFP"
       type: "dfp"
       version: "3.5.93"

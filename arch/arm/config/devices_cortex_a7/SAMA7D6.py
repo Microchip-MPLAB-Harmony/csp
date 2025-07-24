@@ -120,9 +120,40 @@ memory_loc.setLabel("Execution Memory")
 memory_loc.setDefaultValue("DDR")
 memory_loc.setDescription("Generate image to run out of either SRAM or DDR")
 
+dram_app_start_addr = "0x66F00000"
+
+#DRAM cache configuration
+ddr_node = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"DDR_CS\"]")
+processor = Variables.get("__PROCESSOR")
+ddr_start = int(ddr_node.getAttribute("start"), 0)
+ddr_size = int(ddr_node.getAttribute("size"), 0)
+#Set 16MB as non-cacheable region and rest as cacheable region
+non_cacheable_size = 16 * pow(2, 20)
+
+if processor[:11].endswith("1G"):
+    # 1 Gbit memory
+    ddr_size = (1 * pow(2,30)) / 8
+elif processor[:11].endswith("2G"):
+    # 2 Gbit memory
+    ddr_size = (2 * pow(2,30)) / 8
+elif processor[:11].endswith("4G"):
+    # 4 Gbit memory
+    ddr_size = (4 * pow(2,30)) / 8
+    #increase the non cacheable region to 32 MB
+    non_cacheable_size = 32 * pow(2, 20)
+elif processor[:11].endswith("5M"):
+    #512 Mbit memory
+    ddr_size = (512 * pow(2,20)) / 8
+    #reduce the non cacheable region to 8 MB
+    non_cacheable_size = 8 * pow(2, 20)
+    dram_app_start_addr = ("0x%08X" % (ddr_start + non_cacheable_size))
+else:
+    #Non SiP variants, use entire DRAM region
+    ddr_size = int(ddr_node.getAttribute("size"), 0)
+
 dramStartAddress = coreComponent.createStringSymbol("DRAM_APP_START_ADDRESS", cortexMenu)
 dramStartAddress.setLabel("Execution start address in DDR")
-dramStartAddress.setDefaultValue("0x66F00000")
+dramStartAddress.setDefaultValue(dram_app_start_addr)
 dramStartAddress.setVisible(memory_loc.getValue() == "DDR")
 dramStartAddress.setReadOnly(True)
 Database.setSymbolValue("core", "APP_START_ADDRESS", dramStartAddress.getValue())
@@ -150,33 +181,6 @@ mmu_segments = [
                     ("NICGPV0", 0xE8B00000, 0x100000,  "strongly-ordered", "rw", "no-exec"),
                     ("PERIPHERALS_2", 0xE8C00000, 0xC000, "device", "rw", "no-exec")
             ]
-#DRAM cache configuration
-ddr_node = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"DDR_CS\"]")
-processor = Variables.get("__PROCESSOR")
-ddr_start = int(ddr_node.getAttribute("start"), 0)
-ddr_size = int(ddr_node.getAttribute("size"), 0)
-#Set 16MB as non-cacheable region and rest as cacheable region
-non_cacheable_size = 16 * pow(2, 20)
-
-if processor[:11].endswith("1G"):
-    # 1 Gbit memory
-    ddr_size = (1 * pow(2,30)) / 8
-elif processor[:11].endswith("2G"):
-    # 2 Gbit memory
-    ddr_size = (2 * pow(2,30)) / 8
-elif processor[:11].endswith("4G"):
-    # 4 Gbit memory
-    ddr_size = (4 * pow(2,30)) / 8
-    #increase the non cacheable region to 32 MB
-    non_cacheable_size = 32 * pow(2, 20)
-elif processor[:11].endswith("5M"):
-    #512 Mbit memory
-    ddr_size = (512 * pow(2,20)) / 8
-    #reduce the non cacheable region to 8 MB
-    non_cacheable_size = 8 * pow(2, 20)
-else:
-    #Non SiP variants, use entire DRAM region
-    ddr_size = int(ddr_node.getAttribute("size"), 0)
 
 #DRAM coherent region
 dram_coherent_region = coreComponent.createIntegerSymbol("DRAM_COHERENT_REGION_SIZE", cortexMenu)
