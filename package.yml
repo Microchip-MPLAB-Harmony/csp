@@ -1,7 +1,7 @@
 package:
   format-version: "1.0.0"
   name: "csp"
-  version: "v3.22.5"
+  version: "v3.22.6"
   type: "api"
   status: "production"
   required: true
@@ -111,7 +111,7 @@ package:
       version: "1.8.235"
     - name: "SAMA7D65_DFP"
       type: "dfp"
-      version: "1.7.82"
+      version: "1.7.83"
     - name: "SAMC20_DFP"
       type: "dfp"
       version: "3.5.93"

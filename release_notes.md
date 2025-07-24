@@ -3,6 +3,21 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.22.6
+
+### New Features
+
+- None
+
+### Bug fixes and Improvements
+
+- Added SAMA7D65D5M device support in harmony
+- Updated SAMA7D65_DFP 1.7.83 version in package.yml
+
+### Development Tools
+
+- Same as v3.22.0
+
 ## CSP Release v3.22.5
 
 ### New Features
