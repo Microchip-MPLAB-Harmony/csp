@@ -9,10 +9,10 @@ package:
   dependencies:
     - name: "CMSIS_6"
       type: "package"
-      version: "v6.1.0"
+      version: "v6.3.0"
     - name: "CMSIS-DSP"
       type: "package"
-      version: "v1.15.0"
+      version: "v1.16.2"
     - name: "CMSIS-NN"
       type: "package"
       version: "v5.0.0"

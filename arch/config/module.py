@@ -38,22 +38,22 @@ def loadModule():
     #Load CMSIS for relevant architecture
     if ("CORTEX" in coreArch):
         print("Load Module: CMSIS Pack")
-        if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_6", "ARM.CMSIS.pdsc")): 
+        if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_6", "ARM.CMSIS.pdsc")):
             cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis_v6.py")
-        cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
+            cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
 
             #Show components for CMSIS_
-            if cortexType.startswith("m"):
+            if cortexType.startswith("m") or cortexType.startswith("a"):
                 if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS-DSP", "ARM.CMSIS-DSP.pdsc")):
                     cmsisDspComponent = Module.CreateComponent("cmsis_dsp", "CMSIS DSP", "/Packs/", "config/cmsis_dsp.py")
-                
+                    cmsisDspComponent.setHelpKeyword("MH3_CSP_cmsis_dsp")
                 if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS-NN", "ARM.CMSIS-NN.pdsc")):
                     cmsisNnComponent = Module.CreateComponent("cmsis_nn", "CMSIS NN", "/Packs/", "config/cmsis_nn.py")
-
+                    cmsisNnComponent.setHelpKeyword("MH3_CSP_cmsis_nn")
         else:
             cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis_v5.py")
+            cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
 
-   
     print("Load Module: CSP System")
 
     coreSeries = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" )

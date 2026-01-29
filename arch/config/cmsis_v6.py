@@ -22,17 +22,6 @@
 *****************************************************************************"""
 import os
 import xml.etree.ElementTree as ET
-def setDspLibParameters(dspLibSym, compilerID):
-    cmsisPath = Variables.get("__CMSIS_PACK_DIR")
-    libCoreName = dspLibSym.getID().split("CMSIS_DSP_LIB_")[1]
-    # For IAR compiler, M7 fp libraries are named differently
-    if compilerID == 1:
-        libCoreName = libCoreName.replace("M7lfdp", "M7lf").replace("M7lfsp", "M7lfs")
-    compilerList = ["GCC", "IAR", "ARM"]
-    prefixList   = ["libarm_", "iar_", "arm_"]
-    suffixList   = ["_math.a", "_math.a", "_math.lib"]
-    cmsisRelPath = os.path.relpath(cmsisPath, Module.getPath())
-    libFileName = prefixList[compilerID] + libCoreName + suffixList[compilerID]
 
 def instantiateComponent(cmsisComponent):
 
@@ -40,6 +29,7 @@ def instantiateComponent(cmsisComponent):
 
     pdscPath = os.path.join(cmsisPath, "ARM.CMSIS.pdsc")
     cmsisReleaseInfo = ET.parse(pdscPath).getroot().find("releases/release")
+    cmsisPath = os.path.dirname(pdscPath)
 
     cmsisVersion = cmsisComponent.createCommentSymbol("CMSIS_VERSION", None)
     cmsisVersion.setLabel("Release version: {0}".format(cmsisReleaseInfo.get("version")))
@@ -70,6 +60,7 @@ def instantiateComponent(cmsisComponent):
         coreHeaderFileNames = [ "core_c" + cortexType + ".h",
                                 "cmsis_version.h",
                                 "cmsis_compiler.h",
+                                "cmsis_iccarm.h",
                                 "m-profile/cmsis_iccarm_m.h",
                                 "cmsis_gcc.h",
                                 "m-profile/cmsis_gcc_m.h",
@@ -126,7 +117,7 @@ def instantiateComponent(cmsisComponent):
 ############################### CMSIS Core #####################################
 ################################################################################
 
-        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "a-profile/cmsis_gcc_a.h", "a-profile/cmsis_iccarm_a.h", "a-profile/cmsis_cp15.h", "core_ca.h"]
+        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "a-profile/cmsis_gcc_a.h", "cmsis_iccarm.h", "a-profile/cmsis_iccarm_a.h", "a-profile/cmsis_cp15.h", "core_ca.h"]
 
         # add core header files for cortex a devices
         for headerFileName in headerFileNames:

@@ -101,3 +101,25 @@ def instantiateComponent(cmsisComponent):
                 headerFile.setSecurity("SECURE")
                 headerFile.setEnabled(cmsisCoreEnableSym.getValue())
                 headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_CORE_ENABLE"])
+    #If this is a cortex A device
+    elif cortexType.startswith("a"):
+################################################################################
+############################### CMSIS Core #####################################
+################################################################################
+
+        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "cmsis_iccarm.h", "cmsis_cp15.h", "core_ca.h"]
+
+        # add core header files for cortex a devices
+        for headerFileName in headerFileNames:
+            szSymbol = "CORE_A_{}_H".format(headerFileName[:-2].upper())
+            headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
+            headerFile.setRelative(False)
+            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core_A/Include/" + headerFileName)
+            headerFile.setOutputName(headerFileName)
+            headerFile.setMarkup(False)
+            headerFile.setOverwrite(True)
+            headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core_A/Include/")
+            headerFile.setProjectPath("packs/CMSIS/CMSIS/Core_A/Include/")
+            headerFile.setType("HEADER")
+
+
