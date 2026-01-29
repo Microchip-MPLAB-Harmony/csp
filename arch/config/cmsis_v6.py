@@ -79,10 +79,7 @@ def instantiateComponent(cmsisComponent):
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
             # Patch header file with inline function for ACLE intrinsics to build with XC32
-            if headerFileName == "cmsis_gcc.h":
-                headerFile.setSourcePath(Module.getPath() + "config/cmsis_patch/cmsis_gcc.h")
-            else:
-                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
             headerFile.setOutputName(headerFileName)
             headerFile.setMarkup(False)
             headerFile.setOverwrite(True)
@@ -97,10 +94,7 @@ def instantiateComponent(cmsisComponent):
                 headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
                 headerFile.setRelative(False)
                 # Patch header file with inline function for ACLE intrinsics to build with XC32
-                if headerFileName == "cmsis_gcc.h":
-                    headerFile.setSourcePath(Module.getPath() + "config/cmsis_patch/cmsis_gcc.h")
-                else:
-                    headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
                 headerFile.setOutputName(headerFileName)
                 headerFile.setMarkup(False)
                 headerFile.setOverwrite(True)
