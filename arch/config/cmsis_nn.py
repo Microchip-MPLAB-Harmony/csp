@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2026 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -21,21 +21,14 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 import os
-import xml.etree.ElementTree as ET
-
-CMSIS_FILE_LIST ="/config/filelist/cmsis_nn_files.xml"
-
-XML_ATTRIB_NAME = "name"
-XML_ATTRIB_COPY = "copy"
-XML_ATTRIB_DIR  = "dir"
-XML_ATTRIB_FILE  = "file"
-
 
 def instantiateComponent(cmsisComponent):
-    cmsisPath = Variables.get("__FRAMEWORK_ROOT") + "/CMSIS-NN/"
+    import xml.etree.ElementTree as ET
+    cmsisNnPath = Variables.get("__FRAMEWORK_ROOT") + "/CMSIS-NN/"
 
-    pdscPath = os.path.join(cmsisPath, "ARM.CMSIS-NN.pdsc")
+    pdscPath = os.path.join(cmsisNnPath, "ARM.CMSIS-NN.pdsc")
     cmsisReleaseInfo = ET.parse(pdscPath).getroot().find("releases/release")
+    cmsisNnPath = os.path.dirname(pdscPath)
 
     cmsisVersion = cmsisComponent.createCommentSymbol("CMSIS_NN_VERSION", None)
     cmsisVersion.setLabel("Release version: {0}".format(cmsisReleaseInfo.get("version")))
@@ -54,7 +47,80 @@ def instantiateComponent(cmsisComponent):
     cmsisNNEnableSym.setDescription("Copies cmsis Neural Network (NN) files into the project and adds it into project path")
     cmsisNNEnableSym.setDefaultValue(True)
 
-    AddCMSISFiles(cmsisComponent, Variables.get("__FRAMEWORK_ROOT"), Module.getPath()+CMSIS_FILE_LIST)
+    # Add all CMSIS-NN header files from 'Include' directory
+    cmsisNNIncludePath = os.path.join(cmsisNnPath, "Include")
+    for includePath, _, headerFiles in os.walk(cmsisNNIncludePath):
+        for headerFileName in headerFiles:
+            if headerFileName.endswith(".h"):
+                filePath = os.path.join(includePath, headerFileName).replace("\\", "/")
+                projPath = os.path.relpath(includePath, cmsisNnPath).replace("\\", "/")
+                szSymbol = headerFileName.replace(".", "_").upper()
+                headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
+                headerFile.setRelative(False)
+                headerFile.setSourcePath(filePath)
+                headerFile.setOutputName(headerFileName)
+                headerFile.setMarkup(False)
+                headerFile.setOverwrite(True)
+                headerFile.setDestPath("../../packs/CMSIS-NN/{0}/".format(projPath))
+                headerFile.setProjectPath("packs/CMSIS-NN/{0}/".format(projPath))
+                headerFile.setType("HEADER")
+                headerFile.setEnabled(cmsisNNEnableSym.getValue())
+                headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+
+                if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                    # For secure project
+                    headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                    headerFile.setRelative(False)
+                    headerFile.setSourcePath(filePath)
+                    headerFile.setOutputName(headerFileName)
+                    headerFile.setMarkup(False)
+                    headerFile.setOverwrite(True)
+                    headerFile.setDestPath("../../packs/CMSIS-NN/{0}/".format(projPath))
+                    headerFile.setProjectPath("packs/CMSIS-NN/{0}/".format(projPath))
+                    headerFile.setType("HEADER")
+                    headerFile.setSecurity("SECURE")
+                    headerFile.setEnabled(cmsisNNEnableSym.getValue())
+                    headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+
+    cmsisNNSourcePath = os.path.join(cmsisNnPath, "Source")
+    for sourcePath, _, sourceFiles in os.walk(cmsisNNSourcePath):
+        for sourceFileName in sourceFiles:
+            if sourceFileName.endswith(".c") or sourceFileName.endswith(".cpp") or sourceFileName.endswith(".h"):
+                filePath = os.path.join(sourcePath, sourceFileName).replace("\\", "/")
+                projPath = os.path.relpath(sourcePath, cmsisNnPath).replace("\\", "/")
+                szSymbol = sourceFileName.replace(".", "_").upper()
+                sourceFile = cmsisComponent.createFileSymbol(szSymbol, None)
+                sourceFile.setRelative(False)
+                sourceFile.setSourcePath(filePath)
+                sourceFile.setOutputName(sourceFileName)
+                sourceFile.setMarkup(False)
+                sourceFile.setOverwrite(True)
+                sourceFile.setDestPath("../../packs/CMSIS-NN/{0}/".format(projPath))
+                sourceFile.setProjectPath("packs/CMSIS-NN/{0}/".format(projPath))
+                if sourceFileName.endswith(".h"):
+                    sourceFile.setType("HEADER")
+                else:
+                    sourceFile.setType("SOURCE")
+                sourceFile.setEnabled(cmsisNNEnableSym.getValue())
+                sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+
+                if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                    # For secure project
+                    sourceFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                    sourceFile.setRelative(False)
+                    sourceFile.setSourcePath(filePath)
+                    sourceFile.setOutputName(sourceFileName)
+                    sourceFile.setMarkup(False)
+                    sourceFile.setOverwrite(True)
+                    sourceFile.setDestPath("../../packs/CMSIS-NN/{0}/".format(projPath))
+                    sourceFile.setProjectPath("packs/CMSIS-NN/{0}/".format(projPath))
+                    if sourceFileName.endswith(".h"):
+                        sourceFile.setType("HEADER")
+                    else:
+                        sourceFile.setType("SOURCE")
+                    sourceFile.setSecurity("SECURE")
+                    sourceFile.setEnabled(cmsisNNEnableSym.getValue())
+                    sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
 
     #CMSIS NN include path setting symbol
     cmsisNNIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_NN_INCLUDE_DIRS", None)
@@ -78,7 +144,7 @@ def instantiateComponent(cmsisComponent):
         cmsisNNIncludeSetting = cmsisComponent.createSettingSymbol("SEC_CMSIS_NN_INCLUDE_DIRS", None)
         cmsisNNIncludeSetting.setCategory("C32")
         cmsisNNIncludeSetting.setKey("extra-include-directories")
-        cmsisNNIncludeSetting.setValue("../src/packs/CMSIS-NN/Include/")
+        cmsisNNIncludeSetting.setValue("../src/packs/CMSIS-NN/;../src/packs/CMSIS-NN/Include/;../src/packs/CMSIS-NN/Include/Internal/")
         cmsisNNIncludeSetting.setAppend(True, ";")
         cmsisNNIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
         cmsisNNIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
@@ -92,54 +158,5 @@ def instantiateComponent(cmsisComponent):
         cmsisNNXc32cppIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
         cmsisNNXc32cppIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
         cmsisNNXc32cppIncludeSetting.setSecurity("SECURE")
-
-
-def enable_cmsis_dsp_files(symbol, event):
-    symbol.setEnabled(event["value"])
-
-def enable_cmsis_nn_files(symbol, event):
-    symbol.setEnabled(event["value"])
-
-# Add File
-def AddFile(child,component, sourcePath, fileName, destPath, projectPath):
-    tfliteAddFile = component.createFileSymbol(fileName.upper(), None)
-
-    # Patch CMSIS NN file with inline function for ACLE intrinsics to build with XC32
-    if fileName == "arm_nn_compiler.h":
-        tfliteAddFile.setSourcePath(Module.getPath() + "config/cmsis_patch/arm_nn_compiler.h")
-    else:
-        tfliteAddFile.setSourcePath(sourcePath)
-    tfliteAddFile.setOutputName(fileName)
-    tfliteAddFile.setDestPath(destPath)
-    tfliteAddFile.setProjectPath(projectPath)
-    tfliteAddFile.setMarkup(False)
-    tfliteAddFile.setOverwrite(True)
-    tfliteAddFile.setRelative(False)
-    tfliteAddFile.setEnabled(True)
-    tfliteAddFile.setDependencies(enable_cmsis_dsp_files, ["CMSIS_NN_ENABLE"])
-
-    if(".h" in fileName):
-        tfliteAddFile.setType("HEADER")
-    else:
-        tfliteAddFile.setType("SOURCE")
-
-def AddDir(root,component,h3path,rpath):
-    for child in root:
-        if child.tag == XML_ATTRIB_FILE:
-            fileName = str(child.attrib[XML_ATTRIB_NAME])
-            sourceDir=h3path + "/" + rpath
-            sourcePath = os.path.normpath(os.path.join(sourceDir, fileName))
-            destPath = os.path.normpath("../../packs/" + rpath)
-            projectPath = os.path.normpath("/packs/" + rpath)
-            AddFile(child,component, sourcePath, fileName, destPath, projectPath)
-
-def AddCMSISFiles(component, h3path, file):
-    tree = ET.parse(file)
-    root = tree.getroot()
-    for child in root:
-        if child.tag == XML_ATTRIB_DIR:
-            rpath=child.attrib[XML_ATTRIB_NAME]
-            AddDir(child,component,h3path,rpath)
-
 
 
