@@ -646,114 +646,8 @@ def instantiateComponent( coreComponent ):
     autoComponentIDTable = [ "dfp", "cmsis" ]
     res = Database.activateComponents(autoComponentIDTable)
 
-    devMenu = coreComponent.createMenuSymbol("CoreDevMenu", None)
-    devMenu.setLabel("Device & Project Configuration")
-
-    devCfgMenu = coreComponent.createMenuSymbol("CoreCfgMenu", devMenu)
-    devCfgMenu.setLabel( Variables.get( "__PROCESSOR" ) + " Device Configuration" )
-    devCfgMenu.setDescription("Hardware Configuration Bits")
-    devCfgMenu.setVisible( True )
-
-    projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
-    projMenu.setLabel("Project Configuration")
-    if (("dsPIC33A" not in coreArch.getValue()) and ("PIC32A" not in coreArch.getValue())):
-       cplusplusProject = coreComponent.createBooleanSymbol("CPLUSPLUS_PROJECT", projMenu)
-       cplusplusProject.setLabel("Generate C++ Project")
-       cplusplusProject.setDescription("Generate Main Source File (main) and Application Source File (app) with .cpp file extension")
-       cplusplusProject.setDefaultValue(False)
-
-    genMainFile = coreComponent.createBooleanSymbol("CoreMainFile", projMenu)
-    genMainFile.setLabel("Generate Main Source File")
-    genMainFile.setDefaultValue(True)
-
-    genMainFileName = coreComponent.createStringSymbol("CoreMainFileName", genMainFile)
-    genMainFileName.setLabel("Main File Name")
-    genMainFileName.setDescription("Main File Name")
-    genMainFileName.setDefaultValue("main")
-    genMainFileName.setDependencies(setFileVisibility, ["CoreMainFile"])
-
-    genSysFiles = coreComponent.createBooleanSymbol("CoreSysFiles", projMenu)
-    genSysFiles.setDefaultValue(True)
-    genSysFiles.setLabel("Generate System Source Files")
-
-    genSysDefFile = coreComponent.createBooleanSymbol("CoreSysDefFile", genSysFiles)
-    genSysDefFile.setLabel("Generate System Definition")
-    genSysDefFile.setDefaultValue(True)
-    genSysDefFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-    genSysInitFile = coreComponent.createBooleanSymbol("CoreSysInitFile", genSysFiles)
-    genSysInitFile.setLabel("Generate System Initialization")
-    genSysInitFile.setDefaultValue(True)
-    genSysInitFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-    genSysIntFile = coreComponent.createBooleanSymbol("CoreSysIntFile", genSysFiles)
-    genSysIntFile.setLabel("Generate System Interrupts")
-    genSysIntFile.setDefaultValue(True)
-    genSysIntFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-    genSysTrapsFile = coreComponent.createBooleanSymbol("CoreSysTrapsFile", genSysFiles)
-    genSysTrapsFile.setLabel("Generate System Traps")
-    genSysTrapsFile.setDefaultValue(True)
-    genSysTrapsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-    if ((CORE_DSPIC33A not in coreArch.getValue()) and (CORE_PIC32A not in coreArch.getValue())):
-        genSysCallsFile = coreComponent.createBooleanSymbol("CoreSysCallsFile", genSysFiles)
-        genSysCallsFile.setLabel("Generate LIBC Syscalls")
-        genSysCallsFile.setDefaultValue(True)
-        genSysCallsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-        genSysStartupFile = coreComponent.createBooleanSymbol("CoreSysStartupFile", genSysFiles)
-        genSysStartupFile.setLabel("Generate System Startup")
-        genSysStartupFile.setDefaultValue(True)
-        genSysStartupFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-        genSysDebugConsoleFile = coreComponent.createBooleanSymbol("CoreSysStdioSyscallsFile", genSysFiles)
-        genSysDebugConsoleFile.setLabel("Generate STDIO Syscalls")
-        genSysDebugConsoleFile.setDefaultValue(True)
-        genSysDebugConsoleFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-        genSysExceptionFile = coreComponent.createBooleanSymbol("CoreSysExceptionFile", genSysFiles)
-        genSysExceptionFile.setLabel("Generate System Exception")
-        genSysExceptionFile.setDefaultValue(True)
-        genSysExceptionFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
-
-        exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", genSysExceptionFile)
-        exceptionHandling.setLabel("Use Advanced Exception Handling")
-        exceptionHandling.setDefaultValue(False)
-        exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
-
-        filteringExceptionHandling = coreComponent.createBooleanSymbol("FILTERING_EXCEPTION", exceptionHandling)
-        filteringExceptionHandling.setLabel("Use Advanced Exception Handling With Filtering Support")
-        filteringExceptionHandling.setDefaultValue(False)
-        filteringExceptionHandling.setVisible(False)
-        if isMips:
-            filteringExceptionHandling.setDependencies(setFileVisibility, ["ADVANCED_EXCEPTION"])
-
-        ## cache macros
-        deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
-        deviceCacheHeaderFile.setSourcePath( "/templates/" + deviceCacheHeaderName )
-        deviceCacheHeaderFile.setOutputName("device_cache.h")
-        deviceCacheHeaderFile.setMarkup(True)
-        deviceCacheHeaderFile.setOverwrite(True)
-        deviceCacheHeaderFile.setDestPath("")
-        deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
-        deviceCacheHeaderFile.setType("HEADER")
-    if isMips:
-        deviceCacheHeaderFile.setEnabled(False)
-        deviceCacheHeaderFile.setDependencies(deviceCacheEnable, ["USE_CACHE_MAINTENANCE"])
-
-    ## toolchain specifics
-    toolChainSpecifics = coreComponent.createFileSymbol( None, None )
-    toolChainSpecifics.setSourcePath( baseArchDir + "/templates/toolchain_specifics.h.ftl" )
-    toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
-    toolChainSpecifics.setMarkup( True )
-    toolChainSpecifics.setOverwrite( True )
-    toolChainSpecifics.setDestPath("")
-    toolChainSpecifics.setProjectPath("config/" + configName + "/")
-    toolChainSpecifics.setType("HEADER")
-
-    ## toolChainMenu
-    toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", projMenu)
+     ## toolChainMenu
+    toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", None)
     toolChainMenu.setLabel("Tool Chain Selections")
 
     ## compiler choice
@@ -975,6 +869,116 @@ def instantiateComponent( coreComponent ):
         keilHeapStackSize.setVisible(False)
         keilHeapStackSize.setValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
         keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
+
+    devMenu = coreComponent.createMenuSymbol("CoreDevMenu", None)
+    devMenu.setLabel("Device & Project Configuration")
+
+    devCfgMenu = coreComponent.createMenuSymbol("CoreCfgMenu", devMenu)
+    devCfgMenu.setLabel( Variables.get( "__PROCESSOR" ) + " Device Configuration" )
+    devCfgMenu.setDescription("Hardware Configuration Bits")
+    devCfgMenu.setVisible( True )
+
+    projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
+    projMenu.setLabel("Project Configuration")
+    if (("dsPIC33A" not in coreArch.getValue()) and ("PIC32A" not in coreArch.getValue())):
+       cplusplusProject = coreComponent.createBooleanSymbol("CPLUSPLUS_PROJECT", projMenu)
+       cplusplusProject.setLabel("Generate C++ Project")
+       cplusplusProject.setDescription("Generate Main Source File (main) and Application Source File (app) with .cpp file extension")
+       cplusplusProject.setDefaultValue(False)
+
+    genMainFile = coreComponent.createBooleanSymbol("CoreMainFile", projMenu)
+    genMainFile.setLabel("Generate Main Source File")
+    genMainFile.setDefaultValue(True)
+
+    genMainFileName = coreComponent.createStringSymbol("CoreMainFileName", genMainFile)
+    genMainFileName.setLabel("Main File Name")
+    genMainFileName.setDescription("Main File Name")
+    genMainFileName.setDefaultValue("main")
+    genMainFileName.setDependencies(setFileVisibility, ["CoreMainFile"])
+
+    genSysFiles = coreComponent.createBooleanSymbol("CoreSysFiles", projMenu)
+    genSysFiles.setDefaultValue(True)
+    genSysFiles.setLabel("Generate System Source Files")
+
+    genSysDefFile = coreComponent.createBooleanSymbol("CoreSysDefFile", genSysFiles)
+    genSysDefFile.setLabel("Generate System Definition")
+    genSysDefFile.setDefaultValue(True)
+    genSysDefFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysInitFile = coreComponent.createBooleanSymbol("CoreSysInitFile", genSysFiles)
+    genSysInitFile.setLabel("Generate System Initialization")
+    genSysInitFile.setDefaultValue(True)
+    genSysInitFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysIntFile = coreComponent.createBooleanSymbol("CoreSysIntFile", genSysFiles)
+    genSysIntFile.setLabel("Generate System Interrupts")
+    genSysIntFile.setDefaultValue(True)
+    genSysIntFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysTrapsFile = coreComponent.createBooleanSymbol("CoreSysTrapsFile", genSysFiles)
+    genSysTrapsFile.setLabel("Generate System Traps")
+    genSysTrapsFile.setDefaultValue(True)
+    genSysTrapsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    if ((CORE_DSPIC33A not in coreArch.getValue()) and (CORE_PIC32A not in coreArch.getValue())):
+        genSysCallsFile = coreComponent.createBooleanSymbol("CoreSysCallsFile", genSysFiles)
+        genSysCallsFile.setLabel("Generate LIBC Syscalls")
+        genSysCallsFile.setDefaultValue(True)
+        genSysCallsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+        genSysStartupFile = coreComponent.createBooleanSymbol("CoreSysStartupFile", genSysFiles)
+        genSysStartupFile.setLabel("Generate System Startup")
+        genSysStartupFile.setDefaultValue(True)
+        genSysStartupFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+        genSysDebugConsoleFile = coreComponent.createBooleanSymbol("CoreSysStdioSyscallsFile", genSysFiles)
+        genSysDebugConsoleFile.setLabel("Generate STDIO Syscalls")
+        genSysDebugConsoleFile.setDefaultValue(True)
+        genSysDebugConsoleFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+        genSysExceptionFile = coreComponent.createBooleanSymbol("CoreSysExceptionFile", genSysFiles)
+        genSysExceptionFile.setLabel("Generate System Exception")
+        genSysExceptionFile.setDefaultValue(True)
+        genSysExceptionFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+        exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", genSysExceptionFile)
+        exceptionHandling.setLabel("Use Advanced Exception Handling")
+        exceptionHandling.setDefaultValue(False)
+        exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
+
+        filteringExceptionHandling = coreComponent.createBooleanSymbol("FILTERING_EXCEPTION", exceptionHandling)
+        filteringExceptionHandling.setLabel("Use Advanced Exception Handling With Filtering Support")
+        filteringExceptionHandling.setDefaultValue(False)
+        filteringExceptionHandling.setVisible(False)
+        if isMips:
+            filteringExceptionHandling.setDependencies(setFileVisibility, ["ADVANCED_EXCEPTION"])
+
+        ## cache macros
+        deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
+        deviceCacheHeaderFile.setSourcePath( "/templates/" + deviceCacheHeaderName )
+        deviceCacheHeaderFile.setOutputName("device_cache.h")
+        deviceCacheHeaderFile.setMarkup(True)
+        deviceCacheHeaderFile.setOverwrite(True)
+        deviceCacheHeaderFile.setDestPath("")
+        deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
+        deviceCacheHeaderFile.setType("HEADER")
+    if isMips:
+        deviceCacheHeaderFile.setEnabled(False)
+        deviceCacheHeaderFile.setDependencies(deviceCacheEnable, ["USE_CACHE_MAINTENANCE"])
+
+    ## toolchain specifics
+    toolChainSpecifics = coreComponent.createFileSymbol( None, None )
+    toolChainSpecifics.setSourcePath( baseArchDir + "/templates/toolchain_specifics.h.ftl" )
+    toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
+    toolChainSpecifics.setMarkup( True )
+    toolChainSpecifics.setOverwrite( True )
+    toolChainSpecifics.setDestPath("")
+    toolChainSpecifics.setProjectPath("config/" + configName + "/")
+    toolChainSpecifics.setType("HEADER")
+
+   
+
+    
 
     # Device name symbol
     deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
@@ -1445,4 +1449,5 @@ def compilerUpdate( symbol, event ):
 
     for file in compilerSpecifics:
         updatePath( file, compilerSelected.lower() )
+
 
