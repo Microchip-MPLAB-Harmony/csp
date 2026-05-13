@@ -230,6 +230,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
         | ADC_CTRLD_CHOPPING(0UL)
     </#if>
     | ADC_CTRLD_SCALING(${ADC_CTRLD_SCALING}UL)
+    | ADC_CTRLD_SAMPNUM(${ADC_CTRLD_SAMPNUM}UL)
     <#if ADC_CONV_TRIGGER == "Free Run">
         | ADC_CTRLD_FREERUN_Msk
     </#if>;
@@ -244,7 +245,8 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
                                                                             | ADC_CTRLD_VPD(1UL)
                                                                         <#else>
                                                                             | ADC_CTRLD_VPD(0UL)
-                                                                        </#if>;</@compress>
+                                                                        </#if>
+                                                                        | ADC_CTRLD_SAMPNUM(${ADC_CTRLD_SAMPNUM}UL);</@compress>
 </#if>
 
     /* Window Operation Mode */
