@@ -330,10 +330,6 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
     /* Start conversion */
     ${ADC_INSTANCE_NAME}_REGS->ADC_COMMAND |= (uint32_t)ADC_COMMAND_START_IMMEDIATE;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_ADCBUSY_Msk) != 0U)
-    {
-        /* Wait for Synchronization */
-    }
 }
 
 /* Select ADC conversion start type */
@@ -435,10 +431,10 @@ bool ${ADC_INSTANCE_NAME}_ResultReadyStatusGet( void )
 bool ${ADC_INSTANCE_NAME}_SampleReadyStatusGet( void )
 {
     bool status;
-    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTENSET_SAMPRDY_Msk) >> ADC_INTENSET_SAMPRDY_Pos) != 0U);
+    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_SAMPRDY_Msk) >> ADC_INTFLAG_SAMPRDY_Pos) != 0U);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTENSET_SAMPRDY_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_SAMPRDY_Msk;
     }
     return status;
 }
