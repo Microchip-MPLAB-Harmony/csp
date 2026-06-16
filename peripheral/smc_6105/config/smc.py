@@ -218,6 +218,9 @@ def updateInterrupt( symbol, event ):
 def visibilityBasedOnBoolSymbol( symbol, event ):
     symbol.setVisible( event[ "value" ] )
 
+def UpdatePmeccClock( symbol, event ):
+    if (Database.getSymbolValue("core", "PMECC_CLOCK_ENABLE") != None):
+        Database.setSymbolValue("core", "PMECC_CLOCK_ENABLE", event[ "value" ])
 
 def smcModeByteWriteOrSelectAccessVisible( symbol, event ):
     """ function to enable visibility based on selection of Byte Access Type """
@@ -600,6 +603,7 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccClkClkCtrl.setMin( 0 )
     pmeccClkClkCtrl.setMax( convertMaskToInt( atdfPmeccClkBitField_CLKCTRL.getAttribute( "mask" ) ) )
     pmeccClkClkCtrl.setDefaultValue( 0 )
+    pmeccClkClkCtrl.setDependencies(UpdatePmeccClock, [pmeccCtrlEnableName])
 
     pmeccConfigurationMenu = staticMemoryComponent.createMenuSymbol( "PMECC_CONFIGURATION_MENU", pmeccControlsMenu )
     pmeccConfigurationMenu.setLabel( "Configuration" )
