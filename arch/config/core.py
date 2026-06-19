@@ -973,7 +973,7 @@ def instantiateComponent( coreComponent ):
 
         keilHeapStackSize = coreComponent.createStringSymbol("KEIL_STACK_HEAP_SIZE", keilLdGeneralMenu)
         keilHeapStackSize.setVisible(False)
-        keilHeapStackSize.setDefaultValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
+        keilHeapStackSize.setValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
         keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
 
     # Device name symbol
@@ -1283,14 +1283,14 @@ def instantiateComponent( coreComponent ):
         xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
         xc32HeapSizeSym.setCategory("C32-LD")
         xc32HeapSizeSym.setKey("heap-size")
-        xc32HeapSizeSym.setDefaultValue(str(xc32HeapSize.getValue()))
+        xc32HeapSizeSym.setValue(str(xc32HeapSize.getValue()))
         xc32HeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_HEAP_SIZE"])
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         xc32SecureHeapSizeSym = coreComponent.createSettingSymbol("XC32_SECURE_HEAP", None)
         xc32SecureHeapSizeSym.setCategory("C32-LD")
         xc32SecureHeapSizeSym.setKey("heap-size")
-        xc32SecureHeapSizeSym.setDefaultValue(str(xc32SecureHeapSize.getValue()))
+        xc32SecureHeapSizeSym.setValue(str(xc32SecureHeapSize.getValue()))
         xc32SecureHeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_SECURE_HEAP_SIZE"])
         xc32SecureHeapSizeSym.setSecurity("SECURE")
 
