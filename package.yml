@@ -192,7 +192,7 @@ package:
       version: "2.1.63"
     - name: "SAMRH707_DFP"
       type: "dfp"
-      version: "1.2.156"
+      version: "1.4.194"
     - name: "SAMRH71_DFP"
       type: "dfp"
       version: "2.6.253"
