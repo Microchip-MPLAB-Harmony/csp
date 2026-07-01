@@ -31,13 +31,11 @@ def loadModule():
     dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
     dfpComponent.setHelpKeyword("MH3_CSP_dfp")
 
-
-    archNode = ATDF.getNode('/avr-tools-device-file/devices')
-    cortexType = archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()
-
     #Load CMSIS for relevant architecture
     if ("CORTEX" in coreArch):
         print("Load Module: CMSIS Pack")
+        archNode = ATDF.getNode('/avr-tools-device-file/devices')
+        cortexType = archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()
         if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_6", "ARM.CMSIS.pdsc")):
             cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis_v6.py")
             cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
