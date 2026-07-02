@@ -25,9 +25,7 @@ import xml.etree.ElementTree as ET
 
 def instantiateComponent(cmsisComponent):
 
-    cmsisPath = Variables.get("__FRAMEWORK_ROOT") + "/CMSIS_6/"
-
-    pdscPath = os.path.join(cmsisPath, "ARM.CMSIS.pdsc")
+    pdscPath = os.path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_6", "ARM.CMSIS.pdsc")
     cmsisReleaseInfo = ET.parse(pdscPath).getroot().find("releases/release")
     cmsisPath = os.path.dirname(pdscPath)
 
