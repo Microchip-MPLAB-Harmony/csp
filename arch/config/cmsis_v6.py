@@ -50,6 +50,13 @@ def instantiateComponent(cmsisComponent):
     if cortexType.startswith("m"):
         v8Cores = ["m23", "m33"]
         v7VFPCores = ["m4", "m7"]
+        mProfileHeaderFileNames = [
+            "cmsis_iccarm_m.h",
+            "cmsis_gcc_m.h",
+            "cmsis_armclang_m.h",
+            "armv" + ("8" if cortexType in v8Cores else "7") + "m_mpu.h",  #v8 cores uses MPUv8
+            "armv7m_cachel1.h" #v3.7.0 supports  enhanced cache functions for ARM-v7M
+        ]
 
 ################################################################################
 ############################### CMSIS Core #####################################
@@ -59,14 +66,14 @@ def instantiateComponent(cmsisComponent):
                                 "cmsis_version.h",
                                 "cmsis_compiler.h",
                                 "cmsis_iccarm.h",
-                                "m-profile/cmsis_iccarm_m.h",
+                                "cmsis_iccarm_m.h",
                                 "cmsis_gcc.h",
-                                "m-profile/cmsis_gcc_m.h",
+                                "cmsis_gcc_m.h",
                                 "cmsis_armclang.h",
-                                "m-profile/cmsis_armclang_m.h",
-                                "m-profile/armv" + ("8" if cortexType in v8Cores else "7") + "m_mpu.h",  #v8 cores uses MPUv8
-                                "m-profile/armv7m_cachel1.h" #v3.7.0 supports  enhanced cache functions for ARM-v7M
-                              ]
+                                "cmsis_armclang_m.h",
+                                "armv" + ("8" if cortexType in v8Cores else "7") + "m_mpu.h",  #v8 cores uses MPUv8
+                                "armv7m_cachel1.h" #v3.7.0 supports  enhanced cache functions for ARM-v7M
+                            ]
 
         #v8 cores support trustZone
         if cortexType in v8Cores:
@@ -77,12 +84,17 @@ def instantiateComponent(cmsisComponent):
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
             # Patch header file with inline function for ACLE intrinsics to build with XC32
-            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+            if headerFileName in mProfileHeaderFileNames:
+                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/m-profile/" + headerFileName)
+                headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/m-profile/")
+                headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/m-profile/")
+            else:
+                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+                headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
+                headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
             headerFile.setOutputName(headerFileName)
             headerFile.setMarkup(False)
             headerFile.setOverwrite(True)
-            headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
-            headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
             headerFile.setType("HEADER")
             headerFile.setEnabled(cmsisCoreEnableSym.getValue())
             headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_CORE_ENABLE"])
@@ -92,12 +104,17 @@ def instantiateComponent(cmsisComponent):
                 headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
                 headerFile.setRelative(False)
                 # Patch header file with inline function for ACLE intrinsics to build with XC32
-                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+                if headerFileName in mProfileHeaderFileNames:
+                    headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/m-profile/" + headerFileName)
+                    headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/m-profile/")
+                    headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/m-profile/")
+                else:
+                    headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+                    headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
+                    headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
                 headerFile.setOutputName(headerFileName)
                 headerFile.setMarkup(False)
                 headerFile.setOverwrite(True)
-                headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
-                headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
                 headerFile.setType("HEADER")
                 headerFile.setSecurity("SECURE")
                 headerFile.setEnabled(cmsisCoreEnableSym.getValue())
@@ -109,17 +126,26 @@ def instantiateComponent(cmsisComponent):
 ############################### CMSIS Core #####################################
 ################################################################################
 
-        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "a-profile/cmsis_gcc_a.h", "cmsis_iccarm.h", "a-profile/cmsis_iccarm_a.h", "a-profile/cmsis_cp15.h", "core_ca.h"]
-
+        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "cmsis_gcc_a.h", "cmsis_iccarm.h", "cmsis_iccarm_a.h", "cmsis_cp15.h", "core_ca.h"]
+        aProfileHeaderFileNames = [
+            "cmsis_gcc_a.h",
+            "cmsis_iccarm_a.h",
+            "cmsis_cp15.h"
+        ]
         # add core header files for cortex a devices
         for headerFileName in headerFileNames:
             szSymbol = "CORE_A_{}_H".format(headerFileName[:-2].upper())
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
-            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+            if headerFileName in aProfileHeaderFileNames:
+                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/a-profile/" + headerFileName)
+                headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/a-profile/")
+                headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/a-profile/")
+            else:
+                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+                headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
+                headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
             headerFile.setOutputName(headerFileName)
             headerFile.setMarkup(False)
             headerFile.setOverwrite(True)
-            headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
-            headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
             headerFile.setType("HEADER")
