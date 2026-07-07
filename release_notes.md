@@ -3,6 +3,39 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.26.0
+
+### New Features
+
+- **New part support**
+  - Added support for PIC32CM-PL10 4KB/16KB parts
+  - Added support for PIC32CK1012 SG00 parts
+
+- **New Features and Enhancements**
+  - Added support for CMSIS_6 packs
+  - Added support for CMSIS-DSP packs
+  - Added support for CMSIS-NN packs
+
+- **Bug Fixes and Improvements**
+  - Fixed PMECC issue in SMC PLIB
+  - Fixed ADC PLIB issue for PIC32CM-PL10 devices
+  - Updated PIC32CK-GC DFP version to 1.2.168
+  - Updated SAMRH707 DFP version to 1.4.194
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+### Known Issues
+
+-  None
+
+### Development Tools
+
+- [MPLAB® X IDE v6.30](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v5.10](https://www.microchip.com/mplab/compilers) or higher
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.6.4 or higher
+
 ## CSP Release v3.25.2
 
 ### New Features
