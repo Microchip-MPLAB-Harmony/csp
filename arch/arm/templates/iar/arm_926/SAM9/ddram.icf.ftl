@@ -34,6 +34,8 @@ define block UND_STACK with alignment = 8, size = ${UND_STACK_SIZE}{};
 
 define block SRAM { section .region_sram  };
 define block DDRAM { section .region_ddr };
+define block RAMCODE { section .ramcode_section };
+define block RAMDATA { section .ramdata_section };
 
 /* Please see drivers/mm/cache.h for details on the "Cache-aligned" sections */
 define block NO_CACHE { section .region_nocache };
@@ -41,6 +43,10 @@ define block CACHE_ALIGNED with alignment = 32 { section .region_cache_aligned }
 define block CACHE_ALIGNED_CONST with alignment = 32 { section .region_cache_aligned_const };
 
 initialize by copy with packing=none { section .vectors };
+keep { section .ramcode_section };
+keep { section .ramdata_section };
+initialize by copy { section .ramcode_section };
+initialize by copy { section .ramdata_section };
 do not initialize { section .region_sram };
 do not initialize { section .region_ddr };
 do not initialize { section .region_nocache };
@@ -65,6 +71,17 @@ place in DDRAM_region { block ABT_STACK };
 place in DDRAM_region { block UND_STACK };
 
 place in DDRAM_NOCACHE_region { block NO_CACHE };
+
+place in RAM_region { block RAMCODE };
+place in RAM_region { block RAMDATA };
+
+/* Define exported symbols for ramcode/ramdata sections */
+define exported symbol _sramcode = start(RAM_region);
+define exported symbol _eramcode = start(RAM_region) + 0x4000;
+define exported symbol _ramcode_lma = start(DDRAM_region);
+define exported symbol _sramdata = start(RAM_region) + 0x4000;
+define exported symbol _eramdata = start(RAM_region) + 0x8000;
+define exported symbol _ramdata_lma = start(DDRAM_region) + 0x4000;
 
 <#if USE_THREADX_VECTORS>
 place in DDRAM_region { last section FREE_MEM};
