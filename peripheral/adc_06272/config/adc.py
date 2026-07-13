@@ -1050,7 +1050,7 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLD_SAMPNUM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_06272;register:CTRLD")
     adcSym_CTRLD_SAMPNUM.setLabel("Number of Accumulated Samples")
     adcSym_CTRLD_SAMPNUM.setDefaultValue(0)
-    adcSym_CTRLD_SAMPNUM.setOutputMode("Key")
+    adcSym_CTRLD_SAMPNUM.setOutputMode("Value")
     adcSym_CTRLD_SAMPNUM.setDisplayMode("Description")
     adcSym_CTRLD_SAMPNUM.setVisible(True)
     adcSampleNumNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_CTRLD__SAMPNUM\"]")

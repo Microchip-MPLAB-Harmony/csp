@@ -21,6 +21,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+from os import path
+
 def loadModule():
 
     coreArch = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
@@ -29,12 +31,26 @@ def loadModule():
     dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
     dfpComponent.setHelpKeyword("MH3_CSP_dfp")
 
-
-    # Avoid loading CMSIS for non-relevant processors
+    #Load CMSIS for relevant architecture
     if ("CORTEX" in coreArch):
         print("Load Module: CMSIS Pack")
-        cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
-        cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
+        archNode = ATDF.getNode('/avr-tools-device-file/devices')
+        cortexType = archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()
+        if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_6", "ARM.CMSIS.pdsc")):
+            cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis_v6.py")
+            cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
+
+            #Show components for CMSIS_
+            if cortexType.startswith("m") or cortexType.startswith("a"):
+                if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS-DSP", "ARM.CMSIS-DSP.pdsc")):
+                    cmsisDspComponent = Module.CreateComponent("cmsis_dsp", "CMSIS DSP", "/Packs/", "config/cmsis_dsp.py")
+                    cmsisDspComponent.setHelpKeyword("MH3_CSP_cmsis_dsp")
+                if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS-NN", "ARM.CMSIS-NN.pdsc")):
+                    cmsisNnComponent = Module.CreateComponent("cmsis_nn", "CMSIS NN", "/Packs/", "config/cmsis_nn.py")
+                    cmsisNnComponent.setHelpKeyword("MH3_CSP_cmsis_nn")
+        else:
+            cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis_v5.py")
+            cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
 
     print("Load Module: CSP System")
 

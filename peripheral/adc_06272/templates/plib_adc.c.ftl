@@ -230,6 +230,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
         | ADC_CTRLD_CHOPPING(0UL)
     </#if>
     | ADC_CTRLD_SCALING(${ADC_CTRLD_SCALING}UL)
+    | ADC_CTRLD_SAMPNUM(${ADC_CTRLD_SAMPNUM}UL)
     <#if ADC_CONV_TRIGGER == "Free Run">
         | ADC_CTRLD_FREERUN_Msk
     </#if>;
@@ -244,7 +245,8 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
                                                                             | ADC_CTRLD_VPD(1UL)
                                                                         <#else>
                                                                             | ADC_CTRLD_VPD(0UL)
-                                                                        </#if>;</@compress>
+                                                                        </#if>
+                                                                        | ADC_CTRLD_SAMPNUM(${ADC_CTRLD_SAMPNUM}UL);</@compress>
 </#if>
 
     /* Window Operation Mode */
@@ -328,10 +330,6 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
     /* Start conversion */
     ${ADC_INSTANCE_NAME}_REGS->ADC_COMMAND |= (uint32_t)ADC_COMMAND_START_IMMEDIATE;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_ADCBUSY_Msk) != 0U)
-    {
-        /* Wait for Synchronization */
-    }
 }
 
 /* Select ADC conversion start type */
@@ -433,10 +431,10 @@ bool ${ADC_INSTANCE_NAME}_ResultReadyStatusGet( void )
 bool ${ADC_INSTANCE_NAME}_SampleReadyStatusGet( void )
 {
     bool status;
-    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTENSET_SAMPRDY_Msk) >> ADC_INTENSET_SAMPRDY_Pos) != 0U);
+    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_SAMPRDY_Msk) >> ADC_INTFLAG_SAMPRDY_Pos) != 0U);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTENSET_SAMPRDY_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_SAMPRDY_Msk;
     }
     return status;
 }

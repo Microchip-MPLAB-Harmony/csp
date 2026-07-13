@@ -48,5 +48,6 @@
         <package diagram="MX_28_QFN" id="35" name="VQFN28 WF" />
         <package diagram="SPDIP28_SSOP28" id="36" name="SSOP28" />
         <package diagram="SPDIP28_SSOP28" id="36" name="SPDIP28" />
+        <package diagram="SSOP20" id="37" name="SSOP20" />
     </packages>
 </pinfile>

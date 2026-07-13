@@ -73,6 +73,20 @@ typedef void(*advanced_handler_t)(uint32_t * fault_args, unsigned int lr_value);
 static inline void call_advanced_exception_handler(advanced_handler_t pHandler)
 {
 <#if CoreArchitecture == "CORTEX-M0PLUS" || CoreArchitecture == "CORTEX-M23">
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+    __asm volatile (
+        "MOVS   R0, #4        \n"
+        "MOV    R1, LR        \n"
+        "TST    R0, R1        \n"
+        "BEQ.N  stacking_MSP  \n"
+        "MRS    R0, PSP       \n"
+        "B.N    call_handler  \n"
+        "stacking_MSP:        \n"
+        "MRS    R0, MSP       \n"
+        "call_handler:        \n"
+        "BX     %0            \n"
+        ::"r"(pHandler));
+#else
     asm volatile (
         "MOVS   R0, #4\n\t"
         "MOV    R1, LR\n\t"
@@ -84,6 +98,7 @@ static inline void call_advanced_exception_handler(advanced_handler_t pHandler)
         "MRS    R0, MSP\n\t"
         "invoke_handler: \n"
         "BX     %0"::"r"(pHandler));
+#endif
 <#else>
     asm volatile (
         "TST    LR, #4\n\t"
