@@ -49,6 +49,9 @@ if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
 define memory mem with size = 4G;
 define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
 define region ROM_region    = mem:[from __ICFEDIT_region_ROM_start__ to __ICFEDIT_region_ROM_end__];
+<#if QSPI_PRESENT??>
+define region QSPI_region   = mem:[from 0x80000000 to 0x9FFFFFFF];
+</#if>
 
 define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
 define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
@@ -60,3 +63,13 @@ place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
 place in ROM_region                           { readonly };
 place in RAM_region                           { readwrite, block HEAP };
 place at end of RAM_region                    { block CSTACK };
+
+<#if QSPI_PRESENT??>
+/* QSPI code section - functions placed in .code_in_qspi section */
+place in QSPI_region                          { readonly section .code_in_qspi };
+
+/* Define linker symbols for QSPI memory region */
+define exported symbol _start_qspi = 0x80000000;
+define exported symbol _end_qspi = 0x9FFFFFFF;
+define exported symbol _etext = __ICFEDIT_region_ROM_end__;
+</#if>
