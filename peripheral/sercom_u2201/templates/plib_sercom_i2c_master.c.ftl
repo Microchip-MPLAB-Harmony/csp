@@ -72,6 +72,11 @@
 #define RIGHT_ALIGNED (8U)
 </#if>
 
+/* Upper bound on the wait for BUSSTATE to return to IDLE after a transfer.
+ * A STOP takes tens of microseconds even at 100 kHz, so this is a very generous
+ * margin; its only job is to make the wait finite. See the ISR for why. */
+#define SERCOM_I2C_BUSSTATE_IDLE_TIMEOUT (50000U)
+
 static volatile SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 
 // *****************************************************************************
@@ -1429,10 +1434,22 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = (uint8_t)SERCOM_I2CM_INTFLAG_Msk;
 
-            /* Wait for the NAK and STOP bit to be transmitted out and I2C state machine to rest in IDLE state */
-            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01U))
+            /* Wait for the NAK and STOP bit to be transmitted out and I2C state machine to rest in IDLE state.
+             *
+             * Bounded on purpose. A device that keeps SCL low after the transfer has otherwise completed would
+             * spin here forever, at interrupt priority, with no fault and no log -- the board simply stops. On
+             * expiry, report a bus error rather than leaving the transfer to be reported as a success on a bus
+             * that is still stuck, so the client sees a failed transfer and can recover. */
+            uint32_t busStateTimeout = SERCOM_I2C_BUSSTATE_IDLE_TIMEOUT;
+            while((((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01U)))
+                    && (busStateTimeout > 0U))
             {
-                /* Do nothing */
+                busStateTimeout--;
+            }
+
+            if(busStateTimeout == 0U)
+            {
+                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_BUS;
             }
 
             if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)

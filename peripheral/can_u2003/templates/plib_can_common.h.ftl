@@ -324,7 +324,7 @@ typedef struct
     unsigned int anmf:1;
 
     /* Data field */
-    uint8_t data[8];
+    uint8_t data[64];
 
 } CAN_RX_BUFFER;
 
@@ -367,7 +367,7 @@ typedef struct
     unsigned int mm:8;
 
     /* Data field */
-    uint8_t data[8];
+    uint8_t data[64];
 
 } CAN_TX_BUFFER;
 
