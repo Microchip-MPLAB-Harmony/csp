@@ -477,24 +477,30 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         if (fifoQueueNum == 0U)
         {
 <#if TX_QUEUE_USE == true>
-<#if CAN_INTERRUPT_MODE == true>
-            CFD${CAN_INSTANCE_NUM}TXQCON |= _CFD${CAN_INSTANCE_NUM}TXQCON_TXQEIE_MASK;
-
-</#if>
             /* Request the transmit */
             CFD${CAN_INSTANCE_NUM}TXQCON |= _CFD${CAN_INSTANCE_NUM}TXQCON_UINC_MASK;
             CFD${CAN_INSTANCE_NUM}TXQCON |= _CFD${CAN_INSTANCE_NUM}TXQCON_TXREQ_MASK;
+<#if CAN_INTERRUPT_MODE == true>
+
+            /* Enable the Tx Queue empty (completion) interrupt only after the
+             * message is queued. Enabling it while the queue is still empty
+             * raises TXQEIF immediately and fires a premature interrupt. */
+            CFD${CAN_INSTANCE_NUM}TXQCON |= _CFD${CAN_INSTANCE_NUM}TXQCON_TXQEIE_MASK;
+</#if>
 </#if>
         }
         else
         {
-<#if CAN_INTERRUPT_MODE == true>
-            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1U) * CANFD_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFERFFIE_MASK;
-
-</#if>
             /* Request the transmit */
             *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1U) * CANFD_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
             *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1U) * CANFD_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_TXREQ_MASK;
+<#if CAN_INTERRUPT_MODE == true>
+
+            /* Enable the Tx FIFO empty (completion) interrupt only after the
+             * message is queued. Enabling it while the FIFO is still empty
+             * raises TFERFFIF immediately and fires a premature interrupt. */
+            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1U) * CANFD_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFERFFIE_MASK;
+</#if>
         }
 <#if CAN_INTERRUPT_MODE == true>
         CFD${CAN_INSTANCE_NUM}INT |= _CFD${CAN_INSTANCE_NUM}INT_TXIE_MASK;
@@ -1488,6 +1494,12 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
 */
 void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
+    /* The IFS flag is latched: if the CFD${CAN_INSTANCE_NUM}INT condition that set it
+     * cleared before this ISR was entered, none of the handlers below runs and the
+     * flag is never cleared, re-entering this ISR forever. Clear it up front; any
+     * condition still active in CFD${CAN_INSTANCE_NUM}INT will latch it again. */
+    ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
+
     /* Call CAN MISC interrupt handler if SERRIF/CERRIF/IVMIF interrupt flag is set */
     if ((CFD${CAN_INSTANCE_NUM}INT & (_CFD${CAN_INSTANCE_NUM}INT_SERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIF_MASK)) != 0U)
     {
