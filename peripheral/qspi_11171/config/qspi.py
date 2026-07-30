@@ -248,6 +248,17 @@ def instantiateComponent(qspiComponent):
     splitICR.setVisible(False)
     splitICR.setDefaultValue(qspiReg_ICR == None)
 
+    if Database.getSymbolValue("core","CoreArchitecture") == "CORTEX-M7":
+        qspiMemAddrStartNode = ATDF.getNode('/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name="QSPIMEM"]')
+        if qspiMemAddrStartNode != None:
+            qspiMemAddrStart = qspiComponent.createStringSymbol("QSPI_MEM_ADDR_START", None)
+            qspiMemAddrStart.setVisible(False)
+            qspiMemAddrStart.setDefaultValue(qspiMemAddrStartNode.getAttribute("start"))
+
+            qspiMemAddrEnd = qspiComponent.createStringSymbol("QSPI_MEM_ADDR_END", None)
+            qspiMemAddrEnd.setVisible(False)
+            qspiMemAddrEnd.setDefaultValue("0x{:x}".format(int(qspiMemAddrStartNode.getAttribute("start"), 0) + int(int(qspiMemAddrStartNode.getAttribute("size"), 0))))
+
     ###################################################################################################
     ######################################### QSPI-SPI MODE ###########################################
     ###################################################################################################
