@@ -43,7 +43,6 @@
 #ifndef ${SEFC_INSTANCE_NAME}_H    // Guards against multiple inclusion
 #define ${SEFC_INSTANCE_NAME}_H
 
-#include <sys/attribs.h>
 #include "plib_sefc_common.h"
 
 // DOM-IGNORE-BEGIN

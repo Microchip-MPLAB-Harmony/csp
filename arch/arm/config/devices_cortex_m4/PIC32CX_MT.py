@@ -37,6 +37,9 @@ def set_startup_file(symbol,event):
                          "startup_{0}.c.ftl".format(compilerSelected))
     symbol.setOutputName("startup_" + compilerSelected + ".c")
 
+def update_startup_file_enable(symbol,event):
+    compilerSelected = event["symbol"].getSelectedKey().lower()
+    symbol.setEnabled(compilerSelected == "xc32")
 
 # load family specific configurations
 Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
@@ -218,7 +221,13 @@ armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
-armSysStartSourceFile.setDependencies(genSysSourceFile, ["CoreSysStartupFile", "CoreSysFiles"])
+armSysStartSourceFile.setEnabled(True)
+def startup_file_update(symbol, event):
+    compilerSelected = event["symbol"].getSelectedKey().lower()
+    symbol.setSourcePath("../arch/arm/templates/{0}/cortex_m/startup/startup_{0}.c.ftl".format(compilerSelected))
+    symbol.setOutputName("startup_" + compilerSelected + ".c")
+    symbol.setEnabled(True)
+armSysStartSourceFile.setDependencies(startup_file_update, [compilerChoice.getID()])
 
 # generate libc_syscalls.c file
 armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)

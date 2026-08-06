@@ -127,14 +127,28 @@ void SEFC_RegionLock(uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
 
-    return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_RegionLock(address) : SEFC1_RegionLock(address);
+    if (flash_panel == SEFC_FLASH_PANEL0)
+    {
+        SEFC0_RegionLock(address);
+    }
+    else
+    {
+        SEFC1_RegionLock(address);
+    }
 }
 
 void SEFC_RegionUnlock(uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
 
-    return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_RegionUnlock(address) : SEFC1_RegionUnlock(address);
+    if (flash_panel == SEFC_FLASH_PANEL0)
+    {
+        SEFC0_RegionUnlock(address);
+    }
+    else
+    {
+        SEFC1_RegionUnlock(address);
+    }
 }
 
 bool SEFC_IsBusy(uint32_t address)

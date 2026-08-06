@@ -56,8 +56,10 @@ Interface definition of SQI PLIB.
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#if !defined(__ICCARM__) && !defined(__IAR_SYSTEMS_ICC__)
 #include <sys/kmem.h>
 #include <sys/attribs.h>
+#endif
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
