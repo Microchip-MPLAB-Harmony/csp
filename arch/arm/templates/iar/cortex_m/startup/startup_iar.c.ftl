@@ -40,6 +40,9 @@ void __iar_data_init3(void);
 <#include "devices/startup_iar_${DeviceFamily}.c.ftl">
 </#if>
 </#if>
+<#if CoreArchitecture == "CORTEX-M33">
+<#include "devices/startup_iar_${DeviceFamily}.c.ftl">
+</#if>
 
 void Reset_Handler(void)
 {
