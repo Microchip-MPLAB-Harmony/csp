@@ -173,10 +173,12 @@ static void PLL0_Initialize(void)
                                                                  | OSCCTRL_PLL0CTRL_ENABLE_Msk;</@compress>
     <#if CONFIG_CLOCK_PLL0_ONDEMAND != "1">
 
-    while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_PLL0LOCK_Msk) != OSCCTRL_STATUS_PLL0LOCK_Msk)
+    while((OSCCTRL_REGS->OSCCTRL_INTFLAG & OSCCTRL_INTFLAG_PLL0LOCKR_Msk) != OSCCTRL_INTFLAG_PLL0LOCKR_Msk)
     {
         /* Waiting for the Ready state */
     }
+    /* Clear the PLL0 Lock Rise flag */
+    OSCCTRL_REGS->OSCCTRL_INTFLAG = OSCCTRL_INTFLAG_PLL0LOCKR_Msk;
     </#if>
 }
 </#if>
