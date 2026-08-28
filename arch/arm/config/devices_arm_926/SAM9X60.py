@@ -68,9 +68,6 @@ threadXVectors.setVisible(False)
 threadXVectors.setReadOnly(True)
 threadXVectors.setDefaultValue(False)
 
-#Execution start address in DDR
-xc32LdAppStartAddress.setValue("0x23f00000")
-
 #MMU Configuration data
 mmu_segments = [
                 ("BOOT_MEMORY", 0x00000000, 0x00100000, "normal"),
@@ -111,11 +108,16 @@ elif processor.endswith("5M"):
 elif processor.endswith("6K"):
     #64 Mbit memory
     ddr_size = (64 * pow(2,20)) / 8
-    #reduce the non cacheable region to 8 MB
-    non_cacheable_size = 8 * pow(2, 20)
+    #reduce the non cacheable region to 1 MB
+    non_cacheable_size = 1 * pow(2, 20)
 else:
     #Non SiP variants, use entire DRAM region
     ddr_size = int(ddr_node.getAttribute("size"), 0)
+
+if processor.endswith("6K"):
+    xc32LdAppStartAddress.setValue("0x20200000")  # Within 8MB SDR range
+else:
+    xc32LdAppStartAddress.setValue("0x23f00000")  # For larger DDR
 
 #DRAM coherent region
 dram_coherent_region = coreComponent.createIntegerSymbol("DRAM_COHERENT_REGION_SIZE", cortexMenu)
