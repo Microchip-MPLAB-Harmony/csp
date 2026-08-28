@@ -102,36 +102,36 @@ def instantiateComponent(supcComponent):
     supcSym_BOR_Menu.setLabel("Brown-Out Reset (BOR) Configuration")
 
     #BOR DCBORPSEL
-    supcSym_BOR_DCBORPSEL = supcComponent.createKeyValueSetSymbol("SUPC_BOR_DCBORPSEL", supcSym_BOR_Menu)
-    supcSym_BOR_DCBORPSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BOR")
-    supcSym_BOR_DCBORPSEL.setLabel("Select Duty Cycle BOR Prescaler")
     supcBORDcborpselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"BOR__DCBORPSEL\"]")
-    supcDcborpselValues = []
-    supcDcborpselValues = supcBORDcborpselNode.getChildren()
-    for index in range (0, len(supcDcborpselValues)):
-        supcDcborpselKeyName = supcDcborpselValues[index].getAttribute("name")
-        supcDcborpselKeyDescription = supcDcborpselValues[index].getAttribute("caption")
-        supcDcborpselKeyValue =  supcDcborpselValues[index].getAttribute("value")
-        supcSym_BOR_DCBORPSEL.addKey(supcDcborpselKeyName, supcDcborpselKeyValue, supcDcborpselKeyDescription)
-    supcSym_BOR_DCBORPSEL.setDefaultValue(1)
-    supcSym_BOR_DCBORPSEL.setOutputMode("Value")
-    supcSym_BOR_DCBORPSEL.setDisplayMode("Description")
+    if supcBORDcborpselNode != None:
+        supcSym_BOR_DCBORPSEL = supcComponent.createKeyValueSetSymbol("SUPC_BOR_DCBORPSEL", supcSym_BOR_Menu)
+        supcSym_BOR_DCBORPSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BOR")
+        supcSym_BOR_DCBORPSEL.setLabel("Select Duty Cycle BOR Prescaler")
+        supcDcborpselValues = supcBORDcborpselNode.getChildren()
+        for index in range (0, len(supcDcborpselValues)):
+            supcDcborpselKeyName = supcDcborpselValues[index].getAttribute("name")
+            supcDcborpselKeyDescription = supcDcborpselValues[index].getAttribute("caption")
+            supcDcborpselKeyValue =  supcDcborpselValues[index].getAttribute("value")
+            supcSym_BOR_DCBORPSEL.addKey(supcDcborpselKeyName, supcDcborpselKeyValue, supcDcborpselKeyDescription)
+        supcSym_BOR_DCBORPSEL.setDefaultValue(1)
+        supcSym_BOR_DCBORPSEL.setOutputMode("Value")
+        supcSym_BOR_DCBORPSEL.setDisplayMode("Description")
 
     #BOR BORFILT
-    supcSym_BOR_BORFILT = supcComponent.createKeyValueSetSymbol("SUPC_BOR_BORFILT", supcSym_BOR_Menu)
-    supcSym_BOR_BORFILT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BOR")
-    supcSym_BOR_BORFILT.setLabel("BOR Filtering")
     supcBORFiltNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"BOR__BORFILT\"]")
-    supcBORFiltValues = []
-    supcBORFiltValues = supcBORFiltNode.getChildren()
-    for index in range (0, len(supcBORFiltValues)):
-        supcBORFiltKeyName = supcBORFiltValues[index].getAttribute("name")
-        supcBORFiltKeyDescription = supcBORFiltValues[index].getAttribute("caption")
-        supcBORFiltKeyValue =  supcBORFiltValues[index].getAttribute("value")
-        supcSym_BOR_BORFILT.addKey(supcBORFiltKeyName, supcBORFiltKeyValue, supcBORFiltKeyDescription)
-    supcSym_BOR_BORFILT.setDefaultValue(0)
-    supcSym_BOR_BORFILT.setOutputMode("Value")
-    supcSym_BOR_BORFILT.setDisplayMode("Description")
+    if supcBORFiltNode != None:
+        supcSym_BOR_BORFILT = supcComponent.createKeyValueSetSymbol("SUPC_BOR_BORFILT", supcSym_BOR_Menu)
+        supcSym_BOR_BORFILT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BOR")
+        supcSym_BOR_BORFILT.setLabel("BOR Filtering")
+        supcBORFiltValues = supcBORFiltNode.getChildren()
+        for index in range (0, len(supcBORFiltValues)):
+            supcBORFiltKeyName = supcBORFiltValues[index].getAttribute("name")
+            supcBORFiltKeyDescription = supcBORFiltValues[index].getAttribute("caption")
+            supcBORFiltKeyValue =  supcBORFiltValues[index].getAttribute("value")
+            supcSym_BOR_BORFILT.addKey(supcBORFiltKeyName, supcBORFiltKeyValue, supcBORFiltKeyDescription)
+        supcSym_BOR_BORFILT.setDefaultValue(0)
+        supcSym_BOR_BORFILT.setOutputMode("Value")
+        supcSym_BOR_BORFILT.setDisplayMode("Description")
 
     #LVD Menu
     supcSym_LVD_Menu= supcComponent.createMenuSymbol("SUPC_LVD_MENU", None)
@@ -143,20 +143,20 @@ def instantiateComponent(supcComponent):
     supcSym_LVD_Enable.setLabel("Enable")
 
     #LVD DIR
-    supcSym_LVD_DIR = supcComponent.createKeyValueSetSymbol("SUPC_LVD_DIR", supcSym_LVD_Menu)
-    supcSym_LVD_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:LVD")
-    supcSym_LVD_DIR.setLabel("Direction")
     supcLvdDirNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"LVD__DIR\"]")
-    supcLvdDirValues = []
-    supcLvdDirValues = supcLvdDirNode.getChildren()
-    for index in range (0, len(supcLvdDirValues)):
-        supcLvdDirKeyName = supcLvdDirValues[index].getAttribute("name")
-        supcLvdDirKeyDescription = supcLvdDirValues[index].getAttribute("caption")
-        supcLvdDirKeyValue =  supcLvdDirValues[index].getAttribute("value")
-        supcSym_LVD_DIR.addKey(supcLvdDirKeyName, supcLvdDirKeyValue, supcLvdDirKeyDescription)
-    supcSym_LVD_DIR.setDefaultValue(0)
-    supcSym_LVD_DIR.setOutputMode("Value")
-    supcSym_LVD_DIR.setDisplayMode("Description")
+    if supcLvdDirNode != None:
+        supcSym_LVD_DIR = supcComponent.createKeyValueSetSymbol("SUPC_LVD_DIR", supcSym_LVD_Menu)
+        supcSym_LVD_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:LVD")
+        supcSym_LVD_DIR.setLabel("Direction")
+        supcLvdDirValues = supcLvdDirNode.getChildren()
+        for index in range (0, len(supcLvdDirValues)):
+            supcLvdDirKeyName = supcLvdDirValues[index].getAttribute("name")
+            supcLvdDirKeyDescription = supcLvdDirValues[index].getAttribute("caption")
+            supcLvdDirKeyValue =  supcLvdDirValues[index].getAttribute("value")
+            supcSym_LVD_DIR.addKey(supcLvdDirKeyName, supcLvdDirKeyValue, supcLvdDirKeyDescription)
+        supcSym_LVD_DIR.setDefaultValue(0)
+        supcSym_LVD_DIR.setOutputMode("Value")
+        supcSym_LVD_DIR.setDisplayMode("Description")
 
     #LVD OEVEN
     supcSym_LVD_Oeven = supcComponent.createBooleanSymbol("SUPC_LVD_OEVEN", supcSym_LVD_Menu)
@@ -173,20 +173,20 @@ def instantiateComponent(supcComponent):
     supcSym_VREGControl_Menu.setLabel("Voltage Regulator (VREG) Configuration")
 
     #VREG Output Control in RUN mode
-    supcSym_VREGCTRL_VREGOUT = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_VREGOUT", supcSym_VREGControl_Menu)
-    supcSym_VREGCTRL_VREGOUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
-    supcSym_VREGCTRL_VREGOUT.setLabel("VREG Output Control in RUN mode")
     supcVregOutNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREGCTRL__VREGOUT\"]")
-    supcVregOutValues = []
-    supcVregOutValues = supcVregOutNode.getChildren()
-    for index in range (0, len(supcVregOutValues)):
-        supcVregOutKeyName = supcVregOutValues[index].getAttribute("name")
-        supcVregOutKeyDescription = supcVregOutValues[index].getAttribute("caption")
-        supcVregOutKeyValue =  supcVregOutValues[index].getAttribute("value")
-        supcSym_VREGCTRL_VREGOUT.addKey(supcVregOutKeyName, supcVregOutKeyValue, supcVregOutKeyDescription)
-    supcSym_VREGCTRL_VREGOUT.setDefaultValue(0)
-    supcSym_VREGCTRL_VREGOUT.setOutputMode("Value")
-    supcSym_VREGCTRL_VREGOUT.setDisplayMode("Description")
+    if supcVregOutNode != None:
+        supcSym_VREGCTRL_VREGOUT = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_VREGOUT", supcSym_VREGControl_Menu)
+        supcSym_VREGCTRL_VREGOUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
+        supcSym_VREGCTRL_VREGOUT.setLabel("VREG Output Control in RUN mode")
+        supcVregOutValues = supcVregOutNode.getChildren()
+        for index in range (0, len(supcVregOutValues)):
+            supcVregOutKeyName = supcVregOutValues[index].getAttribute("name")
+            supcVregOutKeyDescription = supcVregOutValues[index].getAttribute("caption")
+            supcVregOutKeyValue =  supcVregOutValues[index].getAttribute("value")
+            supcSym_VREGCTRL_VREGOUT.addKey(supcVregOutKeyName, supcVregOutKeyValue, supcVregOutKeyDescription)
+        supcSym_VREGCTRL_VREGOUT.setDefaultValue(0)
+        supcSym_VREGCTRL_VREGOUT.setOutputMode("Value")
+        supcSym_VREGCTRL_VREGOUT.setDisplayMode("Description")
 
     #Off in Standby Control for VREGSW[N-1]
     supcSym_VREGCTRL_OFFSTDBY = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_OFFSTDBY", supcSym_VREGControl_Menu)
@@ -201,56 +201,56 @@ def instantiateComponent(supcComponent):
     if ADDVREG_NUM_node != None:
 
         #Additional Voltage Regulator Configuration
-        supcSym_VREGCTRL_AVREGSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_AVREGSTDBY", supcSym_VREGControl_Menu)
-        supcSym_VREGCTRL_AVREGSTDBY.setLabel("Additional Voltage Regulator Configuration")
-        supcSym_VREGCTRL_AVREGSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
         supcAvregStdbyNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREGCTRL__AVREGSTDBY\"]")
-        supcAvregStdbyValues = []
-        supcAvregStdbyValues = supcAvregStdbyNode.getChildren()
-        for index in range (0, len(supcAvregStdbyValues)):
-            supcAvregStdbyKeyName = supcAvregStdbyValues[index].getAttribute("name")
-            supcAvregStdbyKeyDescription = supcAvregStdbyValues[index].getAttribute("caption")
-            supcAvregStdbyKeyValue =  supcAvregStdbyValues[index].getAttribute("value")
-            supcSym_VREGCTRL_AVREGSTDBY.addKey(supcAvregStdbyKeyName, supcAvregStdbyKeyValue, supcAvregStdbyKeyDescription)
-        supcSym_VREGCTRL_AVREGSTDBY.setDefaultValue(1)
-        supcSym_VREGCTRL_AVREGSTDBY.setOutputMode("Value")
-        supcSym_VREGCTRL_AVREGSTDBY.setDisplayMode("Description")
+        if supcAvregStdbyNode != None:
+            supcSym_VREGCTRL_AVREGSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_AVREGSTDBY", supcSym_VREGControl_Menu)
+            supcSym_VREGCTRL_AVREGSTDBY.setLabel("Additional Voltage Regulator Configuration")
+            supcSym_VREGCTRL_AVREGSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
+            supcAvregStdbyValues = supcAvregStdbyNode.getChildren()
+            for index in range (0, len(supcAvregStdbyValues)):
+                supcAvregStdbyKeyName = supcAvregStdbyValues[index].getAttribute("name")
+                supcAvregStdbyKeyDescription = supcAvregStdbyValues[index].getAttribute("caption")
+                supcAvregStdbyKeyValue =  supcAvregStdbyValues[index].getAttribute("value")
+                supcSym_VREGCTRL_AVREGSTDBY.addKey(supcAvregStdbyKeyName, supcAvregStdbyKeyValue, supcAvregStdbyKeyDescription)
+            supcSym_VREGCTRL_AVREGSTDBY.setDefaultValue(1)
+            supcSym_VREGCTRL_AVREGSTDBY.setOutputMode("Value")
+            supcSym_VREGCTRL_AVREGSTDBY.setDisplayMode("Description")
 
     #VREF Menu
     supcSym_VREF_Menu= supcComponent.createMenuSymbol("VREF_MENU", None)
     supcSym_VREF_Menu.setLabel("Voltage Reference (VREF) Configuration")
 
     #Bandgap and Regulators Low Power Standby
-    supcSym_VREF_LPSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREF_LPSTDBY", supcSym_VREF_Menu)
-    supcSym_VREF_LPSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREFCTRL")
-    supcSym_VREF_LPSTDBY.setLabel("Enable Bandgap and Regulators Low Power Standby")
     supcLPStdbyNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREFCTRL__LPSTDBY\"]")
-    supcLPStdbyValues = []
-    supcLPStdbyValues = supcLPStdbyNode.getChildren()
-    for index in range (0, len(supcLPStdbyValues)):
-        supcLPStdbyKeyName = supcLPStdbyValues[index].getAttribute("name")
-        supcLPStdbyKeyDescription = supcLPStdbyValues[index].getAttribute("caption")
-        supcLPStdbyKeyValue =  supcLPStdbyValues[index].getAttribute("value")
-        supcSym_VREF_LPSTDBY.addKey(supcLPStdbyKeyName, supcLPStdbyKeyValue, supcLPStdbyKeyDescription)
-    supcSym_VREF_LPSTDBY.setDefaultValue(1)
-    supcSym_VREF_LPSTDBY.setOutputMode("Value")
-    supcSym_VREF_LPSTDBY.setDisplayMode("Description")
+    if supcLPStdbyNode != None:
+        supcSym_VREF_LPSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREF_LPSTDBY", supcSym_VREF_Menu)
+        supcSym_VREF_LPSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREFCTRL")
+        supcSym_VREF_LPSTDBY.setLabel("Enable Bandgap and Regulators Low Power Standby")
+        supcLPStdbyValues = supcLPStdbyNode.getChildren()
+        for index in range (0, len(supcLPStdbyValues)):
+            supcLPStdbyKeyName = supcLPStdbyValues[index].getAttribute("name")
+            supcLPStdbyKeyDescription = supcLPStdbyValues[index].getAttribute("caption")
+            supcLPStdbyKeyValue =  supcLPStdbyValues[index].getAttribute("value")
+            supcSym_VREF_LPSTDBY.addKey(supcLPStdbyKeyName, supcLPStdbyKeyValue, supcLPStdbyKeyDescription)
+        supcSym_VREF_LPSTDBY.setDefaultValue(1)
+        supcSym_VREF_LPSTDBY.setOutputMode("Value")
+        supcSym_VREF_LPSTDBY.setDisplayMode("Description")
 
     #Bandgap and Regulators Low Power Hibernate
-    supcSym_VREF_LPHIB = supcComponent.createKeyValueSetSymbol("SUPC_VREF_LPHIB", supcSym_VREF_Menu)
-    supcSym_VREF_LPHIB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREFCTRL")
-    supcSym_VREF_LPHIB.setLabel("Enable Bandgap and Regulators Low Power Hibernate")
     supcLPHibNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREFCTRL__LPHIB\"]")
-    supcLPHibValues = []
-    supcLPHibValues = supcLPHibNode.getChildren()
-    for index in range (0, len(supcLPHibValues)):
-        supcLPHibKeyName = supcLPHibValues[index].getAttribute("name")
-        supcLPHibKeyDescription = supcLPHibValues[index].getAttribute("caption")
-        supcLPHibKeyValue =  supcLPHibValues[index].getAttribute("value")
-        supcSym_VREF_LPHIB.addKey(supcLPHibKeyName, supcLPHibKeyValue, supcLPHibKeyDescription)
-    supcSym_VREF_LPHIB.setDefaultValue(1)
-    supcSym_VREF_LPHIB.setOutputMode("Value")
-    supcSym_VREF_LPHIB.setDisplayMode("Description")
+    if supcLPHibNode != None:
+        supcSym_VREF_LPHIB = supcComponent.createKeyValueSetSymbol("SUPC_VREF_LPHIB", supcSym_VREF_Menu)
+        supcSym_VREF_LPHIB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREFCTRL")
+        supcSym_VREF_LPHIB.setLabel("Enable Bandgap and Regulators Low Power Hibernate")
+        supcLPHibValues = supcLPHibNode.getChildren()
+        for index in range (0, len(supcLPHibValues)):
+            supcLPHibKeyName = supcLPHibValues[index].getAttribute("name")
+            supcLPHibKeyDescription = supcLPHibValues[index].getAttribute("caption")
+            supcLPHibKeyValue =  supcLPHibValues[index].getAttribute("value")
+            supcSym_VREF_LPHIB.addKey(supcLPHibKeyName, supcLPHibKeyValue, supcLPHibKeyDescription)
+        supcSym_VREF_LPHIB.setDefaultValue(1)
+        supcSym_VREF_LPHIB.setOutputMode("Value")
+        supcSym_VREF_LPHIB.setDisplayMode("Description")
 
     #VREF TSEN
     supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_VREF_TSEN", supcSym_VREF_Menu)
@@ -271,20 +271,20 @@ def instantiateComponent(supcComponent):
     supcSym_BKOUT0.setDefaultValue(False)
 
     #TGLOM 0
-    supcSym_BKOUT_TGLOM0 = supcComponent.createKeyValueSetSymbol("SUPC_BKOUT_TGLOM0", supcSym_BKOUT0)
-    supcSym_BKOUT_TGLOM0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
-    supcSym_BKOUT_TGLOM0.setLabel("Toggle Output Mode 0")
     supcTglomNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"BKOUT__TGLOM\"]")
-    supcTglomValues = []
-    supcTglomValues = supcTglomNode.getChildren()
-    for index in range (0, len(supcTglomValues)):
-        supcTglom0KeyName = supcTglomValues[index].getAttribute("name")
-        supcTglom0KeyDescription = supcTglomValues[index].getAttribute("caption")
-        supcTglom0KeyValue =  supcTglomValues[index].getAttribute("value")
-        supcSym_BKOUT_TGLOM0.addKey(supcTglom0KeyName, supcTglom0KeyValue, supcTglom0KeyDescription)
-    supcSym_BKOUT_TGLOM0.setDefaultValue(0)
-    supcSym_BKOUT_TGLOM0.setOutputMode("Value")
-    supcSym_BKOUT_TGLOM0.setDisplayMode("Description")
+    if supcTglomNode != None:
+        supcSym_BKOUT_TGLOM0 = supcComponent.createKeyValueSetSymbol("SUPC_BKOUT_TGLOM0", supcSym_BKOUT0)
+        supcSym_BKOUT_TGLOM0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
+        supcSym_BKOUT_TGLOM0.setLabel("Toggle Output Mode 0")
+        supcTglomValues = supcTglomNode.getChildren()
+        for index in range (0, len(supcTglomValues)):
+            supcTglom0KeyName = supcTglomValues[index].getAttribute("name")
+            supcTglom0KeyDescription = supcTglomValues[index].getAttribute("caption")
+            supcTglom0KeyValue =  supcTglomValues[index].getAttribute("value")
+            supcSym_BKOUT_TGLOM0.addKey(supcTglom0KeyName, supcTglom0KeyValue, supcTglom0KeyDescription)
+        supcSym_BKOUT_TGLOM0.setDefaultValue(0)
+        supcSym_BKOUT_TGLOM0.setOutputMode("Value")
+        supcSym_BKOUT_TGLOM0.setDisplayMode("Description")
 
     #SUPC Output pin 1
     supcSym_BKOUT1 = supcComponent.createBooleanSymbol("SUPC_BKOUT_1", supcSym_BKOUT_Menu)
@@ -294,17 +294,18 @@ def instantiateComponent(supcComponent):
     supcSym_BKOUT1.setDefaultValue(False)
 
     #TGLOM 1
-    supcSym_BKOUT_TGLOM1 = supcComponent.createKeyValueSetSymbol("SUPC_BKOUT_TGLOM1", supcSym_BKOUT1)
-    supcSym_BKOUT_TGLOM1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
-    supcSym_BKOUT_TGLOM1.setLabel("Toggle Output Mode 1")
-    for index in range (0, len(supcTglomValues)):
-        supcTglom1KeyName = supcTglomValues[index].getAttribute("name")
-        supcTglom1KeyDescription = supcTglomValues[index].getAttribute("caption")
-        supcTglom1KeyValue =  supcTglomValues[index].getAttribute("value")
-        supcSym_BKOUT_TGLOM1.addKey(supcTglom1KeyName, supcTglom1KeyValue, supcTglom1KeyDescription)
-    supcSym_BKOUT_TGLOM1.setDefaultValue(0)
-    supcSym_BKOUT_TGLOM1.setOutputMode("Value")
-    supcSym_BKOUT_TGLOM1.setDisplayMode("Description")
+    if supcTglomNode != None:
+        supcSym_BKOUT_TGLOM1 = supcComponent.createKeyValueSetSymbol("SUPC_BKOUT_TGLOM1", supcSym_BKOUT1)
+        supcSym_BKOUT_TGLOM1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
+        supcSym_BKOUT_TGLOM1.setLabel("Toggle Output Mode 1")
+        for index in range (0, len(supcTglomValues)):
+            supcTglom1KeyName = supcTglomValues[index].getAttribute("name")
+            supcTglom1KeyDescription = supcTglomValues[index].getAttribute("caption")
+            supcTglom1KeyValue =  supcTglomValues[index].getAttribute("value")
+            supcSym_BKOUT_TGLOM1.addKey(supcTglom1KeyName, supcTglom1KeyValue, supcTglom1KeyDescription)
+        supcSym_BKOUT_TGLOM1.setDefaultValue(0)
+        supcSym_BKOUT_TGLOM1.setOutputMode("Value")
+        supcSym_BKOUT_TGLOM1.setDisplayMode("Description")
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
