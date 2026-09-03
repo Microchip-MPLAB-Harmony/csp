@@ -126,7 +126,7 @@ def instantiateComponent(cmsisComponent):
 ############################### CMSIS Core #####################################
 ################################################################################
 
-        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "cmsis_gcc_a.h", "cmsis_iccarm.h", "cmsis_iccarm_a.h", "cmsis_cp15.h", "core_ca.h"]
+        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "cmsis_gcc_a.h", "cmsis_iccarm.h", "cmsis_iccarm_a.h", "cmsis_cp15.h", "core_ca.h", "cmsis_version.h"]
         aProfileHeaderFileNames = [
             "cmsis_gcc_a.h",
             "cmsis_iccarm_a.h",

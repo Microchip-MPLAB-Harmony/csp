@@ -1301,7 +1301,7 @@ def instantiateComponent( coreComponent ):
     # set include path and monitor file
     packsPath = ""
     if "CORTEX-A" in Database.getSymbolValue("core","CoreArchitecture"):
-        packsPath = "../src/packs/" + processor + "_DFP;../src/packs/CMSIS/CMSIS/Core_A/Include" + ";../src/packs/CMSIS/"
+        packsPath = "../src/packs/" + processor + "_DFP;../src/packs/CMSIS/CMSIS/Core_A/Include" + ";../src/packs/CMSIS/CMSIS/Core/Include" + ";../src/packs/CMSIS/"
     elif "CORTEX-M" in Database.getSymbolValue("core","CoreArchitecture"):
         packsPath = "../src/packs/" + processor + "_DFP;../src/packs/CMSIS/CMSIS/Core/Include" + ";../src/packs/CMSIS/"
     elif "ARM9" in Database.getSymbolValue("core","CoreArchitecture"):
