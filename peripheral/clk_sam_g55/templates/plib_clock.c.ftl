@@ -329,8 +329,11 @@ static void CLK_ProgrammableClockInitialize(void)
 }
 </#if>
 
-
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc static void CLK_IntRegTrimmedCodeSet(void)
+#else
 __attribute__((ramfunc)) static void CLK_IntRegTrimmedCodeSet(void)
+#endif
 {
     uint8_t trimmed_code;
 
