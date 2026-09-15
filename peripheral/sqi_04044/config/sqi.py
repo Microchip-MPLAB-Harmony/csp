@@ -158,6 +158,11 @@ def instantiateComponent(sqiComponent):
 
     Log.writeInfoMessage("Running " + sqiInstanceName.getValue())
 
+    #Check whether SWRST bitfield is present in the SQI CTRLA register
+    sqiCtrlaSwrstPresent = sqiComponent.createBooleanSymbol("SQI_CTRLA_SWRST_PRESENT", None)
+    sqiCtrlaSwrstPresent.setVisible(False)
+    sqiCtrlaSwrstPresent.setDefaultValue(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SQI\"]/register-group@[name=\"SQI\"]/register@[name=\"CTRLA\"]/bitfield@[name=\"SWRST\"]") != None)
+
     #Clock enable
     Database.setSymbolValue("core", sqiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 

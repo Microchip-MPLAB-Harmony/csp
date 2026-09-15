@@ -58,7 +58,11 @@ static volatile sqiCallbackObjType ${SQI_INSTANCE_NAME}CallbackObj;
 void ${SQI_INSTANCE_NAME}_Initialize(void)
 {
     // Reset and Disable SQI
+<#if SQI_CTRLA_SWRST_PRESENT == true>
     ${SQI_INSTANCE_NAME}_REGS->SQI_CTRLA =  SQI_CTRLA_SWRST_Msk <#if SQI_RUN_STANDBY == true> | SQI_CTRLA_RUNSTDBY_Msk </#if> ;
+<#else>
+    ${SQI_INSTANCE_NAME}_REGS->SQI_CTRLA =  1U <#if SQI_RUN_STANDBY == true> | SQI_CTRLA_RUNSTDBY_Msk </#if> ;
+</#if>
 
     while((${SQI_INSTANCE_NAME}_REGS->SQI_SYNCBUSY & SQI_SYNCBUSY_SWRST_Msk) == SQI_SYNCBUSY_SWRST_Msk)
     {
