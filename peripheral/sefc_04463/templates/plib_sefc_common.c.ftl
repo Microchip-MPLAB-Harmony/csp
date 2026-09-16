@@ -47,7 +47,7 @@ It allows user to Program, Erase and lock the on-chip FLASH memory.
 #include "plib_sefc1.h"
 
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call uint32_t SEFC_GpnvmBitRead(void)
+__ramfunc uint32_t SEFC_GpnvmBitRead(void)
 #else
 __longramfunc__ uint32_t SEFC_GpnvmBitRead(void)
 #endif
@@ -55,7 +55,7 @@ __longramfunc__ uint32_t SEFC_GpnvmBitRead(void)
     return SEFC0_GpnvmBitRead();
 }
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber)
+__ramfunc void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber)
 #else
 __longramfunc__ void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber)
 #endif
@@ -63,7 +63,7 @@ __longramfunc__ void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber)
     SEFC0_GpnvmBitSet(GpnvmBitNumber);
 }
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber)
+__ramfunc void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber)
 #else
 __longramfunc__ void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber)
 #endif

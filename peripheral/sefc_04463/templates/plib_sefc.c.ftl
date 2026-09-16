@@ -61,7 +61,7 @@ static uint32_t ${SEFC_INSTANCE_NAME}_PanelBaseAddr = 0;
 // *****************************************************************************
 // *****************************************************************************
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call static bool ${SEFC_INSTANCE_NAME}_sequenceRead(uint32_t cmdStart, uint32_t cmdStop,
+__ramfunc static bool ${SEFC_INSTANCE_NAME}_sequenceRead(uint32_t cmdStart, uint32_t cmdStop,
                                                                      uint32_t *data, uint32_t length, uint32_t address)
 #else
 __longramfunc__ static bool ${SEFC_INSTANCE_NAME}_sequenceRead(uint32_t cmdStart, uint32_t cmdStop,
@@ -104,8 +104,8 @@ __longramfunc__ static bool ${SEFC_INSTANCE_NAME}_sequenceRead(uint32_t cmdStart
     return true;
 }
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber)
-else
+__ramfunc void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber)
+#else
 __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber)
 #endif
 {
@@ -117,7 +117,7 @@ __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber)
     }
 }
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber)
+__ramfunc void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber)
 #else
 __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber)
 #endif
@@ -131,7 +131,7 @@ __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber)
 }
 
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
+__ramfunc uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
 #else
 __longramfunc__ uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
 #endif

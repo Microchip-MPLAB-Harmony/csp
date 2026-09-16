@@ -91,11 +91,11 @@ void ${SEFC_INSTANCE_NAME}_RegionLock(uint32_t address);
 void ${SEFC_INSTANCE_NAME}_RegionUnlock(uint32_t address);
 
 #if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
-__ramfunc __long_call void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber);
+__ramfunc void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber);
 
-__ramfunc __long_call void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber);
+__ramfunc void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber);
 
-__ramfunc __long_call uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void);
+__ramfunc uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void);
 #else
 __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber);
 
