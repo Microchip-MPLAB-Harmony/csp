@@ -47,8 +47,6 @@
 #include <stddef.h>
 #if !defined(__ICCARM__) && !defined(__IAR_SYSTEMS_ICC__)
 #include <sys/attribs.h>
-#else
-#define __longramfunc__
 #endif
 
 // DOM-IGNORE-BEGIN
