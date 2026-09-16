@@ -46,17 +46,27 @@ It allows user to Program, Erase and lock the on-chip FLASH memory.
 #include "plib_sefc0.h"
 #include "plib_sefc1.h"
 
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call uint32_t SEFC_GpnvmBitRead(void)
+#else
 __longramfunc__ uint32_t SEFC_GpnvmBitRead(void)
+#endif
 {
     return SEFC0_GpnvmBitRead();
 }
-
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber)
+#else
 __longramfunc__ void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber)
+#endif
 {
     SEFC0_GpnvmBitSet(GpnvmBitNumber);
 }
-
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber)
+#else
 __longramfunc__ void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber)
+#endif
 {
     SEFC0_GpnvmBitClear(GpnvmBitNumber);
 }

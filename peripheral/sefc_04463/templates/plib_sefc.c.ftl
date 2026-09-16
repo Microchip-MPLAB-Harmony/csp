@@ -60,9 +60,13 @@ static uint32_t ${SEFC_INSTANCE_NAME}_PanelBaseAddr = 0;
 // *****************************************************************************
 // *****************************************************************************
 // *****************************************************************************
-
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call static bool ${SEFC_INSTANCE_NAME}_sequenceRead(uint32_t cmdStart, uint32_t cmdStop,
+                                                                     uint32_t *data, uint32_t length, uint32_t address)
+#else
 __longramfunc__ static bool ${SEFC_INSTANCE_NAME}_sequenceRead(uint32_t cmdStart, uint32_t cmdStop,
                                                uint32_t *data, uint32_t length, uint32_t address)
+#endif
 {
     uint32_t count = 0;
     uint32_t sefcFmrReg;
@@ -99,8 +103,11 @@ __longramfunc__ static bool ${SEFC_INSTANCE_NAME}_sequenceRead(uint32_t cmdStart
 
     return true;
 }
-
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber)
+else
 __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber)
+#endif
 {
     SEFC0_REGS->SEFC_EEFC_FCR = (SEFC_EEFC_FCR_FCMD_SGPB | SEFC_EEFC_FCR_FARG((uint32_t)GpnvmBitNumber) | SEFC_EEFC_FCR_FKEY_PASSWD);
 
@@ -109,8 +116,11 @@ __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber)
         // Wait for the flash ready
     }
 }
-
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber)
+#else
 __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber)
+#endif
 {
     SEFC0_REGS->SEFC_EEFC_FCR = (SEFC_EEFC_FCR_FCMD_CGPB | SEFC_EEFC_FCR_FARG((uint32_t)GpnvmBitNumber) | SEFC_EEFC_FCR_FKEY_PASSWD);
 
@@ -120,7 +130,11 @@ __longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber)
     }
 }
 
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
+#else
 __longramfunc__ uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
+#endif
 {
     /* GPNVM bits can only be read from Flash Panel 0 (SEFC0 Plib instance) */
     SEFC0_REGS->SEFC_EEFC_FCR = (SEFC_EEFC_FCR_FCMD_GGPB | SEFC_EEFC_FCR_FKEY_PASSWD);

@@ -124,10 +124,15 @@ typedef enum
     SEFC_FLASH_PANEL1,
     
 }SEFC_FLASH_PANEL;
-
+#if defined(__ICCARM__) || defined(__IAR_SYSTEMS_ICC__)
+__ramfunc __long_call uint32_t SEFC_GpnvmBitRead(void);
+__ramfunc __long_call void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber);
+__ramfunc __long_call void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber);
+#else
 __longramfunc__ uint32_t SEFC_GpnvmBitRead(void);
 __longramfunc__ void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber);
 __longramfunc__ void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber);
+#endif
 void SEFC_BankSwap(void);
 SEFC_FLASH_PANEL SEFC_FlashPanelGet(uint32_t address);
 bool SEFC_SectorErase( uint32_t address );
