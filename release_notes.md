@@ -3,6 +3,31 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.26.1
+
+### New Features
+
+- None
+
+### Bug fixes and Improvements
+
+- Fixed PIC32CK-SG FUSE issues
+- Updated harmony compiler selection option as a top level system option 
+- Added PIC32CK1025GC01144 part support in harmony
+- Updated PIC32CK-SG DFP version to 1.10.278 in package.yml
+- Updated PIC32CK-GC DFP version to 1.5.239 in package.yml
+- Fixed IAR startup and linker related issues
+- Fixed TFBGA196 package issue for SAM9x60D6K
+- Fixed cache configuration issue for SAM9x60D6K
+- Fixed CAN-FD transmit interrupt issue in PIC32MK devices
+
+### Development Tools
+
+- [MPLAB® X IDE v6.35](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v6.00](https://www.microchip.com/mplab/compilers) or higher
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.7.0 or higher
+
 ## CSP Release v3.26.0
 
 ### New Features
