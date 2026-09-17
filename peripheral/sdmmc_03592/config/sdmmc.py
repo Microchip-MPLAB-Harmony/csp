@@ -107,6 +107,14 @@ def instantiateComponent(sdmmcComponent):
     sdmmcEMMCSupport.setDefaultValue(True)
     sdmmcEMMCSupport.setVisible(False)
 
+    sdbvselNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SDMMC"]/register-group@[name="SDMMC"]/'
+                 'register@[name="PCR"]/bitfield@[name="SDBVSEL"]')
+    sdmmcSDBVSELSupport = sdmmcComponent.createBooleanSymbol("SDCARD_SDBVSEL_SUPPORT", None)
+    sdmmcSDBVSELSupport.setLabel("SDMMC SDBVSEL Support")
+    sdmmcSDBVSELSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_03592;register:PCR")
+    sdmmcSDBVSELSupport.setDefaultValue(sdbvselNode is not None)
+    sdmmcSDBVSELSupport.setVisible(False)
+
     sdmmcCD = sdmmcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
     sdmmcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
     sdmmcCD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdmmc_03592;register:%NOREGISTER%")

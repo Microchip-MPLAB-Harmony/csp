@@ -52,6 +52,27 @@
 
 #include "plib_sdmmc_common.h"
 
+/* MISRAC 2023 deviation block start */
+/* MISRA C-2023 Rule 7.6 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_7_6_DR_1 */
+/* MISRA C-2023 Rule 10.1 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_1_DR_1 */
+/* MISRA C-2023 Rule 10.3 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_3_DR_1 */
+/* MISRA C-2023 Rule 10.4 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_4_DR_1 */
+/* MISRA C-2023 Rule 10.7 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_7_DR_1 */
+/* MISRA C-2023 Rule 10.8 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_8_DR_1 */
+/* MISRA C-2023 Rule 12.2 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_12_2_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 7.6" "H3_MISRAC_2023_R_7_6_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.1" "H3_MISRAC_2023_R_10_1_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.3" "H3_MISRAC_2023_R_10_3_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.4" "H3_MISRAC_2023_R_10_4_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.7" "H3_MISRAC_2023_R_10_7_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.8" "H3_MISRAC_2023_R_10_8_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 12.2" "H3_MISRAC_2023_R_12_2_DR_1"
+</#if>
 #define ${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES        (${SDMMC_NUM_DESCRIPTOR_LINES}U)
 #define ${SDMMC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY       (${SDMMC_CLK_FREQ}U)
 #define ${SDMMC_INSTANCE_NAME}_MAX_BLOCK_SIZE             (0x200U)
@@ -626,8 +647,13 @@ void ${SDMMC_INSTANCE_NAME}_ModuleInit( void )
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_MC1R = SDMMC_MC1R_FCD_Msk;
 </#if>
 
+<#if SDCARD_SDBVSEL_SUPPORT>
     /* SD Bus Voltage Select = 3.3V, SD Bus Power = On */
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PCR = (SDMMC_PCR_SDBVSEL_3V3 | SDMMC_PCR_SDBPWR_ON);
+<#else>
+    /* SD Bus Power = On */
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PCR |= SDMMC_PCR_SDBPWR_ON;
+</#if>
 
     /* Set initial clock to 400 KHz*/
     (void) ${SDMMC_INSTANCE_NAME}_ClockSet (SDMMC_CLOCK_FREQ_400_KHZ);
@@ -655,3 +681,16 @@ void ${SDMMC_INSTANCE_NAME}_CallbackRegister(SDMMC_CALLBACK callback, uintptr_t 
         ${SDMMC_INSTANCE_NAME?lower_case}Obj.context = contextHandle;
     }
 }
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 7.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.3"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.4"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.7"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.8"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 12.2"
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+    </#if>
+</#if>
+/* MISRAC 2023 deviation block end */
