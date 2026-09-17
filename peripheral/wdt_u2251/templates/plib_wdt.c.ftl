@@ -51,6 +51,22 @@
 </#if>
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 
+/* MISRAC 2023 deviation block start */
+/* MISRA C-2023 Rule 10.1 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_1_DR_1 */
+/* MISRA C-2023 Rule 10.4 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_4_DR_1 */
+/* MISRA C-2023 Rule 10.8 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_8_DR_1 */
+/* MISRA C-2023 Rule 7.6 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_7_6_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.1" "H3_MISRAC_2023_R_10_1_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.4" "H3_MISRAC_2023_R_10_4_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.8" "H3_MISRAC_2023_R_10_8_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 7.6" "H3_MISRAC_2023_R_7_6_DR_1"
+</#if>
+
 <#if WDT_EW_ENABLE = true>
 static volatile WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
@@ -224,3 +240,13 @@ void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
     }
 }
 </#if>
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.4"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.8"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 7.6"
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2023 deviation block end */

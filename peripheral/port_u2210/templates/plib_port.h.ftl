@@ -59,6 +59,16 @@
 #endif
 // DOM-IGNORE-END
 
+/* MISRAC 2023 deviation block start */
+/* MISRA C-2023 Rule 7.6 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_7_6_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+    <#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 7.6" "H3_MISRAC_2023_R_7_6_DR_1"
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data types and constants
@@ -954,6 +964,14 @@ static inline void PORT_PinOutputEnable(PORT_PIN pin)
 {
     PORT_GroupOutputEnable(GET_PORT_GROUP(pin), GET_PIN_MASK(pin));
 }
+
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 7.6"
+    <#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+    </#if>
+</#if>
+/* MISRAC 2023 deviation block end */
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

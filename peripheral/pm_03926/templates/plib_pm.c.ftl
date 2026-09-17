@@ -55,6 +55,21 @@
 
 #include "device.h"
 #include "plib_${PM_INSTANCE_NAME?lower_case}.h"
+
+/* MISRAC 2023 deviation block start */
+/* MISRA C-2023 Rule 7.6 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_7_6_DR_1 */
+/* MISRA C-2023 Rule 10.1 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_1_DR_1 */
+/* MISRA C-2023 Rule 10.4 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_4_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 7.6" "H3_MISRAC_2023_R_7_6_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.1" "H3_MISRAC_2023_R_10_1_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.4" "H3_MISRAC_2023_R_10_4_DR_1"
+</#if>
+
 <#assign PM_STDBYCFG_VAL = "">
 <#assign PM_HIBCFG_VAL = "">
 <#if PM_STDBYCFG_RAMCFG?has_content>
@@ -170,3 +185,13 @@ void ${PM_INSTANCE_NAME}_IO_RetentionClear( void )
 {
     ${PM_INSTANCE_NAME}_REGS->PM_CTRLA &= (uint8_t)(~PM_CTRLA_IORET_Msk);
 }
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 7.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.4"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2023 deviation block end */

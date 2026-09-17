@@ -47,6 +47,22 @@
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include <stdlib.h>
 
+/* MISRAC 2023 deviation block start */
+/* MISRA C-2023 Rule 7.6 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_7_6_DR_1 */
+/* MISRA C-2023 Rule 10.1 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_1_DR_1 */
+/* MISRA C-2023 Rule 10.4 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_4_DR_1 */
+/* MISRA C-2023 Rule 12.2 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_12_2_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 7.6" "H3_MISRAC_2023_R_7_6_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.1" "H3_MISRAC_2023_R_10_1_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.4" "H3_MISRAC_2023_R_10_4_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 12.2" "H3_MISRAC_2023_R_12_2_DR_1"
+</#if>
+
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
     <#lt>static volatile RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
@@ -651,3 +667,14 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     </#if>
     <#lt>}
 </#if>
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 7.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.4"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 12.2"
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+    </#if>
+</#if>
+/* MISRAC 2023 deviation block end */

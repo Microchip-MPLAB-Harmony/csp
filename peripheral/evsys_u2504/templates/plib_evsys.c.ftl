@@ -43,6 +43,24 @@
 #include "interrupts.h"
 </#if>
 
+/* MISRAC 2023 deviation block start */
+/* MISRA C-2023 Rule 7.6 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_7_6_DR_1 */
+/* MISRA C-2023 Rule 10.1 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_1_DR_1 */
+/* MISRA C-2023 Rule 10.3 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_3_DR_2 */
+/* MISRA C-2023 Rule 10.4 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_4_DR_1 */
+/* MISRA C-2023 Rule 10.7 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_10_7_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 7.6" "H3_MISRAC_2023_R_7_6_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.1" "H3_MISRAC_2023_R_10_1_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.3" "H3_MISRAC_2023_R_10_3_DR_2"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.4" "H3_MISRAC_2023_R_10_4_DR_1"
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 10.7" "H3_MISRAC_2023_R_10_7_DR_1"
+</#if>
+
 
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
 <#if INTERRUPT_ACTIVE>
@@ -352,3 +370,15 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
         </#list>
     </#if>
 </#if>
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 7.6"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.1"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.3"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.4"
+#pragma coverity compliance end_block "MISRA C-2023 Rule 10.7"
+    <#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+    </#if>
+</#if>
+/* MISRAC 2023 deviation block end */

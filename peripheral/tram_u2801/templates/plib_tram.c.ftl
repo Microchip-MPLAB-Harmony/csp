@@ -41,6 +41,16 @@
 #include "device.h"
 #include "plib_${TRAM_INSTANCE_NAME?lower_case}.h"
 
+/* MISRAC 2023 deviation block start */
+/* MISRA C-2023 Rule 7.6 deviated in this file. Deviation record ID - H3_MISRAC_2023_R_7_6_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate "MISRA C-2023 Rule 7.6" "H3_MISRAC_2023_R_7_6_DR_1"
+</#if>
+
 void ${TRAM_INSTANCE_NAME}_Initialize( void )
 {
     ${TRAM_INSTANCE_NAME}_REGS->TRAM_CTRLA = TRAM_CTRLA_SWRST_Msk;
@@ -129,3 +139,11 @@ void ${TRAM_INSTANCE_NAME}_DataScrambleEnable(bool enable)
         (void)${TRAM_INSTANCE_NAME}_Enable(true);
     }
 }
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2023 Rule 7.6"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2023 deviation block end */
