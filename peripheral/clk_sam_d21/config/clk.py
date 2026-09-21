@@ -490,6 +490,11 @@ dfllOndemand.addKey("Disable",str(0),"Always Enable")
 dfllOndemand.addKey("Enable",str(1),"Only on Peripheral Request")
 dfllOndemand.setDefaultValue(0)
 
+dfllRunstdy = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_RUNSTDY", dfll_Menu)
+dfllRunstdy.setLabel("Run DFLL in Standby Sleep Mode")
+dfllRunstdy.setDescription("DFLL to run in standby mode or not")
+dfllRunstdy.setDefaultValue(False)
+
 dfllUsb = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_USB", dfll_Menu)
 dfllUsb.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_d21;register:DFLLCTRL")
 dfllUsb.setLabel("USB Clock Recovery Mode")
