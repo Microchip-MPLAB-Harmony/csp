@@ -338,60 +338,99 @@ def setAdcConfigParams( args ):
     component = args["instance"].lower()
 
     if args["enable"] == True:
-        # Calculate prescaler and ADC sample counts based on requested conversion time
-        if not(args["conversion_time"] == "default"):
-            # ToDO: Place Holder. Add the code later
+
+        Log.writeDebugMessage("[ADC] Configuring ADC PLIB with %s" % args)
+
+        # Enable channel
+        Log.writeDebugMessage("[ADC] Enabling channel %s" % args["channel"])
+        channelNum = int(args["channel"])
+        numChannels = Database.getSymbolValue(component, "AFEC_NUM_CHANNELS")
+
+        if numChannels and channelNum > ((numChannels - 1) / 2):
+            # Channels above NUM_CHANNELS/2 are dual sample-and-hold shadow
+            # channels paired with channel (channelNum - 6); their CHER is
+            # derived from the paired channel's SHMR_DUAL symbol via
+            # afecCHEnable(), so set that instead of writing CHER directly.
+            res = Database.setSymbolValue(component, "AFEC_" + str(channelNum - 6) + "_SHMR_DUAL", True)
+        else:
+            res = Database.setSymbolValue(component, "AFEC_" + str(args["channel"]) + "_CHER", True)
+
+        # Configure conversion time
+        if not (args["conversion_time"] == "default"):
+            Log.writeDebugMessage("[ADC] Configuring conversion time: %s" % args["conversion_time"])
+            # ToDO: Placeholder. Add the code later
             pass
 
-        # Calculate prescaler and ADC sample counts based on requested conversion time
-        if not(args["reference"] == "default"):
+        # Configure reference voltage
+        if not (args["reference"] == "default"):
+            Log.writeDebugMessage("[ADC] Configuring reference: %s" % args["reference"])
             # ToDO: Placeholder. To be done later
             pass
 
-        # Find the key index of the RESOLUTION
+        # Find the resolution index
+        Log.writeDebugMessage("[ADC] Setting resolution to %s bits" % args["resolution"])
         count = afecSym_EMR_RES_VALUE.getKeyCount()
         resIndex = 0
-        for i in range(0,count):
-            if (str(args["resolution"]) in afecSym_EMR_RES_VALUE.getKeyDescription(i) ):
+        for i in range(0, count):
+            if str(args["resolution"]) in afecSym_EMR_RES_VALUE.getKeyDescription(i):
                 resIndex = i
                 break
 
-        # Set resolution value
         Database.setSymbolValue(component, "AFEC_EMR_RES_VALUE", resIndex)
 
+        # Configure trigger source
         if args["trigger"] != "SOFTWARE_TRIGGER":
-            # Find the key index of the trigger as a PWM channel as per TRIGGER argument
+            Log.writeDebugMessage("[ADC] Configuring hardware trigger: PWM%s" % args["trigger"])
+
             count = afecSym_MR_TRGSEL_VALUE.getKeyCount()
             triggerIndex = 0
-            for i in range(0,count):
-                if ("PWM" + str(args["trigger"]) in afecSym_MR_TRGSEL_VALUE.getKeyDescription(i) ):
+            for i in range(0, count):
+                if ("PWM" + str(args["trigger"]) in afecSym_MR_TRGSEL_VALUE.getKeyDescription(i)):
                     triggerIndex = i
                     break
 
             Database.setSymbolValue(component, "AFEC_MR_TRGSEL_VALUE", triggerIndex)
             Database.setSymbolValue(component, "AFEC_CONV_MODE", 2)
+        else:
+            Log.writeDebugMessage("[ADC] Using software trigger")
 
-        # Enable/ Disable end-of-conversion interrupt
-        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_IER_EOC", args["enable_eoc_interrupt"])
+        # Configure end-of-conversion interrupt
+        Log.writeDebugMessage("[ADC] End-of-conversion interrupt: %s" %
+                              ("Enabled" if args["enable_eoc_interrupt"] else "Disabled"))
+        Database.setSymbolValue(component,
+                                "AFEC_" + args["channel"] + "_IER_EOC",
+                                args["enable_eoc_interrupt"])
 
-        # Enable/ Disable channel
-        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_CHER", True)
-
-        # Enable DMA sequencing
+        # Configure DMA sequencing
         if not args["enable_dma_sequence"] == "default":
+            Log.writeDebugMessage("[ADC] Configuring DMA sequencing: %s" %
+                                  args["enable_dma_sequence"])
             # ToDO: Placeholder for later development
             pass
 
+        # Configure result alignment
         if not args["result_alignment"] == "default":
+            Log.writeDebugMessage("[ADC] Configuring result alignment: %s" %
+                                  args["result_alignment"])
             # ToDO: Placeholder for later development
             pass
+
+        Log.writeDebugMessage("[ADC] ADC configuration completed successfully")
 
     else:
-        # Enable/ Disable end-of-conversion interrupt
-        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_IER_EOC", False)
+        Log.writeDebugMessage("[ADC] Disabling channel %s" % args["channel"])
 
-        # Enable/ Disable channel
-        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_CHER", False)
+        # Disable end-of-conversion interrupt
+        Database.setSymbolValue(component,
+                                "AFEC_" + args["channel"] + "_IER_EOC",
+                                False)
+
+        # Disable channel
+        Database.setSymbolValue(component,
+                                "AFEC_" + args["channel"] + "_CHER",
+                                False)
+
+        Log.writeDebugMessage("[ADC] Channel %s disabled" % args["channel"])
 
 def handleMessage(messageID, args):
     dict = {}
