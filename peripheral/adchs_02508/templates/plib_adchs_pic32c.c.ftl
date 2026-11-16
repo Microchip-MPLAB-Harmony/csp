@@ -158,7 +158,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 
     /* Turn ON ADC */
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON1 |= ADCHS_ADCCON1_ON_Msk;
-    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_BGVRRDY_Msk) == ADCHS_ADCCON2_BGVRRDY_Msk)
+    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_BGVRRDY_Msk) == 0U)
     {
         // Wait until the reference voltage is ready
     }
