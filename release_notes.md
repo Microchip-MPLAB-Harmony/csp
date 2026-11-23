@@ -3,6 +3,26 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.26.2
+
+### New Features
+
+- None
+
+### Bug fixes and Improvements
+
+- Fixed ADCHS and AFEC PLIB issues
+- Updated PIC32CM-SG00 DFP version to 1.2.83 in package.yml
+- Updated PLL lock condition issue for PIC32CZ-CA devices
+- Fixed Clock PLIB issue for PIC32CX-MT devices
+
+### Development Tools
+
+- [MPLAB® X IDE v6.35](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v6.00](https://www.microchip.com/mplab/compilers) or higher
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.7.0 or higher
+
 ## CSP Release v3.26.1
 
 ### New Features
